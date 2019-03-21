@@ -1,16 +1,24 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: stash-demo
+  name: stash-sample-data
   namespace: demo
+data:
+  file1.txt: "This test file 1"
+  file2.txt: "This is file 2"
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
   labels:
     app: stash-demo
-  # if stash find bellow annotations, it will take backup of it.
+  name: stash-demo
+  namespace: demo
   annotations:
-    stash.appscode.com/backup-template: "workload-data-backup-template"
-    stash.appscode.com/target-directories: "[/source/data]"
+    stash.appscode.com/backup-template: workload-backup-template
+    stash.appscode.com/target-directories: "/source/data"
+    stash.appscode.com/volume-mounts: "source-data:/source/data"
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: stash-demo
