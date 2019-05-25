@@ -130,6 +130,7 @@ $ helm install appscode/stash --name stash-operator --version 0.8.3 --namespace 
 To see the detailed configuration options, visit [here](https://github.com/stashed/stash/tree/master/chart/stash).
 
 </div>
+</div>
 
 ### Installing in GKE Cluster
 
