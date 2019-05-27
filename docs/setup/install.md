@@ -32,7 +32,7 @@ Stash operator can be installed via a script or as a Helm chart.
 To install Stash in your Kubernetes cluster, run the following command:
 
 ```console
-$ curl -fsSL https://raw.githubusercontent.com/stashed/stash/0.8.3/hack/deploy/stash.sh | bash
+$ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh | bash
 ```
 
 After successful installation, you should have a `stash-operator-***` pod running in the `kube-system` namespace.
@@ -47,7 +47,7 @@ stash-operator-846d47f489-jrb58       1/1       Running   0          48s
 The installer script and associated yaml files can be found in the [/hack/deploy](https://github.com/stashed/stash/tree/0.8.3/hack/deploy) folder. You can see the full list of flags available to installer using `-h` flag.
 
 ```console
-$ curl -fsSL https://raw.githubusercontent.com/stashed/stash/0.8.3/hack/deploy/stash.sh | bash -s -- -h
+$ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh | bash -s -- -h
 
 stash.sh - install stash operator
 
@@ -78,7 +78,7 @@ options:
 If you would like to run Stash operator pod in `master` instances, pass the `--run-on-master` flag:
 
 ```console
-$ curl -fsSL https://raw.githubusercontent.com/stashed/stash/0.8.3/hack/deploy/stash.sh \
+$ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh \
     | bash -s -- --run-on-master
 ```
 
@@ -86,7 +86,7 @@ Stash operator will be installed in a `kube-system` namespace by default. If you
 
 ```console
 $ kubectl create namespace stash
-$ curl -fsSL https://raw.githubusercontent.com/stashed/stash/0.8.3/hack/deploy/stash.sh \
+$ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh \
     | bash -s -- --namespace=stash [--run-on-master]
 ```
 
@@ -98,14 +98,14 @@ To pass the address of your private registry and optionally a image pull secret 
 
 ```console
 $ kubectl create namespace stash
-$ curl -fsSL https://raw.githubusercontent.com/stashed/stash/0.8.3/hack/deploy/stash.sh \
+$ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh \
     | bash -s -- --docker-registry=MY_REGISTRY [--image-pull-secret=SECRET_NAME]
 ```
 
 Stash implements [validating admission webhooks](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook) to validate Stash CRDs and **mutating webhooks** for Kubernetes workload types. This is helpful when you create `Restic` before creating workload objects. This allows stash operator to initialize the target workloads by adding sidecar or, init-container before workload-pods are created. Thus stash operator does not need to delete workload pods for applying changes. This is particularly helpful for workload kind `StatefulSet`, since Kubernetes does not support adding sidecar / init containers to StatefulSets after they are created. This is enabled by default for Kubernetes 1.9.0 or later releases. To disable this feature, pass the `--enable-validating-webhook=false` and `--enable-mutating-webhook=false` flag respectively.
 
 ```console
-$ curl -fsSL https://raw.githubusercontent.com/stashed/stash/0.8.3/hack/deploy/stash.sh \
+$ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh \
     | bash -s -- --enable-validating-webhook=false --enable-mutating-webhook=false
 ```
 
