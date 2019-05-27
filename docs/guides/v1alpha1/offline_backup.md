@@ -71,8 +71,8 @@ Let's create a ConfigMap from these sample data,
 
 ```console
 $ kubectl create configmap -n demo stash-sample-data \
-	--from-literal=LICENSE="$(curl -fsSL https://raw.githubusercontent.com/stashed/stash-data/master/LICENSE)" \
-	--from-literal=README.md="$(curl -fsSL https://raw.githubusercontent.com/stashed/stash-data/master/README.md)"
+	--from-literal=LICENSE="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/LICENSE)" \
+	--from-literal=README.md="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/README.md)"
 configmap/stash-sample-data created
 ```
 
