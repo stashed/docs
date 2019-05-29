@@ -1,9 +1,9 @@
 ## Create Volume Snapshot using Stash
 
-This tutorial will show you how to use Stash for creating Volume Snapshots via kubernetes native API. 
+This tutorial will show you how to use Stash for creating Volume Snapshots via Kubernetes native API. 
 
 #### Requirements
-At first, you need to have a kubernetes cluster and ensure that a CSI driver that implements snapshots is deployed on your cluster. For testing purpose, we will use [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).The `kubectl` command-line tool must be configured to communicate with your cluster.
+At first, you need to have a Kubernetes cluster and ensure that a CSI driver that implements snapshots is deployed on your cluster. For testing purposes, we will use [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver). The `kubectl` command-line tool must be configured to communicate with your cluster.
 
 * You need to enable the Kubernetes Volume Snapshotting feature via new Kubernetes feature gate 
     * `--feature-gates=VolumeSnapshotDataSource=true`
@@ -17,7 +17,7 @@ At first, you need to have a kubernetes cluster and ensure that a CSI driver tha
 
 #### Overview
 
-The following diagram shows how Stash creates a Volume Snapshot via kubernetes native API. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash creates a Volume Snapshot via Kubernetes native API. Open the image in a new tab to see the enlarged image.
 
 <p align="center">
   <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/volume-snapshot-overview.svg">
@@ -33,30 +33,6 @@ The Volume Snapshot process consists of the following steps:
 
 4. Stash operator also watches for `BackupSession` crd. Once it found a `BackupSession` crd, it creates a Volume Snapshotter `Job`.
 
-5. Then, Volume Snapshotter Job Creates a `VolumeSnapshot` vai kubernetes native API and Updates `BackupSession` status.
+5. Then, Volume Snapshotter Job Creates a `VolumeSnapshot` vai Kubernetes native API and Updates `BackupSession` status.
 
-6. Finally CSI `external-snapshotter` controller watches for `VolumeSnapshot`. Once, it found a `VolumeSnapshot`, it tiggers `CreateSnapshot` operations againts the CSI endpoint and backup data in the Cloud Volume.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-         
-
-
-
-
-
+6. Finally, CSI `external-snapshotter` controller watches for `VolumeSnapshot`. Once, it found a `VolumeSnapshot`, it triggers `CreateSnapshot` operations against the CSI endpoint and backup data in the Cloud Volume.

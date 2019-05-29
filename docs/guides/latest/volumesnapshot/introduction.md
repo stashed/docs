@@ -4,7 +4,7 @@
 
 Kubernetes v1.12 introduces alpha support for volume snapshotting. This feature allows creating/deleting volume snapshots, and the ability to create new volumes from a snapshot natively using the Kubernetes API.
 
-Volume Snapshots are only supported for CSI drivers. Kubernetes CSI currently enables CSI drivers to expose the following functionality via the Kubernetes API:
+Volume Snapshots are only supported by CSI drivers. Kubernetes CSI currently enables CSI drivers to expose the following functionality via the Kubernetes API:
 
 - Creation and deletion of volume snapshots via [Kubernetes native API](https://kubernetes.io/docs/concepts/storage/volume-snapshots/).
 - provisioning a new volume pre-populated with the snapshot data or to   restore the existing volume to a previous state represented by the snapshot
@@ -30,7 +30,7 @@ The CRDs are automatically deployed by the CSI `external-snapshotter` sidecar. T
 
 #### Cluster Setup for Volume Snapshot
 
-Before using kubernetes volume snapshotting, you must:
+Before using Kubernetes volume snapshotting, you must:
 
 * Ensure a CSI driver implementing snapshots is deployed and running on your Kubernetes cluster.
 * Enable the Kubernetes Volume Snapshotting feature via new Kubernetes feature gate (disabled by default for alpha):

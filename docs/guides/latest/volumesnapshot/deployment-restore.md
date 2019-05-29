@@ -38,7 +38,7 @@ $ kubectl apply -f ./docs/examples/volume-snapshot/storageclass.yaml
 storageclass.storage.k8s.io/standard created
 ```
 
-##### Create Restore Session for restore volume
+##### Create Restore Session
 
 Now we are going to create `RestoreSession` crd for restoring data from Volume Snapshot.
 
@@ -76,19 +76,19 @@ Here,
 * `spec.target.volumeClaimTemplates.spec.dataSource` are used only for `VolumeSnapshot`. currently `VolumeSnapshot` is the only supported data source. It will create a new volume and data will be restored to the volume at the same time.
   * `kind` Kind is the type of resource being referenced.
 
-  * `name` Name is the name of resource being referenced. In `RestoreSession` crd, The name follows the following convension `${CLAIM_NAME}-<backup session creation timestamp in unix epoch seconds>`. `${CLAIM_NAME}` are resolved by the Stash operator and replaced by the persistent volume claim name.
+  * `name` Name is the name of the resource being referenced. In `RestoreSession` crd, The name follows the following convention `${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>`. `${CLAIM_NAME}` are resolved by the Stash operator and replaced by the persistent volume claim name.
 
-Let's create the `RestoreSession` crd we have shown avobe.
+Let's create the `RestoreSession` crd we have shown above.
 
 ```console
 $ kubectl create -f ./docs/examples/volume-snapshot/restoresession.yaml
 restoresession.stash.appscode.com/restore-pvc created
 ````
-here, restore-pvc is the name of the new pvc name that has been created successfully.
+here, restore-pvc is the name of the new PVC name that has been created successfully.
 
 ##### Verify Restoring data from  Volume Snapshot
 
-If everything goes well, Stash operator will create Restore Job. Then Restore Job will create new PVC.  
+If everything goes well, the Stash operator will create a Restore Job. Then Restore Job will create new PVC.  
 
 Now, wait a few minutes, you will see that a new PVC with the name `backup-pvc` has been created.
 
@@ -102,7 +102,7 @@ backup-pvc   Bound    pvc-1963c6c4-81da-11e9-91dc-42010a80001a   6Gi        RWO 
 
 ##### Cleaning Up
 
-To cleanup the Kubernetes resources created by this tutorial, run:
+To clean up the Kubernetes resources created by this tutorial, run:
 
 ```console
 $ kubectl delete -n demo restoresession restore-pvc

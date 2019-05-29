@@ -1,9 +1,9 @@
 ## Restore from Volume Snapshot using Stash
 
-This Section will show you how to use Stash for restoring Volume Snapshots via kubernetes native API. 
+This Section will show you how to use Stash for restoring Volume Snapshots via Kubernetes native API. 
 
 #### Requirements
-At first, you need to have a kubernetes cluster and ensure that a CSI driver that implements snapshots is deployed on your cluster. For testing purpose, we will use [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).The `kubectl` command-line tool must be configured to communicate with your cluster.
+At first, you need to have a Kubernetes cluster and ensure that a CSI driver that implements snapshots is deployed on your cluster. For testing purposes, we will use [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver). The `kubectl` command-line tool must be configured to communicate with your cluster.
 
 * You need to enable the Kubernetes Volume Snapshotting feature via new Kubernetes feature gate 
     * `--feature-gates=VolumeSnapshotDataSource=true`
@@ -17,7 +17,7 @@ At first, you need to have a kubernetes cluster and ensure that a CSI driver tha
 
 #### Overview
 
-The following diagram shows how Stash restore from Volume Snapshot via kubernetes native API. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash restore from Volume Snapshot via Kubernetes native API. Open the image in a new tab to see the enlarged image.
 
 <p align="center">
   <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/restore-vs-overview.svg">
@@ -29,5 +29,5 @@ The Restore process consists of the following steps:
 
 2. Stash operator watches for `RestoreSession` crd. Once, it found a `RestoreSession` crd, it creates a Restore Job which will create Persistent Volume Claim for restore.
 
-3. CSI `external-snapshotter` controller watches for PVC. Once, it found a PVC, it reads all information about `VolumeSnapshot` and downloads respective data from cloud storage. Afterall CSI `external-snapshotter` resotres data to PVC 
-4. Finally Stash operator updates the status of the `BackupSession` crd. 
+3. CSI `external-snapshotter` controller watches for PVC. Once, it found a PVC, it reads all information about `VolumeSnapshot` and downloads respective data from cloud storage. Afterall CSI `external-snapshotter` restores data to PVC 
+4. Finally, the Stash operator updates the status of the `BackupSession` crd. 
