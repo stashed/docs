@@ -75,12 +75,13 @@ You can configure `Repository` template using `spec.backend` field and `spec.wip
 
 - **spec.backend :** `spec.backend` field is backend specification similar to [spec.backend](/docs/concepts/crds/repository.md#specbackend) field of a `Repository` crd. There is only one difference. You can now templatize `prefix` section (`subPath` for local volume) of the backend to store backed up data of different workloads at different directory. You can use the following variables to templatize `spec.backend` field:
 
-    |       Variable       |            Usage            |
-    | -------------------- | --------------------------- |
-    | `TARGET_API_VERSION` | API version of the target   |
-    | `TARGET_KIND`        | Resource kind of the target |
-    | `TARGET_NAMESPACE`   | Namespace of the target     |
-    | `TARGET_NAME`        | Name of the target          |
+    |       Variable       |                                  Usage                                  |
+    | -------------------- | ----------------------------------------------------------------------- |
+    | `TARGET_API_VERSION` | API version of the target                                               |
+    | `TARGET_KIND`        | Resource kind of the target                                             |
+    | `TARGET_NAMESPACE`   | Namespace of the target                                                 |
+    | `TARGET_NAME`        | Name of the target                                                      |
+    | `TARGET_RESOURCE`    | Plural form of the target kind. i.e. `deployments`, `statefulsets` etc. |
 
     If we use the sample `BackupConfigurationTemplate` that has been shown above to backup a Deployment named `my-deploy` of `test` namespace, the backed up file will be stored in `stash/test/deployment/my-deploy` directory of the `stash-backup` bucket. If we want to backup a ReplicaSet with name `my-rs` of same namespace, the backed up data will be stored in `/stash/test/replicaset/my-rs` directory of the backend.
 
