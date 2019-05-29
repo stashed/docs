@@ -1,25 +1,23 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: ss-restore
+  name: restore-deployment
   namespace: demo
 spec:
   repository:
     name: local-repo
   rules:
   - paths:
-    - /source/data-1
-    - /source/data-2
+    - /source/data
   target:
-    replicas: 3 # number of replica of the statefulset which was backed up
     volumeMounts:
-    - name:  restored-data-1-stash-demo # format <claim name>-<statefulset name>
+    - name:  restored-data-1
       mountPath:  /source/data-1
-    - name:  restored-data-2-stash-demo
+    - name:  restored-data-2
       mountPath:  /source/data-2
     volumeClaimTemplates:
     - metadata:
-        name: restored-data-1-stash-demo # format <claim name>-<statefulset name>
+        name:  restored-data-1
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
@@ -27,7 +25,7 @@ spec:
           requests:
             storage: 1Gi
     - metadata:
-        name: restored-data-2-stash-demo
+        name:  restored-data-2
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
