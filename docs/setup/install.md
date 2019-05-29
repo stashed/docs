@@ -44,7 +44,7 @@ stash-operator-846d47f489-jrb58       1/1       Running   0          48s
 
 #### Customizing Installer
 
-The installer script and associated yaml files can be found in the [/hack/deploy](https://github.com/stashed/stash/tree/0.8.3/hack/deploy) folder. You can see the full list of flags available to installer using `-h` flag.
+The installer script and associated yaml files can be found in the [/deploy](https://github.com/stashed/installer/tree/0.8.3/deploy) folder. You can see the full list of flags available to installer using `-h` flag.
 
 ```console
 $ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh | bash -s -- -h
@@ -115,7 +115,7 @@ Stash 0.8.3 or later releases can use status sub resource for CustomResourceDefi
 <div class="tab-pane fade" id="helm" role="tabpanel" aria-labelledby="helm-tab">
 
 ## Using Helm
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/stash/tree/0.8.3/chart/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/0.8.3/chart/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
 
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
@@ -127,7 +127,7 @@ appscode/stash  0.8.3    0.8.3  Stash by AppsCode - Backup your Kubernetes Volum
 $ helm install appscode/stash --name stash-operator --version 0.8.3 --namespace kube-system
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/stash/tree/master/chart/stash).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/0.8.3/chart/stash).
 
 </div>
 </div>
