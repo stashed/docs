@@ -1,7 +1,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: restore
+  name: restore-pvc
   namespace: demo
 spec:
   driver: VolumeSnapshotter
@@ -9,7 +9,7 @@ spec:
 #    replicas : 3    #for Statefulset
     volumeClaimTemplates:
       - metadata:
-          name: pvc
+          name: backup-pvc
         spec:
           accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
@@ -19,5 +19,5 @@ spec:
           dataSource:
             kind: VolumeSnapshot
 #            name: ${CLAIM_NAME}-${POD_ORDINAL}-1558421829    #for Statefulset
-            name: ${CLAIM_NAME}-1558421829
+            name: ${CLAIM_NAME}-1559026686
             apiGroup: snapshot.storage.k8s.io

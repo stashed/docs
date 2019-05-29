@@ -1,6 +1,6 @@
 ## Create Volume Snapshot using Stash
 
-This Section will show you how to use Stash for creating Volume Snapshots via kubernetes native API. Here we are going to create or restore PVC data. 
+This tutorial will show you how to use Stash for creating Volume Snapshots via kubernetes native API. 
 
 #### Requirements
 At first, you need to have a kubernetes cluster and ensure that a CSI driver that implements snapshots is deployed on your cluster. For testing purpose, we will use [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).The `kubectl` command-line tool must be configured to communicate with your cluster.

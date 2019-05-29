@@ -30,4 +30,4 @@ The Restore process consists of the following steps:
 2. Stash operator watches for `RestoreSession` crd. Once, it found a `RestoreSession` crd, it creates a Restore Job which will create Persistent Volume Claim for restore.
 
 3. CSI `external-snapshotter` controller watches for PVC. Once, it found a PVC, it reads all information about `VolumeSnapshot` and downloads respective data from cloud storage. Afterall CSI `external-snapshotter` resotres data to PVC 
-4. Finally Restore job updates the status of the `BackupSession` crd. 
+4. Finally Stash operator updates the status of the `BackupSession` crd. 
