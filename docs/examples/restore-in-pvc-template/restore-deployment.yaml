@@ -1,0 +1,34 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: restore-deployment
+  namespace: demo
+spec:
+  repository:
+    name: local-repo
+  rules:
+  - paths:
+    - /source/data
+  target:
+    volumeMounts:
+    - name:  restored-data-1
+      mountPath:  /source/data-1
+    - name:  restored-data-2
+      mountPath:  /source/data-2
+    volumeClaimTemplates:
+    - metadata:
+        name:  restored-data-1
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 1Gi
+    - metadata:
+        name:  restored-data-2
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 1Gi
