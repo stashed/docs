@@ -1,0 +1,22 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: restore-pvc
+  namespace: demo
+spec:
+  driver: VolumeSnapshotter
+  target:
+    replicas : 1
+    volumeClaimTemplates:
+      - metadata:
+          name: source-data-stash-demo
+        spec:
+          accessModes: [ "ReadWriteOnce" ]
+          storageClassName: "standard"
+          resources:
+            requests:
+              storage: 6Gi
+          dataSource:
+            kind: VolumeSnapshot
+            name: ${CLAIM_NAME}-${POD_ORDINAL}-1559281449
+            apiGroup: snapshot.storage.k8s.io
