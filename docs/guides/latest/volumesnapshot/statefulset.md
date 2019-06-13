@@ -71,12 +71,11 @@ namespace/demo created
 
 ### Take Volume Snapshot
 
-When you create a Statefulset, there is no need to create PVCs seperately, because all replicas in Statefulset use different PVCs to store data. Kubenetes allows us to define a `volumeClaimTemplates` so that a new PVC is created for each replica automatically.
-Now we are going to create snapshot for the number of replica 1.
+When you create a Statefulset, there is no need to create PVCs separately, because all replicas in Statefulset use different PVCs to store data. Kubenetes allows us to define a `volumeClaimTemplates` so that a new PVC is created for each replica automatically.
 
 #### Deploy Workload:
 
-At first, you need to create a headless Service to control Statefulset network domain.
+At first, you need to create a headless Service to control the Statefulset network domain.
 Sample Service YAML are given below,
 
 ```yaml
@@ -115,7 +114,7 @@ spec:
     matchLabels:
       app: demo
   serviceName: svc
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -147,19 +146,29 @@ spec:
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl create -f ./statefulset/statefulset.yaml 
+$ kubectl create -f ./docs/examples/volume-snapshot/statefulset/statefulset.yaml 
 statefulset.apps/stash-demo created
 ```
 
 Now, wait for Statefulset’s pod to go into the Running state.
 
 ```console
-$ kubectl get pod -n demo
+$ $ kubectl get pod -n demo
 NAME           READY   STATUS    RESTARTS   AGE
-stash-demo-0   1/1     Running   0          23s
+stash-demo-0   1/1     Running   0          97s
+stash-demo-1   1/1     Running   0          67s
+stash-demo-2   1/1     Running   0          39s
 ```
-
-You can check that the `/source/data/` directory of this pod is populated with data from the `backup-pvc` PVC by using the following command,
+You can see that automatically created PVCs are bound to the corresponding pod,
+```yaml
+kubectl get pvc -n demo
+NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+source-data-stash-demo-0   Bound    pvc-6456fb74-8382-11e9-91dc-42010a80001a   6Gi        RWO            standard       27m
+source-data-stash-demo-1   Bound    pvc-76564e29-8382-11e9-91dc-42010a80001a   6Gi        RWO            standard       26m
+source-data-stash-demo-2   Bound    pvc-8730dbb2-8382-11e9-91dc-42010a80001a   6Gi        RWO            standard       26m
+source-data-web-0          Bound    pvc-3e57c863-8382-11e9-91dc-42010a80001a   6Gi        RWO 
+```
+You can also check that the `/source/data/` directory of the pod `stash-demo-0` is populated with data by using the following command,
 
 ```console
 $ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
@@ -168,10 +177,9 @@ lost+found
 sample-file.txt
 ```
 
-#### Create BackupConfiguration:
+#### Create BackupConfiguration
 
-Now, create a `BackupConfiguration` crd to take snapshot of `backup-pvc` PVC. Once the  `BackupConfiguration` crd is created, Stash will create a CronJob to take periodic snapshot of `backp-pvc` volume.
-
+We are going to create a BackupConfigration crd.
 Sample `BackupConfiguration` crd YAML are given below,
 
 ```yaml
@@ -197,15 +205,21 @@ spec:
 ```
 
 Here,
-* `spec.schedule` is a [cron expression](https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#schedule) indicates that `BackupSession` will be created every 1 minute.
+* `spec.schedule` is a [cron expression](https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#schedule) indicates that `BackupSession` will be created periodically.
 
 * `spec.driver` indicates the name of the agent to use to back up the target. Currently, Stash supports Restic, VolumeSnapshotter drivers. The VolumeSnapshotter is used to backup/restore PVC using VolumeSnapshot API.
 
-* `spec.replicas` are the desired number of replicas whose data should be backed up.
+* `spec.replicas` specifies the number of replicas whose data should be backed up. i.e.: In statefulset for value 1, it will take snapshot of  `<claim-name>-<statefulset-name>-0` volume; for replica 2, it will take snapshot of `<claim-name>-<statefulset-name>-0` and `<claim-name>-<statefulset-name>-1` volume and so on.
 
 * `spec.target.ref`  refers to the backup target. `apiVersion`, `kind` and `name` refers to the `apiVersion`, `kind` and `name` of the targeted workload respectively. Stash will use this information to create a Volume Snapshotter Job for Creating VolumeSnapshot.
 
 * `spec.target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snapshotting.
+
+
+
+#### Create Snapshot for Replica One
+
+Now, create a `BackupConfiguration` crd to take a snapshot of `source-data-stash-demo-0` PVC. For that, we will set the `spec.replica` to 1 in `BackupConfiguration` crd. Once the  `BackupConfiguration` crd is created, Stash will create a CronJob to take a periodic snapshot of `source-data-stash-demo-0` volume.
 
 Let's create the `BackupConfiguration` crd we have shown above.
 
@@ -213,45 +227,97 @@ Let's create the `BackupConfiguration` crd we have shown above.
 $ kubectl apply -f ./docs/examples/volume-snapshot/statefulset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/statefulset-volume-snapshot created
 ```
-Here, `statefulset-volume-snapshot` is the name of the `BackupConfiguration` crd that has been created successfully.
+Here, `statefulset-volume-snapshot` is the name of the `BackupConfiguration` crd that has been created.
 
-#### Verify Volume Snapshotting 
+##### Verify Volume Snapshotting 
 
-If everything goes well, Stash operator creates CronJob which creates BackupSession crd on each schedule. `BackupSession` crd name will be automatically generated by the following pattern `<BackupConfiguration name>-<BackupSession creation timestamp in Unix epoch seconds>` and label should be set as the following pattern `stash.appscode.com/backup-configuration:<BackupConfiguration name>`.
+If everything goes well, Stash operator creates CronJob which creates BackupSession crd on each schedule. `BackupSession` crd name will be automatically generated by the following pattern `<BackupConfiguration name>-<BackupSession creation timestamp in Unix epoch seconds>` and the label should be set as the following pattern `stash.appscode.com/backup-configuration:<BackupConfiguration name>`.
 
-Now, wait a few minutes,  you will see that `BackupSession` has been created.
-Check that the phase of `BackupSession` status is `Running` 
+Now, wait a few minutes,  you will see that `BackupSession` crd has been created. Check that the phase of `BackupSession` status is `Running` 
 
 ```console
 kubectl get bs -n demo -l   stash.appscode.com/backup-configuration=statefulset-volume-snapshot
-NAME                                     BACKUPCONFIGURATION           PHASE       AGE
-statefulset-volume-snapshot-1559281449   statefulset-volume-snapshot   Running     40s
+NAME                                     BACKUPCONFIGURATION           PHASE     AGE
+statefulset-volume-snapshot-1559297711   statefulset-volume-snapshot   Running   57s
 ```
-Here, `statefulset-volume-snapshot-1559281449` is the name of the `BackupSession` crd that has been created successfully after 1 minute.
+Here, `statefulset-volume-snapshot-1559297711` is the name of the `BackupSession` crd that has been created successfully after 1 minute.
 
 Stash operator watches for BackupSession crd and it will create a volume snapshotter job named `volume-snapshot-<BackupSession name>`.
 Check it by using the following command
 
 ```console
-$ kubectl get job -n demo volume-snapshot-statefulset-volume-snapshot-1559281449
+$ kubectl get job -n demo volume-snapshot-statefulset-volume-snapshot-1559297711
 NAMESPACE   NAME                                                     COMPLETIONS   DURATION   AGE
-demo        volume-snapshot-statefulset-volume-snapshot-1559281449   0/1           19s        20s
+demo        volume-snapshot-statefulset-volume-snapshot-1559297711   0/1           19s        20s
 ```
 Finally, volume snapshotter job will create `VolumeSnapshot` crd for the targeted PVCs. The `VolumeSnapshot` names will follow the following pattern `<PVC name>-<statefulset name>-<pod ordinal>-<backup session creation timestamp in Unix epoch seconds>`.
 
-Wait a few minutes,  you will see that `source-data-stash-demo-0-1559281449` VolumeSnapshot has been created Successfully.
+Wait a few minutes,  you will see that `source-data-stash-demo-0-1559297711` VolumeSnapshot has been created Successfully.
 
 ```console
-$ kubectl get volumesnapshot -n demo source-data-stash-demo-0-1559281449
-NAMESPACE   NAME                                         AGE
-demo        source-data-stash-demo-0-1559281449          153m
+$ kubectl get volumesnapshot -n demo source-data-stash-demo-0-1559297711
+NAMESPACE   NAME                                  AGE
+demo        source-data-stash-demo-0-1559297711   105s
+```
+Once the snapshotting is completed, the BackupSession crd phase will be Succeeded. Check the BackupSession phase is Succeeded by the following command: 
+
+```console
+$ kubectl get bs -n demo -l   stash.appscode.com/backup-configuration=statefulset-volume-snapshot
+NAME                                     BACKUPCONFIGURATION           PHASE       AGE
+statefulset-volume-snapshot-1559297711   statefulset-volume-snapshot   Succeeded   116s
+```
+
+#### Create Snapshot for multiple Replica
+
+Again, create a `BackupConfiguration` crd to take snapshot of `source-data-stash-demo-0` , `source-data-stash-demo-1` and `source-data-stash-demo-2` PVC simultaneously. For that we will set the `spec.replica` to 3 in `BackupConfiguration` crd. Once the  `BackupConfiguration` crd is created, Stash will create a CronJob to take periodic snapshot of `source-data-stash-demo-0` , `source-data-stash-demo-1` and `source-data-stash-demo-2` volume.
+
+Let's create the `BackupConfiguration` crd we have shown above.
+
+```console
+$ kubectl apply -f ./docs/examples/volume-snapshot/statefulset/backupconfiguration.yaml
+backupconfiguration.stash.appscode.com/statefulset-volume-snapshot created
+```
+Here, `statefulset-volume-snapshot` is the name of the `BackupConfiguration` crd that has been created.
+
+##### Verify Volume Snapshotting 
+
+If everything goes well, Stash operator creates CronJob which creates BackupSession crd on each schedule. `BackupSession` crd name will be automatically generated by the following pattern `<BackupConfiguration name>-<BackupSession creation timestamp in Unix epoch seconds>` and the label should be set as the following pattern `stash.appscode.com/backup-configuration:<BackupConfiguration name>`.
+
+Now, wait a few minutes,  you will see that `BackupSession` crd has been created.
+Check that the phase of `BackupSession` status is `Running` 
+
+```console
+kubectl get bs -n demo -l   stash.appscode.com/backup-configuration=statefulset-volume-snapshot
+NAME                                     BACKUPCONFIGURATION           PHASE     AGE
+statefulset-volume-snapshot-1560231666   statefulset-volume-snapshot   Running   2m35s
+```
+Here, `statefulset-volume-snapshot-1560231666` is the name of the `BackupSession` crd that has been created successfully after 1 minute.
+
+Stash operator watches for BackupSession crd and it will create a volume snapshotter job named `volume-snapshot-<BackupSession name>`.
+Check it by using the following command
+
+```console
+$ kubectl get job -n demo volume-snapshot-statefulset-volume-snapshot-1560231666
+NAMESPACE   NAME                                                     COMPLETIONS   DURATION   AGE
+demo        volume-snapshot-statefulset-volume-snapshot-1560231666   0/1           19s        20s
+```
+Finally, volume snapshotter job will create `VolumeSnapshot` crd for the targeted PVCs. The `VolumeSnapshot` names will follow the following pattern `<PVC name>-<statefulset name>-<pod ordinal>-<backup session creation timestamp in Unix epoch seconds>`.
+
+Wait a few minutes,  you will see that `source-data-stash-demo-0-1560231666`, `source-data-stash-demo-1-1560231666` and `source-data-stash-demo-2-1560231666` VolumeSnapshot has been created Successfully simultaneously.
+
+```console
+$ kubectl get volumesnapshot -n demo
+NAME                                  AGE
+source-data-stash-demo-0-1560231666   105s
+source-data-stash-demo-1-1560231666   105s
+source-data-stash-demo-2-1560231666   105s
 ```
 Once the snapshotting is completed, BackupSession crd phase will be Succeeded. Check the BackupSession phase is Succeeded by following command: 
 
 ```console
 $ kubectl get bs -n demo -l   stash.appscode.com/backup-configuration=statefulset-volume-snapshot
 NAME                                     BACKUPCONFIGURATION           PHASE       AGE
-statefulset-volume-snapshot-1559281449   statefulset-volume-snapshot   Succeeded   71s
+statefulset-volume-snapshot-1560231666   statefulset-volume-snapshot   Succeeded   116s
 ```
 ### Restore PVC from VolumeSnapshot
 
@@ -271,7 +337,7 @@ metadata:
 spec:
   driver: VolumeSnapshotter
   target:
-    replicas : 1
+    replicas : 3
     volumeClaimTemplates:
       - metadata:
           name: source-data-stash-demo
@@ -283,23 +349,26 @@ spec:
               storage: 6Gi
           dataSource:
             kind: VolumeSnapshot
-            name: ${CLAIM_NAME}-${POD_ORDINAL}-1559281449
+            name: ${CLAIM_NAME}-${POD_ORDINAL}-1560231666
+            #name: ${CLAIM_NAME}-1560231666
             apiGroup: snapshot.storage.k8s.io
 ```
 Here,
 
 * `spec.driver` indicates the name of the agent to use to back up the target. Currently, Stash supports Restic, VolumeSnapshotter drivers. The VolumeSnapshotter is used to backup/restore PVC using VolumeSnapshot API.
 
-* `spec.target.replicas` specifies the number of source to restore from.
+* `spec.target.replicas` specifies the number of the source to restore from.
 
-* `spec.target.volumeClaimTemplates[*].metadata.name` is the name of the VolumeSnapshot without pod ordinal and timestamp portion, i.e. for a VolumeSnapshot name `source-data-stash-demo-0-1559281449`, this field will be `source-data-stash-demo`.
+* `spec.target.volumeClaimTemplates[*].metadata.name` is the name of the VolumeSnapshot without pod ordinal and timestamp portion, i.e.: for a VolumeSnapshot name `source-data-stash-demo-0-1559281449`, this field will be `source-data-stash-demo`.
 
 * `spec.target.volumeClaimTemplates[*].spec.storageClassName` indicates the name of the [storageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) required by the claim.
 
-* `spec.target.volumeClaimTemplates.spec.dataSource` are used only for `VolumeSnapshot`. currently `VolumeSnapshot` is the only supported data source. It will create a new volume and data will be restored to the volume at the same time.
+* `spec.target.volumeClaimTemplates[*].spec.dataSource` are used only for `VolumeSnapshot`. currently `VolumeSnapshot` is the only supported data source. It will create a new volume and data will be restored to the volume at the same time.
   * `kind` is the type of resource being referenced.
 
-  * `name` is the name of the resource being referenced. In `RestoreSession` crd, The name follows the following convention `${CLAIM_NAME}-${POD_ORDINAL}-<backup session creation timestamp in Unix epoch seconds>`. `${CLAIM_NAME}` and `{POD_ORDINAL}` are resolved by the Stash operator and replaced by the PVCs name and pod ordinal of the Statesulset replicas.
+  * `name` is the name of the resource being referenced. In `RestoreSession` crd, The name follows the following convention `${CLAIM_NAME}-${POD_ORDINAL}-<backup session creation timestamp in Unix epoch seconds>` or `${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>`. `${CLAIM_NAME}` and `{POD_ORDINAL}` are resolved by the Stash operator and replaced by the volumeClaimTemplates name and pod ordinal of the Statesulset replicas.
+
+##### Restore from different VolumeSnapshot
 
 Let's create the `RestoreSession` crd we have shown above.
 
@@ -309,21 +378,45 @@ restoresession.stash.appscode.com/restore-pvc created
 ````
 Here, restore-pvc is the name of the RestoreSession that has been created.
 
-#### Verify Restored PVC 
+##### Verify Restored PVC 
 
 If everything goes well, Stash operator creates a Restore Job. Then Restore Job will create new PVC.  
 
-Now, wait a few minutes, you will see that a new PVC with the name `source-data-stash-demo-0` has been created successfully.
+Now, wait a few minutes, you will see that new PVC with the name `source-data-stash-demo-0`, `source-data-stash-demo-1` and `source-data-stash-demo-2`  has been created successfully.
 
 check that the status of the PVC is bound
 
 ```console
-$  kubectl get pvc -n demo source-data-stash-demo-0
+$  kubectl get pvc -n demo
 NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-data-stash-demo-0   Bound    pvc-b6b32265-836b-11e9-91dc-42010a80001a   6Gi        RWO            standard       2m
+source-data-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
+source-data-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
+source-data-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
 ````
+##### Restore from same VolumeSnapshot
 
+Again at first, Set the `spec.target.volumeClaimTemplates[*].spec.dataSource.name` to `{ClAIM_NAME}-1560342603` in `RestoreSession` and create the `RestoreSession` crd we have shown above.
 
+```console
+$ kubectl create -f ./docs/examples/volume-snapshot/statefulset/restoresession.yaml
+restoresession.stash.appscode.com/restore-pvc created
+````
+Here, restore-pvc is the name of the RestoreSession that has been created.
+
+##### Verify Restored PVC 
+
+If everything goes well, Stash operator creates a Restore Job. Then Restore Job will create new PVC.  
+
+Now, wait a few minutes, you will see that new PVC with the name `source-data-stash-demo-0`, `source-data-stash-demo-1` and `source-data-stash-demo-2`  has been created successfully.
+check that the status of the PVC is bound
+
+```console
+$  kubectl get pvc -n demo
+NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+source-data-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
+source-data-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
+source-data-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
+````
 
 ### Cleaning Up
 
@@ -336,5 +429,3 @@ $ kubectl delete -n demo restoresession restore-pvc
 $ kubectl delete -n demo storageclass standard
 $ kubectl delete -n demo volumesnapshotclass default-snapshot-class
 ```
-
-

@@ -6,10 +6,9 @@ metadata:
 spec:
   driver: VolumeSnapshotter
   target:
-    replicas : 3
     volumeClaimTemplates:
       - metadata:
-          name: backup-pvc
+          name: source-pvc
         spec:
           accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
@@ -18,6 +17,5 @@ spec:
               storage: 6Gi
           dataSource:
             kind: VolumeSnapshot
-#            name: ${CLAIM_NAME}-${POD_ORDINAL}-1560231666
-            name: ${CLAIM_NAME}-1560342603
+            name: ${CLAIM_NAME}-1560400745
             apiGroup: snapshot.storage.k8s.io

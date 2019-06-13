@@ -1,29 +1,14 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: svc
-  labels:
-    app: nginx
-  namespace: demo
-spec:
-  ports:
-    - port: 80
-      name: web
-  clusterIP: None
-  selector:
-    app: stash
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: web
+  name: stash-demo
   namespace: demo
 spec:
   selector:
     matchLabels:
       app: stash
   serviceName: svc
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:

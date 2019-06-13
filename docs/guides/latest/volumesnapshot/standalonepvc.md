@@ -1,6 +1,6 @@
-## Snapshot Deployment's Volumes
+## Snapshot Standalone PVC's
 
-This guide will show you how to use Stash to snapshot Deployment's volumes and restore PersistentVolumeClaims from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API.
+This guide will show you how to use Stash to snapshot standalone PersistentVolumeClaims and restore PersistentVolumeClaims from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API.
 
 ### Before You Begin
 
@@ -24,7 +24,7 @@ parameters:
   type: pd-standard
 provisioner: pd.csi.storage.gke.io
 reclaimPolicy: Delete
-volumeBindingMode: Immediate
+volumeBindingMode: WaitForFirstConsumer
 ```
 The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes specifies `Immediate` and `WaitForFirstConsumer` volumeBindingMode. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod using the PVC is created.
 
@@ -71,14 +71,14 @@ namespace/demo created
 
 ### Take Volume Snapshot
 
-At first, let's create a PVC that holds some sample data.
+At first, You will create a PVC.
 Sample PVC YAML are given below,
 
 ```yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: backup-pvc
+  name: source-pvc
   namespace: demo
 spec:
   accessModes:
@@ -91,75 +91,62 @@ spec:
 Let's create the PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/pvc.yaml
-persistentvolumeclaim/backup-pvc created
+$ kubectl apply -f ./docs/examples/volume-snapshot/standalonePVC/source-pvc.yaml
+persistentvolumeclaim/source-pvc created
 ```
-#### Deploy Workload:
+#### Create Pod:
 
-Now, deploy a Deployment that uses the above PVC.
-Below, the YAML for the Deployment we are going to create.
+Now, create a Pod that uses the above PVC and create some sample data to store in PVC.
+Below, the YAML for the Pod we are going to create.
 
 ```yaml
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  labels:
-    app: stash-demo
-  name: stash-demo
+  name: source-pod
   namespace: demo
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: stash-demo
-  template:
-    metadata:
-      labels:
-        app: stash-demo
-      name: busybox
-    spec:
-      containers:
-      - args: ["touch source/data/sample-file.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
-      restartPolicy: Always
-      volumes:
-      - name: source-data
-        persistentVolumeClaim:
-         claimName: backup-pvc
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["/bin/sh", "-c"]
+      args: ["touch /demo/data/sample-file.txt && sleep 3000"]
+      volumeMounts:
+        - name: source-data
+          mountPath: /demo/data
+  volumes:
+    - name: source-data
+      persistentVolumeClaim:
+        claimName: source-pvc
+        readOnly: false
 ```
-Let's create the deployment we have shown above.
+Let's create the Pod we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/deployment/deployment.yaml
-deployment.apps/stash-demo created
+$ kubectl apply -f ./docs/examples/volume-snapshot/standalonePVC/source-pod.yaml
+pod/source-pod created
 ```
 
-Now, wait for deployment’s pod to go into the Running state.
+Now, wait for Pod to go into the Running state.
 
 ```console
 $ kubectl get pod -n demo 
-NAME                          READY   STATUS    RESTARTS   AGE
-stash-demo-5f67c6b4c4-sqgll   1/1     Running    0         17s
+NAME         READY   STATUS    RESTARTS   AGE
+source-pod   1/1     Running   0          25s
 ```
 
-You can check that the `/source/data/` directory of this pod is populated with data from the `backup-pvc` PVC by using the following command,
+You can check that the `/demo/data/` directory of this pod is populated with data by using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-7ccd56bf5d-4x27d -- ls -R /source/data
-/source/data:
+$ kubectl exec -n demo source-pod  -- ls -R /demo/data
+/demo/data:
 lost+found
 sample-file.txt
 ```
 
 #### Create BackupConfiguration:
 
-Now, create a `BackupConfiguration` crd to take snapshot of `backup-pvc` PVC. Once the  `BackupConfiguration` crd is created, Stash will create a CronJob to take periodic snapshot of `backp-pvc` volume.
+Now, create a `BackupConfiguration` crd to take a snapshot of `source-pvc` PVC. Once the  `BackupConfiguration` crd is created, Stash will create a CronJob to take a periodic snapshot of `source-pvc` volume.
 
 Sample `BackupConfiguration` crd YAML are given below,
 
@@ -167,16 +154,16 @@ Sample `BackupConfiguration` crd YAML are given below,
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: deployments-volume-snapshot
+  name: pvc-volume-snapshot
   namespace: demo
 spec:
   schedule: "*/1 * * * *"
   driver: VolumeSnapshotter
   target:
     ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: stash-demo
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: source-pvc
     snapshotClassName: default-snapshot-class
   retentionPolicy:
     name: 'keep-last-5'
@@ -196,48 +183,50 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/deployment/backupconfiguration.yaml
-backupconfiguration.stash.appscode.com/deployments-volume-snapshot created
+$ kubectl apply -f ./docs/examples/volume-snapshot/standalonePVC/backupconfiguration.yaml
+backupconfiguration.stash.appscode.com/pvc-volume-snapshot created
 ```
-Here, `deployments-volume-snapshot` is the name of the `BackupConfiguration` crd that has been created successfully.
+Here, `pvc-volume-snapshot` is the name of the `BackupConfiguration` crd that has been created successfully.
 
 #### Verify Volume Snapshotting 
 
-If everything goes well, Stash operator creates CronJob which creates BackupSession crd on each schedule. `BackupSession` crd name will be automatically generated by the following pattern `<BackupConfiguration name>-<BackupSession creation timestamp in Unix epoch seconds>` and the label should be set as the following pattern `backup-configuration:<BackupConfiguration name>`.
+If everything goes well, Stash operator creates CronJob which creates BackupSession crd on each schedule. `BackupSession` crd name will be automatically generated by the following pattern `<BackupConfiguration name>-<BackupSession creation timestamp in Unix epoch seconds>` and label should be set as the following pattern `backup-configuration:<BackupConfiguration name>`.
 
 Now, wait a few minutes,  you will see that `BackupSession` has been created.
 Check that the phase of `BackupSession` status is `Running` 
 
 ```console
-$ kubectl get bs -n demo -l  stash.appscode.com/backup-configuration=deployments-volume-snapshot
-NAME                                     BACKUPCONFIGURATION           PHASE       AGE
-deployments-volume-snapshot-1559026686   deployments-volume-snapshot   Running   26s
+$ 
+kubectl get bs -n demo -l  stash.appscode.com/backup-configuration=pvc-volume-snapshot
+NAME                             BACKUPCONFIGURATION   PHASE     AGE
+pvc-volume-snapshot-1560400745   pvc-volume-snapshot   Running   5s
 ```
-Here, `deployments-volume-snapshot-1559026686` is the name of the `BackupSession` crd that has been created successfully after 1 minute.
+Here, `pvc-volume-snapshot-1560400745` is the name of the `BackupSession` crd that has been created successfully after 1 minute.
 
-Stash operator watches for BackupSession crd and it will create a volume snapshotter job named `volume-snapshot-<BackupSession name>`.
+Stash operator watches for `BackupSession` crd and it will create a volume snapshotter job named `volume-snapshot-<BackupSession name>`.
 Check it by using the following command
 
 ```console
-$ kubectl get job -n demo volume-snapshot-deployments-volume-snapshot-1559026686
+$ kubectl get job -n demo volume-snapshot-pvc-volume-snapshot-1560400745
 NAMESPACE   NAME                                                     COMPLETIONS   DURATION   AGE
-demo        volume-snapshot-deployments-volume-snapshot-1559026686   1/1           19s        40s
+demo        volume-snapshot-pvc-volume-snapshot-1560400745           1/1           19s        40s
 ```
 Finally, volume snapshotter job will create `VolumeSnapshot` crd for the targeted PVCs. The `VolumeSnapshot` names will follow the following pattern `<PVC name>-<backup session creation timestamp in Unix epoch seconds>`.
 
-Wait a few minutes,  you will see that `backup-pvc-1559026686` VolumeSnapshot has been created Successfully.
+Wait a few minutes,  you will see that `source-pvc-1560400745` VolumeSnapshot has been created Successfully.
 
 ```console
-$ kubectl get volumesnapshot -n demo backup-pvc-1559026686
-NAMESPACE   NAME                           AGE
-demo        backup-pvc-1559026686          153m
+$ 
+kubectl get volumesnapshot -n demo source-pvc-1560400745
+NAME                    AGE
+source-pvc-1560400745   1m30s
 ```
-Once the snapshotting is completed, BackupSession crd phase will be Succeeded. Check the BackupSession phase is Succeeded by following command: 
+Once the snapshotting is completed, the BackupSession crd phase will be Succeeded. Check the BackupSession phase is Succeeded by the following command: 
 
 ```console
-$ kubectl get bs -n demo -l  backup-configuration=deployments-volume-snapshot
+$ kubectl get bs -n demo -l  backup-configuration=pvc-volume-snapshot
 NAME                                     BACKUPCONFIGURATION           PHASE       AGE
-deployments-volume-snapshot-1559026686   deployments-volume-snapshot   Succeeded   40s
+pvc-volume-snapshot-1560400745           pvc-volume-snapshot           Succeeded   1m32s
 ```
 ### Restore PVC from VolumeSnapshot
 
@@ -259,7 +248,7 @@ spec:
   target:
     volumeClaimTemplates:
       - metadata:
-          name: backup-pvc
+          name: source-pvc
         spec:
           accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
@@ -268,7 +257,7 @@ spec:
               storage: 6Gi
           dataSource:
             kind: VolumeSnapshot
-            name: ${CLAIM_NAME}-1559026686
+            name: ${CLAIM_NAME}-1560400745
             apiGroup: snapshot.storage.k8s.io
 ```
 Here,
@@ -277,7 +266,7 @@ Here,
 
 * `spec.target.replicas` specifies the number of the source to restore from.
 
-* `spec.target.volumeClaimTemplates[*].metadata.name` is the name of the VolumeSnapshot without pod ordinal and timestamp portion, i.e.: for a VolumeSnapshot name `backup-pvc-1559026686`, this field will be `backup-pvc`.
+* `spec.target.volumeClaimTemplates[*].metadata.name` is the name of the VolumeSnapshot without pod ordinal and timestamp portion, i.e.: for a VolumeSnapshot name `source-pvc-1560400745`, this field will be `source-pvc`.
 
 * `spec.target.volumeClaimTemplates.spec.storageClassName` indicates the name of the [storageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) required by the claim.
 
@@ -289,7 +278,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above.
 
 ```console
-$ kubectl create -f ./docs/examples/volume-snapshot/deployment/restoresession.yaml
+$ kubectl create -f ./docs/examples/volume-snapshot/standalonePVC/restoresession.yaml
 restoresession.stash.appscode.com/restore-pvc created
 ````
 Here, restore-pvc is the name of the RestoreSession that has been created.
@@ -298,22 +287,73 @@ Here, restore-pvc is the name of the RestoreSession that has been created.
 
 If everything goes well, Stash operator creates a Restore Job. Then Restore Job will create new PVC.  
 
-Now, wait a few minutes, you will see that a new PVC with the name `backup-pvc` has been created successfully.
+Now, wait a few minutes, you will see that a new PVC with the name `source-pvc` has been created successfully.
 
 check that the status of the PVC is bound
 
 ```console
-$ kubectl get pvc -n demo backup-pvc
+$ kubectl get pvc -n demo source-pvc
 NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-backup-pvc   Bound    pvc-1963c6c4-81da-11e9-91dc-42010a80001a   6Gi        RWO            standard       27m
+source-pvc   Bound    pvc-c2e7ce40-8d98-11e9-bd3e-42010a800011   6Gi        RWO            standard       40s
 ````
+#### Verify Restored Data
+
+Now, We will create a pod to verify whether the restored data has been restored successfully
+Below, the YAML for the Pod we are going to create.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: restored-pod
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      args:
+        - sleep
+        - "3600"
+      volumeMounts:
+        - name: source-data
+          mountPath: /demo/data
+  volumes:
+    - name: source-data
+      persistentVolumeClaim:
+        claimName: source-pvc
+        readOnly: false
+```
+Let's create the Pod we have shown above.
+
+```console
+$ kubectl apply -f ./docs/examples/volume-snapshot/standalonePVC/restored-pod.yaml
+pod/restored-pod created
+```
+
+Now, wait for Pod to go into the Running state.
+
+```console
+$ kubectl get pod -n demo 
+NAME           READY   STATUS    RESTARTS   AGE
+restored-pod   1/1     Running   0          93s
+```
+
+You can check that the `/demo/data/` directory of this pod is populated with data by using the following command,
+
+```console
+$ kubectl exec -n demo restored-pod  -- ls -R /demo/data
+/demo/data:
+lost+found
+sample-file.txt
+```
+
+
 ### Cleaning Up
 
 To clean up the Kubernetes resources created by this tutorial, run:
 
 ```console
-$ kubectl delete -n demo deployment stash-demo
-$ kubectl delete -n demo backupconfiguration deployments-volume-snapshot
+$ kubectl delete -n demo pod restored-pod
+$ kubectl delete -n demo backupconfiguration pvc-volume-snapshot
 $ kubectl delete -n demo restoresession restore-pvc
 $ kubectl delete -n demo storageclass standard
 $ kubectl delete -n demo volumesnapshotclass default-snapshot-class
