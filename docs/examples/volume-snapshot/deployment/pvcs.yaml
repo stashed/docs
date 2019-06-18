@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: backup-pvc-1
+  name: source-pvc-1
   namespace: demo
 spec:
   accessModes:
@@ -14,7 +14,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: backup-pvc-2
+  name: source-pvc-2
   namespace: demo
 spec:
   accessModes:

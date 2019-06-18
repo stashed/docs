@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc
+  labels:
+    app: demo
+  namespace: demo
+spec:
+  ports:
+    - port: 80
+      name: web
+  clusterIP: None
+  selector:
+    app: stash
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stash-demo
+  namespace: demo
+spec:
+  selector:
+    matchLabels:
+      app: stash
+  serviceName: svc
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: stash # Pod template's label selector
+    spec:
+      containers:
+      - args:
+        - sleep
+        - "3600"
+        name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: source-data-0
+          mountPath: /source/data
+        - name: source-data-1
+          mountPath: /source/data
+        - name: source-data-2
+          mountPath: /source/data
+      volumes:
+      - name: source-data-0
+        persistentVolumeClaim:
+          claimName: source-data-stash-demo-0
+      - name: source-data-1
+        persistentVolumeClaim:
+          claimName: source-data-stash-demo-1
+      - name: source-data-2
+        persistentVolumeClaim:
+          claimName: source-data-stash-demo-2

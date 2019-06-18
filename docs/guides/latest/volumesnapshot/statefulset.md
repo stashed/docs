@@ -438,7 +438,7 @@ This section will show you how to restore the PVCs from the snapshots we have ta
 
 #### Create RestoreSession
 
-Now, create a `RestoreSession` crd to restore PersistentVolumeClaims from napshot.
+Now, create a `RestoreSession` crd to restore PersistentVolumeClaims from snapshot.
 Sample `RestoreSession` crd YAML are given below,
 
 ```yaml
@@ -471,11 +471,19 @@ Here,
 * `spec.driver` indicates the name of the agent to use to back up the target. Currently, Stash supports `Restic`, `VolumeSnapshotter` drivers. The `VolumeSnapshotter` is used to backup/restore PVC using `VolumeSnapshot` API.
 
 * `spec.target.volumeClaimTemplates`:
-  * `metadata.name` is the name of the restored `PVC` or prefix of the `VolumeSnapshot` name.
+  * `metadata.name` is the name of the restored `PVC` or prefix with pod ordinal of the `VolumeSnapshot` name.
   * `spec.dataSource`:
     * `apiGroup` is the group for resource being referenced. Now, kubernetes supports only `snapshot.storage.k8s.io`.
     * `kind` is resource of the kind being referenced. Now, kubernetes supports only `VolumeSnapshot`.
-    * `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You can templating the name by using the following convention `${CLAIM_NAME}-${POD_ORDINAL}-<backup session creation timestamp in Unix epoch seconds>` or `${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>`. `${CLAIM_NAME}` and `{POD_ORDINAL}` are resolved by the Stash operator and replaced by the `metadata.name` and pod ordinal respectively. You can set the snapshot name directly.
+    * `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You can templating the name by using the following convention:
+    ```
+     ${CLAIM_NAME}-${POD_ORDINAL}-<backup session creation timestamp in Unix epoch seconds>
+     ```  
+     or 
+     ```
+     ${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>
+     ```
+    `${CLAIM_NAME}` and `{POD_ORDINAL}` are resolved by the Stash operator and replaced by the `metadata.name` and pod ordinal respectively. You can set the snapshot name directly.
 
 ##### Restore from different VolumeSnapshot
 
@@ -489,7 +497,15 @@ Here, restore-pvc is the name of the RestoreSession that has been created.
 
 ##### Verify Restored PVC 
 
-If everything goes well, Stash operator creates a Restore Job. Then Restore Job will create new PVC.  
+If everything goes well, Stash will create a `Job` to restore the volumes. `Job` name will follow the following pattern: `volume-snapshot-<RestoreSession name>`  
+
+Check that the `Job` has been created using the following command,
+
+```console
+$ kubectl get job volume-snapshot-restore-pvc -n demo
+NAME                          COMPLETIONS   DURATION   AGE
+volume-snapshot-restore-pvc   0/1           18s        18s
+```
 
 Now, wait a few minutes, you will see that new PVC with the name `source-data-stash-demo-0`, `source-data-stash-demo-1` and `source-data-stash-demo-2`  has been created successfully.
 
@@ -502,6 +518,24 @@ source-data-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   6
 source-data-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
 source-data-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
 ````
+Once the `Job` is completed, `RestoreSession` crd phase will be Succeeded. Check the `RestoreSession` phase is Succeeded by following command,
+
+```console
+$ kubectl get restoresession restore-pvc -n demo
+NAME          REPOSITORY-NAME   PHASE       AGE
+restore-pvc                     Succeeded   15m
+```
+
+##### Verify Restored Data
+
+We will create a new Statefulset to verify whether the restored data has been restored successfully. 
+
+Below, the YAML for the Deployment we are going to create.
+
+```console
+
+```
+
 ##### Restore from same VolumeSnapshot
 
 Again at first, Set the `spec.target.volumeClaimTemplates[*].spec.dataSource.name` to `{ClAIM_NAME}-1560342603` in `RestoreSession` and create the `RestoreSession` crd we have shown above.

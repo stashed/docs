@@ -31,13 +31,13 @@ spec:
         imagePullPolicy: IfNotPresent
         name: busybox-2
         volumeMounts:
-          - mountPath: /source/data
-            name: source-data-2
+        - mountPath: /source/data
+          name: source-data-2
       restartPolicy: Always
       volumes:
       - name: source-data-1
         persistentVolumeClaim:
-         claimName: backup-pvc-1
+         claimName: source-pvc-1
       - name: source-data-2
         persistentVolumeClaim:
-          claimName: backup-pvc-2
+          claimName: source-pvc-2
