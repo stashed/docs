@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: stash-demo
-  name: stash-demo
+  name: restore-stash-demo
   namespace: demo
 spec:
   replicas: 1
@@ -17,27 +17,17 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["touch source/data/sample-file1.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
+      - args:
+          - sleep
+          - "3600"
         image: busybox
         imagePullPolicy: IfNotPresent
-        name: busybox-1
+        name: busybox
         volumeMounts:
         - mountPath: /source/data
           name: source-data-1
-      - args: ["touch source/data/sample-file2.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox-2
-        volumeMounts:
-          - mountPath: /source/data
-            name: source-data-2
       restartPolicy: Always
       volumes:
       - name: source-data-1
         persistentVolumeClaim:
          claimName: backup-pvc-1
-      - name: source-data-2
-        persistentVolumeClaim:
-          claimName: backup-pvc-2

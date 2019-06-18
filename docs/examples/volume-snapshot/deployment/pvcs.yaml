@@ -1,0 +1,25 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: backup-pvc-1
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 6Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: backup-pvc-2
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 6Gi

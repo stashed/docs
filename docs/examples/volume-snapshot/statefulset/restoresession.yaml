@@ -20,4 +20,5 @@ spec:
             kind: VolumeSnapshot
             name: ${CLAIM_NAME}-${POD_ORDINAL}-1560428524
 #            name: ${CLAIM_NAME}-1560426122
+#            name: source-data-stash-demo-0-1560428524
             apiGroup: snapshot.storage.k8s.io
