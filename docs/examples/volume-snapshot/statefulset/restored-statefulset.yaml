@@ -48,10 +48,10 @@ spec:
       volumes:
       - name: source-data-0
         persistentVolumeClaim:
-          claimName: source-data-stash-demo-0
+          claimName: source-pvc-stash-demo-0
       - name: source-data-1
         persistentVolumeClaim:
-          claimName: source-data-stash-demo-1
+          claimName: source-pvc-stash-demo-1
       - name: source-data-2
         persistentVolumeClaim:
-          claimName: source-data-stash-demo-2
+          claimName: source-pvc-stash-demo-2

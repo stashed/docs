@@ -367,7 +367,7 @@ Here,
   * `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be intialized. It requires following fields to set:
     * `apiGroup` is the group for resource being referenced. Now, kubernetes supports only `snapshot.storage.k8s.io`.
     * `kind` is resource of the kind being referenced. Now, kubernetes supports only `VolumeSnapshot`.
-    * `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You can templating the name by using the following convention `${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>`, `${CLAIM_NAME}` is resolved by the Stash operator and replaced by the `metadata.name`. You can set the snapshot name directly.
+    * `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You can template the name by using the following convention `${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>`, `${CLAIM_NAME}` is resolved by the Stash operator and replaced by the `metadata.name`. You can set the snapshot name directly.
 
 Let's create the `RestoreSession` crd we have shown above.
 

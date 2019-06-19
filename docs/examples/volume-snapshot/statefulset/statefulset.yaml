@@ -38,7 +38,7 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: source-data
+            - name: source-pvc
               mountPath: /source/data
   volumeClaimTemplates:
     - metadata:
