@@ -394,7 +394,7 @@ So, we can see from the output of the above command that the restore process suc
 
 Once a restore process is complete, we will see that new PVCs with the name `source-pvc-1` and `source-pvc-2` has been created successfully.
 
-check that the status of the PVC is bound,
+check that the status of the PVCs are bound,
 
 ```console
 $ kubectl get pvc -n demo
