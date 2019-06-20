@@ -30,28 +30,28 @@ spec:
         app: stash # Pod template's label selector
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80
-          name: web
-        volumeMounts:
-        - name: source-data-0
-          mountPath: /source/data
-        - name: source-data-1
-          mountPath: /source/data
-        - name: source-data-2
-          mountPath: /source/data
+        - args:
+            - sleep
+            - "3600"
+          name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: source-data-0
+              mountPath: /source/data
+            - name: source-data-1
+              mountPath: /source/data
+            - name: source-data-2
+              mountPath: /source/data
       volumes:
-      - name: source-data-0
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-0
-      - name: source-data-1
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-1
-      - name: source-data-2
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-2
+        - name: source-data-0
+          persistentVolumeClaim:
+            claimName: source-pvc-stash-demo-0
+        - name: source-data-1
+          persistentVolumeClaim:
+            claimName: source-pvc-stash-demo-1
+        - name: source-data-2
+          persistentVolumeClaim:
+            claimName: source-pvc-stash-demo-2

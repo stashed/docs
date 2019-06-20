@@ -22,7 +22,7 @@ This guide will show you how Stash takes snapshot of PersistentVolumeClaims and 
 The following diagram shows how Stash creates VolumeSnapshot via Kubernetes native API. Open the image in a new tab to see the enlarged image.
 
 <p align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/volume-snapshot-overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/volumesnapshot-overview.svg">
 <figcaption align="center">Fig: Volume Snapshotting Process in Stash</figcaption>
 </p>
 
@@ -55,11 +55,11 @@ The `VolumeSnapshot` process consists of the following steps:
 The following diagram shows how Stash restores PersistentVolumeClaims from snapshot using Kubernetes VolumeSnapshot API. Open the image in a new tab to see the enlarged image.
 
 <p align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/restore-vs-overview.svg">
-<figcaption align="center">Fig: Restoring process from snapshot in Stash</figcaption>
+  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/restore-overview.svg">
+<figcaption align="center">Fig: Restore process from snapshot in Stash</figcaption>
 </p>
 
-The Restoring process consists of the following steps:
+The restore process consists of the following steps:
 
 1. At first, a user creates a `RestoreSession` crd which specifies the `volumeClaimTemplates`. `volumeClaimTemplates` holds the information about `VolumeSnapshot`.
 
@@ -67,17 +67,15 @@ The Restoring process consists of the following steps:
 
 3. Once it found a `RestoreSession` crd, it creates a Restore `Job`to restore PVC from the snapshot
 
-4. The restore `Job` creates PVC.
+4. The restore `Job` creates PVC with `spec.dataSource` field set to the respective VolumeSnapshot name.
 
 5. CSI `external-snapshotter` controller watches for PVC. 
 
-6. Once it found a new PVC, it reads all the information about `VolumeSnapshot` 
+6. Once it found a new PVC with `spec.dataSource` field set, it reads the information about the `VolumeSnapshot`. 
 
-7. The controller downloads the respective data from the respective cloud storage.
+7. The controller downloads the respective data from the cloud and populate the PVC with it.
 
-8. After all the controller restores PVC from VolumeSnapshot.
-
-9. Once restoring process is completed, the Stash operator updates the `status.phase` field of the `BackupSession` crd. 
+8. Once restore process is completed, the Stash operator updates the `status.phase` field of the `BackupSession` crd. 
 
 ## Next Steps
 

@@ -30,8 +30,13 @@ spec:
         app: stash # Pod template's label selector
     spec:
       containers:
-        - args: ["touch source/data/sample-file.txt && sleep 3000"]
+        - args: ["touch /source/data/$(POD_NAME).txt && sleep 3000"]
           command: ["/bin/sh", "-c"]
+          env:
+            - name:  POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath:  metadata.name
           name: nginx
           image: nginx
           ports:
@@ -42,7 +47,7 @@ spec:
               mountPath: /source/data
   volumeClaimTemplates:
     - metadata:
-        name: source-data
+        name: source-pvc
         namespace: demo
       spec:
         accessModes:

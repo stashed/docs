@@ -1,6 +1,6 @@
 ## Snapshot Standalone PVC's
 
-This guide will show you how to use Stash to snapshot standalone PersistentVolumeClaims and restore that from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API. In this guide, we are going to backup the volumes in Google Cloud Storage with the help of [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
+This guide will show you how to use Stash to snapshot standalone PersistentVolumeClaims and restore that from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API. In this guide, we are going to backup the volumes in Google Cloud Platform with the help of [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
 
 ### Before You Begin
 
@@ -234,7 +234,7 @@ $ kubectl get volumesnapshot -n demo
 NAME                    AGE
 source-pvc-1560400745   1m30s
 ```
-We will also see that, The YAML for `source-pvc-1560400745` looks like using the following command,
+Let's find out the actual snapshot name that will be saved in the GCP by the following command,
 
 ```console
 $ kubectl get volumesnapshot source-pvc-1560400745  -n demo -o yaml
@@ -262,7 +262,8 @@ status:
   readyToUse: true
   restoreSize: 6Gi
 ```
-If we navigate to the `Snapshots` in the GCS navigation menu, we will see snapshots has been stored successfully.
+Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in GCP.
+If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapshot `snapcontent-b939675a-928c-11e9-bd3e-42010a800011` has been stored successfully.
 
 <p align="center">
   <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/standalone-pvc.png">

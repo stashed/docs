@@ -1,6 +1,6 @@
 ## Snapshot Deployment's Volumes
 
-This guide will show you how to use Stash to snapshot Deployment's volumes and restore them from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API. In this guide, we are going to backup the volumes in Google Cloud Storage with the help of [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
+This guide will show you how to use Stash to snapshot Deployment's volumes and restore them from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API. In this guide, we are going to backup the volumes in Google Cloud Platform with the help of [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
 
 ### Before You Begin
 
@@ -277,7 +277,7 @@ NAME                      AGE
 source-pvc-1-1560662826   69s
 source-pvc-2-1560662826   72s
 ```
-We will also see that, The YAML for `source-pvc-1-1560662826` looks like using the following command,
+Let's find out the actual snapshot name that will be saved in the GCP by the following command,
 
 ```console
 $ kubectl get volumesnapshot source-pvc-1-1560662826 -n demo -o yaml
@@ -306,7 +306,8 @@ status:
   restoreSize: 6Gi
 ```
 
-Now, if we navigate to the `Snapshots` in the GCS navigation menu, we will see snapshots has been stored successfully.
+Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in GCP.
+If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapshot `snapcontent-6206ec6b-8ff7-11e9-bd3e-42010a800011` has been stored successfully.
 
 <p align="center">
   <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/deployment.png">
@@ -321,6 +322,7 @@ This section will show you how to restore the PVCs from the snapshots we have ta
 #### Create RestoreSession
 
 At first, we have to create a `RestoreSession` crd to restore the PVCs from respective snapshot.
+
 Below is the YAML of the `RestoreSesion` crd that we are going to create,
 
 ```yaml
