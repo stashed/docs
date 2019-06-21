@@ -261,7 +261,7 @@ deployments-volume-snapshot-1559026686   deployments-volume-snapshot   Succeeded
 ```
 We can see above that the backup session has succeeded. Now, we will verify that the `VolumeSnapshot` has been created and the snapshots has been stored in the respective backend.
 
-#### Verify Volume Snapshotting and Backup:
+#### Verify Volume Snapshot:
 
 Once a `BackupSession` crd is created, it creates volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVCs.The `VolumeSnapshot` name follows the following pattern:
 
@@ -319,7 +319,7 @@ If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapsh
 
 This section will show you how to restore the PVCs from the snapshots we have taken in earlier section.
 
-#### Create RestoreSession
+#### Create RestoreSession:
 
 At first, we have to create a `RestoreSession` crd to restore the PVCs from respective snapshot.
 
@@ -392,11 +392,11 @@ restore-pvc                     Succeeded   1m
 
 So, we can see from the output of the above command that the restore process succeeded.
 
-#### Verify Restored PVC 
+#### Verify Restored PVC:
 
-Once a restore process is complete, we will see that new PVCs with the name `source-pvc-1` and `source-pvc-2` has been created successfully.
+Once a restore process is complete, we will see that new PVCs with the name `source-pvc-1` and `source-pvc-2` has been created.
 
-check that the status of the PVCs are bound,
+Verify that the PVCs has been created by the following command,
 
 ```console
 $ kubectl get pvc -n demo
@@ -405,9 +405,11 @@ source-pvc-1   Bound    pvc-e32b18f6-91c0-11e9-bd3e-42010a800011   6Gi        RW
 source-pvc-2   Bound    pvc-e32db936-91c0-11e9-bd3e-42010a800011   6Gi        RWO            standard       30s
 ````
 
-#### Verify Restored Data
+Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
 
-We will create a new Deployment to verify whether the restored data has been restored successfully.
+#### Verify Restored Data:
+
+We will create a new Deployment with the restored PVCs to verify whether the backed up data has been restored.
 
 Below is the YAML of the Deployment that we are going to create,
 

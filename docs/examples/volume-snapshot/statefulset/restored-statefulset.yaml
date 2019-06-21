@@ -39,19 +39,16 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: source-data-0
+            - name: source-pvc
               mountPath: /source/data
-            - name: source-data-1
-              mountPath: /source/data
-            - name: source-data-2
-              mountPath: /source/data
-      volumes:
-        - name: source-data-0
-          persistentVolumeClaim:
-            claimName: source-pvc-stash-demo-0
-        - name: source-data-1
-          persistentVolumeClaim:
-            claimName: source-pvc-stash-demo-1
-        - name: source-data-2
-          persistentVolumeClaim:
-            claimName: source-pvc-stash-demo-2
+  volumeClaimTemplates:
+    - metadata:
+        name: source-pvc
+        namespace: demo
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 6Gi

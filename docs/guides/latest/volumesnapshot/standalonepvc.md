@@ -219,7 +219,7 @@ pvc-volume-snapshot-1560400745           pvc-volume-snapshot           Succeeded
 ```
 We can see above that the backup session has succeeded. Now, we will verify that the `VolumeSnapshot` has been created and the snapshots has been stored in the respective backend.
 
-#### Verify Volume Snapshotting and Backup:
+#### Verify Volume Snapshot:
 
 Once a `BackupSession` crd is created, it creates volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVC.The `VolumeSnapshot` name follows the following pattern:
 
@@ -274,7 +274,7 @@ If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapsh
 
 This section will show you how to restore the PVC from the snapshot we have taken in earlier section.
 
-#### Create RestoreSession
+#### Create RestoreSession:
 
 At first, we have to create a `RestoreSession` crd to restore the PVC from respective snapshot. 
 
@@ -331,20 +331,23 @@ restore-pvc                     Running     10s
 restore-pvc                     Succeeded   1m
 ```
 
-#### Verify Restored PVC 
+#### Verify Restored PVC:
 
-Once a restore process is complete, we will see that new PVC with the name `source-pvc` has been created successfully.
+Once a restore process is complete, we will see that new PVC with the name `source-pvc` has been created.
 
-check that the status of the PVC is bound,
+Verify that the PVC has been created by the following command,
 
 ```console
 $ kubectl get pvc -n demo
 NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 source-pvc   Bound    pvc-c2e7ce40-8d98-11e9-bd3e-42010a800011   6Gi        RWO            standard       40s
 ````
-#### Verify Restored Data
 
-We will create a new pod to verify whether the restored data has been restored successfully.
+Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
+
+#### Verify Restored Data:
+
+We will create a new pod with the restored PVC to verify whether the backed up data has been restored.
 
 Below, the YAML for the Pod we are going to create.
 
@@ -405,5 +408,3 @@ $ kubectl delete -n demo restoresession restore-pvc
 $ kubectl delete -n demo storageclass standard
 $ kubectl delete -n demo volumesnapshotclass default-snapshot-class
 ```
-
-Once the  `BackupConfiguration` crd is created, Stash will create a CronJob to take a periodic snapshot of `source-pvc` volume.

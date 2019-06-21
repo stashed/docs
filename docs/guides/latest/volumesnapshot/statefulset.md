@@ -74,7 +74,7 @@ We will take snapshot of those PVCs using Stash.
 
 #### Deploy Statefulset:
 
-Now, We will deploy a Statefulset. This Statefulset will automatically generate sample data (`$(POD_NAME).txt` file; `$(POD_NAME)` are resolved by the pod name of the statefulset) in `/source/data` directory.
+Now, We will deploy a Statefulset. This Statefulset will automatically generate sample data in `/source/data` directory.
 
 Below is the YAML of the Statefulset that we are going to create,
 
@@ -255,7 +255,7 @@ statefulset-volume-snapshot-1560231666   statefulset-volume-snapshot   Succeeded
 
 We can see above that the backup session has succeeded. Now, we will verify that the VolumeSnapshot has been created and the snapshots has been stored in the respective backend.
 
-##### Verify Volume Snapshotting and Backup:
+##### Verify Volume Snapshot:
 
 Once a `BackupSession` crd is created, it creates volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVC.The `VolumeSnapshot` name follows the following pattern:
 
@@ -384,9 +384,9 @@ So, we can see from the output of the above command that the restore process suc
 
 ##### Verify Restored PVC:
 
-Once a restore process is complete, we will see that new PVCs with the name `source-pvc-stash-demo-0` , `source-pvc-stash-demo-1` and `source-pvc-stash-demo-2` has been created successfully.
+Once a restore process is complete, we will see that new PVCs with the name `source-pvc-stash-demo-0` , `source-pvc-stash-demo-1` and `source-pvc-stash-demo-2` has been created.
 
-check that the status of the PVCs are bound,
+Verify that the PVCs has been created by the following command,
 
 ```console
 $  kubectl get pvc -n demo
@@ -396,9 +396,11 @@ source-pvc-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   6G
 source-pvc-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
 ````
 
+Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
+
 ##### Verify Restored Data:
 
-We will create a new Statefulset to verify whether the restored data has been restored successfully. 
+We will create a new Statefulset with the restored PVCs to verify whether the backed up data has been restored.
 
 Below, the YAML for the Statefulset we are going to create.
 
@@ -435,31 +437,28 @@ spec:
         app: stash # Pod template's label selector
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80
-          name: web
-        volumeMounts:
-        - name: source-data-0
-          mountPath: /source/data
-        - name: source-data-1
-          mountPath: /source/data
-        - name: source-data-2
-          mountPath: /source/data
-      volumes:
-      - name: source-data-0
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-0
-      - name: source-data-1
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-1
-      - name: source-data-2
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-2
+        - args:
+            - sleep
+            - "3600"
+          name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: source-pvc
+              mountPath: /source/data
+  volumeClaimTemplates:
+    - metadata:
+        name: source-pvc
+        namespace: demo
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 6Gi
 ```
 
 Let's create the Statefulset we have shown above.
@@ -479,15 +478,8 @@ stash-demo-0   1/1     Running   0          97s
 stash-demo-1   1/1     Running   0          67s
 stash-demo-2   1/1     Running   0          39s
 ```
-You can see that automatically created PVCs are bound to the corresponding pod,
-```yaml
-kubectl get pvc -n demo
-NAME                          STATUS   VOLUME                                          CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc-stash-demo-0       Bound    pvc-6456fb74-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       27m
-source-pvc-stash-demo-1       Bound    pvc-76564e29-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       26m
-source-pvc-stash-demo-2       Bound    pvc-8730dbb2-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       26m
-```
-Verify that the sample data has been created in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
+
+Verify that the sample data has been restored in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
 
 ```console
 $ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
@@ -746,31 +738,28 @@ spec:
         app: stash # Pod template's label selector
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80
-          name: web
-        volumeMounts:
-        - name: source-data-0
-          mountPath: /source/data
-        - name: source-data-1
-          mountPath: /source/data
-        - name: source-data-2
-          mountPath: /source/data
-      volumes:
-      - name: source-data-0
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-0
-      - name: source-data-1
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-1
-      - name: source-data-2
-        persistentVolumeClaim:
-          claimName: source-pvc-stash-demo-2
+        - args:
+            - sleep
+            - "3600"
+          name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: source-pvc
+              mountPath: /source/data
+  volumeClaimTemplates:
+    - metadata:
+        name: source-pvc
+        namespace: demo
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 6Gi
 ```
 
 Let's create the Statefulset we have shown above.
@@ -790,15 +779,8 @@ stash-demo-0   1/1     Running   0          97s
 stash-demo-1   1/1     Running   0          67s
 stash-demo-2   1/1     Running   0          39s
 ```
-You can see that automatically created PVCs are bound to the corresponding pod,
-```yaml
-kubectl get pvc -n demo
-NAME                          STATUS   VOLUME                                          CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc-stash-demo-0       Bound    pvc-6456fb74-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       27m
-source-pvc-stash-demo-1       Bound    pvc-76564e29-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       26m
-source-pvc-stash-demo-2       Bound    pvc-8730dbb2-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       26m
-```
-Verify that the sample data has been created in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
+
+Verify that the sample data has been restored in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
 
 ```console
 $ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
