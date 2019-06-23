@@ -37,7 +37,7 @@ This guide will show you how Stash takes snapshot of PersistentVolumeClaims and 
 The following diagram shows how Stash creates VolumeSnapshot via Kubernetes native API. Open the image in a new tab to see the enlarged image.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/volumesnapshot-overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/volumesnapshot-overview.svg">
 <figcaption align="center">Fig: Volume Snapshotting Process in Stash</figcaption>
 </figure>
 
@@ -72,7 +72,7 @@ The `VolumeSnapshot` process consists of the following steps:
 The following diagram shows how Stash restores PersistentVolumeClaims from snapshot using Kubernetes VolumeSnapshot API. Open the image in a new tab to see the enlarged image.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/restore-overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/restore-overview.svg">
 <figcaption align="center">Fig: Restore process from snapshot in Stash</figcaption>
 </figure>
 

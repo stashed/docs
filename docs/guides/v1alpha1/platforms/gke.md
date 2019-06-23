@@ -39,7 +39,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/platforms/gke](/docs/examples/platforms/gke) directory of [appscode/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/platforms/gke](/docs/examples/platforms/gke) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
 ## Backup
 

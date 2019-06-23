@@ -46,7 +46,7 @@ The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-clas
 Let's create the `StorageClass` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/storageclass.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/storageclass.yaml
 storageclass.storage.k8s.io/standard created
 ```
 
@@ -70,7 +70,7 @@ Here,
 Let's create the `volumeSnapshotClass` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/default-volumesnapshotclass.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/default-volumesnapshotclass.yaml
 volumesnapshotclass.snapshot.storage.k8s.io/default-snapshot-class created
 ```
 
@@ -81,7 +81,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/volume-snapshot](/docs/examples/volume-snapshot) directory of [appscode/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
 ## Take Volume Snapshot
 
@@ -159,7 +159,7 @@ spec:
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl create -f ./docs/examples/volume-snapshot/statefulset/statefulset.yaml
+$ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/statefulset/statefulset.yaml
 service/svc created
 statefulset.apps/stash-demo created
 ```
@@ -242,7 +242,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/statefulset/backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/statefulset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/statefulset-volume-snapshot created
 ```
 
@@ -329,7 +329,7 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapshot `snapcontent-912b1ad2-90f9-11e9-bd3e-42010a800011` has been stored successfully.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/statefulset.png">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/statefulset.png">
 <figcaption align="center">Fig: Snapshots in GCE Bucket</figcaption>
 </figure>
 
@@ -393,7 +393,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above.
 
 ```console
-$ kubectl create -f ./docs/examples/volume-snapshot/statefulset/restoresession.yaml
+$ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/restore-pvc created
 ```
 
@@ -494,7 +494,7 @@ spec:
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl create -f ./docs/examples/volume-snapshot/statefulset/restored-statefulset.yaml
+$ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/statefulset/restored-statefulset.yaml
 service/svc created
 statefulset.apps/stash-demo created
 ```
@@ -569,7 +569,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/statefulset/backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/statefulset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/statefulset-volume-snapshot created
 ```
 
@@ -654,7 +654,7 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapshot `snapcontent-8e7d2e6d-90f9-11e9-bd3e-42010a800011` has been stored successfully.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/statefulset2.png">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/statefulset2.png">
 <figcaption align="center">Fig: Snapshot in GCE Bucket</figcaption>
 </figure>
 
@@ -700,7 +700,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl create -f ./docs/examples/volume-snapshot/statefulset/restoresession.yaml
+$ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/restore-pvc created
 ```
 
@@ -799,7 +799,7 @@ spec:
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl create -f ./docs/examples/volume-snapshot/statefulset/restored-statefulset.yaml
+$ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/statefulset/restored-statefulset.yaml
 service/svc created
 statefulset.apps/stash-demo created
 ```

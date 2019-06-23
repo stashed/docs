@@ -46,7 +46,7 @@ The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-clas
 Let's create the `StorageClass` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/storageclass.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/storageclass.yaml
 storageclass.storage.k8s.io/standard created
 ```
 
@@ -70,7 +70,7 @@ Here,
 Let's create the `volumeSnapshotClass` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/default-volumesnapshotclass.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/default-volumesnapshotclass.yaml
 volumesnapshotclass.snapshot.storage.k8s.io/default-snapshot-class created
 ```
 
@@ -81,7 +81,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/volume-snapshot](/docs/examples/volume-snapshot) directory of [appscode/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
 ## Take Volume Snapshot
 
@@ -111,7 +111,7 @@ spec:
 Let's create the PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/standalone-pvc/source-pvc.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/standalone-pvc/source-pvc.yaml
 persistentvolumeclaim/source-pvc created
 ```
 
@@ -146,7 +146,7 @@ spec:
 Let's create the Pod we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/standalone-pvc/source-pod.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/standalone-pvc/source-pod.yaml
 pod/source-pod created
 ```
 
@@ -208,7 +208,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/standalone-pvc/backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/standalone-pvc/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/pvc-volume-snapshot created
 ```
 
@@ -293,7 +293,7 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapshot `snapcontent-b939675a-928c-11e9-bd3e-42010a800011` has been stored successfully.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/volumesnapshot/standalone-pvc.png">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/standalone-pvc.png">
 <figcaption align="center">Fig: Snapshots in GCE Bucket</figcaption>
 </figure>
 
@@ -343,7 +343,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above.
 
 ```console
-$ kubectl create -f ./docs/examples/volume-snapshot/standalone-pvc/restoresession.yaml
+$ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/standalone-pvc/restoresession.yaml
 restoresession.stash.appscode.com/restore-pvc created
 ```
 
@@ -405,7 +405,7 @@ spec:
 Let's create the Pod we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/volume-snapshot/standalone-pvc/restored-pod.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/standalone-pvc/restored-pod.yaml
 pod/restored-pod created
 ```
 
