@@ -6,7 +6,7 @@ metadata:
 spec:
   repository:
     name: local-repo
-  schedule: "* * * * *"
+  schedule: "*/1 * * * *"
   target:
     ref:
       apiVersion: apps/v1

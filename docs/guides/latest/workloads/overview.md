@@ -41,7 +41,7 @@ The backup process consists of the following steps:
 
 8. Once it found a `BackupSession` crd, it takes periodic backup of the volume to specified backend.
 
-9.  The sidecar send metrics to Prometheus pushgateway in the stash operator. Once the backup is completed, stash operator updates the `status.phase` of the `BackupSession` crd.
+9.  The sidecar send metrics to Prometheus pushgateway in the stash operator. Once the backup is completed, stash operator updates the `status` of the `BackupSession` and `Repository` crd respectively.
 
 ## How Restore Works?
 
