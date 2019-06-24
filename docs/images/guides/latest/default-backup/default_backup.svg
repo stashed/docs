@@ -9,12 +9,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
-   viewBox="0 0 916 322"
+   viewBox="0 0 924 326"
    stroke-miterlimit="10"
    id="svg196"
    sodipodi:docname="default_backup.svg"
-   width="916"
-   height="322"
+   width="924"
+   height="326"
    style="fill:none;stroke:none;stroke-linecap:square;stroke-miterlimit:10"
    inkscape:version="0.92.3 (2405546, 2018-03-11)">
   <metadata
@@ -37,10 +37,11 @@
       <rect
          style="fill:#00ff00;fill-opacity:0.29239765;stroke:none"
          id="rect208"
-         width="916"
-         height="322"
-         x="26"
-         y="146" />
+         width="924"
+         height="326"
+         x="17"
+         y="147"
+         ry="0" />
     </clipPath>
   </defs>
   <sodipodi:namedview
@@ -57,8 +58,8 @@
      id="namedview198"
      showgrid="false"
      inkscape:zoom="1"
-     inkscape:cx="492"
-     inkscape:cy="198"
+     inkscape:cx="501"
+     inkscape:cy="203"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -74,7 +75,7 @@
   <g
      clip-path="url(#clipPath206)"
      id="g194"
-     transform="translate(-26,-146)">
+     transform="translate(-17,-147)">
     <path
        d="M 0,0 H 960 V 540 H 0 Z"
        id="path5"
@@ -99,7 +100,7 @@
        d="m 147.06169,168.98624 h 112.53545 v 29.41733 H 147.06169 Z"
        id="path13"
        inkscape:connector-curvature="0"
-       style="fill:#d9d9d9;fill-rule:evenodd" />
+       style="fill:#fff2cc;fill-rule:evenodd" />
     <path
        d="m 147.06169,168.98624 h 112.53545 v 29.41733 H 147.06169 Z"
        id="path15"
@@ -181,7 +182,7 @@
        d="m 294.48364,158.68504 h 198.32883 v 39.80878 c -99.1644,0 -99.1644,15.16786 -198.32883,6.54976 z"
        id="path44"
        inkscape:connector-curvature="0"
-       style="fill:#f4cccc;fill-rule:evenodd" />
+       style="fill:#cfe2f3;fill-rule:evenodd" />
     <path
        d="m 294.48364,158.68504 h 198.32883 v 39.80878 c -99.1644,0 -99.1644,15.16786 -198.32883,6.54976 z"
        id="path46"
@@ -196,7 +197,7 @@
        d="m 320.0509,294.20096 h 148.31497 v 59.93701 H 320.0509 Z"
        id="path50"
        inkscape:connector-curvature="0"
-       style="fill:#fff2cc;fill-rule:evenodd" />
+       style="fill:#ead1dc;fill-rule:evenodd" />
     <path
        d="m 320.0509,294.20096 h 148.31497 v 59.93701 H 320.0509 Z"
        id="path52"
