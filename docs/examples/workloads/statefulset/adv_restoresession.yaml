@@ -1,0 +1,28 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: ss-restore
+  namespace: demo
+spec:
+  driver: Restic
+  repository:
+    name: gcs-repo
+  # task:
+  #   name: workload-restore # task field is not required for workload data restore but it is necessary for database restore.
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: stash-recovered
+    volumeMounts:
+      - mountPath: /source/data
+        name: source-data
+  rules:
+    - targetHosts: ["host-1","host-2"] # "host-3" and "host-4" will have restored data of backed up host "host-1"
+      sourceHost: "host-1" # source host
+      paths:
+        - /source/data
+    - targetHosts: [] # empty host match all hosts
+      sourceHost: "" # no source host indicates that the host is pod itself
+      paths:
+        - /source/data

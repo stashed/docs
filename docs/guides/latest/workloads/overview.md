@@ -1,6 +1,6 @@
-# Backup and Restore volumes using Stash
+# Backup and Restore Workload's data using Stash
 
-This guide will show you how Stash backup and restore a kubernetes volumes using Stash.
+This guide will show you how Stash backup and restore workloads (Deployment, StatefulSet, DaemonSet etc.) data.
 
 ## Before You Begin
 
@@ -16,11 +16,11 @@ This guide will show you how Stash backup and restore a kubernetes volumes using
 
 ## How Backup Works?
 
-The following diagram shows how Stash takes backup of a Kubernetes volume. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash takes backup workload's data. Open the image in a new tab to see the enlarged image.
 
 <figure align="center">
   <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/workloads/backup_overview.svg">
-<figcaption align="center">Fig: Backup Process in Stash</figcaption>
+<figcaption align="center">Fig: Backup Process of Workload's data in Stash</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -29,42 +29,46 @@ The backup process consists of the following steps:
 
 2. The user creates a `Repository` crd which represents the original repository in the backend.
   
-3. Then, the user creates a `BackupConfiguration` crd which specifies the targeted workload for backup and the `Repository` object that holds backend infomed `stash` and mounts the target volumes into it.
+3. Then, the user creates a `BackupConfiguration` crd which specifies the targeted workload and desired directories to backup. It also specifies the `Repository` object that holds the backend information where the backed up data will be stored.
 
-4. Once it found a `BackupConfiguration` crd, it injects a sidecar container named `stash` and mounts the target volumes into it.
+4. Stash operator watches for `BackupConfiguration` object.
 
-5. The Stash operator creates a `CronJob` to take a perioddic backup of the target volumes.  
+5. Once it found a `BackupConfiguration` object, it find the targeted workload and injects a sidecar named `stash` to backup.
 
-6. The`CronJob` triggers backup on each schedule by creating a `BackupSession` crd.
+6. It also creates a `CronJob` to trigger backup periodically.  
 
-7. The sidecar watches for `BackupSession` crd.
+7. The`CronJob` triggers backup on each schedule by creating a `BackupSession` crd.
 
-8. Once it found a `BackupSession` crd, it takes periodic backup of the volume to specified backend.
+8. The `stash` sidecar inside the workload watches for `BackupSession` crd.
 
-9.  The sidecar send metrics to Prometheus pushgateway in the stash operator. Once the backup is completed, stash operator updates the `status` of the `BackupSession` and `Repository` crd respectively.
+9. When it found a `BackupSession` crd, it instantly takes a backup of the targeted directories.
+
+10. Once the backup process is completed, the `sidecar` send Prometheus metrics to the Pushgateway running inside the `stash-operator` pod. It also update respective `BackupSession` and `Repository` status to reflect the backup.
 
 ## How Restore Works?
 
-The following diagram shows how Stash restores backed up data from a backend. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash restores backed up data inside a workload. Open the image in a new tab to see the enlarged image.
 
 <figure align="center">
   <img alt="Stash Backup Flow" src="/docs/images/v1beta1/backends/workloads/restore_overview.svg">
-<figcaption align="center">Fig: Restore Process in Stash</figcaption>
+<figcaption align="center">Fig: Restore Process of Workload's data in Stash</figcaption>
 </figure>
 
 The restore process consists of the following steps:
 
-1. At first, a user creates a workload to restore data on it's volume.
+1. At first, the user creates a workload where the data will be restored.
 
-2. Then the user creates a `RestoreSession` crd that specifies the target `Repository` from where she want to restore. It also specifies targeted workload where the recovered data will be restored.
+2. Then, the user creates a `RestoreSession` crd that specifies the targeted workload where the backed up data will be restored. It also specifies the respective `Repository` that holds the respective backend information.
 
 3. Stash operator watches for `RestoreSession` crd.
 
-4. Once it found a `RestoreSession` crd, it injects a `init-container` named `stash`. The `init-container` reads the backend information from `Repository` crd and the backend credentials from the storage `Secret`.
+4. Once it found a `RestoreSession` crd, it injects an init-container named `stash-init` to the workload and restart it.
 
-5. Then, the `init-container` restores data from the backend and stores it in the target volume.
+5. The init-container restores the desired data from the backend on start-up.
 
-6. The `init-container` send metrics to Prometheus pushgateway in the stash operator. Once the restore is completed, stash operator updates the `status.phase` of the `RestoreSession` crd.
+6. Finally, when the restore process is completed it send Prometheus metrics to the `pushgateway` running inside the stash operator. It also update the `RestoreSession` status to reflect the restore process.
+
+>**Note:** If your workload restart with the `stash-init` init-container for any reason, the init-container will skip running restore process if there is no pending `RestoreSession` for this workload.
 
 # Nest Steps
 

@@ -33,17 +33,7 @@ spec:
       containers:
       - name: busybox
         image: busybox
-        command:
-        - sleep
-        - '3600'
-        volumeMounts:
-        - name: source-data
-          mountPath: "/source/data"
-        imagePullPolicy: IfNotPresent
-      initContainers:
-      - name: data-generator
-        image: busybox
-        command: ["/bin/sh", "-c","touch /source/data/$(POD_NAME).txt"]
+        command: ["/bin/sh", "-c","touch /source/data/$(POD_NAME).txt && sleep 3000"]
         env:
         - name:  POD_NAME
           valueFrom:

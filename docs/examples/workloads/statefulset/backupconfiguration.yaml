@@ -5,8 +5,8 @@ metadata:
   namespace: demo
 spec:
   repository:
-    name: local-repo
-  schedule: "* * * * *"
+    name: gcs-repo
+  schedule: "*/1 * * * *"
   target:
     ref:
       apiVersion: apps/v1
