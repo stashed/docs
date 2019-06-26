@@ -93,7 +93,7 @@ spec:
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl apply -f ./statefulset.yaml 
+$ kubectl apply -f ./docs/examples/workloads/statefulset/statefulset.yaml
 service/headless created
 statefulset.apps/stash-demo created
 ```
@@ -114,12 +114,12 @@ Verify that the sample data has been generated in `/source/data` directory for `
 $ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
 /source/data:
 stash-demo-0.txt
-$ kubectl exec -n demo stash-demo-1 -- ls -R /source/data
+$ kubectl exec -n demo stash-demo-2 -- ls -R /source/data
 /source/data:
 stash-demo-1.txt
-$ kubectl exec -n demo stash-demo-1 -- ls -R /source/data
+$ kubectl exec -n demo stash-demo-2 -- ls -R /source/data
 /source/data:
-stash-demo-1.txt
+stash-demo-2.txt
 ```
 
 ### Prepare Backend
@@ -128,7 +128,7 @@ We are going to store our backed up data into a GCS bucket. At first, we need to
 
 **Create Secret:**
 
-At first, we need to create a secret with access credentials to our desired GCS bucket,
+Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
 
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
@@ -166,7 +166,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-$ kubectl apply -f ./repository.yaml
+$ kubectl apply -f ./docs/examples/workloads/statefulset/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -174,7 +174,7 @@ Now, we are ready to backup our volumes to our desired backend.
 
 ### Backup
 
-We have to create a `BackupConfiguration` crd targeting the `stash-demo` Statefulset that we have deployed earlier. Then Stash will inject a sidecar container to the target. It will also, create a `CronJob` to take periodic backup of `/source/data` directory of the target.
+We have to create a `BackupConfiguration` crd targeting the `stash-demo` Statefulset that we have deployed earlier. Then Stash will inject a sidecar container to the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
 
 **Create BackupConfiguration:**
 
@@ -215,7 +215,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/workloads/statefulset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -469,7 +469,7 @@ This section will show you how to restore the backed up data from the backend we
 
 **Deploy Statefulset:**
 
-We are going to create a new Statefulset named `stash-recovered` and restore the inside it.
+We are going to create a new Statefulset named `stash-recovered` and restore the backed up data inside it.
 
 Below is the YAML of the Statefulset that we are going to create,
 
@@ -530,7 +530,7 @@ spec:
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl apply -f ./recovered_statefulset.yaml 
+$ kubectl apply -f ./docs/examples/workloads/statefulset/recovered_statefulset.yaml
 service/re-headless created
 statefulset.apps/stash-recovered created
 ```
@@ -547,7 +547,7 @@ stash-recovered-2   1/1     Running   0          32s
 
 **Create RestoreSession:**
 
-Now, we need to create a `RestoreSession` crd targeting the `stash-recovered` Statefulset to restore the inside it.
+Now, we need to create a `RestoreSession` crd targeting the `stash-recovered` Statefulset to restore the backed up data inside it.
 
 Below is the YAML of the `RestoreSesion` crd that we are going to create,
 
@@ -582,7 +582,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./restoresession.yaml
+$ kubectl apply -f ./docs/examples/workloads/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
@@ -749,11 +749,13 @@ $ kubectl exec -n demo stash-recovered-2 -- ls -R /source/data
 stash-demo-2.txt
 ```
 
-### Advanced
+### Rule Based Restore Process
+
+Generally, Stash runs restore process in all pod's of a Statefulset. It also provide you what data will be restored into which pod by configuring the `spec.rules`in `BackupSession` crd. You can learn more details from [here](docs/concepts/crds/restoresession.md#specrules)
 
 **Create RestoreSession:**
 
-Now, we need to create a `RestoreSession` crd targeting the `stash-recovered` Statefulset to restore the inside it.
+Now, we are going to create a `RestoreSession` crd targeting the `stash-recovered` Statefulset to restore the backed up data inside it.
 
 Below is the YAML of the `RestoreSesion` crd that we are going to create,
 
@@ -767,8 +769,6 @@ spec:
   driver: Restic
   repository:
     name: gcs-repo
-  # task:
-  #   name: workload-restore # task field is not required for workload data restore but it is necessary for database restore.
   target:
     ref:
       apiVersion: apps/v1
@@ -778,7 +778,7 @@ spec:
       - mountPath: /source/data
         name: source-data
   rules:
-    - targetHosts: ["host-1","host-2"] # "host-3" and "host-4" will have restored data of backed up host "host-1"
+    - targetHosts: ["host-1","host-2"] # "host-1" and "host-2" will have restored data of backed up host "host-1"
       sourceHost: "host-1" # source host
       paths:
         - /source/data
@@ -789,10 +789,15 @@ spec:
 ```
 
 Here,
-............................................................
+
+- `spec.rules`: `spec.rules` specify how Stash should restore data for each host.
+  - `targetHosts` specify that backed up data of `host-1`(old Statefulset's pod-1) will be restored into targetHosts `host-1`(new statefulset's pod-1) and `host-2`(new Statefulset's pod-2).
+  - `sourceHost` specify the name of the host whose backed up data will be restored.
+  
+Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./adv_restoresession.yaml
+$ kubectl apply -f ./docs/examples/workloads/statefulset/adv_restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
@@ -946,7 +951,6 @@ stash-demo-1.txt
 $ kubectl exec -n demo stash-recovered-2 -- ls -R /source/data
 /source/data:
 stash-demo-1.txt
-stash-demo-2.txt
 ```
 
 # Cleaning Up
