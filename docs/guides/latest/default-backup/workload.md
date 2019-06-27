@@ -14,11 +14,11 @@ section_menu_id: guides
 
 # Default Backup for Workloads
 
-This tutorial will show you how to configure default backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployment, StatefulSet and DaemonSet using a common template.
+This tutorial will show you how to configure default backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployment, StatefulSet, and DaemonSet using a common template.
 
 ## Before You Begin
 
-- At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [Minikube](https://github.com/kubernetes/minikube).
+- At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one using [Minikube](https://github.com/kubernetes/minikube).
 
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 
@@ -37,11 +37,11 @@ namespace/demo created
 
 ## Prepare Template
 
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To know which backed is supported by Stash and how to configure them, visit [here](/docs/guides/latest/backends/overview.md).
+We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To know which backed is supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
 **Create Storage Secret:**
 
-At first, let's create a Storage Secret for GCS backend,
+At first, let's create a Storage Secret for the GCS backend,
 
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
@@ -56,7 +56,7 @@ secret/gcs-secret created
 
 **Create BackupConfigurationTemplate:**
 
-Now, we have to create a `BackupConfigurationTemplate` crd with template for `Repository` and `BackupConfiguration` object.
+Now, we have to create a `BackupConfigurationTemplate` crd with a template for `Repository` and `BackupConfiguration` object.
 
 Below is the YAML of the `BackupConfigurationTemplate` object that we are going to create,
 
@@ -80,7 +80,7 @@ spec:
     prune: true
 ```
 
-Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with valuse from respective target. Since the resolved prefix will be different for different workload, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupconfiguration_template.md#repository-template).
+Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. Since the resolved prefix will be different for different workload, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupconfiguration_template.md#repository-template).
 
 Let's create the `BackupConfigurationTemplate` that we have shown above,
 
@@ -89,13 +89,13 @@ $ kubectl apply -f ./docs/examples/guides/latest/default-backup/backupconfigurat
 backupconfigurationtemplate.stash.appscode.com/workload-backup-template created
 ```
 
-Now, default backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload.
+Now, default backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload to enable backup.
 
 **Required Annotations for Workloads:**
 
-You have to add following 3 annotations to a targetted workload to enable backup for it:
+You have to add the following 3 annotations to a targetted workload to enable backup for it:
 
-1. Name of the BackupConfigurationTemplate object where a template for Repository and BackupConfiguration has been defined.
+1. Name of the `BackupConfigurationTemplate` object where a template for `Repository` and `BackupConfiguration` has been defined.
 
 ```yaml
 stash.appscode.com/backup-template: <BackupConfigurationTemplate name>
@@ -115,7 +115,11 @@ stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
 
 ## Backup Deployment
 
+Now, we are going to backup a Deployment using the template we have configured earlier. We will mount two ConfigMap volume in two different directories of the Deployment. Then, we will backup those directories using default backup.
+
 **Create Deployment:**
+
+Below is the YAML of the Deployment and respective ConfigMaps that we are going to create,
 
 ```yaml
 apiVersion: v1
@@ -178,6 +182,10 @@ spec:
           name: stash-sample-data-2
 ```
 
+Notice the `metadata.annotations` field. We have specified the default backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `workload-backup-template` BackupConfigurationTemplate for creating `Repository` and `BackupConfiguration` for this Deployment.
+
+Let's create the above Deployment,
+
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/default-backup/deployment.yaml
 configmap/stash-sample-data-1 created
@@ -185,7 +193,11 @@ configmap/stash-sample-data-2 created
 deployment.apps/stash-demo created
 ```
 
+If everything goes well, Stash will create a `Repository` and a `BackupConfiguration` with the name in the following format: `<workload-kind>-<workload-name>`.
+
 **Verify Repository:**
+
+Verify that the Repository has been created successfully by the following command,
 
 ```console
 $ kubectl get repository -n demo
@@ -193,23 +205,19 @@ NAME                    INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACK
 deployment-stash-demo                                                                9s
 ```
 
+If we view the YAML of this Repository, we will see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `deployment` and `stash-demo` respectively.
+
 ```console
-kubectl get repository -n demo deployment-stash-demo -o yaml
+$ kubectl get repository -n demo deployment-stash-demo -o yaml
 ```
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: Repository
 metadata:
-  creationTimestamp: "2019-06-26T06:16:21Z"
-  finalizers:
-  - stash
-  generation: 1
   name: deployment-stash-demo
   namespace: demo
-  resourceVersion: "8788"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/repositories/deployment-stash-demo
-  uid: eab6a2b5-97d9-11e9-b72d-0800275860ad
+  ...
 spec:
   backend:
     gcs:
@@ -220,35 +228,27 @@ spec:
 
 **Verify BackupConfiguratoin:**
 
+Verify that the `BackupConfiguration` has been created by the following command,
+
 ```console
 $ kubectl get backupconfiguration -n demo
 NAME                    TASK   SCHEDULE      PAUSED   AGE
 deployment-stash-demo          */5 * * * *            19s
 ```
 
+Let's check the YAML of this `BackupConfiguration`,
+
 ```console
-kubectl get backupconfiguration -n demo deployment-stash-demo -o yaml
+$ kubectl get backupconfiguration -n demo deployment-stash-demo -o yaml
 ```
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  creationTimestamp: "2019-06-26T06:16:21Z"
-  finalizers:
-  - stash.appscode.com
-  generation: 1
   name: deployment-stash-demo
   namespace: demo
-  ownerReferences:
-  - apiVersion: apps/v1
-    blockOwnerDeletion: false
-    kind: Deployment
-    name: stash-demo
-    uid: eab310c4-97d9-11e9-b72d-0800275860ad
-  resourceVersion: "8798"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/backupconfigurations/deployment-stash-demo
-  uid: eac2328b-97d9-11e9-b72d-0800275860ad
+  ...
 spec:
   repository:
     name: deployment-stash-demo
@@ -275,30 +275,55 @@ spec:
   tempDir: {}
 ```
 
+Notice that the `spec.target.ref` is pointing to the `stash-demo` Deployment. Also, notice that the `spec.target.directories` and `spec.target.volumeMounts` fields have been populated with the information we had provided as annotation of the Deployment.
+
 **Wait for BackupSession:**
+
+Now, wait for a backup schedule to appear. Run the following command to watch `BackupSession` crd:
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=deployment-stash-demo
-Every 1.0s: kubectl get backupsession -n demo                                   workstation: Wed Jun 26 12:20:31 2019
 
+Every 1.0s: kubectl get backupsession -n demo                                   workstation: Wed Jun 26 12:20:31 2019
 NAME                               BACKUPCONFIGURATION     PHASE       AGE
 deployment-stash-demo-1561530008   deployment-stash-demo   Running     24s
 deployment-stash-demo-1561530008   deployment-stash-demo   Succeeded   61s
 ```
 
+>Note: Respective CronJob creates `BackupSession` crd with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
+
 **Verify Backup:**
+
+When backup session is completed, Stash will update the respective `Repository` to reflect the latest state of backed up data.
+
+Run the following command to check if the snapshots are stored in the backend,
 
 ```console
 $ kubectl get repository -n demo deployment-stash-demo
 NAME                    INTEGRITY   SIZE    SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-deployment-stash-demo   true        246 B   6                70s                      15m
+deployment-stash-demo   true        246 B   2                70s                      5m
 ```
 
-<figure>Figure Here</figure>
+> Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
+
+If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we will see that the snapshot has been stored there.
+
+<figure align="center">
+  <img alt="Backup data in GCS backend" src="/docs/images/guides/latest/default-backup/deployment_repo.png">
+  <figcaption align="center">Fig: Backup data in GCS backend</figcaption>
+</figure>
+
+>Stash keeps all backup data encrypted. So, snapshot files in the bucket will not contain any meaningful data until they are decrypted.
 
 ## Backup StatefulSet
 
+Now, we are going to backup a StatefulSet with the same template we have used to backup Deployment in the previous section.
+
 **Create StatefulSet:**
+
+We are going to create a StatefulSet with 3 replicas. We will configure the StatefulSet to generate sample data in each replica.
+
+Below is the YAML of the StatefulSet that we are going to create,
 
 ```yaml
 apiVersion: v1
@@ -367,6 +392,10 @@ spec:
           storage: 1Gi
 ```
 
+Notice the `metadata.annotations` field. We have specified default backup specific annotations similarly as we had specified in the Deployment in the previous section.
+
+Let's create the StatefulSet we have created above,
+
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/default-backup/statefulset.yaml
 service/headless created
@@ -375,6 +404,8 @@ statefulset.apps/sts-demo created
 
 **Verify Repository:**
 
+Verify that a Repository has been created for this StatefulSet using the following command,
+
 ```console
 $ kubectl get repository -n demo
 NAME                    INTEGRITY   SIZE    SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
@@ -382,23 +413,21 @@ deployment-stash-demo   true        410 B   10               14s                
 statefulset-sts-demo                                                                  31s
 ```
 
+Here, `statefulset-sts-demo` Repository has been created for our `sts-demo` StatefulSet.
+
+Let's view the YAML of the Repository,
+
 ```console
-kubectl get repository -n demo statefulset-sts-demo -o yaml
+$ kubectl get repository -n demo statefulset-sts-demo -o yaml
 ```
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: Repository
 metadata:
-  creationTimestamp: "2019-06-26T06:55:23Z"
-  finalizers:
-  - stash
-  generation: 1
   name: statefulset-sts-demo
   namespace: demo
-  resourceVersion: "13149"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/repositories/statefulset-sts-demo
-  uid: 5e9d8f34-97df-11e9-b72d-0800275860ad
+  ...
 spec:
   backend:
     gcs:
@@ -407,7 +436,11 @@ spec:
     storageSecretName: gcs-secret
 ```
 
+Notice that the variables of the `prefix` field of `BackupConfigurationTemplate` is now replaced with `demo`, `statefulset` and `sts-demo` respectively.
+
 **Verify BackupConfiguratoin:**
+
+Verify that a `BackupConfiguration` has been created for this StatefulSet using the following command,
 
 ```console
 $ kubectl get backupconfiguration -n demo
@@ -416,29 +449,19 @@ deployment-stash-demo          */5 * * * *            40m
 statefulset-sts-demo           */5 * * * *            105s
 ```
 
+Here, `statefulset-sts-demo` has been created for the StatefulSet `sts-demo`. You can check the YAML of this `BackupConfiguration` to see that the target field is pointing to this StatefulSet.
+
 ```console
-kubectl get backupconfiguration -n demo statefulset-sts-demo -o yaml
+$ kubectl get backupconfiguration -n demo statefulset-sts-demo -o yaml
 ```
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  creationTimestamp: "2019-06-26T06:55:23Z"
-  finalizers:
-  - stash.appscode.com
-  generation: 1
   name: statefulset-sts-demo
   namespace: demo
-  ownerReferences:
-  - apiVersion: apps/v1
-    blockOwnerDeletion: false
-    kind: StatefulSet
-    name: sts-demo
-    uid: 5e9671e3-97df-11e9-b72d-0800275860ad
-  resourceVersion: "13152"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/backupconfigurations/statefulset-sts-demo
-  uid: 5ea175de-97df-11e9-b72d-0800275860ad
+  ...
 spec:
   repository:
     name: statefulset-sts-demo
@@ -467,6 +490,8 @@ spec:
 
 **Wait for BackupSession:**
 
+Now, wait for a backup schedule to appear. Watch the `BackupSession` of the BackupConfiguration `statefulset-sts-demo` using the following command,
+
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=statefulset-sts-demo
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-...  workstation: Wed Jun 26 13:01:22 2019
@@ -478,17 +503,30 @@ statefulset-sts-demo-1561532403   statefulset-sts-demo   Succeeded   2m21s
 
 **Verify Backup:**
 
+Once the backup session is completed, verify that the `Repository` has been updated to reflect the backup using the following command,
+
 ```console
 $ kubectl get repository -n demo statefulset-sts-demo
 NAME                   INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 statefulset-sts-demo   true        0 B    6                32s                      7m29s
 ```
 
-<figure>Figure Here</figure>
+>For StatfulSet, Stash takes backup from every replica. Since we are using a StatefulSet with 3 replicas and we are taking backup of 2 directories, total 6 snapshots have been created for this BackupSession.
+
+If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS bucket, we will see that the snapshot been stored there.
+
+<figure align="center">
+  <img alt="Backup data of `sts-demo` StatefulSet in GCS backend" src="/docs/images/guides/latest/default-backup/statefulset_repo.png">
+  <figcaption align="center">Fig: Backup data of StatefulSet "sts-demo" in GCS backend</figcaption>
+</figure>
 
 ## Backup DaemonSet
 
+Now, we are going to use the same template to backup a DaemonSet. We will mount a ConfigMap in `/etc/config` directory. Then, we will backup this directory using default backup.
+
 **Create DaemonSet:**
+
+Below is the YAML of the DaemonSet that we are going to create,
 
 ```yaml
 apiVersion: v1
@@ -538,6 +576,10 @@ spec:
           name: my-daemon-config
 ```
 
+Notice the `metadata.annotations` field. We have specified default backup specific annotations to backup our desired directory.
+
+Let's create the DaemonSet we have shown above,
+
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/default-backup/daemonset.yaml
 configmap/my-daemon-config created
@@ -545,6 +587,8 @@ daemonset.apps/dmn-demo created
 ```
 
 **Verify Repository:**
+
+Verify that a `Repository` has been created for this DaemonSet using the following command,
 
 ```console
 $ kubectl get repository -n demo
@@ -554,23 +598,21 @@ deployment-stash-demo   true        410 B   10               6m3s               
 statefulset-sts-demo    true        0 B     26               6m6s                     31m
 ```
 
+Here, `daemonset-dmn-demo` Repository has been created for our `dmn-demo` DaemonSet.
+
+Let's view the YAML of the Repository,
+
 ```console
-kubectl get repository -n demo daemonset-dmn-demo -o yaml
+$ kubectl get repository -n demo daemonset-dmn-demo -o yaml
 ```
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: Repository
 metadata:
-  creationTimestamp: "2019-06-26T07:26:16Z"
-  finalizers:
-  - stash
-  generation: 1
   name: daemonset-dmn-demo
   namespace: demo
-  resourceVersion: "17351"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/repositories/daemonset-dmn-demo
-  uid: af7d22f6-97e3-11e9-b72d-0800275860ad
+  ...
 spec:
   backend:
     gcs:
@@ -581,6 +623,8 @@ spec:
 
 **Verify BackupConfiguratoin:**
 
+Verify that a `BackupConfiguration` has been created for this DaemonSet using the following command,
+
 ```console
 $  kubectl get backupconfiguration -n demo
 NAME                    TASK   SCHEDULE      PAUSED   AGE
@@ -589,29 +633,19 @@ deployment-stash-demo          */5 * * * *            71m
 statefulset-sts-demo           */5 * * * *            32m
 ```
 
+Here, `daemonset-dmn-demo` has been created for the DaemonSet `dmn-demo`. You can check the YAML of this `BackupConfiguration` to see that the target field is pointing to this DaemonSet.
+
 ```console
-kubectl get backupconfiguration -n demo daemonset-dmn-demo -o yaml
+$ kubectl get backupconfiguration -n demo daemonset-dmn-demo -o yaml
 ```
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  creationTimestamp: "2019-06-26T07:26:16Z"
-  finalizers:
-  - stash.appscode.com
-  generation: 1
   name: daemonset-dmn-demo
   namespace: demo
-  ownerReferences:
-  - apiVersion: apps/v1
-    blockOwnerDeletion: false
-    kind: DaemonSet
-    name: dmn-demo
-    uid: af74eb56-97e3-11e9-b72d-0800275860ad
-  resourceVersion: "17355"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/backupconfigurations/daemonset-dmn-demo
-  uid: af85d9b9-97e3-11e9-b72d-0800275860ad
+  ...
 spec:
   repository:
     name: daemonset-dmn-demo
@@ -637,6 +671,8 @@ spec:
 
 **Wait for BackupSession:**
 
+Now, wait for a backup schedule to appear. Watch the `BackupSession` of the BackupConfiguration `daemonset-dmn-demo` using the following command,
+
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=daemonset-dmn-demo
 
@@ -649,15 +685,26 @@ daemonset-dmn-demo-1561534208   daemonset-dmn-demo    Succeeded   45s
 
 **Verify Backup:**
 
+Once the backup session is completed, verify that the `Repository` has been updated to reflect the backup using the following command,
+
 ```console
 $ kubectl get repository -n demo daemonset-dmn-demo
 NAME                 INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 daemonset-dmn-demo   true        51 B   1                5s                       4m27s
 ```
 
-<figure>Figure Here</figure>
+>For DaemonSet, Stash takes backup from every daemon pod running on different nodes. Since we are using a single node cluster (Minikube), only 1 snapshot has been created for this BackupSession.
+
+If we navigate to `stash-backup/demo/daemonset/dmn-demo` directory of our GCS bucket, we will see that the snapshot been stored there.
+
+<figure align="center">
+  <img alt="Backup data of `dmn-demo` DaemonSet in GCS backend" src="/docs/images/guides/latest/default-backup/daemon_repo.png">
+  <figcaption align="center">Fig: Backup data of DaemonSet "dmn-demo" in GCS backend</figcaption>
+</figure>
 
 ## Cleanup
+
+To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```console
 kubectl delete -n demo deployment/stash-demo
@@ -666,4 +713,7 @@ kubectl delete -n demo daemonset/dmn-demo
 
 kubectl delete -n demo repository --all
 kubectl delete -n demo secret/gcs-secret
+kubectl delete -n demo backupconfigurationtemplate/workload-backup-template
 ```
+
+If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/uninstall.md).
