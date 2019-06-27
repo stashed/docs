@@ -16,7 +16,7 @@ section_menu_id: guides
 
 # Monitoring Stash
 
-Stash has native support for monitoring via [Prometheus](https://prometheus.io/). You can use builtin [Prometheus](https://github.com/prometheus/prometheus) scrapper or [CoreOS Prometheus Operator](https://github.com/coreos/prometheus-operator) to monitor Stash. This tutorial will show you how this monitoring works with Stash and how to enable them.
+Stash has native support for monitoring via [Prometheus](https://prometheus.io/). You can use builtin [Prometheus](https://github.com/prometheus/prometheus) scraper or [CoreOS Prometheus Operator](https://github.com/coreos/prometheus-operator) to monitor Stash. This tutorial will show you how this monitoring works with Stash and how to enable them.
 
 ## Overview
 
