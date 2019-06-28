@@ -1,20 +1,25 @@
 apiVersion: v1
-kind: ConfigMap
+kind: PersistentVolumeClaim
 metadata:
-  name: stash-sample-data
+  name: demo-pvc
   namespace: demo
-data:
-  file1.txt: "This test file 1"
-  file2.txt: "This is file 2"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   labels:
     app: stash-demo
-  name: stash-demo
+  name: stash-recovered
   namespace: demo
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: stash-demo
@@ -37,5 +42,5 @@ spec:
       restartPolicy: Always
       volumes:
       - name: source-data
-        configMap:
-          name: stash-sample-data
+        persistentVolumeClaim:
+          claimName: demo-pvc

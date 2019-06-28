@@ -35,7 +35,7 @@ At first, we will create a PVC then we will create a Deployment that will use th
 
 Below is the YAML of the sample PVC that we are going to create,
 
-```console
+```yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -52,7 +52,7 @@ spec:
 Let's create the PVC we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/deployment/pvc.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/pvc.yaml
 persistentvolumeclaim/stash-sample-data created
 ```
 
@@ -62,7 +62,7 @@ Now, we will deploy a Deployment that uses the above PVC. This Deployment will a
 
 Below is the YAML of the Deployment that we are going to create,
 
-```console
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -100,7 +100,7 @@ spec:
 Let's create the Deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/deployment/deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -143,11 +143,9 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, create a `Respository` using this secret.
+Now, create a `Respository` using this secret. Below is the YAML of `Repository` crd we are going to create,
 
-Below is the YAML of `Repository` crd we are going to create,
-
-```console
+```yaml
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
@@ -164,7 +162,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/deployment/repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -172,13 +170,13 @@ Now, we are ready to backup our volumes to our desired backend.
 
 ### Backup
 
-We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Then Stash will inject a sidecar container to the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
+We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
 
 **Create BackupConfiguration:**
 
 Below is the YAML of the `BackupConfiguration` crd that we are going to create,
 
-```console
+```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
@@ -206,20 +204,20 @@ spec:
 
 Here,
 
-- `spec.repository` refers to the `gcs-repo` GCP Backend.
-- `spec.schedule` is a cron expression indicates that `BackupSession` will be created at 1 minute interval.
-- `spec.target.ref` refers to the target workload that was created for `stash-demo` Deploymnet.
+- `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend information.
+- `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 1 minute interval.
+- `spec.target.ref` refers to the `stash-demo` Deployment.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/deployment/backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
 **Verify Sidecar:**
 
-If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take periodic backup. Let’s check that sidecar has been injected successfully,
+If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
 ```console
 $ kubectl get pod -n demo 
@@ -230,32 +228,16 @@ stash-demo-856896bd95-ttbq4   2/2     Running       0          15s
 
 ```
 
-Look at the pod. It now has 2 containers. If you view the resource definition of this pod, you will see that there is a container named `stash` which running backup command.
+Look at the pod. It now has 2 containers. If you view the resource definition of this pod, you will see that there is a container named `stash` which is running `run-backup` command.
 
-```console
+```yaml
 $ kubectl get pod -n demo stash-demo-856896bd95-4gfbh -o yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  annotations:
-    stash.appscode.com/last-applied-backupconfiguration-hash: "16695904176112618119"
-  creationTimestamp: "2019-06-25T05:51:18Z"
-  generateName: stash-demo-856896bd95-
-  labels:
-    app: stash-demo
-    pod-template-hash: 856896bd95
   name: stash-demo-856896bd95-4gfbh
   namespace: demo
-  ownerReferences:
-  - apiVersion: apps/v1
-    blockOwnerDeletion: true
-    controller: true
-    kind: ReplicaSet
-    name: stash-demo-856896bd95
-    uid: b6ab0568-9704-11e9-975f-080027cababb
-  resourceVersion: "16335"
-  selfLink: /api/v1/namespaces/demo/pods/stash-demo-856896bd95-4gfbh
-  uid: 4047c78e-970d-11e9-975f-080027cababb
+ ...
 spec:
   containers:
   - args:
@@ -301,12 +283,6 @@ spec:
         fieldRef:
           apiVersion: v1
           fieldPath: metadata.name
-    image: suaas21/stash:vs_linux_amd64
-    imagePullPolicy: IfNotPresent
-    name: stash
-    resources: {}
-    terminationMessagePath: /dev/termination-log
-    terminationMessagePolicy: File
     volumeMounts:
     - mountPath: /etc/stash
       name: stash-podinfo
@@ -319,25 +295,6 @@ spec:
     - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
       name: default-token-4tzgg
       readOnly: true
-  dnsPolicy: ClusterFirst
-  enableServiceLinks: true
-  nodeName: minikube
-  priority: 0
-  restartPolicy: Always
-  schedulerName: default-scheduler
-  securityContext: {}
-  serviceAccount: default
-  serviceAccountName: default
-  terminationGracePeriodSeconds: 30
-  tolerations:
-  - effect: NoExecute
-    key: node.kubernetes.io/not-ready
-    operator: Exists
-    tolerationSeconds: 300
-  - effect: NoExecute
-    key: node.kubernetes.io/unreachable
-    operator: Exists
-    tolerationSeconds: 300
   volumes:
   - name: source-data
     persistentVolumeClaim:
@@ -360,50 +317,8 @@ spec:
     secret:
       defaultMode: 420
       secretName: default-token-4tzgg
-status:
-  conditions:
-  - lastProbeTime: null
-    lastTransitionTime: "2019-06-25T05:51:18Z"
-    status: "True"
-    type: Initialized
-  - lastProbeTime: null
-    lastTransitionTime: "2019-06-25T05:51:20Z"
-    status: "True"
-    type: Ready
-  - lastProbeTime: null
-    lastTransitionTime: "2019-06-25T05:51:20Z"
-    status: "True"
-    type: ContainersReady
-  - lastProbeTime: null
-    lastTransitionTime: "2019-06-25T05:51:18Z"
-    status: "True"
-    type: PodScheduled
-  containerStatuses:
-  - containerID: docker://1b849112500fe7334134f4b4a9c113302cf845cd5bfb79c66cb752b23875323e
-    image: busybox:latest
-    imageID: docker-pullable://busybox@sha256:c94cf1b87ccb80f2e6414ef913c748b105060debda482058d2b8d0fce39f11b9
-    lastState: {}
-    name: busybox
-    ready: true
-    restartCount: 0
-    state:
-      running:
-        startedAt: "2019-06-25T05:51:19Z"
-  - containerID: docker://da95746aa508d135b59ce13d6711c20e30f5626e2558ee3b9a068cf08be5a672
-    image: suaas21/stash:vs_linux_amd64
-    imageID: docker-pullable://suaas21/stash@sha256:8b6afb1f6c6cd4139f6892e94367ae9462d76dca19a028e717e53afe1944250a
-    lastState: {}
-    name: stash
-    ready: true
-    restartCount: 0
-    state:
-      running:
-        startedAt: "2019-06-25T05:51:19Z"
-  hostIP: 10.0.2.15
-  phase: Running
-  podIP: 172.17.0.10
-  qosClass: BestEffort
-  startTime: "2019-06-25T05:51:18Z"
+  ...
+...
 ```
 
 **Verify CronJob:**
@@ -448,7 +363,7 @@ gcs-repo   true        0 B    5                58s                      18m
 Now, if we navigate to the GCS bucket, we will see backed up data has been stored in `source/data/sample-deployment` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/v1beta1/backends/workloads/gcs_bucket_dep.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/images/latest/workloads/gcs_bucket_dep.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -465,7 +380,7 @@ We are going to create a new Deployment named `stash-recovered` and restore the 
 
 Below is the YAML of the Deployment that we are going to create,
 
-```console
+```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -517,20 +432,9 @@ spec:
 Let's create the Deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/deployment/recovered_deployment.yaml 
+$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/recovered_deployment.yaml 
 persistentvolumeclaim/demo-pvc created
 deployment.apps/stash-recovered created
-```
-
-Now, wait for Deployment’s pod to go into the `Running` state.
-
-```console
-$ kubectl get pod -n demo
-NAME                               READY   STATUS    RESTARTS   AGE
-stash-recovered-676bd87957-7bcfg   1/1     Running   0          31s
-stash-recovered-676bd87957-pv4hg   1/1     Running   0          31s
-stash-recovered-676bd87957-q2hbl   1/1     Running   0          31s
-
 ```
 
 **Create RestoreSession:**
@@ -539,7 +443,7 @@ Now, we need to create a `RestoreSession` crd targeting the `stash-recovered` De
 
 Below is the YAML of the `RestoreSesion` crd that we are going to create,
 
-```console
+```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
@@ -563,9 +467,9 @@ spec:
 
 Here,
 
-`spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
+- `spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
 
-`spec.target.ref` refers to the target workload where the recovered data will be stored.
+- `spec.target.ref` refers to the target workload where the recovered data will be stored.
 
 Let's create the `RestoreSession` crd we have shown above,
 
@@ -578,29 +482,24 @@ Once, you have created the `RestoreSession` crd, Stash will inject `init-contain
 
 **Verify Init-Container:**
 
-Wait until the `init-container` has been injected to the `stash-recovered` Deployment's pod, Run the following command to describe the `stash-recovered` Deployment's pod,
+Wait until the `init-container` has been injected to the `stash-recovered` Deployment. Let’s describe the Deployment to verify that `init-container` has been injected successfully.
 
-```console
-$ kubectl describe pod -n demo stash-recovered-867688ddd5-rfsw4 
-Name:               stash-recovered-867688ddd5-rfsw4
-Namespace:          demo
-Priority:           0
-PriorityClassName:  <none>
-Node:               minikube/10.0.2.15
-Start Time:         Tue, 25 Jun 2019 12:35:49 +0600
-Labels:             app=stash-demo
-                    pod-template-hash=867688ddd5
-Annotations:        stash.appscode.com/last-applied-restoresession-hash: 18120714276586222772
-Status:             Running
-IP:                 172.17.0.9
-Controlled By:      ReplicaSet/stash-recovered-867688ddd5
-Init Containers:
-  stash-init:
-    Container ID:  docker://5676ef7ba4d1accb1f53a8ae81d7ce523ac08d4cdc53bf66e573be8cb1e405ec
-    Image:         suaas21/stash:vs_linux_amd64
-    Image ID:      docker-pullable://suaas21/stash@sha256:8b6afb1f6c6cd4139f6892e94367ae9462d76dca19a028e717e53afe1944250a
-    Port:          <none>
-    Host Port:     <none>
+```yaml
+$ kubectl describe deployment -n demo stash-recovered
+Name:                   stash-recovered
+Namespace:              demo
+Labels:                 app=stash-demo
+Selector:               app=stash-demo
+Replicas:               3 desired | 3 updated | 3 total | 3 available |
+...
+Pod Template:
+  Labels:       app=stash-demo
+  Annotations:  stash.appscode.com/last-applied-restoresession-hash: 14443247646000846167
+  Init Containers:
+   stash-init:
+    Image:      suaas21/stash:vs_linux_amd64
+    Port:       <none>
+    Host Port:  <none>
     Args:
       restore
       --restore-session=deployment-restore
@@ -616,81 +515,52 @@ Init Containers:
       --alsologtostderr=false
       --v=3
       --stderrthreshold=0
-    State:          Terminated
-      Reason:       Completed
-      Exit Code:    0
-      Started:      Tue, 25 Jun 2019 12:35:50 +0600
-      Finished:     Tue, 25 Jun 2019 12:36:06 +0600
-    Ready:          True
-    Restart Count:  0
     Environment:
       NODE_NAME:   (v1:spec.nodeName)
-      POD_NAME:   stash-recovered-867688ddd5-rfsw4 (v1:metadata.name)
+      POD_NAME:    (v1:metadata.name)
     Mounts:
       /etc/stash/repository/secret from stash-secret-volume (rw)
       /source/data from source-data (rw)
       /tmp from tmp-dir (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from default-token-4tzgg (ro)
-Containers:
-  busybox:
-    Container ID:  docker://40c19ff4c31933815a068edb6016cf73f95a0f1ac909b0eeb4eb2138d459f237
-    Image:         busybox
-    Image ID:      docker-pullable://busybox@sha256:c94cf1b87ccb80f2e6414ef913c748b105060debda482058d2b8d0fce39f11b9
-    Port:          <none>
-    Host Port:     <none>
+  Containers:
+   busybox:
+    Image:      busybox
+    Port:       <none>
+    Host Port:  <none>
     Args:
       sleep
       3600
-    State:          Running
-      Started:      Tue, 25 Jun 2019 12:36:06 +0600
-    Ready:          True
-    Restart Count:  0
-    Environment:    <none>
+    Environment:  <none>
     Mounts:
       /source/data from source-data (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from default-token-4tzgg (ro)
-Conditions:
-  Type              Status
-  Initialized       True 
-  Ready             True 
-  ContainersReady   True 
-  PodScheduled      True 
-Volumes:
-  source-data:
+  Volumes:
+   source-data:
     Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
     ClaimName:  demo-pvc
     ReadOnly:   false
-  tmp-dir:
+   tmp-dir:
     Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
     Medium:     
     SizeLimit:  <unset>
-  stash-podinfo:
+   stash-podinfo:
     Type:  DownwardAPI (a volume populated by information about the pod)
     Items:
       metadata.labels -> labels
-  stash-secret-volume:
+   stash-secret-volume:
     Type:        Secret (a volume populated by a Secret)
     SecretName:  gcs-secret
     Optional:    false
-  default-token-4tzgg:
-    Type:        Secret (a volume populated by a Secret)
-    SecretName:  default-token-4tzgg
-    Optional:    false
-QoS Class:       BestEffort
-Node-Selectors:  <none>
-Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
-                 node.kubernetes.io/unreachable:NoExecute for 300s
-Events:
-  Type    Reason     Age   From               Message
-  ----    ------     ----  ----               -------
-  Normal  Scheduled  54s   default-scheduler  Successfully assigned demo/stash-recovered-867688ddd5-rfsw4 to minikube
-  Normal  Pulled     53s   kubelet, minikube  Container image "suaas21/stash:vs_linux_amd64" already present on machine
-  Normal  Created    53s   kubelet, minikube  Created container stash-init
-  Normal  Started    53s   kubelet, minikube  Started container stash-init
-  Normal  Pulled     37s   kubelet, minikube  Container image "busybox" already present on machine
-  Normal  Created    37s   kubelet, minikube  Created container busybox
-  Normal  Started    37s   kubelet, minikube  Started container busybox
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  stash-recovered-7478988f57 (3/3 replicas created)
+NewReplicaSet:   <none>
+...
 ```
+
+Notice the `Init-Containers` section. We can see that init-container `stash-init` has been injected which is running `restore` command.
 
 You will see that `stash-init` container has been injected.
 
@@ -713,7 +583,7 @@ So, we can see from the output of the above command that the restore process suc
 
 In this section, we will verify that the desired data has been restored successfully.
 
-At first, check if the `stash-recovered` Deployment's pod has gone into Running state after successful `stash-init` container injection by the following command,
+At first, check if the `stash-recovered` Deployment's pod has gone into `Running` state by the following command,
 
 ```console
 $ kubectl get pod -n demo

@@ -5,7 +5,7 @@ metadata:
   namespace: demo
 spec:
   repository:
-    name: gcs-repo
+    name: local-repo
   rules:
   - paths:
     - /source/data
@@ -13,7 +13,7 @@ spec:
     ref:
       apiVersion: apps/v1
       kind: DaemonSet
-      name: stash-recovered
+      name: stash-demo
     volumeMounts:
     - name:  source-data
       mountPath:  /source/data
