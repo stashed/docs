@@ -1,3 +1,17 @@
+---
+title: Backup and Restore Workload Data Overview | Stash
+description: An overview on how Backup and Restore workload data works in Stash.
+menu:
+  product_stash_0.8.3:
+    identifier: backup-restore-workload-overview
+    name: How Backup and Restore works?
+    parent: backup-restore-workload
+    weight: 10
+product_name: stash
+menu_name: product_stash_0.8.3
+section_menu_id: guides
+---
+
 # Backup and Restore Workload's data using Stash
 
 This guide will show you how Stash backup and restore workloads (Deployment, StatefulSet, DaemonSet etc.) data.

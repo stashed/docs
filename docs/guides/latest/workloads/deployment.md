@@ -1,3 +1,17 @@
+---
+title: Backup and Restore Deployment's Data | Stash
+description: A step by step guide showing how to backup and restore Deployment's data.
+menu:
+  product_stash_0.8.3:
+    identifier: backup-restore-deployment
+    name: Back and Restore Deployment's Data
+    parent: backup-restore-workload
+    weight: 20
+product_name: stash
+menu_name: product_stash_0.8.3
+section_menu_id: guides
+---
+
 # Backup and Restore Deployment's Data
 
 This guide will show you how to use Stash to backup and restore Deployment's data.
