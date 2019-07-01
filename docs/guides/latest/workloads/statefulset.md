@@ -3,9 +3,9 @@ title: Backup and Restore StatefulSet's Data | Stash
 description: A step by step guide showing how to backup and restore StatefulSet's data.
 menu:
   product_stash_0.8.3:
-    identifier: backup-restore-statefulset
-    name: Back and Restore StatefulSet's Data
-    parent: backup-restore-workload
+    identifier: workload-statefulset
+    name: Backup & Restore StatefulSet's Data
+    parent: workload
     weight: 30
 product_name: stash
 menu_name: product_stash_0.8.3
