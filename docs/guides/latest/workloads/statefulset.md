@@ -639,7 +639,7 @@ Generally, Stash restores data in individual replica from the backup of respecti
 
 **Deploy StatefulSet:**
 
-We are going to create a new StatefulSet named `stash-recovered` with `spec.replica` 5 and restore the backed up data inside it.
+We are going to create a new StatefulSet named `stash-recovered-adv` with `spec.replica` 5 and restore the backed up data inside it.
 
 Below is the YAML of the StatefulSet that we are going to create,
 
@@ -734,8 +734,8 @@ spec:
       sourceHost: "host-1"
       paths:
         - /source/data
-    - targetHosts: []
-      sourceHost: ""
+    - targetHosts: [] # empty host match all hosts
+      sourceHost: "" # no source host indicates that the host is pod itself
       paths:
         - /source/data
 ```
@@ -885,7 +885,7 @@ $ kubectl exec -n demo stash-recovered-adv-4 -- ls -R /source/data
 stash-demo-1.txt
 ```
 
-we can see from the above output that backup data of `host-1` has been restored into `host-3` and `host-4` successfully.
+We can see from the above output that backup data of `host-1` has been restored into `host-3` and `host-4` successfully.
 
 # Cleaning Up
 
