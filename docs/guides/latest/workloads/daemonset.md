@@ -3,9 +3,9 @@ title: Backup and Restore DaemonSet's Data | Stash
 description: A step by step guide showing how to backup and restore DaemonSet's data.
 menu:
   product_stash_0.8.3:
-    identifier: backup-restore-daemonset
-    name: Back and Restore DaemonSet's Data
-    parent: backup-restore-workload
+    identifier: workload-daemonset
+    name: Backup & Restore DaemonSet's Data
+    parent: workload
     weight: 40
 product_name: stash
 menu_name: product_stash_0.8.3
