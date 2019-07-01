@@ -29,7 +29,7 @@ This section will show you how to use Stash to backup DaemonSet's data. Here, we
 
 **Deploy DaemonSet:**
 
-Now, we will deploy a DaemonSet. This DaemonSet will automatically generate sample data (`sample-file.txt` file) in `/source/data` directory.
+At first, we will deploy a DaemonSet. This DaemonSet will automatically generate sample data (`sample-file.txt` file) in `/source/data` directory.
 
 Below is the YAML of the DaemonSet that we are going to create,
 
@@ -92,7 +92,7 @@ sample-file.txt
 
 ### Prepare Backend
 
-We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a Repository crd. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
+We are going to store our backed up data into a GCS bucket. We have to create a Secret with necessary credentials and a Repository crd to use this backend. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
 
 **Create Secret:**
 
@@ -314,7 +314,7 @@ dmn-backup-1561543509   dmn-backup            Running      17s
 dmn-backup-1561543509   dmn-backup            Succeeded    2m20s
 ```
 
-We can see above that the backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
+We can see from the above output that the backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
 
 **Verify Backup:**
 

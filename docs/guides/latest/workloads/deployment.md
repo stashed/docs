@@ -58,7 +58,7 @@ persistentvolumeclaim/stash-sample-data created
 
 **Deploy Deployment:**
 
-Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`sample-file.txt` file) in `/source/data` directory where we have mounted the desired PVC.
+Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`sample-file.txt` file) in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -124,7 +124,7 @@ sample-file.txt
 
 ### Prepare Backend
 
-We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a Repository crd. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
+We are going to store our backed up data into a GCS bucket. We have to create a Secret with necessary credentials and a Repository crd to use this backend. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
 
 **Create Secret:**
 
@@ -344,11 +344,11 @@ $ watch -n 2 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo     suaas-appscode: Mon Jun 24 10:23:08 2019
 
 NAME                           BACKUPCONFIGURATION   PHASE       AGE
-deployment-backup-1561350065   deployment-backup     Running     30s
+deployment-backup-1561350125   deployment-backup     Running     30s
 deployment-backup-1561350125   deployment-backup     Succeeded   63s
 ```
 
-We can see above that the backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
+We can see from the above output that the backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
 
 **Verify Backup:**
 

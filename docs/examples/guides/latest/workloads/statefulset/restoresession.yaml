@@ -9,7 +9,7 @@ spec:
   rules:
   - paths:
     - /source/data
-  target: # target indicates where the recovered data will be stored
+  target:
     ref:
       apiVersion: apps/v1
       kind: StatefulSet
