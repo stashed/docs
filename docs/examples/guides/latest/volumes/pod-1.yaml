@@ -1,0 +1,17 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: demo-pod-1
+  namespace: demo
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c","touch /shared/config/pod-1.conf && sleep 3000"]
+    volumeMounts:
+    - name: shared-config
+      mountPath: /shared/config
+  volumes:
+  - name: shared-config
+    persistentVolumeClaim:
+      claimName: nfs-pvc
