@@ -327,6 +327,33 @@ Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:909
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 
+### Backup and Restore Metrics in Prometheus Dashboard
+
+This section will show you how Prometheus monitors `backup` and `restore` metrics from stash. For `backup` and `restore` metrics monitoring, you can take backup and restore of Deployment's data.
+
+**Backup Metrics:**
+
+At first, you need to take backup of Deployment's data using Stash. you could have to complete the whole backup process by following the deployment's backup user guide [here](docs/guides/latest/workloads/deployment.md#backup-deployments-data).
+
+After completion of the backup process, you will see the result of the `stash_backup_session_success` and `stash_backup_session_duration_total_seconds` metrics in the Prometheus dashboard,
+
+<figure align="center">
+  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/builtin_prometheus_met.png">
+<figcaption align="center">Fig: Prometheus Graph for backup metrics</figcaption>
+</figure>
+
+**Resstore Metrics:**
+
+Now, you need to restore the backed up data for restore metrics monitoring. You could have to complete the whole restore process by following the deployment's restore
+user guide [here](docs/guides/latest/workloads/deployment.md#restore-deployments-data)
+
+After completion of the restore process, you will see the result of the `stash_restore_session_duration_total_seconds` metrics in the Prometheus dashboard,
+
+<figure align="center">
+  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/builtin_prometheus_met2.png">
+<figcaption align="center">Fig: Prometheus Graph for restore metrics</figcaption>
+</figure>
+
 ## Cleanup
 
 To cleanup the Kubernetes resources created by this tutorial, run:
