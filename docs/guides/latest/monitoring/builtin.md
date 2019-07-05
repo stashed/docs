@@ -327,15 +327,22 @@ Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:909
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 
-### Backup and Restore Metrics in Prometheus Dashboard
+### Verify Backup and Restore Metrics
 
-This section will show you how Prometheus monitors `backup` and `restore` metrics from stash. For `backup` and `restore` metrics monitoring, you can take backup and restore of Deployment's data.
+This section will show you how Prometheus monitors `backup` and `restore` in stash. For `backup` and `restore` metrics monitoring, you need to take backup and restore of Deployment's data using Stash. You could have to complete the whole backup and restore process by following the deployment's backup/restore user guide [here](docs/guides/latest/workloads/deployment.md).
+
+Once you have completed the backup and restore process successfully, you will see the `backup` and `restore` metrics in the Prometheus dashboard.
+
+<figure align="center">
+  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/prometheus_backup_restore_met.png">
+<figcaption align="center">Fig: Stash Backup and Restore metrics</figcaption>
+</figure>
 
 **Backup Metrics:**
 
-At first, you need to take backup of Deployment's data using Stash. you could have to complete the whole backup process by following the deployment's backup user guide [here](docs/guides/latest/workloads/deployment.md#backup-deployments-data).
 
-After completion of the backup process, you will see the result of the `stash_backup_session_success` and `stash_backup_session_duration_total_seconds` metrics in the Prometheus dashboard,
+
+After completion of the backup process, you will see the graph of the `stash_backup_session_success` and `stash_backup_session_duration_total_seconds` metrics in the Prometheus dashboard,
 
 <figure align="center">
   <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/builtin_prometheus_met.png">
@@ -344,10 +351,7 @@ After completion of the backup process, you will see the result of the `stash_ba
 
 **Resstore Metrics:**
 
-Now, you need to restore the backed up data for restore metrics monitoring. You could have to complete the whole restore process by following the deployment's restore
-user guide [here](docs/guides/latest/workloads/deployment.md#restore-deployments-data)
-
-After completion of the restore process, you will see the result of the `stash_restore_session_duration_total_seconds` metrics in the Prometheus dashboard,
+After completion of the restore process, you will see the graph of the `stash_restore_session_duration_total_seconds` metrics in the Prometheus dashboard,
 
 <figure align="center">
   <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/builtin_prometheus_met2.png">
