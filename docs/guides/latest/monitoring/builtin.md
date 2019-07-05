@@ -327,35 +327,15 @@ Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:909
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 
-### Verify Backup and Restore Metrics
+**Backup and Restore Metrics:**
 
-This section will show you how Prometheus monitors `backup` and `restore` in stash. For `backup` and `restore` metrics monitoring, you need to take backup and restore of Deployment's data using Stash. You could have to complete the whole backup and restore process by following the deployment's backup/restore user guide [here](docs/guides/latest/workloads/deployment.md).
+ When you perform a backup or restore using Stash, it will send respective Prometheus metrics. You can check if the metrics has been sent successfully by performing backup and restore as described [here](docs/guides/latest/workloads/deployment.md).
 
-Once you have completed the backup and restore process successfully, you will see the `backup` and `restore` metrics in the Prometheus dashboard.
+A screenshot that shows Prometheus metrics send by Stash backup and restore process is given below,
 
 <figure align="center">
   <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/prometheus_backup_restore_met.png">
 <figcaption align="center">Fig: Stash Backup and Restore metrics</figcaption>
-</figure>
-
-**Backup Metrics:**
-
-
-
-After completion of the backup process, you will see the graph of the `stash_backup_session_success` and `stash_backup_session_duration_total_seconds` metrics in the Prometheus dashboard,
-
-<figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/builtin_prometheus_met.png">
-<figcaption align="center">Fig: Prometheus Graph for backup metrics</figcaption>
-</figure>
-
-**Resstore Metrics:**
-
-After completion of the restore process, you will see the graph of the `stash_restore_session_duration_total_seconds` metrics in the Prometheus dashboard,
-
-<figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/builtin_prometheus_met2.png">
-<figcaption align="center">Fig: Prometheus Graph for restore metrics</figcaption>
 </figure>
 
 ## Cleanup
@@ -378,6 +358,6 @@ To uninstall Stash follow this [guide](/docs/setup/uninstall.md).
 
 ## Next Steps
 
-- Learn how monitoring in Stash works from [here](/docs/guides/v1alpha1/monitoring/overview.md).
-- Learn how to monitor Stash using CoreOS Prometheus operator from [here](/docs/guides/v1alpha1/monitoring/coreos.md).
-- Learn how to use Grafana dashboard to visualize monitoring data from [here](/docs/guides/v1alpha1/monitoring/grafana.md).
+- Learn how monitoring in Stash works from [here](/docs/guides/latest/monitoring/overview.md).
+- Learn how to monitor Stash using CoreOS Prometheus operator from [here](/docs/guides/latest/monitoring/coreos.md).
+- Learn how to use Grafana dashboard to visualize monitoring data from [here](/docs/guides/latest/monitoring/grafana.md).

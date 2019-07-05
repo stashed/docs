@@ -31,7 +31,7 @@ Stash operator runs two containers. The `operator` container runs controller and
 
 ### Backup Metrics
 
-Following metrics are available for stash backup and restore operations. These metrics are accessible through `pushgateway` endpoint of `stash-operator` service.
+Following metrics available for backup process:
 
 |                 Metric                         |                      Uses                       |
 | --------------------------------------------   | ----------------------------------------------- |
@@ -48,6 +48,8 @@ Following metrics are available for stash backup and restore operations. These m
 
 ### Repository Metrics
 
+Following metrics are available for backup repository:
+
 |                 Metric                        |                      Uses                       |
 | --------------------------------------------- | ----------------------------------------------- |
 | `stash_repository_integrity`                  | Result of repository integrity check after last backup |
@@ -56,6 +58,8 @@ Following metrics are available for stash backup and restore operations. These m
 | `stash_repository_snapshot_cleaned`           | Indicates number of old snapshots cleaned up according to retention policy on last backup session |
 
 ### Restore Metrics
+
+Following metrics are available for restore process:
 
 |                 Metric                          |                      Uses                       |
 | ---------------------------------------         | ----------------------------------------------- |
