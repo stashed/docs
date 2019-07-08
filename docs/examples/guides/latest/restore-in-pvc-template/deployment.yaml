@@ -1,0 +1,90 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: source-pvc-1
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 6Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: source-pvc-2
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 6Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: stash-demo
+  name: stash-demo
+  namespace: demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stash-demo
+  template:
+    metadata:
+      labels:
+        app: stash-demo
+      name: busybox
+    spec:
+      containers:
+      - args: ["touch /source/data/file.txt && sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /source/data-1
+          name: source-data-1
+        - mountPath: /source/data-2
+          name: source-data-2
+      restartPolicy: Always
+      volumes:
+      - name: source-data-1
+        persistentVolumeClaim:
+          claimName: source-pvc-1
+      - name: source-data-2
+        persistentVolumeClaim:
+          claimName: source-pvc-2
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: deployment-backup
+  namespace: demo
+spec:
+  repository:
+    name: local-repo
+  schedule: "* * * * *"
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: stash-demo
+    volumeMounts:
+    - name: source-data-1
+      mountPath: /source/data-1
+    - name: source-data-2
+      mountPath: /source/data-2
+    directories:
+    - /source/data-1
+    - /source/data-2
+  retentionPolicy:
+    name: 'keep-last-5'
+    keepLast: 5
+    prune: true
