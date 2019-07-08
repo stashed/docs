@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: stash-demo
+  name: restore-stash-demo
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stash-demo
+  template:
+    metadata:
+      labels:
+        app: stash-demo
+      name: busybox
+    spec:
+      containers:
+      - args:
+        - sleep
+        - "3600"
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /source/data-1
+          name: restore-data-1
+        - mountPath: /source/data-2
+          name: restore-data-2
+      restartPolicy: Always
+      volumes:
+      - name: restore-data-1
+        persistentVolumeClaim:
+          claimName: restore-data-1
+      - name: restore-data-2
+        persistentVolumeClaim:
+          claimName: restore-data-2

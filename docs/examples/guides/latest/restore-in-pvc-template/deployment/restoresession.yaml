@@ -5,19 +5,20 @@ metadata:
   namespace: demo
 spec:
   repository:
-    name: local-repo
+    name: gcs-repo
   rules:
   - paths:
-    - /source/data
+    - /source/data-1
+    - /source/data-2
   target:
     volumeMounts:
-    - name:  restored-data-1
+    - name:  restore-data-1
       mountPath:  /source/data-1
-    - name:  restored-data-2
+    - name:  restore-data-2
       mountPath:  /source/data-2
     volumeClaimTemplates:
     - metadata:
-        name:  restored-data-1
+        name:  restore-data-1
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
@@ -25,7 +26,7 @@ spec:
           requests:
             storage: 1Gi
     - metadata:
-        name:  restored-data-2
+        name:  restore-data-2
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"

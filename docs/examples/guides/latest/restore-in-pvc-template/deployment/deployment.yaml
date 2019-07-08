@@ -32,7 +32,7 @@ metadata:
   name: stash-demo
   namespace: demo
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: stash-demo
@@ -43,7 +43,7 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["touch /source/data/file.txt && sleep 3000"]
+      - args: ["touch /source/data-1/file1.txt /source/data-2/file2.txt && sleep 3000"]
         command: ["/bin/sh", "-c"]
         image: busybox
         imagePullPolicy: IfNotPresent
@@ -61,30 +61,3 @@ spec:
       - name: source-data-2
         persistentVolumeClaim:
           claimName: source-pvc-2
----
-apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfiguration
-metadata:
-  name: deployment-backup
-  namespace: demo
-spec:
-  repository:
-    name: local-repo
-  schedule: "* * * * *"
-  target:
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: stash-demo
-    volumeMounts:
-    - name: source-data-1
-      mountPath: /source/data-1
-    - name: source-data-2
-      mountPath: /source/data-2
-    directories:
-    - /source/data-1
-    - /source/data-2
-  retentionPolicy:
-    name: 'keep-last-5'
-    keepLast: 5
-    prune: true
