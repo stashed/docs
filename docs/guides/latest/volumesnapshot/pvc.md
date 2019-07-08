@@ -1,10 +1,10 @@
 ---
-title: Snapshot Stand-alone PVC | Stash
-description: An step by step guide showing how to snapshot a stand-alone PVC.
+title: Snapshotting PVCs | Stash
+description: An step by step guide showing how to snapshot a stand-alone PVC
 menu:
   product_stash_0.8.3:
     identifier: volume-snapshot-pvc
-    name: Standalone PVC
+    name: Snapshotting PVCs
     parent: volume-snapshot
     weight: 40
 product_name: stash
@@ -12,15 +12,16 @@ menu_name: product_stash_0.8.3
 section_menu_id: guides
 ---
 
-# Snapshot Standalone PVC
+# Snapshotting a Standalone PVC
 
 This guide will show you how to use Stash to snapshot standalone PersistentVolumeClaims and restore that from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API. In this guide, we are going to backup the volumes in Google Cloud Platform with the help of [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
 
 ## Before You Begin
 
-- At first, you need to be familiarize with the [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
-- Also need to enable the Kubernetes `VolumeSnapshotDataSource` alpha feature via feature gates.
-- You need to have Stash installed in your cluster. If you already don't have Stash installed, please follow this [steps](https://appscode.com/products/stash/0.8.3/setup/install/).
+- At first, you need to be familiar with the [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
+- You need to enable the Kubernetes `VolumeSnapshotDataSource` alpha feature via Kubernetes feature gates
+  - `--feature-gates=VolumeSnapshotDataSource=true`
+- Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
 - If you don't know how VolumeSnapshot works in Stash, please visit [here](/docs/guides/latest/volumesnapshot/overview.md).
 
 ## Prepare for VolumeSnapshot
@@ -203,7 +204,7 @@ Here,
 
 - `spec.target.ref`  refers to the backup target. `apiVersion`, `kind` and `name` refers to the `apiVersion`, `kind` and `name` of the targeted workload respectively. Stash will use this information to create a Volume Snapshotter Job for creating VolumeSnapshot.
 
-- `spec.target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snapshotting.
+- `spec.target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to be used for volume snapshotting.
 
 Let's create the `BackupConfiguration` crd we have shown above.
 
@@ -226,7 +227,7 @@ pvc-volume-snapshot           */1 * * * *   False     0        39s             2
 
 **Wait for BackupSession :**
 
-The `pvc-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd.
+The `pvc-volume-snapshot` CronJob will trigger a backup on each scheduled time slot by creating a `BackpSession` crd.
 
 Wait for a schedule to appear. Run the following command to watch `BackupSession` crd,
 
@@ -243,7 +244,7 @@ We can see above that the backup session has succeeded. Now, we will verify that
 
 **Verify Volume Snapshot :**
 
-Once a `BackupSession` crd is created, it creates volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVC.The `VolumeSnapshot` name follows the following pattern:
+Once a `BackupSession` crd is created, it creates volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVC. The `VolumeSnapshot` name follows the following pattern:
 
 ```console
 <PVC name>-<backup session creation timestamp in Unix epoch seconds>
@@ -257,7 +258,7 @@ NAME                    AGE
 source-pvc-1560400745   1m30s
 ```
 
-Let's find out the actual snapshot name that will be saved in the GCP by the following command,
+Let's find out the actual snapshot name that will be saved in the Google Cloud by the following command,
 
 ```console
 kubectl get volumesnapshot source-pvc-1560400745  -n demo -o yaml
@@ -289,8 +290,7 @@ status:
   restoreSize: 6Gi
 ```
 
-Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in GCP.
-If we navigate to the `Snapshots` in the GCP navigation menu, we will see snapshot `snapcontent-b939675a-928c-11e9-bd3e-42010a800011` has been stored successfully.
+Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we will see snapshot `snapcontent-b939675a-928c-11e9-bd3e-42010a800011` has been stored successfully.
 
 <figure align="center">
   <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/standalone-pvc.png">
@@ -335,9 +335,9 @@ Here,
 
 - `spec.target.volumeClaimTemplates`:
   - `metadata.name` is the name of the restored `PVC` or prefix of the `VolumeSnapshot` name.
-  - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be intialized. It requires following fields to set:
-    - `apiGroup` is the group for resource being referenced. Now, kubernetes supports only `snapshot.storage.k8s.io`.
-    - `kind` is resource of the kind being referenced. Now, kubernetes supports only `VolumeSnapshot`.
+  - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be initialized. It requires following fields to be set:
+    - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
+    - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
     - `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You can template the name by using the following convention `${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>`, `${CLAIM_NAME}` is resolved by the Stash operator and replaced by the `metadata.name`. You can set the snapshot name directly.
 
 Let's create the `RestoreSession` crd we have shown above.
@@ -364,7 +364,7 @@ restore-pvc                     Succeeded   1m
 
 Once a restore process is complete, we will see that new PVC with the name `source-pvc` has been created.
 
-Verify that the PVC has been created by the following command,
+To verify that the PVC has been created, run by the following command,
 
 ```console
 $ kubectl get pvc -n demo

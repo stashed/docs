@@ -1,4 +1,4 @@
-# volumeRecoveryfunction Recover a kubernetes volume
+# volumeRecoveryfunction Recover a Kubernetes volume
 apiVersion: stash.appscode.com/v1beta1
 kind: Function
 metadata:
