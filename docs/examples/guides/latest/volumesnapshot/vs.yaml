@@ -20,4 +20,4 @@ spec:
 status:
   creationTime: "2019-05-16T06:06:12Z"
   readyToUse: true
-  restoreSize: 6Gi
+  restoreSize: 1Gi

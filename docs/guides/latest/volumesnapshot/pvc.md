@@ -106,7 +106,7 @@ spec:
   storageClassName: standard
   resources:
     requests:
-      storage: 6Gi
+      storage: 1Gi
 ```
 
 Let's create the PVC we have shown above.
@@ -287,7 +287,7 @@ spec:
 status:
   creationTime: "2019-06-19T12:21:12Z"
   readyToUse: true
-  restoreSize: 6Gi
+  restoreSize: 1Gi
 ```
 
 Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we will see snapshot `snapcontent-b939675a-928c-11e9-bd3e-42010a800011` has been stored successfully.
@@ -324,7 +324,7 @@ spec:
           storageClassName: "standard"
           resources:
             requests:
-              storage: 6Gi
+              storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
             name: ${CLAIM_NAME}-1560400745
@@ -369,7 +369,7 @@ To verify that the PVC has been created, run by the following command,
 ```console
 $ kubectl get pvc -n demo
 NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc   Bound    pvc-c2e7ce40-8d98-11e9-bd3e-42010a800011   6Gi        RWO            standard       40s
+source-pvc   Bound    pvc-c2e7ce40-8d98-11e9-bd3e-42010a800011   1Gi        RWO            standard       40s
 ```
 
 Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.

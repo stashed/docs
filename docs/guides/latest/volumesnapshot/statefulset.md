@@ -153,7 +153,7 @@ spec:
         storageClassName: standard
         resources:
           requests:
-            storage: 6Gi
+            storage: 1Gi
 
 ```
 
@@ -180,9 +180,9 @@ Let's find out the PVCs created for these replicas,
 ```console
 $ kubectl get pvc -n demo
 NAME                          STATUS   VOLUME                                          CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc-stash-demo-0       Bound    pvc-6456fb74-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       27m
-source-pvc-stash-demo-1       Bound    pvc-76564e29-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       26m
-source-pvc-stash-demo-2       Bound    pvc-8730dbb2-8382-11e9-91dc-42010a80001a        6Gi        RWO            standard       26m
+source-pvc-stash-demo-0       Bound    pvc-6456fb74-8382-11e9-91dc-42010a80001a        1Gi        RWO            standard       27m
+source-pvc-stash-demo-1       Bound    pvc-76564e29-8382-11e9-91dc-42010a80001a        1Gi        RWO            standard       26m
+source-pvc-stash-demo-2       Bound    pvc-8730dbb2-8382-11e9-91dc-42010a80001a        1Gi        RWO            standard       26m
 ```
 
 Verify that the sample data has been generated in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
@@ -323,7 +323,7 @@ spec:
 status:
   creationTime: "2019-06-17T12:15:13Z"
   readyToUse: true
-  restoreSize: 6Gi
+  restoreSize: 1Gi
 ```
 
 Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we should see snapshot `snapcontent-912b1ad2-90f9-11e9-bd3e-42010a800011` has been stored successfully.
@@ -361,7 +361,7 @@ spec:
           storageClassName: "standard"
           resources:
             requests:
-              storage: 6Gi
+              storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
             name: ${CLAIM_NAME}-${POD_ORDINAL}-1560231666
@@ -421,9 +421,9 @@ Verify that the PVCs has been created by the following command,
 ```console
 $  kubectl get pvc -n demo
 NAME                      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
-source-pvc-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
-source-pvc-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
+source-pvc-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
+source-pvc-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
+source-pvc-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
 ```
 
 Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
@@ -488,7 +488,7 @@ spec:
         storageClassName: standard
         resources:
           requests:
-            storage: 6Gi
+            storage: 1Gi
 ```
 
 Let's create the Statefulset we have shown above.
@@ -647,7 +647,7 @@ spec:
 status:
   creationTime: "2019-06-17T12:15:13Z"
   readyToUse: true
-  restoreSize: 6Gi
+  restoreSize: 1Gi
 ```
 
 Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in GCP. If we navigate to the `Snapshots` tab in the GCP console, we should see the snapshot `snapcontent-8e7d2e6d-90f9-11e9-bd3e-42010a800011` has been stored successfully.
@@ -685,7 +685,7 @@ spec:
           storageClassName: "standard"
           resources:
             requests:
-              storage: 6Gi
+              storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
             name: ${CLAIM_NAME}-0-1560231666
@@ -727,9 +727,9 @@ check that the status of the PVCs are bound,
 ```console
 $  kubectl get pvc -n demo
 NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-data-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
-source-data-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
-source-data-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   6Gi        RWO            standard       10m
+source-data-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
+source-data-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
+source-data-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
 ```
 
 **Verify Restored Data :**
@@ -792,7 +792,7 @@ spec:
         storageClassName: standard
         resources:
           requests:
-            storage: 6Gi
+            storage: 1Gi
 ```
 
 Let's create the Statefulset we have shown above.

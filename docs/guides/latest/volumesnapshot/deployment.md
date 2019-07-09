@@ -106,7 +106,7 @@ spec:
   storageClassName: standard
   resources:
     requests:
-      storage: 6Gi
+      storage: 1Gi
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -119,7 +119,7 @@ spec:
   storageClassName: standard
   resources:
     requests:
-      storage: 6Gi
+      storage: 1Gi
 ```
 
 Create the PVCs we have shown above.
@@ -326,7 +326,7 @@ spec:
 status:
   creationTime: "2019-06-16T05:27:08Z"
   readyToUse: true
-  restoreSize: 6Gi
+  restoreSize: 1Gi
 ```
 
 Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we will see the snapshot `snapcontent-6206ec6b-8ff7-11e9-bd3e-42010a800011` has been stored successfully.
@@ -363,7 +363,7 @@ spec:
           storageClassName: "standard"
           resources:
             requests:
-              storage: 6Gi
+              storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
             name: ${CLAIM_NAME}-1560662826
@@ -376,7 +376,7 @@ spec:
           storageClassName: "standard"
           resources:
             requests:
-              storage: 6Gi
+              storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
             name: ${CLAIM_NAME}-1560662826
@@ -424,8 +424,8 @@ Verify that the PVCs has been created by the following command,
 ```console
 $ kubectl get pvc -n demo
 NAME           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc-1   Bound    pvc-e32b18f6-91c0-11e9-bd3e-42010a800011   6Gi        RWO            standard       30s
-source-pvc-2   Bound    pvc-e32db936-91c0-11e9-bd3e-42010a800011   6Gi        RWO            standard       30s
+source-pvc-1   Bound    pvc-e32b18f6-91c0-11e9-bd3e-42010a800011   1Gi        RWO            standard       30s
+source-pvc-2   Bound    pvc-e32db936-91c0-11e9-bd3e-42010a800011   1Gi        RWO            standard       30s
 ````
 
 Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.

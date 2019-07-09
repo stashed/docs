@@ -15,7 +15,7 @@ spec:
           storageClassName: "standard"
           resources:
             requests:
-              storage: 6Gi
+              storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
 #            name: ${CLAIM_NAME}-${POD_ORDINAL}-1560231666
