@@ -5,21 +5,21 @@ metadata:
   namespace: demo
 spec:
   repository:
-    name: local-repo
+    name: gcs-repo
   rules:
   - paths:
-    - /source/data-1
-    - /source/data-2
+    - /source/data
+    - /source/config
   target:
-    replicas: 3 # number of replica of the statefulset which was backed up
+    replicas: 3
     volumeMounts:
-    - name:  restored-data-1-stash-demo # format <claim name>-<statefulset name>
-      mountPath:  /source/data-1
-    - name:  restored-data-2-stash-demo
-      mountPath:  /source/data-2
+    - name:  restore-data-restore-demo
+      mountPath:  /source/data
+    - name:  restore-config-restore-demo
+      mountPath:  /source/config
     volumeClaimTemplates:
     - metadata:
-        name: restored-data-1-stash-demo # format <claim name>-<statefulset name>
+        name: restore-data-restore-demo
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
@@ -27,7 +27,7 @@ spec:
           requests:
             storage: 1Gi
     - metadata:
-        name: restored-data-2-stash-demo
+        name: restore-config-restore-demo
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"

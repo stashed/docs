@@ -31,35 +31,27 @@ spec:
         app: stash-demo
     spec:
       containers:
-      - name: busybox
-        image: busybox
-        command:
-        - sleep
-        - '3600'
-        volumeMounts:
-        - name: source-data-1
-          mountPath: "/source/data-1"
-        - name: source-data-2
-          mountPath: "/source/data-2"
-        imagePullPolicy: IfNotPresent
-      initContainers:
-      - name: data-generator
-        image: busybox
-        command: ["/bin/sh", "-c","touch /source/data-1/$(POD_NAME).txt","touch /source/data-2/$(POD_NAME).txt"]
+      - args: ["echo $(POD_NAME) > /source/data/$(POD_NAME)-data.txt; echo $(POD_NAME) > /source/config/$(POD_NAME)-config.txt && sleep 3000"]
+        command: ["/bin/sh", "-c"]
         env:
         - name:  POD_NAME
           valueFrom:
             fieldRef:
               fieldPath:  metadata.name
+        name: busybox
+        image: busybox
+        ports:
+        - containerPort: 80
+          name: http
         volumeMounts:
-        - name: source-data-1
-          mountPath: "/source/data-1"
-        - name: source-data-2
-          mountPath: "/source/data-2"
+        - name: source-data
+          mountPath: "/source/data"
+        - name: source-config
+          mountPath: "/source/config"
         imagePullPolicy: IfNotPresent
   volumeClaimTemplates:
   - metadata:
-      name: source-data-1
+      name: source-data
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: "standard"
@@ -67,7 +59,7 @@ spec:
         requests:
           storage: 1Gi
   - metadata:
-      name: source-data-2
+      name: source-config
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: "standard"
