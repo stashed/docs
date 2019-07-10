@@ -1,0 +1,11 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: gcs-repo
+  namespace: demo
+spec:
+  backend:
+    gcs:
+      bucket: appscode-qa
+      prefix: /stash/instant/deployment
+    storageSecretName: gcs-secret

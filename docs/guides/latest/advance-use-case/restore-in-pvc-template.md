@@ -21,7 +21,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/volumes](/docs/examples/guides/latest/restore-in-pvc-template) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+>**Note:** YAML files used in this tutorial are stored in  [/docs/examples/guides/latest/advance-use-case/restore-in-pvc-template](/docs/examples/guides/latest/advance-use-case/restore-in-pvc-template) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
 ## Restore data volumes of Deployment in PVC Template
 
@@ -104,7 +104,7 @@ spec:
 Let's create the Deployment and PVCs we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/deployment.yaml 
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/deployment/deployment.yaml
 persistentvolumeclaim/source-data created
 persistentvolumeclaim/source-config created
 deployment.apps/stash-demo created
@@ -163,7 +163,7 @@ spec:
 Let's create the `Repository` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -207,7 +207,7 @@ spec:
 Let's create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/dep-backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/deployment/dep-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -291,7 +291,7 @@ spec:
 Let's create the `RestoreSession` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/restore-deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/deployment/restore-deployment.yaml
 restoresession.stash.appscode.com/restore-deployment created
 ```
 
@@ -376,7 +376,7 @@ spec:
 Let's create the deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/restore-deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/deployment/restore-deployment.yaml
 deployment.apps/restore-demo created
 ```
 
@@ -481,7 +481,7 @@ spec:
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/statefulset/statefulset.yaml
 service/headless configured
 statefulset.apps/stash-demo created
 ```
@@ -541,7 +541,7 @@ spec:
 Let’s create the Repository object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -585,7 +585,7 @@ spec:
 Let’s create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/ss-backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/statefulset/ss-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -671,7 +671,7 @@ spec:
 Let’s create the `RestoreSession` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/restoresession.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/restore-statefulset created
 ```
 
@@ -784,7 +784,7 @@ spec:
 Let’s create the StatefulSet we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/restore-statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc-template/statefulset/restore-statefulset.yaml
 service/re-headless created
 statefulset.apps/restore-demo created
 ```
@@ -822,5 +822,6 @@ kubectl delete -n demo backupconfiguration ss-backup
 kubectl delete -n demo restoresession restore-deployment
 kubectl delete -n demo restoresession restore-statefulset
 kubectl delete -n demo repository gcs-repo
+kubectl delete -n demo secret gcs-secret
 kubectl delete -n demo pvc --all
 ```
