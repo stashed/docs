@@ -13,13 +13,13 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-      - name: source-data-1
-        mountPath: /source/data-1
-      - name: source-data-2
-        mountPath: /source/data-2
+      - name: source-data
+        mountPath: /source/data
+      - name: source-config
+        mountPath: /source/config
     directories:
-      - /source/data-1
-      - /source/data-2
+      - /source/data
+      - /source/config
   retentionPolicy:
     name: 'keep-last-5'
     keepLast: 5

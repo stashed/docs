@@ -1,6 +1,6 @@
-# Restore Data in PVC Template
+# Restore  Data Volumes in PVC Template
 
-This guide will show you how to restore backed up data in PVC Template using Stash. Here we are going to backup the data volumes of Deploymnent and StatefulSet then we will restore that volumes in PVC Template.
+This guide will show you how to restore backed up data in PVC Template using Stash. Here we are going to backup data volumes of Deploymnent and StatefulSet then we will restore that volumes in PVC Template.
 
 ## Before You Begin
 
@@ -23,13 +23,13 @@ namespace/demo created
 
 >**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/volumes](/docs/examples/guides/latest/restore-in-pvc-template) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
-## Restore Deployment's data in PVC Template
+## Restore data volumes of Deployment in PVC Template
 
 Here, we are going to backup the data volumes of Deployment then we will restore that volumes in PVC Template.
 
 ### Backup
 
-We will deploy a Deployment with two PVCs. This Deployment will automatically generate sample data in `/source/data-1` and `sourc/data-2` directory where we have mounted the PVCs. Then, we will take backup of those PVCs using Stash.
+We will deploy a Deployment with two PVCs. This Deployment will automatically generate sample data in `/source/data` and `sourc/config` directory where we have mounted the PVCs. Then, we will take backup of those PVCs using Stash.
 
 Below is the YAML of the Deployment and PVC's that we are going to create,
 
@@ -39,7 +39,7 @@ Below is the YAML of the Deployment and PVC's that we are going to create,
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: source-pvc-1
+  name: source-data
   namespace: demo
 spec:
   accessModes:
@@ -47,12 +47,12 @@ spec:
   storageClassName: standard
   resources:
     requests:
-      storage: 6Gi
+      storage: 2Gi
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: source-pvc-2
+  name: source-config
   namespace: demo
 spec:
   accessModes:
@@ -60,7 +60,7 @@ spec:
   storageClassName: standard
   resources:
     requests:
-      storage: 6Gi
+      storage: 2Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -81,50 +81,50 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["touch /source/data-1/file1.txt /source/data-2/file2.txt && sleep 3000"]
+      - args: ["echo sample_data > /source/data/data.txt; echo config_data > /source/config/config.txt && sleep 3000"]
         command: ["/bin/sh", "-c"]
         image: busybox
         imagePullPolicy: IfNotPresent
         name: busybox
         volumeMounts:
-        - mountPath: /source/data-1
-          name: source-data-1
-        - mountPath: /source/data-2
-          name: source-data-2
+        - mountPath: /source/data
+          name: source-data
+        - mountPath: /source/config
+          name: source-config
       restartPolicy: Always
       volumes:
-      - name: source-data-1
+      - name: source-data
         persistentVolumeClaim:
-          claimName: source-pvc-1
-      - name: source-data-2
+          claimName: source-data
+      - name: source-config
         persistentVolumeClaim:
-          claimName: source-pvc-2
+          claimName: source-config
 ```
 
 Let's create the Deployment and PVCs we have shown above.
 
 ```console
-$ kubectl apply -f ./deployment.yaml
-persistentvolumeclaim/source-pvc-1 created
-persistentvolumeclaim/source-pvc-2 created
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/deployment.yaml 
+persistentvolumeclaim/source-data created
+persistentvolumeclaim/source-config created
 deployment.apps/stash-demo created
 ```
 
-Now, wait for Deployment’s pod to go into the Running state.
+Now, wait for the pod of Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo 
 NAME                          READY   STATUS    RESTARTS   AGE
-stash-demo-5459cd4485-zp6v6   1/1     Running   0          57s
+stash-demo-67ccdfbbc7-z97rd   1/1     Running   0          77s
 ```
 
-Verify that the sample data has been created in `/source/data-1` and `/source/data-2` directory using the following command,
+Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-5459cd4485-zp6v6 ls source/data-1
-file1.txt
-$ kubectl exec -n demo stash-demo-5459cd4485-zp6v6 ls source/data-2
-file2.txt
+$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd ls /source/data
+data.txt
+$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd ls /source/config
+config.txt
 ```
 
 **Create Repository:**
@@ -163,7 +163,7 @@ spec:
 Let's create the `Repository` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -171,7 +171,7 @@ Now, we are ready to backup our volumes to our desired backend.
 
 **Create BackupConfiguration:**
 
-We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a CronJob to take periodic backup of `/source/data-1` and `/source/data-2` directory of the target.
+We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a CronJob to take periodic backup of `/source/data` and `/source/config` directory of the target.
 
 Below is the YAML of the `BackupConfiguration` object that we are going to create,
 
@@ -191,13 +191,13 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-      - name: source-data-1
-        mountPath: /source/data-1
-      - name: source-data-2
-        mountPath: /source/data-2
+      - name: source-data
+        mountPath: /source/data
+      - name: source-config
+        mountPath: /source/config
     directories:
-      - /source/data-1
-      - /source/data-2
+      - /source/data
+      - /source/config
   retentionPolicy:
     name: 'keep-last-5'
     keepLast: 5
@@ -207,7 +207,7 @@ spec:
 Let's create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./dep-backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/dep-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -256,40 +256,42 @@ spec:
     name: gcs-repo
   rules:
   - paths:
-    - /source/data-1
-    - /source/data-2
+    - /source/data
+    - /source/config
   target:
     volumeMounts:
-    - name:  restore-data-1
-      mountPath:  /source/data-1
-    - name:  restore-data-2
-      mountPath:  /source/data-2
+    - name:  restore-data
+      mountPath:  /source/data
+    - name:  restore-config
+      mountPath:  /source/config
     volumeClaimTemplates:
     - metadata:
-        name:  restore-data-1
+        name:  restore-data
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
     - metadata:
-        name:  restore-data-2
+        name:  restore-config
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
 ```
 
 - `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
 - `spec.target.rules[*].paths` specifies the directories that will be restored from the backed up data.
+- `spec.target.volumeClaimTemplates:`
+  - `metadata.name` is the name of the restored PVC.
 
 Let's create the `RestoreSession` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./restore-deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/restore-deployment.yaml
 restoresession.stash.appscode.com/restore-deployment created
 ```
 
@@ -301,7 +303,6 @@ Run the following command to watch RestoreSession phase,
 
 ```console
 $ watch -n 3 kubectl get restoresession -n demo
-
 Every 3.0s: kubectl get restoresession -n demo               suaas-appscode: Mon Jul  8 18:39:58 2019
 
 NAME                 REPOSITORY-NAME   PHASE       AGE
@@ -312,22 +313,22 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC:**
 
-Once a restore process is complete, we will see that new PVCs with the name `restore-data-1` and `restore-data-2` has been created.
+Once a restore process is complete, we will see that new PVCs with the name `restore-data` and `restore-config` have been created.
 
 Verify that the PVCs have been created by the following command,
 
 ```console
 $ kubectl get pvc -n demo
 NAME             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-restore-data-1   Bound    pvc-505a80a1-37a3-4ce8-b632-de870666b498   1Gi        RWO            standard       5m36s
-restore-data-2   Bound    pvc-c2c21e8e-3466-4098-b8eb-231f4bfea2e5   1Gi        RWO            standard       5m36s
+restore-config   Bound    pvc-6aab94dc-10b2-4c36-8768-89b20a7a24ed   2Gi        RWO            standard       32s
+restore-data     Bound    pvc-8296da99-b813-466a-b9f2-efff1faeee17   2Gi        RWO            standard       32s
 ```
 
-Notice the STATUS field. `Bound` indicates that PVCs have been initialized from the respective snapshot.
+Notice the STATUS field. `Bound` indicates that PVCs have been initialized from the respective backed up data.
 
 **Verify Restored Data:**
 
-We will create a new Deployment with the restored PVCs to verify whether the backed up data has been restored.
+We will create a new Deployment with the restored PVCs to verify whether the backed up data have been restored.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -337,7 +338,7 @@ kind: Deployment
 metadata:
   labels:
     app: stash-demo
-  name: restore-stash-demo
+  name: restore-demo
   namespace: demo
 spec:
   replicas: 1
@@ -358,25 +359,25 @@ spec:
         imagePullPolicy: IfNotPresent
         name: busybox
         volumeMounts:
-        - mountPath: /source/data-1
-          name: restore-data-1
-        - mountPath: /source/data-2
-          name: restore-data-2
+        - mountPath: /restore/data
+          name: restore-data
+        - mountPath: /source/config
+          name: restore-config
       restartPolicy: Always
       volumes:
-      - name: restore-data-1
+      - name: restore-data
         persistentVolumeClaim:
-          claimName: restore-data-1
-      - name: restore-data-2
+          claimName: restore-data
+      - name: restore-config
         persistentVolumeClaim:
-          claimName: restore-data-2
+          claimName: restore-config
 ```
 
 Let's create the deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./restore-deployment.yaml
-deployment.apps/restore-stash-demo created
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/deployment/restore-deployment.yaml
+deployment.apps/restore-demo created
 ```
 
 Now, wait for the pod of the deployment to go into the `Running` state.
@@ -384,16 +385,16 @@ Now, wait for the pod of the deployment to go into the `Running` state.
 ```console
 $ kubectl get pod -n demo
 NAME                                READY   STATUS    RESTARTS   AGE
-restore-stash-demo-d9d54b8f-xnddz   1/1     Running   0          2m50s
+restore-demo-85fbcb5dcf-vpbt8       1/1     Running   0          2m50s
 ```
 
-Verify that the sample data has been created in `/source/data-1` and `/source/data-2` directory using the following command,
+Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following command,
 
 ```console
-$ kubectl exec -n demo restore-stash-demo-d9d54b8f-xnddz ls /source/data-1
-file1.txt
-$ kubectl exec -n demo restore-stash-demo-d9d54b8f-xnddz ls /source/data-2
-file2.txt
+$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 ls /restore/data
+data.txt
+$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 ls /restore/config
+config.txt
 ```
 
 ## Restore data volumes of SatefulSet in PVC Template
@@ -466,7 +467,7 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
   - metadata:
       name: source-config
     spec:
@@ -474,13 +475,13 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
 ```
 
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl apply -f ./statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/statefulset.yaml
 service/headless configured
 statefulset.apps/stash-demo created
 ```
@@ -540,7 +541,7 @@ spec:
 Let’s create the Repository object that we have shown above,
 
 ```console
-$ kubectl apply -f ./repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -584,7 +585,7 @@ spec:
 Let’s create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./ss-backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/ss-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -606,7 +607,6 @@ Now, wait for a backup schedule to appear. You can watch for `BackupSession` crd
 
 ```console
 $ watch -n 3 kubectl get backupsession -n demo
-
 Every 3.0s: kubectl get backupsession -n demo                suaas-appscode: Tue Jul  9 17:09:43 2019
 
 NAME                   BACKUPCONFIGURATION   PHASE       AGE
@@ -651,7 +651,7 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
     - metadata:
         name: restore-config-restore-demo
       spec:
@@ -659,19 +659,19 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
 ```
 
 - `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
 - `spec.target.rules[*].paths` specifies the directories that will be restored from the backed up data.
 - `spec.target.volumeClaimTemplates:`
-  - `metadata.name` specifies the name of the restored PVC without pod ordinal. User must set the name by follow the following convention,
+  - `metadata.name` specifies the name of the restored PVC without pod ordinal and will follow the following convention,
   `<claim name>-<statefulset name>`.
 
 Let’s create the `RestoreSession` object that we have shown above,
 
 ```console
- $ kubectl apply -f ./restoresession.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/restore-statefulset created
 ```
 
@@ -683,7 +683,6 @@ Run the following command to watch `RestoreSession` phase,
 
 ```console
 $ watch -n 3 kubectl get restoresession -n demo
-
 Every 3.0s: kubectl get restoresession -n demo               suaas-appscode: Tue Jul  9 18:14:44 2019
 
 NAME                  REPOSITORY-NAME   PHASE       AGE
@@ -699,15 +698,15 @@ Once a restore process is complete, verify that new PVCs have been created succe
 ```console
 $ kubectl get pvc -n demo
 NAME                            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-restore-config-restore-demo-0   Bound    pvc-c575f88a-79c9-4d25-9aab-5f9822ced239   1Gi        RWO            standard       19s
-restore-config-restore-demo-1   Bound    pvc-09d8e1dc-9b51-4a74-983e-8ef2ecde88b5   1Gi        RWO            standard       19s
-restore-config-restore-demo-2   Bound    pvc-45fe4050-12dc-46cb-a797-63f8ea420e28   1Gi        RWO            standard       19s
-restore-data-restore-demo-0     Bound    pvc-d27485e6-5377-4009-b2e2-9ddc2f9afaf3   1Gi        RWO            standard       19s
-restore-data-restore-demo-1     Bound    pvc-ae605285-ef6c-4b02-958c-d34352972ff0   1Gi        RWO            standard       19s
-restore-data-restore-demo-2     Bound    pvc-bd087508-9d9c-4ee0-955f-4cd822ab85f7   1Gi        RWO            standard       19s
+restore-config-restore-demo-0   Bound    pvc-c575f88a-79c9-4d25-9aab-5f9822ced239   2Gi        RWO            standard       19s
+restore-config-restore-demo-1   Bound    pvc-09d8e1dc-9b51-4a74-983e-8ef2ecde88b5   2Gi        RWO            standard       19s
+restore-config-restore-demo-2   Bound    pvc-45fe4050-12dc-46cb-a797-63f8ea420e28   2Gi        RWO            standard       19s
+restore-data-restore-demo-0     Bound    pvc-d27485e6-5377-4009-b2e2-9ddc2f9afaf3   2Gi        RWO            standard       19s
+restore-data-restore-demo-1     Bound    pvc-ae605285-ef6c-4b02-958c-d34352972ff0   2Gi        RWO            standard       19s
+restore-data-restore-demo-2     Bound    pvc-bd087508-9d9c-4ee0-955f-4cd822ab85f7   2Gi        RWO            standard       19s
 ```
 
-Notice the STATUS field. `Bound` indicates that PVC has been initialized from the respective snapshot.
+Notice the STATUS field. `Bound` indicates that PVC has been initialized from the respective backed up data.
 
 **Verify Restored Data:**
 
@@ -771,7 +770,7 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
     - metadata:
         name: restore-config
       spec:
@@ -779,13 +778,13 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
 ```
 
 Let’s create the StatefulSet we have shown above.
 
 ```console
-$ kubectl apply -f ./restore-statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/restore-in-pvc-template/statefulset/restore-statefulset.yaml
 service/re-headless created
 statefulset.apps/restore-demo created
 ```
@@ -810,3 +809,18 @@ stash-demo-0-config.txt
 ```
 
 ## Cleanup
+
+To clean up the Kubernetes resources created by this tutorial, run:
+
+```yaml
+kubectl delete -n demo deployment stash-demo
+kubectl delete -n demo deployment restore-demo
+kubectl delete -n demo statefulset stash-demo
+kubectl delete -n demo statefulset restore-demo
+kubectl delete -n demo backupconfiguration deployment-backup
+kubectl delete -n demo backupconfiguration ss-backup
+kubectl delete -n demo restoresession restore-deployment
+kubectl delete -n demo restoresession restore-statefulset
+kubectl delete -n demo repository gcs-repo
+kubectl delete -n demo pvc --all
+```

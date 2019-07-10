@@ -25,7 +25,7 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
     - metadata:
         name: restore-config-restore-demo
       spec:
@@ -33,4 +33,4 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi

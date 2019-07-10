@@ -57,7 +57,7 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
   - metadata:
       name: source-config
     spec:
@@ -65,4 +65,4 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi

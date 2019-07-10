@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: stash-demo
-  name: restore-stash-demo
+  name: restore-demo
   namespace: demo
 spec:
   replicas: 1
@@ -24,15 +24,15 @@ spec:
         imagePullPolicy: IfNotPresent
         name: busybox
         volumeMounts:
-        - mountPath: /source/data-1
-          name: restore-data-1
-        - mountPath: /source/data-2
-          name: restore-data-2
+        - mountPath: /restore/data
+          name: restore-data
+        - mountPath: /restore/config
+          name: restore-config
       restartPolicy: Always
       volumes:
-      - name: restore-data-1
+      - name: restore-data
         persistentVolumeClaim:
-          claimName: restore-data-1
-      - name: restore-data-2
+          claimName: restore-data
+      - name: restore-config
         persistentVolumeClaim:
-          claimName: restore-data-2
+          claimName: restore-config

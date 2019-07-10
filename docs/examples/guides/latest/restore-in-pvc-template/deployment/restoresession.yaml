@@ -8,28 +8,28 @@ spec:
     name: gcs-repo
   rules:
   - paths:
-    - /source/data-1
-    - /source/data-2
+    - /source/data
+    - /source/config
   target:
     volumeMounts:
-    - name:  restore-data-1
-      mountPath:  /source/data-1
-    - name:  restore-data-2
-      mountPath:  /source/data-2
+    - name:  restore-data
+      mountPath:  /source/data
+    - name:  restore-config
+      mountPath:  /source/config
     volumeClaimTemplates:
     - metadata:
-        name:  restore-data-1
+        name:  restore-data
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
     - metadata:
-        name:  restore-data-2
+        name:  restore-config
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi

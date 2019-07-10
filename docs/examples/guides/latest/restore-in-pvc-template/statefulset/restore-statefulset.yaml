@@ -53,7 +53,7 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
     - metadata:
         name: restore-config
       spec:
@@ -61,4 +61,4 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
