@@ -31,7 +31,7 @@ spec:
         app: stash-demo
     spec:
       containers:
-      - args: ["echo $(POD_NAME) > /source/data/$(POD_NAME)-data.txt; echo $(POD_NAME) > /source/config/$(POD_NAME)-config.txt && sleep 3000"]
+      - args: ["echo $(POD_NAME) > /source/data/data.txt; echo $(POD_NAME) > /source/config/config.cfg && sleep 3000"]
         command: ["/bin/sh", "-c"]
         env:
         - name:  POD_NAME

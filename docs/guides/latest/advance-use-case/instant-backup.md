@@ -1,6 +1,6 @@
 # Instant Backup
 
-This guide will show you how to trigger a backup volumes instantly using Stash.
+This guide will show you how to trigger an instant backup in Stash.
 
 ## Before You Begin
 
@@ -22,13 +22,11 @@ namespace/demo created
 
 >**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/advance-use-case/instant-backup](/docs/examples/guides/latest/advance-use-case/instant-backup) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
-## Backup Configure
+## Configure Backup
 
-Here, we are going to backup the data volumes of Deployment. At first, we will deploy a Deployment with a PVC and generate some sample data in it. Then we will take instant backup of these PVC using Stash.
+Here, we are going to configure backup for a Deployment. At first, we will deploy a Deployment with a PVC and generate some sample data in it. Then, we will configure backup for the Deployment using Stash.
 
 **Deploy Deployment:**
-
-We will deploy a Deployment with PVC. This Deployment will automatically generate sample data in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment and PVC that we are going to create,
 
@@ -80,6 +78,8 @@ spec:
           claimName: source-data
 ```
 
+The above Deployment will automatically create a `data.txt` file in `/source/data` directory and write some sample data in it.
+
 Let’s create the Deployment and PVC we have shown above.
 
 ```console
@@ -88,10 +88,10 @@ persistentvolumeclaim/source-data created
 deployment.apps/stash-demo created
 ```
 
-Now, wait for the pod of Deployment to go into the `Running` state.
+Now, wait for pod of the Deployment to go into `Running` state.
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-859d96f6bd-fxr7l   1/1     Running   0          81s
 ```
@@ -105,7 +105,7 @@ data.txt
 
 **Create Secret and Repository:**
 
-We are going to store our backed up data into a GCS bucket using Stash. We have to create a Secret and a Repository object with access credentials and backend information respectively.
+We are going to store our backed up data into a GCS bucket. We have to create a Secret and a Repository object with access credentials and backend information respectively.
 
 Let’s create a secret called `gcs-secret` with access credentials of our desired GCS backend,
 
@@ -196,101 +196,6 @@ stash-demo-9bff9fd4f-xvt77   2/2     Running   0          57s
 
 Look at the pod. It now has 2 containers. If you view the resource definition of this pod, you will see that there is a container named `stash` which is running `run-backup` command.
 
-```yaml
-$ kubectl get pod -n demo stash-demo-9bff9fd4f-xvt77 -o yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    app: stash-demo
-    pod-template-hash: 9bff9fd4f
-  name: stash-demo-9bff9fd4f-xvt77
-  namespace: demo
-  uid: 044cfa14-9b2f-47e8-ac15-399b9addd61d
-  ...
-spec:
-  containers:
-  - args:
-    - echo sample_data > /source/data/data.txt && sleep 3000
-    command:
-    - /bin/sh
-    - -c
-    image: busybox
-    imagePullPolicy: IfNotPresent
-    name: busybox
-    volumeMounts:
-    - mountPath: /source/data
-      name: source-data
-    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-      name: default-token-dp4pv
-      readOnly: true
-  - args:
-    - run-backup
-    - --backup-configuration=deployment-backup
-    - --secret-dir=/etc/stash/repository/secret
-    - --enable-cache=true
-    - --max-connections=0
-    - --metrics-enabled=true
-    - --pushgateway-url=http://stash-operator.kube-system.svc:56789
-    - --enable-status-subresource=true
-    - --use-kubeapiserver-fqdn-for-aks=true
-    - --enable-analytics=true
-    - --logtostderr=true
-    - --alsologtostderr=false
-    - --v=3
-    - --stderrthreshold=0
-    env:
-    - name: NODE_NAME
-      valueFrom:
-        fieldRef:
-          apiVersion: v1
-          fieldPath: spec.nodeName
-    - name: POD_NAME
-      valueFrom:
-        fieldRef:
-          apiVersion: v1
-          fieldPath: metadata.name
-    image: suaas21/stash:restore-pvc-tpl_linux_amd64
-    imagePullPolicy: IfNotPresent
-    name: stash
-    volumeMounts:
-    - mountPath: /etc/stash
-      name: stash-podinfo
-    - mountPath: /etc/stash/repository/secret
-      name: stash-secret-volume
-    - mountPath: /tmp
-      name: tmp-dir
-    - mountPath: /source/data
-      name: source-data
-    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-      name: default-token-dp4pv
-      readOnly: true
-  volumes:
-  - name: source-data
-    persistentVolumeClaim:
-      claimName: source-data
-  - emptyDir: {}
-    name: tmp-dir
-  - downwardAPI:
-      defaultMode: 420
-      items:
-      - fieldRef:
-          apiVersion: v1
-          fieldPath: metadata.labels
-        path: labels
-    name: stash-podinfo
-  - name: stash-secret-volume
-    secret:
-      defaultMode: 420
-      secretName: gcs-secret
-  - name: default-token-dp4pv
-    secret:
-      defaultMode: 420
-      secretName: default-token-dp4pv
-  ...
-...
-```
-
 **Verify CronJob:**
 
 It will also create a `CronJob` with the schedule specified in `spec.schedule` field of `BackupConfiguration` crd.
@@ -303,9 +208,9 @@ NAME                TASK   SCHEDULE       PAUSED   AGE
 deployment-backup          */40 * * * *            6m41s
 ```
 
-## Backup Instant
+## Trigger Instant Backup
 
-Now, we will take instant backup of the data volumes. for that, we will deploy a `BackupSession` object to trigger instant backup.
+Now, we will trigger an instant backup of Deployment's volumes that we have configured in the previous section. In order to do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
 
 **Create BackupSession:**
 
@@ -324,7 +229,11 @@ spec:
     name: deployment-backup
 ```
 
-- `metadata.labels` holds the respective `BackupConfiguration` name as label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`. The form of label must follow the following convention, `stash.appscode.com/backup-configuration: <BackupConfiguration name>`.
+- `metadata.labels` holds the respective `BackupConfiguration` name as label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`. You must provide the label in the following format:
+  ```
+  stash.appscode.com/backup-configuration: <BackupConfiguration name>
+  ```
+- `spec.backupConfiguration.name` indicates the name of the `BackupConfiguration` object whose target will be backed up instantly in this `BackupSession`.
 
 Let's create the `BackupSession` object that we have have shown above,
 
@@ -332,6 +241,8 @@ Let's create the `BackupSession` object that we have have shown above,
 $ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/instant-backup/backupsession.yaml
 backupsession.stash.appscode.com/deployment-backupsession created
 ```
+
+If everything goes well, the stash sidecar inside the Deployment will take a backup instantly.
 
 **Wait for BackupSession to Succeeded:**
 

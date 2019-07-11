@@ -1,6 +1,6 @@
-# Restore  Data Volumes in PVC Template
+# Restore Volumes in PVC Template
 
-This guide will show you how to restore backed up data in PVC Template using Stash. Here we are going to backup data volumes of Deploymnent and StatefulSet then we will restore that volumes in PVC Template.
+This guide will show you how to restore backed up volumes in PVC Template using Stash.
 
 ## Before You Begin
 
@@ -23,17 +23,17 @@ namespace/demo created
 
 >**Note:** YAML files used in this tutorial are stored in  [/docs/examples/guides/latest/advance-use-case/restore-in-pvc-template](/docs/examples/guides/latest/advance-use-case/restore-in-pvc-template) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
-## Restore data volumes of Deployment in PVC Template
+## Restore Deployment's volumes in PVC Template
 
-Here, we are going to backup the data volumes of Deployment then we will restore that volumes in PVC Template.
+Here we are going to restore a Deploymnent's volumes in PVC Template. At first, we will back up a Deployment's volumes then we will restore these volumes in PVC Template.
 
 ### Backup
 
-We will deploy a Deployment with two PVCs. This Deployment will automatically generate sample data in `/source/data` and `sourc/config` directory where we have mounted the PVCs. Then, we will take backup of those PVCs using Stash.
-
-Below is the YAML of the Deployment and PVC's that we are going to create,
+Now, we will deploy a Deployment with two pvcs and generate some sample data in it. Then, we will backup these PVCs.
 
 **Deploy Deployment:**
+
+Below is the YAML of the Deployment and PVCs that we are going to create,
 
 ```yaml
 kind: PersistentVolumeClaim
@@ -81,7 +81,7 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > /source/data/data.txt; echo config_data > /source/config/config.txt && sleep 3000"]
+      - args: ["echo sample_data > /source/data/data.txt; echo config_data > /source/config/config.cfg && sleep 3000"]
         command: ["/bin/sh", "-c"]
         image: busybox
         imagePullPolicy: IfNotPresent
@@ -101,6 +101,8 @@ spec:
           claimName: source-config
 ```
 
+The above Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `sourc/config` directory respectively and write some sample data in it.
+
 Let's create the Deployment and PVCs we have shown above.
 
 ```console
@@ -110,7 +112,7 @@ persistentvolumeclaim/source-config created
 deployment.apps/stash-demo created
 ```
 
-Now, wait for the pod of Deployment to go into the `Running` state.
+Now, wait for pod of the Deployment to go into `Running` state.
 
 ```console
 $ kubectl get pod -n demo 
@@ -124,12 +126,12 @@ Verify that the sample data has been created in `/source/data` and `/source/conf
 $ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd ls /source/data
 data.txt
 $ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd ls /source/config
-config.txt
+config.cfg
 ```
 
 **Create Repository:**
 
-We are going to store our backed up data into a GCS bucket using Stash. We have to create a Secret and a Repository object with access credentials and backend information respectively.
+We are going to store our backed up data into a GCS bucket. We have to create a Secret and a Repository object with access credentials and backend information respectively.
 
 Let's create a secret called `gcs-secret` with access credentials of our desired GCS backend,
 
@@ -211,11 +213,11 @@ $ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
-If everything goes well, Stash will create a CronJob to trigger backup periodically.
+If everything goes well, Stash will create a `CronJob` to trigger backup periodically.
 
 **Verify CronJob:**
 
-Verify that Stash has created a CronJob to trigger a periodic backup of the volumes of Deployment by the following command,
+Verify that Stash has created a `CronJob` to trigger a periodic backup of volumes of the Deployment by the following command,
 
 ```console
 $ kubectl get backupconfiguration -n demo
@@ -235,15 +237,15 @@ NAMESPACE   NAME                           BACKUPCONFIGURATION   PHASE       AGE
 demo        deployment-backup-1562588351   deployment-backup     Succeeded   96s
 ```
 
-We can see from the above output that the backup session has succeeded. This indicates that the data volumes of deployment have been stored in the backend successfully.
+We can see from the above output that the backup session has succeeded. This indicates that the volumes of the deployment have been stored in the backend successfully.
 
 ### Restore
 
-This section will show you how to restore the backed up data in PVC Template using stash. Here, we will restore the data we have backed up in the previous section.
+Now, we will restore the volumes that we have backed up in the previous section into PVC Template. In order to do that, we have to create a `RestoreSession` object that specify the `volumeClaimTemplates`.
 
 **Create RestoreSession:**
 
-Now, we will create a `RestoreSession` object to restore the backed up data into the PVC Template. Below is the YAML of the `RestoreSession` object that we are going to create,
+Below is the YAML of the `RestoreSession` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -285,8 +287,8 @@ spec:
 
 - `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
 - `spec.target.rules[*].paths` specifies the directories that will be restored from the backed up data.
-- `spec.target.volumeClaimTemplates:`
-  - `metadata.name` is the name of the restored PVC.
+- `spec.target.volumeClaimTemplates:` specifies a list of PVC templates that will be created by restoring volumes from respective backed up volumes.
+  - `metadata.name` specifies the name of the restored PVC.
 
 Let's create the `RestoreSession` object that we have shown above,
 
@@ -324,7 +326,7 @@ restore-config   Bound    pvc-6aab94dc-10b2-4c36-8768-89b20a7a24ed   2Gi        
 restore-data     Bound    pvc-8296da99-b813-466a-b9f2-efff1faeee17   2Gi        RWO            standard       32s
 ```
 
-Notice the STATUS field. `Bound` indicates that PVCs have been initialized from the respective backed up data.
+Notice the STATUS field. `Bound` indicates that PVCs have been initialized from the respective backed up volumes.
 
 **Verify Restored Data:**
 
@@ -380,7 +382,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc
 deployment.apps/restore-demo created
 ```
 
-Now, wait for the pod of the deployment to go into the `Running` state.
+Now, wait for pod of the deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -394,18 +396,20 @@ Verify that the sample data has been created in `/source/data` and `/source/conf
 $ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 ls /restore/data
 data.txt
 $ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 ls /restore/config
-config.txt
+config.cfg
 ```
 
-## Restore data volumes of SatefulSet in PVC Template
+## Restore SatefulSet's volumes in PVC Template
 
-Here, we are going to backup data volumes of statefulSet then we will restore that volumes in PVC Template.
+Here we are going to restore a StatefulSet’s volumes in PVC Template. At first, we will back up a StatefulSet’s volumes then we will restore these volumes in PVC Template.
 
 ### Backup
 
-Now, we will deploy a Statefulset. This StatefulSet will automatically generate sample data in `/source/data` and `/source/config` directory. Below is the YAML of the Statefulset that we are going to create,
+Now, we will deploy a StatefulSet and generate some sample data in it's volume. Then, we will backup these volumes.
 
 **Deploy StatefulSet:**
+
+Below is the YAML of the Statefulset that we are going to create,
 
 ```yaml
 apiVersion: v1
@@ -441,7 +445,7 @@ spec:
         app: stash-demo
     spec:
       containers:
-      - args: ["echo $(POD_NAME) > /source/data/$(POD_NAME)-data.txt; echo $(POD_NAME) > /source/config/$(POD_NAME)-config.txt && sleep 3000"]
+      - args: ["echo $(POD_NAME) > /source/data/data.txt; echo $(POD_NAME) > /source/config/config.cfg && sleep 3000"]
         command: ["/bin/sh", "-c"]
         env:
         - name:  POD_NAME
@@ -478,6 +482,8 @@ spec:
           storage: 2Gi
 ```
 
+The above StatefulSet will automatically create `data.txt` and `config.cfg` file in `/source/data` and `sourc/config` directory respectively and write some sample data in it.
+
 Let's create the Statefulset we have shown above.
 
 ```console
@@ -486,7 +492,7 @@ service/headless configured
 statefulset.apps/stash-demo created
 ```
 
-Now, wait for the pod of the Statefulset to go into the Running state.
+Now, wait for pod of the Statefulset to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo 
@@ -496,18 +502,18 @@ stash-demo-1   1/1     Running   0          43s
 stash-demo-2   1/1     Running   0          33s
 ```
 
-Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following command,
+Verify that the file has been created in `/source/data` and `/source/config` directory using the following command,
 
 ```console
 $ kubectl exec -n demo stash-demo-0 ls /source/data
-stash-demo-0-data.txt
+data.txt
 $ kubectl exec -n demo stash-demo-0 ls /source/config
-stash-demo-0-config.txt
+config.txt
 ```
 
 **Create Repository:**
 
-We are going to store our backed up data into a GCS bucket using Stash. We have to create a Secret and a Repository object with access credentials and backend information respectively.
+We are going to store our backed up data into a GCS bucket. We have to create a Secret and a Repository object with access credentials and backend information respectively.
 
 Let’s create a secret called `gcs-secret` with access credentials of our desired GCS backend,
 
@@ -589,11 +595,11 @@ $ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/restore-in-pvc
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
-If everything goes well, Stash will create a CronJob to trigger backup periodically.
+If everything goes well, Stash will create a `CronJob` to trigger backup periodically.
 
 **Verify CronJob:**
 
-Verify that Stash has created a CronJob to trigger a periodic backup of the volumes of Statefulset by the following command,
+Verify that Stash has created a `CronJob` to trigger a periodic backup of the volumes of the Statefulset by the following command,
 
 ```console
 $ kubectl get backupconfiguration -n demo
@@ -613,15 +619,15 @@ NAME                   BACKUPCONFIGURATION   PHASE       AGE
 ss-backup-1562670004   ss-backup             Succeeded   9m39s
 ```
 
-We can see from the above output that the backup session has succeeded. This indicates that the data volumes of StatefulSet have been stored in the backend successfully.
+We can see from the above output that the backup session has succeeded. This indicates that the volumes of StatefulSet have been stored in the backend successfully.
 
 ### Restore
 
-This section will show you how to restore the backed up data in PVC Template using stash. Here, we will restore the data we have backed up in the previous section.
+Now, we will restore the volumes that we have backed up in the previous section into PVC Template. In order to do that, we have to create a `RestoreSession` object that specify the `volumeClaimTemplates`.
 
 **Create RestoreSession:**
 
-Now, we will create a `RestoreSession` object to restore the backed up data into the PVC Template. Below is the YAML of the `RestoreSession` object that we are going to create,
+Below is the YAML of the `RestoreSession` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -662,11 +668,12 @@ spec:
             storage: 2Gi
 ```
 
-- `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
-- `spec.target.rules[*].paths` specifies the directories that will be restored from the backed up data.
-- `spec.target.volumeClaimTemplates:`
-  - `metadata.name` specifies the name of the restored PVC without pod ordinal and will follow the following convention,
-  `<claim name>-<statefulset name>`.
+- `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Snapshots.
+- `spec.target.volumeClaimTemplates:` specifies a list of PVC templates that will be created by restoring volumes from respective backed up volumes.
+  - `metadata.name` Specifies the name of the restored PVC without pod ordinal. You must provide the name in the format:
+  ```
+  <claim name>-<statefulset name>
+  ```
 
 Let’s create the `RestoreSession` object that we have shown above,
 
@@ -706,7 +713,7 @@ restore-data-restore-demo-1     Bound    pvc-ae605285-ef6c-4b02-958c-d34352972ff
 restore-data-restore-demo-2     Bound    pvc-bd087508-9d9c-4ee0-955f-4cd822ab85f7   2Gi        RWO            standard       19s
 ```
 
-Notice the STATUS field. `Bound` indicates that PVC has been initialized from the respective backed up data.
+Notice the STATUS field. `Bound` indicates that PVC has been initialized from the respective backed up volumes.
 
 **Verify Restored Data:**
 
@@ -803,9 +810,9 @@ Verify that the sample data has been created in `/restore/data` and `/restore/co
 
 ```console
 $ kubectl exec -n demo restore-demo-0 ls /restore/data
-stash-demo-0-data.txt
+data.txt
 $ kubectl exec -n demo restore-demo-0 ls /restore/config
-stash-demo-0-config.txt
+config.txt
 ```
 
 ## Cleanup
