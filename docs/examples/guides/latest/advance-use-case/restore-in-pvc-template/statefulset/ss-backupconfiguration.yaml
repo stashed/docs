@@ -6,7 +6,7 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  schedule: "* * * * *"
+  schedule: "*/3 * * * *"
   target:
     ref:
       apiVersion: apps/v1

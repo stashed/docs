@@ -19,7 +19,7 @@ spec:
       mountPath:  /source/config
     volumeClaimTemplates:
     - metadata:
-        name: restore-data-restore-demo
+        name: restore-data-restore-demo-${POD_ORDINAL}
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
@@ -27,7 +27,7 @@ spec:
           requests:
             storage: 2Gi
     - metadata:
-        name: restore-config-restore-demo
+        name: restore-config-restore-demo-${POD_ORDINAL}
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"

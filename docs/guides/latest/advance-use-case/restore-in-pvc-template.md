@@ -651,7 +651,7 @@ spec:
       mountPath:  /source/config
     volumeClaimTemplates:
     - metadata:
-        name: restore-data-restore-demo
+        name: restore-data-restore-demo-${POD_ORDINAL}
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
@@ -659,7 +659,7 @@ spec:
           requests:
             storage: 2Gi
     - metadata:
-        name: restore-config-restore-demo
+        name: restore-config-restore-demo-${POD_ORDINAL}
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
@@ -668,12 +668,9 @@ spec:
             storage: 2Gi
 ```
 
-- `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Snapshots.
+- `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
 - `spec.target.volumeClaimTemplates:` specifies a list of PVC templates that will be created by restoring volumes from respective backed up volumes.
-  - `metadata.name` Specifies the name of the restored PVC without pod ordinal. You must provide the name in the format:
-  ```
-  <claim name>-<statefulset name>
-  ```
+  - `metadata.name` Specifies the name of the restored PVC. You must provide the name in the format: `pvcname-<POD_ORDINAL>`. `${POD_ORDINAL}` is resolved by the stash operator.
 
 Let’s create the `RestoreSession` object that we have shown above,
 
