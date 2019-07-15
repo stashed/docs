@@ -27,10 +27,10 @@ spec:
   template:
     metadata:
       labels:
-        app: stash # Pod template's label selector
+        app: stash
     spec:
       containers:
-        - args: ["touch /source/data/$(POD_NAME).txt && sleep 3000"]
+        - args: ["echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
           command: ["/bin/sh", "-c"]
           env:
             - name:  POD_NAME
@@ -43,11 +43,11 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: source-pvc
+            - name: source-data
               mountPath: /source/data
   volumeClaimTemplates:
     - metadata:
-        name: source-pvc
+        name: source-data
         namespace: demo
       spec:
         accessModes:

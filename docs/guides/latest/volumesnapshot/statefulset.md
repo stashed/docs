@@ -42,8 +42,6 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ```
 
-The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC.
-
 Let's create the `StorageClass` we have shown above,
 
 ```console
@@ -86,8 +84,7 @@ namespace/demo created
 
 ## Take Volume Snapshot
 
-When you create a Statefulset, there is no need to create PVCs separately, because all replicas in Statefulset use different PVCs to store data. Kubernetes allows us to define a `volumeClaimTemplates` in Statefulset so that new PVC is created for each replica automatically. 
-We will take snapshot of those PVCs using Stash.
+When you create a Statefulset, there is no need to create PVCs separately, because all replicas in Statefulset use different PVCs to store data. Kubernetes allows us to define a `volumeClaimTemplates` in Statefulset so that new PVC is created for each replica automatically. We will take snapshot of those PVCs using Stash.
 
 **Deploy StatefulSet :**
 
@@ -125,10 +122,10 @@ spec:
   template:
     metadata:
       labels:
-        app: stash # Pod template's label selector
+        app: stash 
     spec:
       containers:
-        - args: ["touch /source/data/$(POD_NAME).txt && sleep 3000"]
+        - args: ["echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
           command: ["/bin/sh", "-c"]
           env:
             - name:  POD_NAME
@@ -141,11 +138,11 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: source-pvc
+            - name: source-data
               mountPath: /source/data
   volumeClaimTemplates:
     - metadata:
-        name: source-pvc
+        name: source-data
         namespace: demo
       spec:
         accessModes:
@@ -154,7 +151,6 @@ spec:
         resources:
           requests:
             storage: 1Gi
-
 ```
 
 Let's create the Statefulset we have shown above.
@@ -165,7 +161,7 @@ service/svc created
 statefulset.apps/stash-demo created
 ```
 
-Now, wait for Statefulset’s pods to go into the Running state.
+Now, wait for the pod of Statefulset to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -178,28 +174,22 @@ stash-demo-2   1/1     Running   0          39s
 Let's find out the PVCs created for these replicas,
 
 ```console
-$ kubectl get pvc -n demo
-NAME                          STATUS   VOLUME                                          CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc-stash-demo-0       Bound    pvc-6456fb74-8382-11e9-91dc-42010a80001a        1Gi        RWO            standard       27m
-source-pvc-stash-demo-1       Bound    pvc-76564e29-8382-11e9-91dc-42010a80001a        1Gi        RWO            standard       26m
-source-pvc-stash-demo-2       Bound    pvc-8730dbb2-8382-11e9-91dc-42010a80001a        1Gi        RWO            standard       26m
+kubectl get pvc -n demo
+NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+source-data-stash-demo-0   Bound    pvc-760c1734-a6cc-11e9-9f3a-42010a800050   1Gi        RWO            standard       70s
+source-data-stash-demo-1   Bound    pvc-86f5b3bd-a6cc-11e9-9f3a-42010a800050   1Gi        RWO            standard       42s
+source-data-stash-demo-2   Bound    pvc-9c9f542f-a6cc-11e9-9f3a-42010a800050   1Gi        RWO            standard       5s
 ```
 
-Verify that the sample data has been generated in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
+Verify that the sample data has been created in `/source/data` directory using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-0.txt
-$ kubectl exec -n demo stash-demo-1 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-1.txt
-$ kubectl exec -n demo stash-demo-2 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-2.txt
+$ kubectl exec -n demo stash-demo-0 -- cat /source/data/data.txt
+stash-demo-0
+$ kubectl exec -n demo stash-demo-1 -- cat /source/data/data.txt
+stash-demo-1
+$ kubectl exec -n demo stash-demo-2 -- cat /source/data/data.txt
+stash-demo-2
 ```
 
 **Create BackupConfiguration :**
@@ -270,8 +260,8 @@ $ watch -n 1 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo                      suaas-appscode: Tue Jun 18 18:35:41 2019
 
 NAME                                     BACKUP-CONFIGURATION           PHASE        AGE
-statefulset-volume-snapshot-1560231666   statefulset-volume-snapshot   Running      57s
-statefulset-volume-snapshot-1560231666   statefulset-volume-snapshot   Succeeded    57s
+statefulset-volume-snapshot-1563177551   statefulset-volume-snapshot   Running      57s
+statefulset-volume-snapshot-1563177551   statefulset-volume-snapshot   Succeeded    57s
 ```
 
 We can see above that the backup session has succeeded. Now, we will verify that the VolumeSnapshot has been created and the snapshots has been stored in the respective backend.
@@ -289,44 +279,44 @@ Check that the `VolumeSnapshot` has been created Successfully.
 ```console
 $ kubectl get volumesnapshot -n demo
 NAME                                  AGE
-source-pvc-stash-demo-0-1560231666    105s
-source-pvc-stash-demo-1-1560231666    105s
-source-pvc-stash-demo-2-1560231666    105s
+source-data-stash-demo-0-1563177551   115s
+source-data-stash-demo-1-1563177551   115s
+source-data-stash-demo-2-1563177551   115s
 ```
 
 Let's find out the actual snapshot name that will be saved in the Google Cloud by the following command,
 
 ```console
-kubectl get volumesnapshot source-pvc-stash-demo-0-1560231666 -n demo -o yaml
+kubectl get volumesnapshot source-data-stash-demo-0-1563177551 -n demo -o yaml
 ```
 
 ```yaml
 apiVersion: snapshot.storage.k8s.io/v1alpha1
 kind: VolumeSnapshot
 metadata:
-  creationTimestamp: "2019-06-17T12:15:12Z"
+  creationTimestamp: "2019-07-15T07:59:13Z"
   finalizers:
   - snapshot.storage.kubernetes.io/volumesnapshot-protection
   generation: 4
-  name: source-pvc-stash-demo-0-1560773710
+  name: source-data-stash-demo-0-1563177551
   namespace: demo
-  resourceVersion: "919278"
-  selfLink: /apis/snapshot.storage.k8s.io/v1alpha1/namespaces/demo/volumesnapshots/source-pvc-stash-demo-0-1560231666
-  uid: 912b1ad2-90f9-11e9-bd3e-42010a800011
+  resourceVersion: "18764"
+  selfLink: /apis/snapshot.storage.k8s.io/v1alpha1/namespaces/demo/volumesnapshots/source-data-stash-demo-0-1563177551
+  uid: 6f3b49a9-a6d6-11e9-9f3a-42010a800050
 spec:
   snapshotClassName: default-snapshot-class
-  snapshotContentName: snapcontent-912b1ad2-90f9-11e9-bd3e-42010a800011
+  snapshotContentName: snapcontent-6f3b49a9-a6d6-11e9-9f3a-42010a800050
   source:
     apiGroup: null
     kind: PersistentVolumeClaim
     name: source-data-stash-demo-0
 status:
-  creationTime: "2019-06-17T12:15:13Z"
+  creationTime: "2019-07-15T07:59:14Z"
   readyToUse: true
   restoreSize: 1Gi
 ```
 
-Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we should see snapshot `snapcontent-912b1ad2-90f9-11e9-bd3e-42010a800011` has been stored successfully.
+Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we should see snapshot `snapcontent-6f3b49a9-a6d6-11e9-9f3a-42010a800050` has been stored successfully.
 
 <figure align="center">
   <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/statefulset.png">
@@ -355,7 +345,7 @@ spec:
     replicas : 3
     volumeClaimTemplates:
       - metadata:
-          name: source-data-stash-demo
+          name: restore-data-restore-demo-${POD_ORDINAL}
         spec:
           accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
@@ -364,31 +354,26 @@ spec:
               storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
-            name: ${CLAIM_NAME}-${POD_ORDINAL}-1560231666
-            # name: ${CLAIM_NAME}-0-1560231666
+            name: source-data-stash-demo-${POD_ORDINAL}-1563177551
+#           name: source-data-stash-demo-0-1563177551
             apiGroup: snapshot.storage.k8s.io
 ```
 
 Here,
 
+- `spec.target.replicas`: `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective or Specific VolumeSnapShots.
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name` is the name of the restored `PVC` or prefix of the `VolumeSnapshot` name.
+  - `metadata.name` is the name of the restored `PVC`.
   - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be initialized. It requires following fields to be set:
     - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
     - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
-    - `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You can template the name by using the following convention:
-
+    - `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You must provide the name in the format:
+  
     ```console
-     ${CLAIM_NAME}-${POD_ORDINAL}-<backup session creation timestamp in Unix epoch seconds>
+     <VolumeSnapshot name prefix>-${POD_ORDINAL}-<backup session creation timestamp in Unix epoch seconds>
      ```
 
-     Or,
-
-     ```console
-     ${CLAIM_NAME}-<backup session creation timestamp in Unix epoch seconds>
-     ```
-
-    `${CLAIM_NAME}` and `{POD_ORDINAL}` are resolved by the Stash operator and replaced by the `metadata.name` of the `volumeclaimtemplates` and pod ordinal respectively. This allows you to restore all PVCs from a single VolumeSnapshot or restore each PVC from its respective VolumeSnapshot. You can also set the snapshot name directly.
+    `{POD_ORDINAL}` is resolved by the Stash operator. You can also restore all PVCs from a single VolumeSnapshot or restore each PVC from its respective VolumeSnapshot by setting up the name directly.
 
 Let's create the `RestoreSession` crd we have shown above.
 
@@ -414,19 +399,21 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVCs with the name `source-pvc-stash-demo-0` , `source-pvc-stash-demo-1` and `source-pvc-stash-demo-2` has been created.
+Once a restore process is complete, we will see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` has been created.
 
 Verify that the PVCs has been created by the following command,
 
 ```console
-$  kubectl get pvc -n demo
-NAME                      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-pvc-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
-source-pvc-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
-source-pvc-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
+$ kubectl get pvc -n demo
+NAME                          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+restore-data-restore-demo-0   Bound    pvc-ed35c54d-a6dc-11e9-9f3a-42010a800050   1Gi        RWO            standard       13s
+restore-data-restore-demo-1   Bound    pvc-ed3bcb82-a6dc-11e9-9f3a-42010a800050   1Gi        RWO            standard       13s
+restore-data-restore-demo-2   Bound    pvc-ed3fed79-a6dc-11e9-9f3a-42010a800050   1Gi        RWO            standard       13s
 ```
 
 Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
+
+>Note:The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
 
 **Verify Restored Data :**
 
@@ -453,7 +440,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: stash-demo
+  name: restore-demo
   namespace: demo
 spec:
   selector:
@@ -464,7 +451,7 @@ spec:
   template:
     metadata:
       labels:
-        app: stash # Pod template's label selector
+        app: stash
     spec:
       containers:
         - args:
@@ -476,11 +463,11 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: source-pvc
-              mountPath: /source/data
+            - name: restore-data
+              mountPath: /restore/data
   volumeClaimTemplates:
     - metadata:
-        name: source-pvc
+        name: restore-data
         namespace: demo
       spec:
         accessModes:
@@ -496,34 +483,28 @@ Let's create the Statefulset we have shown above.
 ```console
 $ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/statefulset/restored-statefulset.yaml
 service/svc created
-statefulset.apps/stash-demo created
+statefulset.apps/restore-demo created
 ```
 
-Now, wait for Statefulset’s pod to go into the Running state.
+Now, wait for the pod of Statefulset to go into the `Running` state.
 
 ```console
-$ $ kubectl get pod -n demo
-NAME           READY   STATUS    RESTARTS   AGE
-stash-demo-0   1/1     Running   0          97s
-stash-demo-1   1/1     Running   0          67s
-stash-demo-2   1/1     Running   0          39s
+$ kubectl get pod -n demo
+NAME             READY   STATUS    RESTARTS   AGE
+restore-demo-0   1/1     Running   0          65s
+restore-demo-1   1/1     Running   0          46s
+restore-demo-2   1/1     Running   0          26s
 ```
 
-Verify that the sample data has been restored in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
+Verify that the sample data has been created in `/restore/data` directory using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-0.txt
-$ kubectl exec -n demo stash-demo-1 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-1.txt
-$ kubectl exec -n demo stash-demo-2 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-2.txt
+$ kubectl exec -n demo restore-demo-0 -- cat /restore/data/data.txt
+stash-demo-0
+$ kubectl exec -n demo restore-demo-1 -- cat /restore/data/data.txt
+stash-demo-1
+$ kubectl exec -n demo restore-demo-2 -- cat /restore/data/data.txt
+stash-demo-2
 ```
 
 ## Advance Use-Case
@@ -596,8 +577,8 @@ $ watch -n 1 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo                      suaas-appscode: Tue Jun 18 18:35:41 2019
 
 NAME                                     BACKUPCONFIGURATION           PHASE        AGE
-statefulset-volume-snapshot-1559297711   statefulset-volume-snapshot   Running      57s
-statefulset-volume-snapshot-1559297711   statefulset-volume-snapshot   Succeeded    57s
+statefulset-volume-snapshot-1563181264   statefulset-volume-snapshot   Running      57s
+statefulset-volume-snapshot-1563181264   statefulset-volume-snapshot   Succeeded    57s
 ```
 
 We can see above that the backup session has succeeded. Now, we will verify that the VolumeSnapshot has been created and the snapshot has been stored in the respective backend.
@@ -614,43 +595,43 @@ Check that the `VolumeSnapshot` has been created Successfully.
 
 ```console
 $ kubectl get volumesnapshot -n demo
-NAMESPACE   NAME                                  AGE
-demo        source-pvc-stash-demo-0-1559297711    105s
+NAME                                  AGE
+source-data-stash-demo-0-1563181264   67s
 ```
 
 Let's find out the actual snapshot name that will be saved in the GCP by the following command,
 
 ```console
-kubectl get volumesnapshot source-pvc-stash-demo-0-1559297711 -n demo -o yaml
+kubectl get volumesnapshot source-data-stash-demo-0-1563181264 -n demo -o yaml
 ```
 
 ```yaml
 apiVersion: snapshot.storage.k8s.io/v1alpha1
 kind: VolumeSnapshot
 metadata:
-  creationTimestamp: "2019-06-17T12:15:12Z"
+  creationTimestamp: "2019-07-15T09:01:06Z"
   finalizers:
   - snapshot.storage.kubernetes.io/volumesnapshot-protection
   generation: 4
-  name: source-pvc-stash-demo-0-1559297711
+  name: source-data-stash-demo-0-1563181264
   namespace: demo
-  resourceVersion: "919278"
-  selfLink: /apis/snapshot.storage.k8s.io/v1alpha1/namespaces/demo/volumesnapshots/source-pvc-stash-demo-0-1559297711
-  uid: 8e7d2e6d-90f9-11e9-bd3e-42010a800011
+  resourceVersion: "24310"
+  selfLink: /apis/snapshot.storage.k8s.io/v1alpha1/namespaces/demo/volumesnapshots/source-data-stash-demo-0-1563181264
+  uid: 14984cd3-a6df-11e9-9f3a-42010a800050
 spec:
   snapshotClassName: default-snapshot-class
-  snapshotContentName: snapcontent-8e7d2e6d-90f9-11e9-bd3e-42010a800011
+  snapshotContentName: snapcontent-14984cd3-a6df-11e9-9f3a-42010a800050
   source:
     apiGroup: null
     kind: PersistentVolumeClaim
     name: source-data-stash-demo-0
 status:
-  creationTime: "2019-06-17T12:15:13Z"
+  creationTime: "2019-07-15T09:01:07Z"
   readyToUse: true
   restoreSize: 1Gi
 ```
 
-Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in GCP. If we navigate to the `Snapshots` tab in the GCP console, we should see the snapshot `snapcontent-8e7d2e6d-90f9-11e9-bd3e-42010a800011` has been stored successfully.
+Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in GCP. If we navigate to the `Snapshots` tab in the GCP console, we should see the snapshot `snapcontent-14984cd3-a6df-11e9-9f3a-42010a800050` has been stored successfully.
 
 <figure align="center">
   <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/statefulset2.png">
@@ -679,7 +660,7 @@ spec:
     replicas : 3
     volumeClaimTemplates:
       - metadata:
-          name: source-data-stash-demo
+          name: restore-data-restore-demo-${POD_ORDINAL}
         spec:
           accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
@@ -688,13 +669,14 @@ spec:
               storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
-            name: ${CLAIM_NAME}-0-1560231666
+            name: source-data-stash-demo-0-1563181264
+#            name: source-data-stash-demo-${POD_ORDINAL}-1563177551
             apiGroup: snapshot.storage.k8s.io
 ```
 
 Here,
 
-- `spec.dataSource.name`: `spec.dataSource.name` is the `VolumeSnapshot` resource name. `$(CLAIM_NAME)` is resolved by the stash operator or replaced by the `metadata.name` of the `volumeclaimtemplates`.
+- `spec.dataSource.name`: `spec.dataSource.name` is the `VolumeSnapshot` resource name. data will be restored in all replica from single VolumeSnapshot.
 
 Let's create the `BackupConfiguration` crd we have shown above.
 
@@ -720,16 +702,16 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVCs with the name `source-pvc-stash-demo-0` , `source-pvc-stash-demo-1` and `source-pvc-stash-demo-2` has been created successfully.
+Once a restore process is complete, we will see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` has been created successfully.
 
 check that the status of the PVCs are bound,
 
 ```console
-$  kubectl get pvc -n demo
-NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-source-data-stash-demo-0   Bound    pvc-7c773921-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
-source-data-stash-demo-1   Bound    pvc-7c7b32ad-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
-source-data-stash-demo-2   Bound    pvc-7c7d0bdf-8c10-11e9-bd3e-42010a800011   1Gi        RWO            standard       10m
+$ kubectl get pvc -n demo
+NAME                          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+restore-data-restore-demo-0   Bound    pvc-745e0f51-a6e0-11e9-9f3a-42010a800050   1Gi        RWO            standard       5m23s
+restore-data-restore-demo-1   Bound    pvc-746227e7-a6e0-11e9-9f3a-42010a800050   1Gi        RWO            standard       5m23s
+restore-data-restore-demo-2   Bound    pvc-74674656-a6e0-11e9-9f3a-42010a800050   1Gi        RWO            standard       5m23s
 ```
 
 **Verify Restored Data :**
@@ -757,7 +739,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: stash-demo
+  name: restore-demo
   namespace: demo
 spec:
   selector:
@@ -768,7 +750,7 @@ spec:
   template:
     metadata:
       labels:
-        app: stash # Pod template's label selector
+        app: stash 
     spec:
       containers:
         - args:
@@ -780,11 +762,11 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: source-pvc
-              mountPath: /source/data
+            - name: restore-data
+              mountPath: /restore/data
   volumeClaimTemplates:
     - metadata:
-        name: source-pvc
+        name: restore-data
         namespace: demo
       spec:
         accessModes:
@@ -800,34 +782,28 @@ Let's create the Statefulset we have shown above.
 ```console
 $ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/statefulset/restored-statefulset.yaml
 service/svc created
-statefulset.apps/stash-demo created
+statefulset.apps/restore-demo created
 ```
 
-Now, wait for Statefulset’s pod to go into the Running state.
+Now, wait for the pod of Statefulset to go into the Running state.
 
 ```console
-$ $ kubectl get pod -n demo
-NAME           READY   STATUS    RESTARTS   AGE
-stash-demo-0   1/1     Running   0          97s
-stash-demo-1   1/1     Running   0          67s
-stash-demo-2   1/1     Running   0          39s
+$ kubectl get pod -n demo 
+NAME             READY   STATUS    RESTARTS   AGE
+restore-demo-0   1/1     Running   0          3m9s
+restore-demo-1   1/1     Running   0          2m50s
+restore-demo-2   1/1     Running   0          2m30s
 ```
 
-Verify that the sample data has been restored in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
+Verify that the same sample data has been restored in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-0.txt
-$ kubectl exec -n demo stash-demo-1 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-1.txt
-$ kubectl exec -n demo stash-demo-2 -- ls -R /source/data
-/source/data:
-lost+found
-stash-demo-2.txt
+$ kubectl exec -n demo restore-demo-0 -- cat /restore/data/data.txt
+stash-demo-0
+$ kubectl exec -n demo restore-demo-1 -- cat /restore/data/data.txt
+stash-demo-0
+$ kubectl exec -n demo restore-demo-2 -- cat /restore/data/data.txt
+stash-demo-0
 ```
 
 ## Cleaning Up
@@ -836,6 +812,7 @@ To clean up the Kubernetes resources created by this tutorial, run:
 
 ```console
 kubectl delete -n demo statefulset stash-demo
+kubectl delete -n demo statefulset restore-demo
 kubectl delete -n demo backupconfiguration statefulset-volume-snapshot
 kubectl delete -n demo restoresession restore-pvc
 kubectl delete -n demo storageclass standard

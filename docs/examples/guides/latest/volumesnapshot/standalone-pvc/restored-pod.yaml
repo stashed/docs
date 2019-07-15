@@ -11,10 +11,10 @@ spec:
         - sleep
         - "3600"
       volumeMounts:
-        - name: source-data
-          mountPath: /demo/data
+        - name: restore-data
+          mountPath: /restore/data
   volumes:
-    - name: source-data
+    - name: restore-data
       persistentVolumeClaim:
-        claimName: source-pvc
+        claimName: restore-data
         readOnly: false

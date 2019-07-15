@@ -8,7 +8,7 @@ spec:
   target:
     volumeClaimTemplates:
       - metadata:
-          name: source-pvc
+          name: restore-data
         spec:
           accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
@@ -17,5 +17,5 @@ spec:
               storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
-            name: ${CLAIM_NAME}-1560400745
+            name: source-data-1563186667
             apiGroup: snapshot.storage.k8s.io

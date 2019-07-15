@@ -10,7 +10,7 @@ spec:
     ref:
       apiVersion: v1
       kind: PersistentVolumeClaim
-      name: source-pvc
+      name: source-data
     snapshotClassName: default-snapshot-class
   retentionPolicy:
     name: 'keep-last-5'

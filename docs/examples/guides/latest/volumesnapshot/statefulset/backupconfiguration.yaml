@@ -11,7 +11,7 @@ spec:
       apiVersion: apps/v1
       kind: StatefulSet
       name: stash-demo
-#    replicas : 1
+    replicas : 1
     snapshotClassName: default-snapshot-class
   retentionPolicy:
     name: 'keep-last-5'

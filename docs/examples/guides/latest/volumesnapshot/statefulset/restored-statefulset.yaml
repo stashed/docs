@@ -16,7 +16,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: stash-demo
+  name: restore-demo
   namespace: demo
 spec:
   selector:
@@ -27,7 +27,7 @@ spec:
   template:
     metadata:
       labels:
-        app: stash # Pod template's label selector
+        app: stash
     spec:
       containers:
         - args:
@@ -39,11 +39,11 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: source-pvc
-              mountPath: /source/data
+            - name: restore-data
+              mountPath: /restore/data
   volumeClaimTemplates:
     - metadata:
-        name: source-pvc
+        name: restore-data
         namespace: demo
       spec:
         accessModes:

@@ -8,12 +8,12 @@ spec:
     - name: busybox
       image: busybox
       command: ["/bin/sh", "-c"]
-      args: ["touch /demo/data/sample-file.txt && sleep 3000"]
+      args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
       volumeMounts:
         - name: source-data
-          mountPath: /demo/data
+          mountPath: /source/data
   volumes:
     - name: source-data
       persistentVolumeClaim:
-        claimName: source-pvc
+        claimName: source-data
         readOnly: false
