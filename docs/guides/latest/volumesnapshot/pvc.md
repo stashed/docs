@@ -368,9 +368,11 @@ NAME           STATUS   VOLUME                                     CAPACITY   AC
 restore-data   Bound    pvc-c5f0e7f5-a6ec-11e9-9f3a-42010a800050   1Gi        RWO            standard       52s
 ```
 
-Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
+Notice the `STATUS` field. It indicates that the respective PV has been provisioned and initialized from the respective VolumeSnapshot by CSI driver and the PVC has been bound with the PV.
 
->Note:The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
+>The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
+
+>If you use `volumeBindingMode: WaitForFirstConsumer`, respective PVC will be initialized from respective VolumeSnapshot after you create a workload with that PVC. In this case, Stash will mark the restore session as completed with phase `Unknown`.
 
 **Verify Restored Data :**
 
@@ -416,8 +418,7 @@ NAME           READY   STATUS    RESTARTS   AGE
 restored-pod   1/1     Running   0          34s
 ```
 
-Verify that the sample data has been created in `/restore/data` directory for `restored-pod` pod
-using the following command,
+Verify that the backed up data has been restored in `/restore/data` directory for `restored-pod` pod using the following command,
 
 ```console
 $ kubectl exec -n demo restored-pod -- cat /restore/data/data.txt

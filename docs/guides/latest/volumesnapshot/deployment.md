@@ -156,7 +156,7 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > source/data/data.txt; echo sample_config > source/config/config.cfg  && sleep 3000"]
+      - args: ["echo sample_data > /source/data/data.txt; echo sample_config > /source/config/config.cfg  && sleep 3000"]
         command: ["/bin/sh", "-c"]
         image: busybox
         imagePullPolicy: IfNotPresent
@@ -183,7 +183,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/deplo
 deployment.apps/stash-demo created
 ```
 
-Now, wait for pod of the deployment to go into the `Running` state.
+Now, wait for pod of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -194,12 +194,10 @@ stash-demo-7fd48dd5b4-xqv5n   1/1     Running   0          2m10s
 Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-7fd48dd5b4-xqv5n ls /source/data
-data.txt
-lost+found
-$ kubectl exec -n demo stash-demo-7fd48dd5b4-xqv5n ls /source/config
-config.cfg
-lost+found
+$ kubectl exec -n demo stash-demo-7fd48dd5b4-xqv5n -- cat /source/data/data.txt
+sample_data
+$ kubectl exec -n demo stash-demo-7fd48dd5b4-xqv5n -- cat /source/config/config.cfg
+config_data
 ```
 
 **Create BackupConfiguration :**
@@ -381,7 +379,7 @@ spec:
 Here,
 
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name` is the name of the restored `PVC`.
+  - `metadata.name`  is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with your desired Deployment's PVC.
   - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be initialized. It requires the following fields to be set:
     - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
     - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
@@ -411,9 +409,9 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVCs with the name `source-data` and `source-config ` has been created.
+Once a restore process is complete, we will see that new PVCs with the name `source-data` and `source-config ` have been created.
 
-Verify that the PVCs has been created by the following command,
+Verify that the PVCs have been created by the following command,
 
 ```console
 $ kubectl get pvc -n demo
@@ -422,9 +420,11 @@ restore-config   Bound    pvc-26758eda-a6ca-11e9-9f3a-42010a800050   1Gi        
 restore-data     Bound    pvc-267335ff-a6ca-11e9-9f3a-42010a800050   1Gi        RWO            standard       30s
 ```
 
-Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
+Notice the `STATUS` field. It indicates that the respective PV has been provisioned and initialized from the respective VolumeSnapshot by CSI driver and the PVC has been bound with the PV.
 
->Note:The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
+>The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
+
+>If you use `volumeBindingMode: WaitForFirstConsumer`, respective PVC will be initialized from respective VolumeSnapshot after you create a workload with that PVC. In this case, Stash will mark the restore session as completed with phase `Unknown`.
 
 **Verify Restored Data :**
 
@@ -480,23 +480,21 @@ $ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/resto
 deployment.apps/restore-demo created
 ```
 
-Now, wait for deployment’s pod to go into the `Running` state.
+Now, wait for pod of the Deployment to go into the `Running` state.
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME                            READY   STATUS    RESTARTS   AGE
 restore-demo-544db78b8b-tnzb2   1/1     Running   0          34s
 ```
 
-Verify that the sample data has been created in `/restore/data` and `/restore/config` directory using the following command,
+Verify that the backed up data has been restored in `/restore/data` and `/restore/config` directory using the following command,
 
 ```console
-$ kubectl exec -n demo restore-demo-544db78b8b-tnzb2 ls /restore/config
-config.cfg
-lost+found
-$ kubectl exec -n demo restore-demo-544db78b8b-tnzb2 ls /restore/data
-data.txt
-lost+found
+$ kubectl exec -n demo restore-demo-544db78b8b-tnzb2 ls /restore/config/config.cfg
+config_data
+$ kubectl exec -n demo restore-demo-544db78b8b-tnzb2 ls /restore/data/data.txt
+sample_data
 ```
 
 ## Cleaning Up

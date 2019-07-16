@@ -17,7 +17,7 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > source/data/data.txt; echo sample_config > source/config/config.cfg  && sleep 3000"]
+      - args: ["echo sample_data > /source/data/data.txt; echo sample_config > /source/config/config.cfg  && sleep 3000"]
         command: ["/bin/sh", "-c"]
         image: busybox
         imagePullPolicy: IfNotPresent

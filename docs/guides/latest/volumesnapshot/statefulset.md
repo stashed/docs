@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Snapshotting the volumes of a StatefulSet
 
-This guide will show you how to use Stash to snapshot the volumes of a StatefulSets and restore them from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API.In this guide, we are going to backup the volumes in Google Cloud Platform with the help of [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
+This guide will show you how to use Stash to snapshot the volumes of a StatefulSets and restore them from snapshot using Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) API. In this guide, we are going to backup the volumes in Google Cloud Platform with the help of [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
 
 ## Before You Begin
 
@@ -271,7 +271,7 @@ We can see above that the backup session has succeeded. Now, we will verify that
 Once a `BackupSession` crd is created, it creates volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVC.The `VolumeSnapshot` name follows the following pattern:
 
 ```console
- <PVC name>-<statefulset name>-<pod ordinal>-<backup session creation timestamp in Unix epoch seconds>
+ <PVC claim name>-<statefulset name>-<pod ordinal>-<backup session creation timestamp in Unix epoch seconds>
 ```
 
 Check that the `VolumeSnapshot` has been created Successfully.
@@ -363,17 +363,23 @@ Here,
 
 - `spec.target.replicas`: `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective or Specific VolumeSnapShots.
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name` is the name of the restored `PVC`.
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be `my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in `RestoreSession` in the following format:
+  
+    ```console
+    <volume claim name>-<statefulset name>-${POD_ORDINAL}
+    ```
+
+    So for the above example, `volumeClaimTemplate` name for `RestoreSession` will be `my-volume-stash-demo-${POD_ORDINAL}`.
   - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be initialized. It requires following fields to be set:
     - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
     - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
-    - `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You must provide the name in the format:
+    - `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You must provide the name in the following format:
   
-    ```console
-     <VolumeSnapshot name prefix>-${POD_ORDINAL}-<backup session creation timestamp in Unix epoch seconds>
-     ```
+      ```console
+      <VolumeSnapshot name prefix>-${POD_ORDINAL}-<timestamp in Unix  epoch seconds>
+      ```
 
-    `{POD_ORDINAL}` is resolved by the Stash operator. You can also restore all PVCs from a single VolumeSnapshot or restore each PVC from its respective VolumeSnapshot by setting up the name directly.
+      The `${POD_ORDINAL}` variable is resolved by Stash. If you don't provide this variable and specify ordinal manually, all the PVC will be restored from the same VolumeSnapshot.
 
 Let's create the `RestoreSession` crd we have shown above.
 
@@ -411,9 +417,11 @@ restore-data-restore-demo-1   Bound    pvc-ed3bcb82-a6dc-11e9-9f3a-42010a800050 
 restore-data-restore-demo-2   Bound    pvc-ed3fed79-a6dc-11e9-9f3a-42010a800050   1Gi        RWO            standard       13s
 ```
 
-Notice the `STATUS` field. `Bound` indicates that PVC has been initialized from the respective VolumeSnapshot.
+Notice the `STATUS` field. It indicates that the respective PV has been provisioned and initialized from the respective VolumeSnapshot by CSI driver and the PVC has been bound with the PV.
 
->Note:The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
+>The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
+
+>If you use `volumeBindingMode: WaitForFirstConsumer`, respective PVC will be initialized from respective VolumeSnapshot after you create a workload with that PVC. In this case, Stash will mark the restore session as completed with phase `Unknown`.
 
 **Verify Restored Data :**
 
@@ -486,7 +494,7 @@ service/svc created
 statefulset.apps/restore-demo created
 ```
 
-Now, wait for the pod of Statefulset to go into the `Running` state.
+Now, wait for pod of the Statefulset to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -496,7 +504,7 @@ restore-demo-1   1/1     Running   0          46s
 restore-demo-2   1/1     Running   0          26s
 ```
 
-Verify that the sample data has been created in `/restore/data` directory using the following command,
+Verify that the backed up data has been restored in `/restore/data` directory using the following command,
 
 ```console
 $ kubectl exec -n demo restore-demo-0 -- cat /restore/data/data.txt
@@ -517,7 +525,7 @@ This section will show you how to snapshot only a single replica of a Statefulse
 
 **Create BackupConfiguration :**
 
-Now, create a `BackupConfiguration` crd to take snapshot of the PVCs of `stash-demo` Statefulset.
+Now, create a `BackupConfiguration` crd to take snapshot of a single PVC of the `stash-demo` Statefulset.
 
 Below is the YAML of the `BackupConfiguration` that we are going to create,
 
@@ -588,7 +596,7 @@ We can see above that the backup session has succeeded. Now, we will verify that
 Once a `BackupSession` crd is created, Stash creates a volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVC. The `VolumeSnapshot` name follows the following pattern:
 
 ```console
- <PVC name>-<backup session creation timestamp in Unix epoch seconds>
+ <PVC claim name>-<backup session creation timestamp in Unix epoch seconds>
 ```
 
 Check that the `VolumeSnapshot` has been created Successfully.
@@ -644,7 +652,7 @@ This section will show you how to restore PVCs from the snapshot that  we have t
 
 **Create RestoreSession :**
 
-At first, we have to create a `RestoreSession` crd to restore the PVCs from respective snapshot.
+At first, we have to create a `RestoreSession` crd to restore PVCs from the respective snapshot.
 
 Below is the YAML of the `RestoreSesion` crd that we are going to create,
 
@@ -702,7 +710,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` has been created successfully.
+Once a restore process is complete, we will see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` have been created successfully.
 
 check that the status of the PVCs are bound,
 
@@ -785,7 +793,7 @@ service/svc created
 statefulset.apps/restore-demo created
 ```
 
-Now, wait for the pod of Statefulset to go into the Running state.
+Now, wait for the pod of Statefulset to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo 
@@ -795,7 +803,7 @@ restore-demo-1   1/1     Running   0          2m50s
 restore-demo-2   1/1     Running   0          2m30s
 ```
 
-Verify that the same sample data has been restored in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following command,
+Verify that the backed up data has been restored in `/restore/data` directory using the following command,
 
 ```console
 $ kubectl exec -n demo restore-demo-0 -- cat /restore/data/data.txt
