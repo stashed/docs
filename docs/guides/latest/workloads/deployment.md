@@ -72,7 +72,7 @@ persistentvolumeclaim/stash-sample-data created
 
 **Deploy Deployment:**
 
-Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`sample-file.txt` file) in `/source/data` directory where we have mounted the PVC.
+Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -96,7 +96,7 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["touch source/data/sample-file.txt && sleep 3000"]
+      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
         command: ["/bin/sh", "-c"]
         image: busybox
         imagePullPolicy: IfNotPresent
@@ -118,10 +118,10 @@ $ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/deployment
 deployment.apps/stash-demo created
 ```
 
-Now, wait for Deployment’s pod to go into the `Running` state.
+Now, wait for pod of the Deployment to go into the `Running` state.
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME                         READY   STATUS    RESTARTS   AGE
 stash-demo-8cfcbcc89-2z6mq   1/1     Running   0          30s
 stash-demo-8cfcbcc89-j9wbc   1/1     Running   0          30s
@@ -131,9 +131,8 @@ stash-demo-8cfcbcc89-q8xfd   1/1     Running   0          30s
 Verify that the sample data has been created in `/source/data` directory using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-8cfcbcc89-2z6mq -- ls -R /source/data
-/source/data:
-sample-file.txt
+$ kubectl exec -n demo stash-demo-8cfcbcc89-2z6mq -- cat /source/data/data.txt
+sample_data
 ```
 
 ### Prepare Backend
@@ -255,7 +254,7 @@ metadata:
 spec:
   containers:
   - args:
-    - touch source/data/sample-file.txt && sleep 3000
+    - echo sample_data > /source/data/data.txt && sleep 3000
     command:
     - /bin/sh
     - -c
@@ -610,9 +609,8 @@ stash-recovered-867688ddd5-zswhs   1/1     Running   0          22m
 Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` Deployment's pod using the following command,
 
 ```console
-$ kubectl exec -n demo stash-recovered-867688ddd5-67xr8 -- ls -R /source/data
-/source/data:
-sample-file.txt
+$ kubectl exec -n demo stash-recovered-867688ddd5-67xr8 -- cat /source/data/data.txt
+sample_data
 ```
 
 # Cleaning Up

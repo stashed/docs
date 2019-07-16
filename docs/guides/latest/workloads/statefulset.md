@@ -83,7 +83,7 @@ spec:
       containers:
       - name: busybox
         image: busybox
-        command: ["/bin/sh", "-c","touch /source/data/$(POD_NAME).txt && sleep 3000"]
+        command: ["/bin/sh", "-c","echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
         env:
         - name:  POD_NAME
           valueFrom:
@@ -112,7 +112,7 @@ service/headless created
 statefulset.apps/stash-demo created
 ```
 
-Now, wait for StatefulSet’s pod to go into the `Running` state.
+Now, wait for pod of the StatefulSet to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -125,15 +125,12 @@ stash-demo-2   1/1     Running   0          36s
 Verify that the sample data has been generated in `/source/data` directory for `stash-demo-0` , `stash-demo-1` and `stash-demo-2` pod respectively using the following commands,
 
 ```console
-$ kubectl exec -n demo stash-demo-0 -- ls -R /source/data
-/source/data:
-stash-demo-0.txt
-$ kubectl exec -n demo stash-demo-2 -- ls -R /source/data
-/source/data:
-stash-demo-1.txt
-$ kubectl exec -n demo stash-demo-2 -- ls -R /source/data
-/source/data:
-stash-demo-2.txt
+$ kubectl exec -n demo stash-demo-0 -- cat /source/data/data.txt
+stash-demo-0
+$ kubectl exec -n demo stash-demo-1 -- cat /source/data/data.txt
+stash-demo-1
+$ kubectl exec -n demo stash-demo-2 -- cat /source/data/data.txt
+stash-demo-2
 ```
 
 ### Prepare Backend
@@ -262,7 +259,7 @@ spec:
   - command:
     - /bin/sh
     - -c
-    - touch /source/data/$(POD_NAME).txt && sleep 3000
+    - echo $(POD_NAME) > /source/data/data.txt && sleep 3000
     env:
     - name: POD_NAME
       valueFrom:
@@ -619,18 +616,15 @@ stash-recovered-1   1/1     Running   0          11m
 stash-recovered-2   1/1     Running   0          12m
 ```
 
-Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` StatefulSet's pod using the following command,
+Verify that the backed up data has been restored in `/source/data` directory of the `stash-recovered` StatefulSet's pod using the following command,
 
 ```console
-$ kubectl exec -n demo stash-recovered-0 -- ls -R /source/data
-/source/data:
-stash-demo-0.txt
-$ kubectl exec -n demo stash-recovered-1 -- ls -R /source/data
-/source/data:
-stash-demo-1.txt
-$ kubectl exec -n demo stash-recovered-2 -- ls -R /source/data
-/source/data:
-stash-demo-2.txt
+$ kubectl exec -n demo stash-recovered-0 -- cat /source/data/data.txt
+stash-demo-0
+$ kubectl exec -n demo stash-recovered-1 -- cat /source/data/data.txt
+stash-demo-1
+$ kubectl exec -n demo stash-recovered-2 -- cat /source/data/data.txt
+stash-demo-2
 ```
 
 ### Customize Restore Process
@@ -868,21 +862,16 @@ stash-recovered-adv-4   1/1     Running   0          8m1s
 Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` StatefulSet's pod using the following command,
 
 ```console
-$ kubectl exec -n demo stash-recovered-adv-0 -- ls -R /source/data
-/source/data:
-stash-demo-0.txt
-$ kubectl exec -n demo stash-recovered-adv-1 -- ls -R /source/data
-/source/data:
-stash-demo-1.txt
-$ kubectl exec -n demo stash-recovered-adv-2 -- ls -R /source/data
-/source/data:
-stash-demo-2.txt
-$ kubectl exec -n demo stash-recovered-adv-3 -- ls -R /source/data
-/source/data:
-stash-demo-1.txt
-$ kubectl exec -n demo stash-recovered-adv-4 -- ls -R /source/data
-/source/data:
-stash-demo-1.txt
+$ kubectl exec -n demo stash-recovered-adv-0 -- cat /source/data/data.txt
+stash-demo-0
+$ kubectl exec -n demo stash-recovered-adv-1 -- cat /source/data/data.txt
+stash-demo-1
+$ kubectl exec -n demo stash-recovered-adv-2 -- cat /source/data/data.txt
+stash-demo-2
+$ kubectl exec -n demo stash-recovered-adv-3 -- cat /source/data/data.txt
+stash-demo-1
+$ kubectl exec -n demo stash-recovered-adv-4 -- cat /source/data/data.txt
+stash-demo-1
 ```
 
 We can see from the above output that backup data of `host-1` has been restored into `host-3` and `host-4` successfully.

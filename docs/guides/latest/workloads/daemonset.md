@@ -43,7 +43,7 @@ This section will show you how to use Stash to backup DaemonSet's data. Here, we
 
 **Deploy DaemonSet:**
 
-At first, we will deploy a DaemonSet. This DaemonSet will automatically generate sample data (`sample-file.txt` file) in `/source/data` directory.
+At first, we will deploy a DaemonSet. This DaemonSet will automatically generate sample data (`data.txt` file) in `/source/data` directory.
 
 Below is the YAML of the DaemonSet that we are going to create,
 
@@ -66,7 +66,7 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["touch source/data/sample-file.txt && sleep 3000"]
+      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
         command: ["/bin/sh", "-c"]
         image: busybox
         imagePullPolicy: IfNotPresent
@@ -99,9 +99,8 @@ stash-demo-c4nqw    1/1     Running   0          39s
 Verify that the sample data has been created in `/source/data` directory using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-c4nqw -- ls -R /source/data
-/source/data:
-sample-file.txt
+$ kubectl exec -n demo stash-demo-c4nqw -- cat /source/data/data.txt
+sample_data
 ```
 
 ### Prepare Backend
@@ -220,7 +219,7 @@ metadata:
 spec:
   containers:
   - args:
-    - touch source/data/sample-file.txt && sleep 3000
+    - echo sample_data > /source/data/data.txt && sleep 3000
     command:
     - /bin/sh
     - -c
@@ -547,12 +546,11 @@ NAME                    READY   STATUS    RESTARTS   AGE
 stash-recovered-dqlrb   1/1     Running   0          4m4s
 ```
 
-Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` DaemonSet's pod using the following command,
+Verify that the backed up data has been restored in `/source/data` directory of the `stash-recovered` DaemonSet's pod using the following command,
 
 ```console
-$ kubectl exec -n demo stash-recovered-dqlrb -- ls -R /source/data
-/source/data:
-sample-file.txt
+$ kubectl exec -n demo stash-recovered-dqlrb -- cat /source/data/data.txt
+sample_data
 ```
 
 # Cleaning Up
