@@ -12,7 +12,7 @@ This guide will show you how to trigger an instant backup in Stash.
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
   - [BackupSession](/docs/concepts/crds/backupsession.md/)
   - [Repository](/docs/concepts/crds/repository.md/)
-  
+
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
 ```console
@@ -20,7 +20,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/advance-use-case/instant-backup](/docs/examples/guides/latest/advance-use-case/instant-backup) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+>**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/advance-use-case/instant-backup](/docs/examples/guides/latest/advance-use-case/instant-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Configure Backup
 
@@ -99,8 +99,8 @@ stash-demo-859d96f6bd-fxr7l   1/1     Running   0          81s
 Verify that the sample data has been created in `/source/data` directory using the following command,
 
 ```console
-$ kubectl exec -n demo stash-demo-859d96f6bd-fxr7l ls /source/data
-data.txt
+$ kubectl exec -n demo stash-demo-859d96f6bd-fxr7l -- cat /source/data/data.txt
+sample_data
 ```
 
 **Create Secret and Repository:**
@@ -149,7 +149,7 @@ Now, we are ready to backup our volumes to our desired backend.
 
 We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
 
-Below is the YAML of the `BackupConfiguration` object that we are going to create,
+Below is the YAML of the `BackupConfiguration` object that we are going to create and specify that this `BackupConfiguration` will take backup in every 40 minutes.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -203,14 +203,14 @@ It will also create a `CronJob` with the schedule specified in `spec.schedule` f
 Verify that the `CronJob` has been created using the following command,
 
 ```console
-$ kubectl get backupconfiguration -n demo 
+$ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE       PAUSED   AGE
 deployment-backup          */40 * * * *            6m41s
 ```
 
 ## Trigger Instant Backup
 
-Now, we will trigger an instant backup of Deployment's volumes that we have configured in the previous section. In order to do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
+Now, we will trigger an instant backup of the volumes of the Deployment that we have configured in the previous section. In order to do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
 
 **Create BackupSession:**
 
@@ -244,7 +244,7 @@ backupsession.stash.appscode.com/deployment-backupsession created
 
 If everything goes well, the stash sidecar inside the Deployment will take a backup instantly.
 
-**Wait for BackupSession to Succeeded:**
+**Wait for BackupSession to Succeed:**
 
 Run the following command to watch `BackupSession` phase,
 
@@ -265,7 +265,7 @@ Once a backup is complete, Stash will update the respective `Repository` crd to 
 ```console
 $ kubectl get repository -n demo gcs-repo
 NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-gcs-repo   true        24 B   2                116s                     10m
+gcs-repo   true        24 B   1                116s                     10m
 ```
 
 Now, if we navigate to the GCS bucket, we will see backed up data has been stored in `stash/instant/deployment` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.

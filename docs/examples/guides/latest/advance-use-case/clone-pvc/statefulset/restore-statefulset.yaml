@@ -9,7 +9,7 @@ spec:
       port: 80
       targetPort: 0
   selector:
-    app: stash-demo
+    app: restore-demo
   clusterIP: None
 ---
 apiVersion: apps/v1
@@ -18,17 +18,17 @@ metadata:
   name: restore-demo
   namespace: demo
   labels:
-    app: stash-demo
+    app: restore-demo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: stash-demo
+      app: restore-demo
   serviceName: re-headless
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: restore-demo
     spec:
       containers:
       - command:
