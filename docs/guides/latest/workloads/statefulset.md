@@ -392,7 +392,7 @@ gcs-repo   true        0 B    3                103s                     5m
 Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `source/data/sample-statefulset` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/latest/workloads/gcs_bucket_ss.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/latest/workloads/gcs_bucket_ss.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 

@@ -1,0 +1,12 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: minio-repo
+  namespace: demo
+spec:
+  backend:
+    s3:
+      endpoint: 'https://minio-nodeport-svc.storage.svc'
+      bucket: minio-bucket
+      prefix: /source/data
+    storageSecretName: minio-secret

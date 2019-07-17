@@ -29,7 +29,7 @@ This guide will show you how Stash backs up and restores volumes of various work
 The following diagram shows how Stash takes backup of the volumes of a workload. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/latest/workloads/backup_overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/workloads/backup_overview.svg">
 <figcaption align="center">Fig: Backup process of Workload volumes in Stash</figcaption>
 </figure>
 
@@ -60,7 +60,7 @@ The backup process consists of the following steps:
 The following diagram shows how Stash restores backed up data inside a workload. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/latest/workloads/restore_overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/workloads/restore_overview.svg">
 <figcaption align="center">Fig: Restore process of Workload volumes in Stash</figcaption>
 </figure>
 
