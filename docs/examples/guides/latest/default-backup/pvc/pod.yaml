@@ -1,0 +1,17 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: demo-pod
+  namespace: demo
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c","echo 'hellow from sample file.'>>/my/sample/data/hello.txt && sleep 3000"]
+    volumeMounts:
+    - name: data-volume
+      mountPath: /my/sample/data
+  volumes:
+  - name: data-volume
+    persistentVolumeClaim:
+      claimName: nfs-pvc

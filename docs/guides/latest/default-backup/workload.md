@@ -85,7 +85,7 @@ Note that we have used some variables (format: `${<variable name>}`) in `backend
 Let's create the `BackupConfigurationTemplate` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/backupconfiguration_template.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/backupconfiguration_template.yaml
 backupconfigurationtemplate.stash.appscode.com/workload-backup-template created
 ```
 
@@ -187,7 +187,7 @@ Notice the `metadata.annotations` field. We have specified the default backup sp
 Let's create the above Deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/deployment.yaml
 configmap/stash-sample-data-1 created
 configmap/stash-sample-data-2 created
 deployment.apps/stash-demo created
@@ -397,7 +397,7 @@ Notice the `metadata.annotations` field. We have specified default backup specif
 Let's create the StatefulSet we have created above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/statefulset.yaml
 service/headless created
 statefulset.apps/sts-demo created
 ```
@@ -581,7 +581,7 @@ Notice the `metadata.annotations` field. We have specified default backup specif
 Let's create the DaemonSet we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/daemonset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/daemonset.yaml
 configmap/my-daemon-config created
 daemonset.apps/dmn-demo created
 ```
