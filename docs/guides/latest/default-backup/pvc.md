@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Default Backup for PVC
 
-This tutorial will show you how to configure default-backup for PersistentVolumeClaim. Here, we are going to backup a PVC provishined from an NFS server using default backup.
+This tutorial will show you how to configure default-backup for PersistentVolumeClaim. Here, we are going to backup a PVC provisioned from an NFS server using default-backup.
 
 ## Before You Begin
 
@@ -121,7 +121,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/default-backup/pvc/backupconfig
 backupconfigurationtemplate.stash.appscode.com/pvc-backup-template created
 ```
 
-Now, default backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
+Now, default-backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
 
 **Required Annotations for PVC:**
 
@@ -139,7 +139,7 @@ You have to add the following 3 annotations to a targetted PVC to enable backup 
     stash.appscode.com/target-directories: "<directories to backup>"
     ```
 
-3. MountPath where the PVC will be mounted inside backup job.
+3. MountPath where the PVC will be mounted inside backup job. This should be same as the directory where the PVC has been mounted inside workload.
 
     ```yaml
     stash.appscode.com/mountpath: "<mountPath>"
@@ -147,10 +147,9 @@ You have to add the following 3 annotations to a targetted PVC to enable backup 
 
 ## Prepare PVC
 
-At first, let's prepare our desired PVC. Here, we are going to create a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) (PV) that will use an NFS server as storage. Then, we will create a PVC that will bind with the PV. Then, we will mount this PVC in two different pods. Each pod will generate a sample file into the PVC.
+At first, let's prepare our desired PVC. Here, we are going to create a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) (PV) that will use an NFS server as storage. Then, we will create a PVC that will bind with the PV. Then, we will mount this PVC into a pod. This pod will generate a sample file into the PVC.
 
 **Create PersistentVolume:**
-
 
 We have deployed an NFS server in `storage` namespace and it is accessible through a Service named `nfs-service`. Now, we are going to create a PV that uses the NFS server as storage.
 
@@ -172,15 +171,18 @@ spec:
     server: "nfs-service.storage.svc.cluster.local"
     path: "/"
 ```
+
 Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label. We will use this label as selector in PVC so that the PVC binds with this PV.
 
 Let's create the PV we have shown above,
+
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/default-backup/pvc/nfs_pv.yaml
 persistentvolume/nfs-pv created
 ```
 
 **Create PersistentVolumeClaim:**
+
 Now, create a PVC to bind with the PV we have just created. Below, is the YAML of the PVC that we are going to create,
 
 ```yaml
@@ -201,7 +203,7 @@ spec:
       app: nfs-demo
 ```
 
-Notice the `spec.accessModes` section. We are using `ReadWriteMany` access mode so that multiple pod can use this PVC simultaneously. Without this access mode, Stash will fail to backup the volume if any other pod mount it during backup.
+Notice the `spec.accessModes` section. We are using `ReadWriteMany` access mode so that multiple pods can use this PVC simultaneously. Without this access mode, Stash will fail to backup the volume if any other pod mount it during backup.
 
 Also, notice the `spec.selector` section. We have specified `app: nfs-demo` labels as a selector so that it binds with the PV that we have created earlier.
 
@@ -220,13 +222,13 @@ NAME      STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 nfs-pvc   Bound    nfs-pv   1Gi        RWX                           61s
 ```
 
-Here, we can see that the PVC `nfs-pvc` has been bounded with PV `nvs-pv`.
+Here, we can see that the PVC `nfs-pvc` has been bounded with PV `nfs-pv`.
 
 **Generate Sample Data:**
 
-Now, we are going to deploy two sample pods that mount the PVC we have just created. Each of the pods will generate a sample file named `pod-1.conf` and `pod-2.conf` respectively. We will backup these files using Stash.
+Now, we are going to deploy a sample pod that mounts the PVC we have just created. The pod will generate a sample file named `hello.txt` in `/my/sample/data/` directory. We will backup this file using default-backup.
 
-Below, is the YAML of the first pod that we are going to deploy,
+Below, is the YAML of the pod that we are going to deploy,
 
 ```yaml
 kind: Pod
@@ -238,7 +240,7 @@ spec:
   containers:
   - name: busybox
     image: busybox
-    command: ["/bin/sh", "-c","echo 'hellow from sample file.'>>/my/sample/data/hello.txt && sleep 3000"]
+    command: ["/bin/sh", "-c","echo 'hello from sample file.'>>/my/sample/data/hello.txt && sleep 3000"]
     volumeMounts:
     - name: data-volume
       mountPath: /my/sample/data
@@ -247,28 +249,40 @@ spec:
     persistentVolumeClaim:
       claimName: nfs-pvc
 ```
-Here, we have mount the `nfs-pvc` into `/shared/config` directory of the pod. Let's deploy the pod we have shown above,
+
+Here, we have mount the `nfs-pvc` into `/my/sample/data` directory of the pod. Let's deploy the pod we have shown above,
 
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/default-backup/pvc/pod.yaml
 pod/demo-pod created
 ```
-Verify that the pod has generated a sample file named `pod-1.conf` in `/shared/config/` directory,
+
+Verify that the pod has generated the sample file,
 
 ```console
 $ kubectl exec -n demo demo-pod -- cat /my/sample/data/hello.txt
-hellow from sample file.
+hello from sample file.
 ```
 
 ## Backup
 
+Now, well will add default-backup specific annotations to the PVC. Stash watches for PVC. Once it found a PVC with default-backup specific annotations, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupConfigurationTemplate`. Then, rest of the backup process will proceed as normal backup of a stand-alone PVC as describe [here](/docs/guides/latest/volumes/pvc.md).
+
 **Add Annotations:**
 
+Let's add the default-backup specific annotation to the PVC,
+
 ```console
-$ kubectl annotate pvc nfs-pvc -n demo --overwrite\
+$ kubectl annotate pvc nfs-pvc -n demo --overwrite \
   stash.appscode.com/backup-template=pvc-backup-template \
   stash.appscode.com/target-directories="/my/sample/data" \
   stash.appscode.com/mountpath="/my/sample/data"
+```
+
+Verify that the annotations has been added successfully,
+
+```console
+$ kubectl get pvc -n demo nfs-pvc -o yaml
 ```
 
 ```yaml
@@ -276,21 +290,13 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"nfs-pvc","namespace":"demo"},"spec":{"accessModes":["ReadWriteMany"],"resources":{"requests":{"storage":"1Gi"}},"selector":{"matchLabels":{"app":"nfs-demo"}},"storageClassName":""}}
     pv.kubernetes.io/bind-completed: "yes"
     pv.kubernetes.io/bound-by-controller: "yes"
     stash.appscode.com/backup-template: pvc-backup-template
     stash.appscode.com/mountpath: /my/sample/data
     stash.appscode.com/target-directories: /my/sample/data
-  creationTimestamp: "2019-07-18T08:37:46Z"
-  finalizers:
-  - kubernetes.io/pvc-protection
   name: nfs-pvc
   namespace: demo
-  resourceVersion: "23185"
-  selfLink: /api/v1/namespaces/demo/persistentvolumeclaims/nfs-pvc
-  uid: 51218a08-a937-11e9-a5e4-0800273e2099
 spec:
   accessModes:
   - ReadWriteMany
@@ -311,8 +317,11 @@ status:
   phase: Bound
 ```
 
+Now, Stash will create a `Repository` crd and a `BackupConfiguration` crd according to the template.
+
 **Verify Repository:**
-Verify that the Repository has been created successfully by the following command,
+
+Verify that the `Repository` has been created successfully by the following command,
 
 ```console
 $ kubectl get repository -n demo
@@ -320,10 +329,13 @@ NAME                            INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESS
 persistentvolumeclaim-nfs-pvc
 ```
 
-If we view the YAML of this Repository, we will see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `deployment` and `stash-demo` respectively.
+If we view the YAML of this `Repository`, we will see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `presistentvolumeclaim` and `nfs-pvc` respectively.
+
+```console
+$ kubectl get repository -n demo persistentvolumeclaim-nfs-pvc -o yaml
+```
 
 ```yaml
-$ kubectl get repository -n demo persistentvolumeclaim-nfs-pvc -o yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: Repository
 metadata:
@@ -345,16 +357,22 @@ spec:
 ```
 
 **Verify BackupConfiguration:**
-Verify that the `BackupConfiguration` has been created by the following command,
+
+Verify that the `BackupConfiguration` crd has been created by the following command,
 
 ```console
 $ kubectl get backupconfiguration -n demo
 NAME                            TASK         SCHEDULE      PAUSED   AGE
 persistentvolumeclaim-nfs-pvc   pvc-backup   */5 * * * *            119s
 ```
+
 Let's check the YAML of this `BackupConfiguration`,
 
 ```console
+$ kubectl get backupconfiguration -n demo persistentvolumeclaim-nfs-pvc -o yaml
+```
+
+```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
@@ -364,15 +382,6 @@ metadata:
   generation: 1
   name: persistentvolumeclaim-nfs-pvc
   namespace: demo
-  ownerReferences:
-  - apiVersion: v1
-    blockOwnerDeletion: false
-    kind: PersistentVolumeClaim
-    name: nfs-pvc
-    uid: 51218a08-a937-11e9-a5e4-0800273e2099
-  resourceVersion: "23189"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/backupconfigurations/persistentvolumeclaim-nfs-pvc
-  uid: 67a1eb2f-a93c-11e9-a5e4-0800273e2099
 spec:
   repository:
     name: persistentvolumeclaim-nfs-pvc
@@ -396,33 +405,38 @@ spec:
     name: pvc-backup
   tempDir: {}
 ```
-Notice that the `spec.target.ref` is pointing to the `stash-demo` Deployment. Also, notice that the `spec.target.directories` and `spec.target.volumeMounts` fields have been populated with the information we had provided as annotation of the Deployment.
 
+Notice that the `spec.target.ref` is pointing to the `nfs-pvc` PVC. Also, notice that the `spec.target.directories` field has been populated with the information we had provided in `stash.appscode.com/target-directories` annotation.
 
 **Wait for BackupSession:**
+
 Now, wait for a backup schedule to appear. Run the following command to watch `BackupSession` crd:
 
 ```console
-Every 2.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-...  workstation: Thu Jul 18 15:18:42 2019
+$ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=persistentvolumeclaim-nfs-pvc
 
+Every 1.0s: kubectl get backupsession -n demo ... workstation: Thu Jul 18 15:18:42 2019
 NAME                                       BACKUPCONFIGURATION             PHASE       AGE
 persistentvolumeclaim-nfs-pvc-1563441309   persistentvolumeclaim-nfs-pvc   Succeeded   3m33s
 ```
+
 >Note: Respective CronJob creates `BackupSession` crd with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
+
 **Verify Backup:**
 
 When backup session is completed, Stash will update the respective `Repository` to reflect the latest state of backed up data.
 
-Run the following command to check if the snapshots are stored in the backend,
+Run the following command to check if a snapshot has been sent to the backend,
 
 ```console
 $ kubectl get repository -n demo persistentvolumeclaim-nfs-pvc
 NAME                            INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 persistentvolumeclaim-nfs-pvc   true        41 B   1                3m37s                    5m11s
 ```
+
 > Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
 
-If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we will see that the snapshot has been stored there.
+If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of our GCS bucket, we will see that the snapshot has been stored there.
 
 <figure align="center">
   <img alt="Backup data of PVC 'nfs-pvc' in GCS backend" src="/docs/images/guides/latest/default-backup/pvc_repo.png">
@@ -442,4 +456,5 @@ kubectl delete -n demo pod/demo-pod
 kubectl delete -n demo pvc/nfs-pvc
 kubectl delete -n demo pv/nfs-pv
 ```
+
 If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/uninstall.md).

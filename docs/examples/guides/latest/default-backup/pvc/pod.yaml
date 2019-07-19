@@ -7,7 +7,7 @@ spec:
   containers:
   - name: busybox
     image: busybox
-    command: ["/bin/sh", "-c","echo 'hellow from sample file.'>>/my/sample/data/hello.txt && sleep 3000"]
+    command: ["/bin/sh", "-c","echo 'hello from sample file.'>>/my/sample/data/hello.txt && sleep 3000"]
     volumeMounts:
     - name: data-volume
       mountPath: /my/sample/data
