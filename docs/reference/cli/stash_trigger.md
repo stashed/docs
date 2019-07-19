@@ -1,36 +1,30 @@
 ---
-title: Download
+title: Trigger
 menu:
   product_stash_0.1.0:
-    identifier: stash-download
-    name: Download
+    identifier: stash-trigger
+    name: Trigger
     parent: stash-cli
 product_name: stash
 section_menu_id: reference
 menu_name: product_stash_0.1.0
 ---
-## stash download
+## stash trigger
 
-Download snapshots
+Trigger a backup
 
 ### Synopsis
 
-Download contents of snapshots from Repository
+Trigger a backup by creating BackupSession
 
 ```
-stash download [flags]
+stash trigger [flags]
 ```
 
 ### Options
 
 ```
-      --destination string       Destination path where snapshot will be restored.
-      --directories strings      List of directories to be restored
-      --docker-registry string   Docker image registry for restic cli (default "restic")
-  -h, --help                     help for download
-      --host string              Name of the source host machine (default "host-0")
-      --image-tag string         Restic docker image tag (default "latest")
-      --snapshots strings        List of snapshots to be restored
+  -h, --help   help for trigger
 ```
 
 ### Options inherited from parent commands

@@ -1,36 +1,31 @@
 ---
-title: Download
+title: Cp Repository
 menu:
   product_stash_0.1.0:
-    identifier: stash-download
-    name: Download
+    identifier: stash-cp-repository
+    name: Cp Repository
     parent: stash-cli
 product_name: stash
 section_menu_id: reference
 menu_name: product_stash_0.1.0
 ---
-## stash download
+## stash cp repository
 
-Download snapshots
+Copy Repository and Secret
 
 ### Synopsis
 
-Download contents of snapshots from Repository
+Copy Repository and Secret from one namespace to another namespace
 
 ```
-stash download [flags]
+stash cp repository [flags]
 ```
 
 ### Options
 
 ```
-      --destination string       Destination path where snapshot will be restored.
-      --directories strings      List of directories to be restored
-      --docker-registry string   Docker image registry for restic cli (default "restic")
-  -h, --help                     help for download
-      --host string              Name of the source host machine (default "host-0")
-      --image-tag string         Restic docker image tag (default "latest")
-      --snapshots strings        List of snapshots to be restored
+  -h, --help                  help for repository
+      --to-namespace string   Destination namespace.
 ```
 
 ### Options inherited from parent commands
@@ -67,5 +62,5 @@ stash download [flags]
 
 ### SEE ALSO
 
-* [stash](/docs/reference/stash/stash.md)	 - kubectl plugin for Stash by AppsCode
+* [stash cp](/docs/reference/stash/stash_cp.md)	 - Copy stash resources from one namespace to another namespace
 

@@ -1,36 +1,32 @@
 ---
-title: Download
+title: Unlock
 menu:
   product_stash_0.1.0:
-    identifier: stash-download
-    name: Download
+    identifier: stash-unlock
+    name: Unlock
     parent: stash-cli
 product_name: stash
 section_menu_id: reference
 menu_name: product_stash_0.1.0
 ---
-## stash download
+## stash unlock
 
-Download snapshots
+Unlock Restic Repository
 
 ### Synopsis
 
-Download contents of snapshots from Repository
+Unlock Restic Repository
 
 ```
-stash download [flags]
+stash unlock [flags]
 ```
 
 ### Options
 
 ```
-      --destination string       Destination path where snapshot will be restored.
-      --directories strings      List of directories to be restored
-      --docker-registry string   Docker image registry for restic cli (default "restic")
-  -h, --help                     help for download
-      --host string              Name of the source host machine (default "host-0")
-      --image-tag string         Restic docker image tag (default "latest")
-      --snapshots strings        List of snapshots to be restored
+      --docker-registry string   Docker image registry (default "restic")
+  -h, --help                     help for unlock
+      --image-tag string         Stash image tag (default "latest")
 ```
 
 ### Options inherited from parent commands

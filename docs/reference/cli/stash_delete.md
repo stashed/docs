@@ -1,36 +1,26 @@
 ---
-title: Download
+title: Delete
 menu:
   product_stash_0.1.0:
-    identifier: stash-download
-    name: Download
+    identifier: stash-delete
+    name: Delete
     parent: stash-cli
 product_name: stash
 section_menu_id: reference
 menu_name: product_stash_0.1.0
 ---
-## stash download
+## stash delete
 
-Download snapshots
+Delete stash resources
 
 ### Synopsis
 
-Download contents of snapshots from Repository
-
-```
-stash download [flags]
-```
+Delete stash resources
 
 ### Options
 
 ```
-      --destination string       Destination path where snapshot will be restored.
-      --directories strings      List of directories to be restored
-      --docker-registry string   Docker image registry for restic cli (default "restic")
-  -h, --help                     help for download
-      --host string              Name of the source host machine (default "host-0")
-      --image-tag string         Restic docker image tag (default "latest")
-      --snapshots strings        List of snapshots to be restored
+  -h, --help   help for delete
 ```
 
 ### Options inherited from parent commands
@@ -68,4 +58,5 @@ stash download [flags]
 ### SEE ALSO
 
 * [stash](/docs/reference/stash/stash.md)	 - kubectl plugin for Stash by AppsCode
+* [stash delete snapshot](/docs/reference/stash/stash_delete_snapshot.md)	 - Delete a snapshot from repository backend
 
