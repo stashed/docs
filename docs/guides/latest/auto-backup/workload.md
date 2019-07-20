@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Auto Backup for Workloads
 
-This tutorial will show you how to configure automatic backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployment, StatefulSet, and DaemonSet using a common template.
+This tutorial will show you how to configure automatic backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployments, StatefulSets, and DaemonSets using a common template.
 
 ## Before You Begin
 
@@ -89,7 +89,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/backupconf
 backupconfigurationtemplate.stash.appscode.com/workload-backup-template created
 ```
 
-Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload to enable backup.
+Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload to enable periodic backup.
 
 **Required Annotations for Workloads:**
 
@@ -182,7 +182,7 @@ spec:
           name: stash-sample-data-2
 ```
 
-Notice the `metadata.annotations` field. We have specified the automatic backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `workload-backup-template` BackupConfigurationTemplate for creating `Repository` and `BackupConfiguration` for this Deployment.
+Notice the `metadata.annotations` field. We have specified the automatic backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `workload-backup-template` BackupConfigurationTemplate for creating `Repository` and `BackupConfiguration` for this Deployment. BackupConfigurationTemplate is a non-namespaced resource, so we just need to specify the name of the template.
 
 Let's create the above Deployment,
 

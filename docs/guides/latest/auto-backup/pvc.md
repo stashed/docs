@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Auto Backup for PVC
 
-This tutorial will show you how to configure auto-backup for PersistentVolumeClaim. Here, we are going to backup a PVC provisioned from an NFS server using auto-backup.
+This tutorial will show you how to configure automatic backup for PersistentVolumeClaims. Here, we are going to backup a PVC provisioned from an NFS server using auto-backup.
 
 ## Before You Begin
 
@@ -40,7 +40,7 @@ namespace/demo created
 
 **Verify necessary Function and Task:**
 
-Stash uses `Function-Task` model to backup PVC using auto-backup. When you install Stash, it automatically creates the necessary `Function` and `Task`.
+Stash uses `Function-Task` model to automatically backup PVC. When you install Stash, it creates the necessary `Function` and `Task`.
 
 Let's verify that Stash has created the necessary `Function` to backup/restore PVC by the following command,
 
@@ -121,7 +121,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/backupconfigura
 backupconfigurationtemplate.stash.appscode.com/pvc-backup-template created
 ```
 
-Now, auto-backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
+Now, automatic backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
 
 **Required Annotations for PVC:**
 
@@ -203,7 +203,7 @@ spec:
       app: nfs-demo
 ```
 
-Notice the `spec.accessModes` section. We are using `ReadWriteMany` access mode so that multiple pods can use this PVC simultaneously. Without this access mode, Stash will fail to backup the volume if any other pod mount it during backup.
+Notice the `spec.accessModes` section. We are using `ReadWriteMany` access mode so that multiple pods can use this PVC simultaneously. Without this access mode, Stash will fail to backup the volume if any other pod mounts it during backup.
 
 Also, notice the `spec.selector` section. We have specified `app: nfs-demo` labels as a selector so that it binds with the PV that we have created earlier.
 
@@ -266,11 +266,11 @@ hello from sample file.
 
 ## Backup
 
-Now, well will add auto-backup specific annotations to the PVC. Stash watches for PVC. Once it found a PVC with auto-backup specific annotations, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupConfigurationTemplate`. Then, rest of the backup process will proceed as normal backup of a stand-alone PVC as describe [here](/docs/guides/latest/volumes/pvc.md).
+Now, we are going to add auto backup specific annotations to the PVC. Stash watches for PVC with auto-backup annotations. Once it finds a PVC with auto-backup annotations, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupConfigurationTemplate`. Then, rest of the backup process will proceed as normal backup of a stand-alone PVC as describe [here](/docs/guides/latest/volumes/pvc.md).
 
 **Add Annotations:**
 
-Let's add the auto-backup specific annotation to the PVC,
+Let's add the auto backup specific annotation to the PVC,
 
 ```console
 $ kubectl annotate pvc nfs-pvc -n demo --overwrite \
