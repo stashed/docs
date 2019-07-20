@@ -2,17 +2,17 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
-    app: stash-demo
+    app: stash-recovered
   name: stash-recovered
   namespace: demo
 spec:
   selector:
     matchLabels:
-      app: stash-demo
+      app: stash-recovered
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: stash-recovered
       name: busybox
     spec:
       containers:

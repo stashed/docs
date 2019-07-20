@@ -19,7 +19,7 @@ section_menu_id: concepts
 
 A complete backup or restore process may consist of several steps. For example, in order to backup a PostgreSQL database we first need to dump the database and upload the dumped file to a backend. Then we need to update the respective`Repository` and `BackupSession` status and send Prometheus metrics. In Stash, we call such individual steps a `Function`.
 
-A `Function` is a Kubernetes `CustomResourceDefinition`(CRD) which basically specifies a template for a container that performs only a specific action. For example, `pg-backup` function only dump and upload the dumped file into the backend where `update-status` function updates the status of respective `BackupSession` and `Repository` and send Prometheus metrics to pushgateway based on the output of `pg-backup` function.
+A `Function` is a Kubernetes `CustomResourceDefinition`(CRD) which basically specifies a template for a container that performs only a specific action. For example, `pg-backup` function only dumps and uploads the dumped file into the backend where `update-status` function updates the status of respective `BackupSession` and `Repository` and sends Prometheus metrics to pushgateway based on the output of `pg-backup` function.
 
 When you install Stash, some `Function`s will be pre-installed for supported targets like databases, etc. However, you can create your own function to customize or extend the backup/restore process.
 
@@ -68,7 +68,7 @@ spec:
         runAsGroup: 5000
 ```
 
-A sample `Function` that updates `BackupSession` and `Repository`  status and send metrics to Prometheus pushgateway is shown below,
+A sample `Function` that updates `BackupSession` and `Repository`  status and sends metrics to Prometheus pushgateway is shown below,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1

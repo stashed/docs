@@ -1,10 +1,10 @@
 ---
-title: Backup and Restore Deployment's Data | Stash
-description: A step by step guide showing how to backup and restore Deployment's data.
+title: Backup and Restore Volumes of a Deployment | Stash
+description: A step by step guide showing how to backup and restore volumes of a Deployment.
 menu:
   product_stash_0.8.3:
     identifier: workload-deployment
-    name: Backup & Restore Deployment's Data
+    name: Backup & Restore Volumes of a Deployment
     parent: workload
     weight: 20
 product_name: stash
@@ -12,9 +12,9 @@ menu_name: product_stash_0.8.3
 section_menu_id: guides
 ---
 
-# Backup and Restore Deployment's Data
+# Backup and Restore Volumes of a Deployment
 
-This guide will show you how to use Stash to backup and restore Deployment's data.
+This guide will show you how to use Stash to backup and restore volumes of a Deployment.
 
 ## Before You Begin
 
@@ -35,11 +35,11 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/workloads](/docs/examples/guides/latest/workloads) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/workloads](/docs/examples/guides/latest/workloads) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
-## Backup Deployment's Data
+## Backup Volumes of a Deployment
 
-This section will show you how to use Stash to backup Deployment's data. Here, we are going to deploy a Deployment with a PVC and generate some sample data in it. Then, we will backup this sample data using Stash.
+This section will show you how to use Stash to backup volumes of a Deployment. Here, we are going to deploy a Deployment with a PVC and generate some sample data in it. Then, we will backup this sample data using Stash.
 
 ### Deploy workload
 
@@ -118,7 +118,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/deployment
 deployment.apps/stash-demo created
 ```
 
-Now, wait for pod of the Deployment to go into the `Running` state.
+Now, wait for pods of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -156,7 +156,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, create a `Respository` using this secret. Below is the YAML of `Repository` crd we are going to create,
+Now, create a `Repository` using this secret. Below is the YAML of `Repository` crd we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
@@ -233,7 +233,7 @@ backupconfiguration.stash.appscode.com/deployment-backup created
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME                          READY   STATUS        RESTARTS   AGE
 stash-demo-856896bd95-4gfbh   2/2     Running       0          12s
 stash-demo-856896bd95-njr8x   2/2     Running       0          17s
@@ -348,12 +348,12 @@ deployment-backup   */1 * * * *   False     0        35s             64s
 
 **Wait for BackupSession:**
 
-The `deployment-backup` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd. The sidecar container will watches for the `BackupSession` crd. Once it found one, it will take backup immediately.
+The `deployment-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackpSession` crd. The sidecar container watches for the `BackupSession` crd. When it finds one, it will take backup immediately.
 
-Wait for a schedule to appear. Run the following command to watch `BackupSession` crd,
+Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
-$ watch -n 2 kubectl get backupsession -n demo 
+$ watch -n 2 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo     suaas-appscode: Mon Jun 24 10:23:08 2019
 
 NAME                           BACKUPCONFIGURATION   PHASE       AGE
@@ -361,7 +361,7 @@ deployment-backup-1561350125   deployment-backup     Running     30s
 deployment-backup-1561350125   deployment-backup     Succeeded   63s
 ```
 
-We can see from the above output that the backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
+We can see from the above output that the backup session has succeeded. Now, we are going to verify that the backed up data has been stored in the backend.
 
 **Verify Backup:**
 
@@ -380,10 +380,9 @@ Now, if we navigate to the GCS bucket, we will see backed up data has been store
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
->**Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
+> **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-
-## Restore Deployment's Data
+## Restore Volumes of a Deployment
 
 This section will show you how to restore the backed up data from the backend we have taken in earlier section.
 
@@ -411,18 +410,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: stash-demo
+    app: stash-recovered
   name: stash-recovered
   namespace: demo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: stash-demo
+      app: stash-recovered
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: stash-recovered
       name: busybox
     spec:
       containers:
@@ -445,7 +444,7 @@ spec:
 Let's create the Deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/recovered_deployment.yaml 
+$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/recovered_deployment.yaml
 persistentvolumeclaim/demo-pvc created
 deployment.apps/stash-recovered created
 ```
@@ -474,8 +473,8 @@ spec:
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-      - name:  source-data
-        mountPath:  /source/data
+      - name: source-data
+        mountPath: /source/data
 ```
 
 Here,
@@ -501,12 +500,12 @@ Wait until the `init-container` has been injected to the `stash-recovered` Deplo
 $ kubectl describe deployment -n demo stash-recovered
 Name:                   stash-recovered
 Namespace:              demo
-Labels:                 app=stash-demo
-Selector:               app=stash-demo
+Labels:                 app=stash-recovered
+Selector:               app=stash-recovered
 Replicas:               3 desired | 3 updated | 3 total | 3 available |
 ...
 Pod Template:
-  Labels:       app=stash-demo
+  Labels:       app=stash-recovered
   Annotations:  stash.appscode.com/last-applied-restoresession-hash: 14443247646000846167
   Init Containers:
    stash-init:
@@ -553,7 +552,7 @@ Pod Template:
     ReadOnly:   false
    tmp-dir:
     Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
-    Medium:     
+    Medium:
     SizeLimit:  <unset>
    stash-podinfo:
     Type:  DownwardAPI (a volume populated by information about the pod)
@@ -594,9 +593,9 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully.
+In this section, we are going to verify that the desired data has been restored successfully.
 
-At first, check if the `stash-recovered` Deployment's pod has gone into `Running` state by the following command,
+At first, check if the `stash-recovered` pods of a Deployment has gone into `Running` state by the following command,
 
 ```console
 $ kubectl get pod -n demo
@@ -606,14 +605,14 @@ stash-recovered-867688ddd5-rfsw4   1/1     Running   0          21m
 stash-recovered-867688ddd5-zswhs   1/1     Running   0          22m
 ```
 
-Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` Deployment's pod using the following command,
+Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` pods of a Deployment using the following command,
 
 ```console
 $ kubectl exec -n demo stash-recovered-867688ddd5-67xr8 -- cat /source/data/data.txt
 sample_data
 ```
 
-# Cleaning Up
+## Cleaning Up
 
 To clean up the Kubernetes resources created by this tutorial, run:
 

@@ -82,7 +82,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Take Volume Snapshot
 
@@ -260,7 +260,7 @@ deployments-volume-snapshot   */1 * * * *   False     0        39s             2
 
 The `deployments-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd.
 
-Wait for a schedule to appear. Run the following command to watch `BackupSession` crd,
+Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo
@@ -379,7 +379,7 @@ spec:
 Here,
 
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name`  is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with your desired Deployment's PVC.
+  - `metadata.name`  is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with the desired PVC of your Deployment.
   - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be initialized. It requires the following fields to be set:
     - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
     - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
@@ -437,18 +437,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: stash-demo
+    app: restore-demo
   name: restore-demo
   namespace: demo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stash-demo
+      app: restore-demo
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: restore-demo
       name: busybox
     spec:
       containers:

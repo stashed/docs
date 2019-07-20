@@ -9,7 +9,7 @@ spec:
       port: 80
       targetPort: 0
   selector:
-    app: stash-demo
+    app: stash-recovered-adv
   clusterIP: None
 ---
 apiVersion: apps/v1
@@ -18,17 +18,17 @@ metadata:
   name: stash-recovered-adv
   namespace: demo
   labels:
-    app: stash-demo
+    app: stash-recovered-adv
 spec:
   replicas: 5
   selector:
     matchLabels:
-      app: stash-demo
+      app: stash-recovered-adv
   serviceName: adv-headless
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: stash-recovered-adv
     spec:
       containers:
         - name: busybox

@@ -40,11 +40,11 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/recovery](/docs/examples/recovery) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/recovery](/docs/examples/recovery) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Overview
 
-The following diagram shows how Stash recovers backed up data from a backend. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash recovers backed up data from a backend. Open the image in a new tab to see the enlarged version.
 
 <p align="center">
   <img alt="Stash Backup Flow" src="/docs/images/v1alpha1/stash-recovery.svg">

@@ -80,7 +80,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Take Volume Snapshot
 
@@ -122,7 +122,7 @@ spec:
   template:
     metadata:
       labels:
-        app: stash 
+        app: stash
     spec:
       containers:
         - args: ["echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
@@ -253,7 +253,7 @@ statefulset-volume-snapshot   */1 * * * *   False     0        <none>          1
 
 The `statefulset-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd.
 
-Wait for a schedule to appear. Run the following command to watch `BackupSession` crd,
+Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo
@@ -363,8 +363,8 @@ Here,
 
 - `spec.target.replicas`: `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective or Specific VolumeSnapShots.
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be `my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in `RestoreSession` in the following format:
-  
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with the desired PVC of a StatefulSet. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, the PVCs of your StatefulSet will be `my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in `RestoreSession` in the following format:
+
     ```console
     <volume claim name>-<statefulset name>-${POD_ORDINAL}
     ```
@@ -374,7 +374,7 @@ Here,
     - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
     - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
     - `name` is the `VolumeSnapshot` resource name. In `RestoreSession` crd, You must provide the name in the following format:
-  
+
       ```console
       <VolumeSnapshot name prefix>-${POD_ORDINAL}-<timestamp in Unix  epoch seconds>
       ```
@@ -433,9 +433,9 @@ Below, the YAML for the Statefulset we are going to create.
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc
+  name: restore-svc
   labels:
-    app: demo
+    app: restore-demo
   namespace: demo
 spec:
   ports:
@@ -443,7 +443,7 @@ spec:
       name: web
   clusterIP: None
   selector:
-    app: stash
+    app: restore-demo
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -453,13 +453,13 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: stash
+      app: restore-demo
   serviceName: svc
   replicas: 3
   template:
     metadata:
       labels:
-        app: stash
+        app: restore-demo
     spec:
       containers:
         - args:
@@ -578,7 +578,7 @@ statefulset-volume-snapshot   */1 * * * *   False     0        <none>          1
 
 The `statefulset-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd.
 
-Wait for a schedule to appear. Run the following command to watch `BackupSession` crd,
+Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo
@@ -732,9 +732,9 @@ Below, the YAML for the Statefulset we are going to create.
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc
+  name: restore-svc
   labels:
-    app: demo
+    app: restore-demo
   namespace: demo
 spec:
   ports:
@@ -742,7 +742,7 @@ spec:
       name: web
   clusterIP: None
   selector:
-    app: stash
+    app: restore-demo
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -752,13 +752,13 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: stash
+      app: restore-demo
   serviceName: svc
   replicas: 3
   template:
     metadata:
       labels:
-        app: stash 
+        app: restore-demo
     spec:
       containers:
         - args:
@@ -796,7 +796,7 @@ statefulset.apps/restore-demo created
 Now, wait for the pod of Statefulset to go into the `Running` state.
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME             READY   STATUS    RESTARTS   AGE
 restore-demo-0   1/1     Running   0          3m9s
 restore-demo-1   1/1     Running   0          2m50s
