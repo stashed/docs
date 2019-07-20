@@ -80,10 +80,8 @@ The restore process consists of the following steps:
 
 >**Note:** If your workload restart with the `stash-init` init-container for any reason, the init-container will skip running restore process if there is no pending `RestoreSession` for this workload.
 
-# Nest Steps
+# Next Steps
 
 1. See a step by step guide to backup/restore a Deployment's volumes from [here](docs/guides/latest/workloads/deployment.md).
-
 2. See a step by step guide to backup/restore a StatefulSet's volumes from [here](docs/guides/latest/workloads/statefulset.md).
-
 3. See a step by step guide to backup/restore a Daemonset's volumes from [here](docs/guides/latest/workloads/daemonset.md).
