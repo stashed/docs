@@ -1,20 +1,20 @@
 ---
-title: Default Backup PVC | Stash
-description: An step by step guide on how to configure default backup for PVCs.
+title: Auto Backup PVC | Stash
+description: An step by step guide on how to configure automatic backup for PVCs.
 menu:
   product_stash_0.8.3:
-    identifier: default-backup-pvc
-    name: Default Backup for PVCs
-    parent: default-backup
+    identifier: auto-backup-pvc
+    name: Auto Backup for PVCs
+    parent: auto-backup
     weight: 30
 product_name: stash
 menu_name: product_stash_0.8.3
 section_menu_id: guides
 ---
 
-# Default Backup for PVC
+# Auto Backup for PVC
 
-This tutorial will show you how to configure default-backup for PersistentVolumeClaim. Here, we are going to backup a PVC provisioned from an NFS server using default-backup.
+This tutorial will show you how to configure auto-backup for PersistentVolumeClaim. Here, we are going to backup a PVC provisioned from an NFS server using auto-backup.
 
 ## Before You Begin
 
@@ -36,11 +36,11 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/default-backup/pvc](/docs/examples/guides/latest/default-backup/pvc) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+>**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/auto-backup/pvc](/docs/examples/guides/latest/auto-backup/pvc) directory of [stashed/stash](https://github.com/stashed/stash) repository.
 
 **Verify necessary Function and Task:**
 
-Stash uses `Function-Task` model to backup PVC using default-backup. When you install Stash, it automatically creates the necessary `Function` and `Task`.
+Stash uses `Function-Task` model to backup PVC using auto-backup. When you install Stash, it automatically creates the necessary `Function` and `Task`.
 
 Let's verify that Stash has created the necessary `Function` to backup/restore PVC by the following command,
 
@@ -117,11 +117,11 @@ Note that we have used some variables (format: `${<variable name>}`) in `backend
 Let's create the `BackupConfigurationTemplate` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/pvc/backupconfiguration_template.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/backupconfiguration_template.yaml
 backupconfigurationtemplate.stash.appscode.com/pvc-backup-template created
 ```
 
-Now, default-backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
+Now, auto-backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
 
 **Required Annotations for PVC:**
 
@@ -177,7 +177,7 @@ Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label.
 Let's create the PV we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/pvc/nfs_pv.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/nfs_pv.yaml
 persistentvolume/nfs-pv created
 ```
 
@@ -210,7 +210,7 @@ Also, notice the `spec.selector` section. We have specified `app: nfs-demo` labe
 Let's create the PVC we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/pvc/nfs_pvc.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/nfs_pvc.yaml
 persistentvolumeclaim/nfs-pvc created
 ```
 
@@ -226,7 +226,7 @@ Here, we can see that the PVC `nfs-pvc` has been bounded with PV `nfs-pv`.
 
 **Generate Sample Data:**
 
-Now, we are going to deploy a sample pod that mounts the PVC we have just created. The pod will generate a sample file named `hello.txt` in `/my/sample/data/` directory. We will backup this file using default-backup.
+Now, we are going to deploy a sample pod that mounts the PVC we have just created. The pod will generate a sample file named `hello.txt` in `/my/sample/data/` directory. We will backup this file using auto-backup.
 
 Below, is the YAML of the pod that we are going to deploy,
 
@@ -253,7 +253,7 @@ spec:
 Here, we have mount the `nfs-pvc` into `/my/sample/data` directory of the pod. Let's deploy the pod we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/pvc/pod.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/pod.yaml
 pod/demo-pod created
 ```
 
@@ -266,11 +266,11 @@ hello from sample file.
 
 ## Backup
 
-Now, well will add default-backup specific annotations to the PVC. Stash watches for PVC. Once it found a PVC with default-backup specific annotations, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupConfigurationTemplate`. Then, rest of the backup process will proceed as normal backup of a stand-alone PVC as describe [here](/docs/guides/latest/volumes/pvc.md).
+Now, well will add auto-backup specific annotations to the PVC. Stash watches for PVC. Once it found a PVC with auto-backup specific annotations, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupConfigurationTemplate`. Then, rest of the backup process will proceed as normal backup of a stand-alone PVC as describe [here](/docs/guides/latest/volumes/pvc.md).
 
 **Add Annotations:**
 
-Let's add the default-backup specific annotation to the PVC,
+Let's add the auto-backup specific annotation to the PVC,
 
 ```console
 $ kubectl annotate pvc nfs-pvc -n demo --overwrite \
@@ -439,7 +439,7 @@ persistentvolumeclaim-nfs-pvc   true        41 B   1                3m37s       
 If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of our GCS bucket, we will see that the snapshot has been stored there.
 
 <figure align="center">
-  <img alt="Backup data of PVC 'nfs-pvc' in GCS backend" src="/docs/images/guides/latest/default-backup/pvc_repo.png">
+  <img alt="Backup data of PVC 'nfs-pvc' in GCS backend" src="/docs/images/guides/latest/auto-backup/pvc_repo.png">
   <figcaption align="center">Fig: Backup data of PVC "nfs-pvc" in GCS backend</figcaption>
 </figure>
 

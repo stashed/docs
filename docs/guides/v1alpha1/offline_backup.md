@@ -42,7 +42,7 @@ namespace/demo created
 
 ## Overview
 
-The following diagram shows how Stash takes offline backup of a Kubernetes volume. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash takes offline backup of a Kubernetes volume. Open the image in a new tab to see the enlarged version.
 
 <p align="center">
   <img alt="Stash Offline Backup Flow" src="/docs/images/v1alpha1/stash-offline-backup.svg">

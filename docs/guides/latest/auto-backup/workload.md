@@ -1,20 +1,20 @@
 ---
-title: Default Backup Workload | Stash
-description: An step by step guide on how to configure default backup for workloads.
+title: Auto Backup Workload | Stash
+description: An step by step guide on how to configure automatic backup for workloads.
 menu:
   product_stash_0.8.3:
-    identifier: default-backup-workload
-    name: Default Backup for Workloads
-    parent: default-backup
+    identifier: auto-backup-workload
+    name: Auto Backup for Workloads
+    parent: auto-backup
     weight: 20
 product_name: stash
 menu_name: product_stash_0.8.3
 section_menu_id: guides
 ---
 
-# Default Backup for Workloads
+# Auto Backup for Workloads
 
-This tutorial will show you how to configure default backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployment, StatefulSet, and DaemonSet using a common template.
+This tutorial will show you how to configure automatic backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployment, StatefulSet, and DaemonSet using a common template.
 
 ## Before You Begin
 
@@ -85,11 +85,11 @@ Note that we have used some variables (format: `${<variable name>}`) in `backend
 Let's create the `BackupConfigurationTemplate` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/backupconfiguration_template.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/backupconfiguration_template.yaml
 backupconfigurationtemplate.stash.appscode.com/workload-backup-template created
 ```
 
-Now, default backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload to enable backup.
+Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload to enable backup.
 
 **Required Annotations for Workloads:**
 
@@ -115,7 +115,7 @@ stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
 
 ## Backup Deployment
 
-Now, we are going to backup a Deployment using the template we have configured earlier. We will mount two ConfigMap volume in two different directories of the Deployment. Then, we will backup those directories using default backup.
+Now, we are going to backup a Deployment using the template we have configured earlier. We will mount two ConfigMap volume in two different directories of the Deployment. Then, we will backup those directories using automatic backup.
 
 **Create Deployment:**
 
@@ -182,12 +182,12 @@ spec:
           name: stash-sample-data-2
 ```
 
-Notice the `metadata.annotations` field. We have specified the default backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `workload-backup-template` BackupConfigurationTemplate for creating `Repository` and `BackupConfiguration` for this Deployment.
+Notice the `metadata.annotations` field. We have specified the automatic backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `workload-backup-template` BackupConfigurationTemplate for creating `Repository` and `BackupConfiguration` for this Deployment.
 
 Let's create the above Deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/deployment.yaml
 configmap/stash-sample-data-1 created
 configmap/stash-sample-data-2 created
 deployment.apps/stash-demo created
@@ -309,7 +309,7 @@ deployment-stash-demo   true        246 B   2                70s                
 If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we will see that the snapshot has been stored there.
 
 <figure align="center">
-  <img alt="Backup data in GCS backend" src="/docs/images/guides/latest/default-backup/deployment_repo.png">
+  <img alt="Backup data in GCS backend" src="/docs/images/guides/latest/auto-backup/deployment_repo.png">
   <figcaption align="center">Fig: Backup data in GCS backend</figcaption>
 </figure>
 
@@ -392,12 +392,12 @@ spec:
           storage: 1Gi
 ```
 
-Notice the `metadata.annotations` field. We have specified default backup specific annotations similarly as we had specified in the Deployment in the previous section.
+Notice the `metadata.annotations` field. We have specified automatic backup specific annotations similarly as we had specified in the Deployment in the previous section.
 
 Let's create the StatefulSet we have created above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/statefulset.yaml
 service/headless created
 statefulset.apps/sts-demo created
 ```
@@ -516,13 +516,13 @@ statefulset-sts-demo   true        0 B    6                32s                  
 If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS bucket, we will see that the snapshot been stored there.
 
 <figure align="center">
-  <img alt="Backup data of `sts-demo` StatefulSet in GCS backend" src="/docs/images/guides/latest/default-backup/statefulset_repo.png">
+  <img alt="Backup data of `sts-demo` StatefulSet in GCS backend" src="/docs/images/guides/latest/auto-backup/statefulset_repo.png">
   <figcaption align="center">Fig: Backup data of StatefulSet "sts-demo" in GCS backend</figcaption>
 </figure>
 
 ## Backup DaemonSet
 
-Now, we are going to use the same template to backup a DaemonSet. We will mount a ConfigMap in `/etc/config` directory. Then, we will backup this directory using default backup.
+Now, we are going to use the same template to backup a DaemonSet. We will mount a ConfigMap in `/etc/config` directory. Then, we will backup this directory using automatic backup.
 
 **Create DaemonSet:**
 
@@ -576,12 +576,12 @@ spec:
           name: my-daemon-config
 ```
 
-Notice the `metadata.annotations` field. We have specified default backup specific annotations to backup our desired directory.
+Notice the `metadata.annotations` field. We have specified automatic backup specific annotations to backup our desired directory.
 
 Let's create the DaemonSet we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/default-backup/workload/daemonset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/daemonset.yaml
 configmap/my-daemon-config created
 daemonset.apps/dmn-demo created
 ```
@@ -698,7 +698,7 @@ daemonset-dmn-demo   true        51 B   1                5s                     
 If we navigate to `stash-backup/demo/daemonset/dmn-demo` directory of our GCS bucket, we will see that the snapshot been stored there.
 
 <figure align="center">
-  <img alt="Backup data of `dmn-demo` DaemonSet in GCS backend" src="/docs/images/guides/latest/default-backup/daemon_repo.png">
+  <img alt="Backup data of `dmn-demo` DaemonSet in GCS backend" src="/docs/images/guides/latest/auto-backup/daemon_repo.png">
   <figcaption align="center">Fig: Backup data of DaemonSet "dmn-demo" in GCS backend</figcaption>
 </figure>
 
