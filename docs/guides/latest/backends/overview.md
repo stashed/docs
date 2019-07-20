@@ -21,7 +21,7 @@ Stash supports various backends for storing data snapshots. It can be a cloud st
 The following diagram shows how Stash sidecar container accesses and backs up data into a backend.
 
 <figure align="center">
-  <img alt="Stash Backend Overview" src="/docs/images/v1beta1/backends/backend_overview.svg">
+  <img alt="Stash Backend Overview" src="/docs/images/guides/latest/backends/backend_overview.svg">
   <figcaption align="center">Fig: Stash Backend Overview</figcaption>
 </figure>
 
@@ -32,7 +32,7 @@ Stash sidecar/backup job reads backend information from the `Repository` and ret
 Below, a screenshot that shows a repository created in AWS S3 bucket named `stash-qa`:
 
 <figure align="center">
-  <img alt="Repository in AWS S3 Backend" src="/docs/images/v1beta1/backends/s3_repository.png">
+  <img alt="Repository in AWS S3 Backend" src="/docs/images/guides/latest/backends/s3_repository.png">
   <figcaption align="center">Fig: Repository in AWS S3 Backend</figcaption>
 </figure>
 
