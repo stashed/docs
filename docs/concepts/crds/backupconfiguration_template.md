@@ -61,7 +61,7 @@ spec:
     prune: true
 ```
 
-The sample `BackupConfigurationTemplate` that has been shown above can be used to backup Deployments, DaemonSets, StatefulSets, ReplicaSets and ReplicationControllers. You only have to add some annotations to these workloads. For more details about what annotations you have to add to the targets, please visit [here](/docs/guides/default-backup/overview.md).
+The sample `BackupConfigurationTemplate` that has been shown above can be used to backup Deployments, DaemonSets, StatefulSets, ReplicaSets and ReplicationControllers. You only have to add some annotations to these workloads. For more details about what annotations you have to add to the targets, please visit [here](/docs/guides/auto-backup/overview.md).
 
 Here, we are going to describe the various sections of `BackupConfigurationTemplate` crd.
 
@@ -103,6 +103,6 @@ You can set a template for the `BackupConfiguration` object that will be created
 
 ## Next Steps
 
-- Learn how to use `BackupConfigurationTemplate` for default backup of workloads data from [here](/docs/guides/default-backup/workload.md).
-- Learn how to use `BackupConfigurationTemplate` for default-backup of database from [here](/docs/guides/default-backup/database.md).
-- Learn how to use `BackupConfigurationTemplate` for default-backup of stand-alone PVC from [here](/docs/guides/default-backup/volume.md).
+- Learn how to use `BackupConfigurationTemplate` for auto backup of workloads data from [here](/docs/guides/auto-backup/workload.md).
+- Learn how to use `BackupConfigurationTemplate` for auto backup of database from [here](/docs/guides/auto-backup/database.md).
+- Learn how to use `BackupConfigurationTemplate` for auto backup of stand-alone PVC from [here](/docs/guides/auto-backup/volume.md).
