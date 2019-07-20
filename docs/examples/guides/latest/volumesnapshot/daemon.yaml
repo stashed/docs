@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 6Gi
+      storage: 1Gi
 ---      
 apiVersion: apps/v1
 kind: DaemonSet

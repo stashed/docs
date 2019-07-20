@@ -7,4 +7,3 @@ parameters:
 provisioner: pd.csi.storage.gke.io
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
-

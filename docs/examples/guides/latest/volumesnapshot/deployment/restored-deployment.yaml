@@ -1,22 +1,9 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: backup-pvc
-  namespace: demo
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: "standard"
-  resources:
-    requests:
-      storage: 6Gi
----   
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: stash-demo
-  name: stash-demo
+  name: restore-demo
   namespace: demo
 spec:
   replicas: 1
@@ -30,16 +17,22 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["touch source/data/sample-file.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
+      - args:
+        - sleep
+        - "3600"
         image: busybox
         imagePullPolicy: IfNotPresent
         name: busybox
         volumeMounts:
-        - mountPath: /source/data
-          name: source-data
+        - mountPath: /restore/data
+          name: restore-data
+        - mountPath: /restore/config
+          name: restore-config
       restartPolicy: Always
       volumes:
-      - name: source-data
+      - name: restore-data
         persistentVolumeClaim:
-         claimName: backup-pvc
+          claimName: restore-data
+      - name: restore-config
+        persistentVolumeClaim:
+          claimName: restore-config
