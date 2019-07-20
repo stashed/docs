@@ -80,7 +80,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Take Volume Snapshot
 
@@ -225,7 +225,7 @@ pvc-volume-snapshot           */1 * * * *   False     0        39s             2
 
 The `pvc-volume-snapshot` CronJob will trigger a backup on each scheduled time slot by creating a `BackpSession` crd.
 
-Wait for a schedule to appear. Run the following command to watch `BackupSession` crd,
+Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo

@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: stash-demo
+    app: restore-demo
   name: restore-demo
   namespace: demo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stash-demo
+      app: restore-demo
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: restore-demo
       name: busybox
     spec:
       containers:
