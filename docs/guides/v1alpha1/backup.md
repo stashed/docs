@@ -39,7 +39,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/backup](/docs/examples/backup) directory of [appscode/stash](https://github.com/stashed/stash) repository.
+>Note: YAML files used in this tutorial are stored in [/docs/examples/backup](/docs/examples/backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Overview
 
@@ -53,7 +53,7 @@ The backup process consists of the following steps:
 
 1. At first, a user creates a `Secret`. This secret holds the credentials to access the backend where backed up data will be stored. It also holds a password (`RESTIC_PASSWORD`) that will be used to encrypt the backed up data.
 2. Then, the user creates a `Restic` crd which specifies the targeted workload for backup. It also specifies the backend information where the backed up data will be stored.
-3. Stash operator watches for `Restic` crd. Once, it found a `Restic` crd, it identifies the targeted workloads that match `Restic`'s selector.
+3. Stash operator watches for `Restic` crd. Once, it finds a `Restic` crd, it identifies the targeted workloads that match `Restic`'s selector.
 4. Then, Stash operator injects a sidecar container named `stash` and mounts the target volume into it.
 5. Finally, `stash` sidecar container takes periodic backup of the volume to specified backend. It also creates a `Repository` crd in first backup which represents the original repository in the backend in a Kubernetes native way.
 

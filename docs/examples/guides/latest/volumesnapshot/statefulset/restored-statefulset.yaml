@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: restore-svc
+  labels:
+    app: restore-demo
+  namespace: demo
+spec:
+  ports:
+    - port: 80
+      name: web
+  clusterIP: None
+  selector:
+    app: restore-demo
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: restore-demo
+  namespace: demo
+spec:
+  selector:
+    matchLabels:
+      app: restore-demo
+  serviceName: svc
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: restore-demo
+    spec:
+      containers:
+        - args:
+            - sleep
+            - "3600"
+          name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: restore-data
+              mountPath: /restore/data
+  volumeClaimTemplates:
+    - metadata:
+        name: restore-data
+        namespace: demo
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 1Gi

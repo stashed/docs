@@ -27,7 +27,7 @@ You have to create only one  `BackupConfigurationTemplate` for all similar types
 
 Like any official Kubernetes resource, a `BackupConfigurationTemplate` has `TypeMeta`, `ObjectMeta` and `Spec` sections. However, unlike other Kubernetes resources, it does not have a `Status` section.
 
-A sample `BackupConfigurationTemplate` object to backup a Deployment's data through default backup is shown below,
+A sample `BackupConfigurationTemplate` object to backup volumes of a Deployment through default backup is shown below,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1

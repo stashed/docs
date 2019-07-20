@@ -149,7 +149,7 @@ NAME                    DESIRED   CURRENT   AGE
 prometheus-prometheus   1         1         4m
 ```
 
-Check StatefulSet's pod is running,
+Check if the pod of the StatefulSet is running,
 
 ```console
 $ kubectl get pod prometheus-prometheus-0 -n monitoring

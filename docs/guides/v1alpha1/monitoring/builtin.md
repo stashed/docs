@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Monitoring Stash with builtin Prometheus
 
-This tutorial will show you how to configure builtin [Prometheus](https://github.com/prometheus/prometheus) scrapper to monitor Stash backup and recovery operations as well as Stash operator.
+This tutorial will show you how to configure builtin [Prometheus](https://github.com/prometheus/prometheus) scraper to monitor Stash backup and recovery operations as well as Stash operator.
 
 ## Before You Begin
 

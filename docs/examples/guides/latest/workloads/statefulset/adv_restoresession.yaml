@@ -1,0 +1,26 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: ss-restore
+  namespace: demo
+spec:
+  driver: Restic
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: stash-recovered-adv
+    volumeMounts:
+      - mountPath: /source/data
+        name: source-data
+  rules:
+    - targetHosts: ["host-3","host-4"]
+      sourceHost: "host-1"
+      paths:
+        - /source/data
+    - targetHosts: []
+      sourceHost: ""
+      paths:
+        - /source/data
