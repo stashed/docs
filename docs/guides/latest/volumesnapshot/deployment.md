@@ -183,7 +183,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/deplo
 deployment.apps/stash-demo created
 ```
 
-Now, wait for pod of the Deployment to go into the `Running` state.
+Now, wait for the pod of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -480,7 +480,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/resto
 deployment.apps/restore-demo created
 ```
 
-Now, wait for pod of the Deployment to go into the `Running` state.
+Now, wait for the pod of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo

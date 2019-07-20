@@ -494,7 +494,7 @@ service/svc created
 statefulset.apps/restore-demo created
 ```
 
-Now, wait for pod of the Statefulset to go into the `Running` state.
+Now, wait for the pod of the Statefulset to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
