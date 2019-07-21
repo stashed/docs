@@ -80,7 +80,7 @@ spec:
 
 - Stash will watch for `BackupCofiguration` crd. When it will find a  `BackupConfiguration` crd, it will inject a `sidecar` container to the workload and start a `cron` for scheduled backup.
 - In each schedule, the `cron` will create `BackupSession` crd.
-- The `sidecar` container watches for `BackupSession` crd. If it find one, it will take backup instantly and update `BackupSession` status accordingly.
+- The `sidecar` container watches for `BackupSession` crd. If it finds one, it will take backup instantly and update `BackupSession` status accordingly.
 
 Sample `BackupSession` crd:
 

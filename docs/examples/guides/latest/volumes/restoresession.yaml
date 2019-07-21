@@ -1,0 +1,21 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: nfs-pvc-restore
+  namespace: demo
+spec:
+  task:
+    name: pvc-restore
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: nfs-pvc
+    volumeMounts:
+    - name:  nfs-pvc
+      mountPath:  /shared/config
+  rules:
+  - paths:
+    - /shared/config

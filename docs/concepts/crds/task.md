@@ -83,7 +83,7 @@ You might be wondering why we have introduced `Function` and `Task` crd. We have
 
 - **Customizability:** `Function` and `Task` enables you to customize backup/recovery process. For example, currently we use [mysqldump](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html) in `mysql-backup` Function to backup MySQL database. You can build a custom `Function` using Percona's [xtrabackup](https://www.percona.com/software/mysql-database/percona-xtrabackup) tool instead of `mysqldump`. Then you can write a `Task` with this custom `Function` and use it to backup your target MySQL database.
 
-You can also customize backup/restore process by executing hooks before or after the backup/restore process. For example, if you want to execute some logic to prepare your apps for backup or you want to send an email notification after each backup, you just need to add `Function` with your custom logic and respective `Task` to execute them.
+  You can also customize backup/restore process by executing hooks before or after the backup/restore process. For example, if you want to execute some logic to prepare your apps for backup or you want to send an email notification after each backup, you just need to add `Function` with your custom logic and respective `Task` to execute them.
 
 - **Extensibility:** Currently, Stash supports backup of MySQL, MongoDB and PostgreSQL databases. You can easily backup the databases that are not officially supported by Stash. You just need to create a `Function` and a `Task` for your desired database.
 

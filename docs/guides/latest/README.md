@@ -27,7 +27,7 @@ Guides show how to perform different operations with Stash. We have divided guid
 
 - **Databases :** Databases section describes how to backup and restore databases using Stash. Check how database backup works in Stash from [here](/docs/guides/latest/databases/backup.md).
 
-- **Default Backup :** This section describes how you can write template for backup process to backup resources using some annotations. Start learning to write backup template from [here](/docs/guides/latest/default-backup/overview.md).
+- **Default Backup :** This section describes how you can write template for backup process to backup resources using some annotations. Start learning to write backup template from [here](/docs/guides/latest/auto-backup/overview.md).
 
 - **Advanced Use Cases :** This section describes some advance uses of Stash such as instant backup, restoring in different namespace/cluster, restoring in different host etc. See how to trigger an instant backup from [here](/docs/guides/latest/advanced/instant_backup.md).
 

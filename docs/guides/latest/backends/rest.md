@@ -70,7 +70,7 @@ spec:
 Create the `Repository` we have shown above using the following command,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/0.8.3/docs/examples/guides/v1beta1/backends/rest.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/0.8.3/docs/examples/guides/latest/backends/rest.yaml
 repository/rest-repo created
 ```
 

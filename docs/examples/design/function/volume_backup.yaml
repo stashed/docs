@@ -1,4 +1,4 @@
-# volumeBackup function backup a kubernetes volume
+# volumeBackup function backup a Kubernetes volume
 apiVersion: stash.appscode.com/v1beta1
 kind: Function
 metadata:
