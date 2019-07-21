@@ -39,11 +39,11 @@ namespace/demo created
 
 ## Backup Volumes of a DaemonSet
 
-This section will show you how to use Stash to backup volumes of a DaemonSet. Here, we are going to deploy a DaemonSet and generate some sample data in it. Then, we will backup this sample data using Stash.
+This section will show you how to use Stash to backup volumes of a DaemonSet. Here, we are going to deploy a DaemonSet and generate some sample data in it. Then, we are going to backup this sample data using Stash.
 
 **Deploy DaemonSet:**
 
-At first, we will deploy a DaemonSet. This DaemonSet will automatically generate sample data (`data.txt` file) in `/source/data` directory.
+At first, we are going to deploy a DaemonSet. This DaemonSet will automatically generate sample data (`data.txt` file) in `/source/data` directory.
 
 Below is the YAML of the DaemonSet that we are going to create,
 
@@ -327,7 +327,7 @@ dmn-backup-1561543509   dmn-backup            Running      17s
 dmn-backup-1561543509   dmn-backup            Succeeded    2m20s
 ```
 
-We can see from the above output that the backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
+We can see from the above output that the backup session has succeeded. Now, we are going to verify that the backed up data has been stored in the backend.
 
 **Verify Backup:**
 
@@ -339,7 +339,7 @@ NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        0 B    3                47s                      4m
 ```
 
-Now, if we navigate to the GCS bucket, we will see backed up data has been stored in `source/data/sample-daemonset` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
+Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `source/data/sample-daemonset` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
 
 <figure align="center">
   <img alt="Backup data in GCS Bucket" src="/docs/images/latest/workloads/gcs_bucket_dmn.png">
@@ -535,7 +535,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully.
+In this section, we are going to verify that the desired data has been restored successfully.
 
 At first, check if the `stash-recovered` pods of a DaemonSet has gone into `running` state by the following command,
 

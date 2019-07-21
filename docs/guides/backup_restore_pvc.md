@@ -3,7 +3,7 @@
 
 # Backup and Restore PVC
 
-In this tutorial we will backup some directories of a persistent volume and restore it in another persistent volume.
+In this tutorial we are going to backup some directories of a persistent volume and restore it in another persistent volume.
 
 ## Before You Begin
 

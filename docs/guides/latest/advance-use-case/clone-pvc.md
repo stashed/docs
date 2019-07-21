@@ -25,11 +25,11 @@ namespace/demo created
 
 ## Clone the Volumes of a Deployment
 
-Here we are going to clone the volumes of a Deployment. At first, we will back up the volumes of a Deployment, then we will restore these volumes into new PVCs.
+Here we are going to clone the volumes of a Deployment. At first, we are going to back up the volumes of a Deployment, then we are going to restore these volumes into new PVCs.
 
 ### Backup
 
-We are going to deploy a Deployment with two PVCs and generate some sample data in it. Then, we will back up these PVCs.
+We are going to deploy a Deployment with two PVCs and generate some sample data in it. Then, we are going to back up these PVCs.
 
 **Deploy Deployment:**
 
@@ -243,7 +243,7 @@ We can see from the above output that the backup session has succeeded. This ind
 
 ### Restore
 
-Now, we will clone the volumes that we have backed up in the previous section. In order to do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
+Now, we are going to clone the volumes that we have backed up in the previous section. In order to do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
 
 **Create RestoreSession:**
 
@@ -319,7 +319,7 @@ So, we can see from the output of the above command that the restore process has
 
 **Verify Restored PVC:**
 
-Once a restore process is complete, we will see that new PVCs with the name `restore-data` and `restore-config` have been created.
+Once a restore process is complete, we are going to see that new PVCs with the name `restore-data` and `restore-config` have been created.
 
 Verify that the PVCs have been created by the following command,
 
@@ -403,11 +403,11 @@ config_data
 
 ## Clone the Volumes of a SatefulSet
 
-Here we are going to clone the volumes of a StatefulSet. At first, we will back up the volumes of a StatefulSet, then we will restore these volumes into new PVCs.
+Here we are going to clone the volumes of a StatefulSet. At first, we are going to back up the volumes of a StatefulSet, then we are going to restore these volumes into new PVCs.
 
 ### Backup
 
-Now, we will deploy a StatefulSet and generate some sample data in it's volume. Then, we will back up these volumes.
+Now, we are going to deploy a StatefulSet and generate some sample data in it's volume. Then, we are going to back up these volumes.
 
 **Deploy StatefulSet:**
 
@@ -634,7 +634,7 @@ We can see from the above output that the backup session has succeeded. This ind
 
 ### Restore
 
-Now, we will restore the volumes that we have backed up in the previous section. In order to do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
+Now, we are going to restore the volumes that we have backed up in the previous section. In order to do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
 
 **Create RestoreSession:**
 

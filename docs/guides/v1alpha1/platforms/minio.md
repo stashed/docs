@@ -285,7 +285,7 @@ In order to perform recovery, we need `Repository` crd `deployment.stah-demo` an
 
 **Create PVC:**
 
-We will recover backed up data into a PVC. At first, we need to know available [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) in our cluster.
+We are going to recover backed up data into a PVC. At first, we need to know available [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) in our cluster.
 
 ```console
 $ kubectl get storageclass

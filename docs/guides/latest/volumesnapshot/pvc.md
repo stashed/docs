@@ -84,11 +84,11 @@ namespace/demo created
 
 ## Take Volume Snapshot
 
-Here, we are going to create a PVC and mount it with a pod and we will also generate some sample data on it. Then, we will take snapshot of this PVC using Stash.
+Here, we are going to create a PVC and mount it with a pod and we are going to also generate some sample data on it. Then, we are going to take snapshot of this PVC using Stash.
 
 **Create PersistentVolumeClaim :**
 
-At first, let's create a PVC. We will mount this PVC in a pod.
+At first, let's create a PVC. We are going to mount this PVC in a pod.
 
 Below is the YAML of the sample PVC,
 
@@ -116,7 +116,7 @@ persistentvolumeclaim/source-data created
 
 **Create Pod :**
 
-Now, we will deploy a pod that uses the above PVC. This pod will automatically create `data.txt` file in `/source/data`  directory and write some sample data in it and also mounted the desired PVC in `/source/data`  directory.
+Now, we are going to deploy a pod that uses the above PVC. This pod will automatically create `data.txt` file in `/source/data`  directory and write some sample data in it and also mounted the desired PVC in `/source/data`  directory.
 
 Below is the YAML of the pod that we are going to create,
 
@@ -236,7 +236,7 @@ pvc-volume-snapshot-1563186667           pvc-volume-snapshot           Running  
 pvc-volume-snapshot-1563186667           pvc-volume-snapshot           Succeeded   1m32s
 ```
 
-We can see above that the backup session has succeeded. Now, we will verify that the `VolumeSnapshot` has been created and the snapshots has been stored in the respective backend.
+We can see above that the backup session has succeeded. Now, we are going to verify that the `VolumeSnapshot` has been created and the snapshots has been stored in the respective backend.
 
 **Verify Volume Snapshot :**
 
@@ -286,7 +286,7 @@ status:
   restoreSize: 1Gi
 ```
 
-Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we will see snapshot `snapcontent-a8e8faeb-a6eb-11e9-9f3a-42010a800050` has been stored successfully.
+Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we are going to see snapshot `snapcontent-a8e8faeb-a6eb-11e9-9f3a-42010a800050` has been stored successfully.
 
 <figure align="center">
   <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/standalone-pvc.png">
@@ -358,7 +358,7 @@ restore-pvc                     Succeeded   1m
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVC with the name `restore-data` has been created.
+Once a restore process is complete, we are going to see that new PVC with the name `restore-data` has been created.
 
 To verify that the PVC has been created, run by the following command,
 
@@ -376,7 +376,7 @@ Notice the `STATUS` field. It indicates that the respective PV has been provisio
 
 **Verify Restored Data :**
 
-We will create a new pod with the restored PVC to verify whether the backed up data has been restored.
+We are going to create a new pod with the restored PVC to verify whether the backed up data has been restored.
 
 Below, the YAML for the Pod we are going to create.
 

@@ -39,11 +39,11 @@ namespace/demo created
 
 ## Backup Volumes of a Deployment
 
-This section will show you how to use Stash to backup volumes of a Deployment. Here, we are going to deploy a Deployment with a PVC and generate some sample data in it. Then, we will backup this sample data using Stash.
+This section will show you how to use Stash to backup volumes of a Deployment. Here, we are going to deploy a Deployment with a PVC and generate some sample data in it. Then, we are going to backup this sample data using Stash.
 
 ### Deploy workload
 
-At first, we will create a PVC then we will create a Deployment that will use this PVC.
+At first, we are going to create a PVC then we are going to create a Deployment that will use this PVC.
 
 **Create PVC:**
 
@@ -72,7 +72,7 @@ persistentvolumeclaim/stash-sample-data created
 
 **Deploy Deployment:**
 
-Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
+Now, we are going to deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -373,7 +373,7 @@ NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        0 B    5                58s                      18m
 ```
 
-Now, if we navigate to the GCS bucket, we will see backed up data has been stored in `source/data/sample-deployment` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
+Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `source/data/sample-deployment` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
 
 <figure align="center">
   <img alt="Backup data in GCS Bucket" src="/docs/images/latest/workloads/gcs_bucket_dep.png">

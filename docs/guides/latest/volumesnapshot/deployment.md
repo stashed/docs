@@ -86,11 +86,11 @@ namespace/demo created
 
 ## Take Volume Snapshot
 
-Here, we are going to deploy a Deployment with two PVCs and generate some sample data on it. Then, we will take snapshot of those PVCs using Stash.
+Here, we are going to deploy a Deployment with two PVCs and generate some sample data on it. Then, we are going to take snapshot of those PVCs using Stash.
 
 **Create PersistentVolumeClaim :**
 
-At first, let's create two sample PVCs. We will mount these PVCs in our targeted Deployment.
+At first, let's create two sample PVCs. We are going to mount these PVCs in our targeted Deployment.
 
 Below is the YAML of the sample PVCs,
 
@@ -132,7 +132,7 @@ persistentvolumeclaim/source-config created
 
 **Deploy Deployment :**
 
-Now, we will deploy a Deployment that uses the above PVCs. This Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `sourc/config` directory respectively where we have mounted the desired PVCs.
+Now, we are going to deploy a Deployment that uses the above PVCs. This Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `sourc/config` directory respectively where we have mounted the desired PVCs.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -271,7 +271,7 @@ deployments-volume-snapshot-1563171247   deployments-volume-snapshot   Running  
 deployments-volume-snapshot-1563171247   deployments-volume-snapshot   Succeeded   50s
 ```
 
-We can see above that the backup session has succeeded. Now, we will verify that the `VolumeSnapshot` has been created and the snapshots has been stored in the respective backend.
+We can see above that the backup session has succeeded. Now, we are going to verify that the `VolumeSnapshot` has been created and the snapshots has been stored in the respective backend.
 
 **Verify Volume Snapshot :**
 
@@ -323,7 +323,7 @@ status:
 
 ```
 
-Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we will see the snapshot `snapcontent-c1bc3390-a6c7-11e9-9f3a-42010a800050` has been stored successfully.
+Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we are going to see the snapshot `snapcontent-c1bc3390-a6c7-11e9-9f3a-42010a800050` has been stored successfully.
 
 <figure align="center">
   <img alt="Stash Backup Flow" src="/docs/images/guides/latest/volumesnapshot/deployment.png">
@@ -409,7 +409,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVCs with the name `source-data` and `source-config ` have been created.
+Once a restore process is complete, we are going to see that new PVCs with the name `source-data` and `source-config ` have been created.
 
 Verify that the PVCs have been created by the following command,
 
@@ -428,7 +428,7 @@ Notice the `STATUS` field. It indicates that the respective PV has been provisio
 
 **Verify Restored Data :**
 
-We will create a new Deployment with the restored PVCs to verify whether the backed up data has been restored.
+We are going to create a new Deployment with the restored PVCs to verify whether the backed up data has been restored.
 
 Below is the YAML of the Deployment that we are going to create,
 
