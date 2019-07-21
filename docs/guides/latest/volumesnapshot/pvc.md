@@ -343,7 +343,7 @@ $ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/standalone-pvc/
 restoresession.stash.appscode.com/restore-pvc created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will create a job to restore. We can watch the `RestoreSession` phase to check if the restore process is succeeded or not.
+Once, you have created the `RestoreSession` crd, Stash will create a job to restore. We can watch the `RestoreSession` phase to check if the restore process has succeeded or not.
 
 Run the following command to watch RestoreSession phase,
 

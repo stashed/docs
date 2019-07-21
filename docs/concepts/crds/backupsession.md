@@ -34,7 +34,7 @@ You can also create a `BackupSession` object manually to trigger backup instantl
 
 Like any official Kubernetes resource, a `BackupSession` has `TypeMeta`, `ObjectMeta` and `Spec` , `Status` sections.
 
-A sample `BackupSession` created for backing up volumes of a Deployment is shown below,
+A sample `BackupSession` created for backing up the volumes of a Deployment is shown below,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1

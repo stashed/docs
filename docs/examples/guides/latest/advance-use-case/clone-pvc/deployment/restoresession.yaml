@@ -1,0 +1,35 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: restore-deployment
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo
+  rules:
+  - paths:
+    - /source/data
+    - /source/config
+  target:
+    volumeMounts:
+    - name:  restore-data
+      mountPath:  /source/data
+    - name:  restore-config
+      mountPath:  /source/config
+    volumeClaimTemplates:
+    - metadata:
+        name:  restore-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 2Gi
+    - metadata:
+        name:  restore-config
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 2Gi

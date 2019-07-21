@@ -410,7 +410,7 @@ Notice that the `spec.target.ref` is pointing to the `nfs-pvc` PVC. Also, notice
 
 **Wait for BackupSession:**
 
-Now, wait for a backup schedule to appear. Run the following command to watch `BackupSession` crd:
+Now, wait for the next backup schedule. Run the following command to watch `BackupSession` crd:
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=persistentvolumeclaim-nfs-pvc

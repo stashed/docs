@@ -279,7 +279,7 @@ Notice that the `spec.target.ref` is pointing to the `stash-demo` Deployment. Al
 
 **Wait for BackupSession:**
 
-Now, wait for a backup schedule to appear. Run the following command to watch `BackupSession` crd:
+Now, wait for the next backup schedule. Run the following command to watch `BackupSession` crd:
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=deployment-stash-demo
@@ -490,7 +490,7 @@ spec:
 
 **Wait for BackupSession:**
 
-Now, wait for a backup schedule to appear. Watch the `BackupSession` of the BackupConfiguration `statefulset-sts-demo` using the following command,
+Now, wait for the next backup schedule. Watch the `BackupSession` of the BackupConfiguration `statefulset-sts-demo` using the following command,
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=statefulset-sts-demo
@@ -671,7 +671,7 @@ spec:
 
 **Wait for BackupSession:**
 
-Now, wait for a backup schedule to appear. Watch the `BackupSession` of the BackupConfiguration `daemonset-dmn-demo` using the following command,
+Now, wait for the next backup schedule. Watch the `BackupSession` of the BackupConfiguration `daemonset-dmn-demo` using the following command,
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=daemonset-dmn-demo

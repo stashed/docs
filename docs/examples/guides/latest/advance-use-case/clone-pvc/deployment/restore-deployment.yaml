@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: restore-demo
+  name: restore-demo
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restore-demo
+  template:
+    metadata:
+      labels:
+        app: restore-demo
+      name: busybox
+    spec:
+      containers:
+      - args:
+        - sleep
+        - "3600"
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /restore/data
+          name: restore-data
+        - mountPath: /restore/config
+          name: restore-config
+      restartPolicy: Always
+      volumes:
+      - name: restore-data
+        persistentVolumeClaim:
+          claimName: restore-data
+      - name: restore-config
+        persistentVolumeClaim:
+          claimName: restore-config
