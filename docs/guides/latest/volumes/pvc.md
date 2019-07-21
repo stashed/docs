@@ -22,7 +22,7 @@ This guide will show you how to backup a stand-alone PersistentVolumeClaim (PVC)
 
 - Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
 
-- You will need to have a PVC with `ReadWriteMany` access permission. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
+- You will need to have a PVC with `ReadWriteMany` access mode. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access mode. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
 
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
@@ -39,7 +39,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/volumes](/docs/examples/guides/latest/volumes) directory of [stashed/stash](https://github.com/stashed/stash) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/volumes](/docs/examples/guides/latest/volumes) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 **Verify necessary Function and Task:**
 
@@ -85,7 +85,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   nfs:
     server: "nfs-service.storage.svc.cluster.local"
     path: "/"
@@ -112,7 +112,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   storageClassName: ""
   resources:
     requests:
@@ -157,16 +157,17 @@ metadata:
   namespace: demo
 spec:
   containers:
-  - name: busybox
-    image: busybox
-    command: ["/bin/sh", "-c","touch /shared/config/pod-1.conf && sleep 3000"]
-    volumeMounts:
-    - name: shared-config
-      mountPath: /shared/config
+    - name: busybox
+      image: busybox
+      command:
+        ["/bin/sh", "-c", "touch /shared/config/pod-1.conf && sleep 3000"]
+      volumeMounts:
+        - name: shared-config
+          mountPath: /shared/config
   volumes:
-  - name: shared-config
-    persistentVolumeClaim:
-      claimName: nfs-pvc
+    - name: shared-config
+      persistentVolumeClaim:
+        claimName: nfs-pvc
 ```
 
 Here, we have mount the `nfs-pvc` into `/shared/config` directory of the pod. Let's deploy the pod we have shown above,
@@ -194,16 +195,17 @@ metadata:
   namespace: demo
 spec:
   containers:
-  - name: busybox
-    image: busybox
-    command: ["/bin/sh", "-c","touch /shared/config/pod-2.conf && sleep 3000"]
-    volumeMounts:
-    - name: shared-config
-      mountPath: /shared/config
+    - name: busybox
+      image: busybox
+      command:
+        ["/bin/sh", "-c", "touch /shared/config/pod-2.conf && sleep 3000"]
+      volumeMounts:
+        - name: shared-config
+          mountPath: /shared/config
   volumes:
-  - name: shared-config
-    persistentVolumeClaim:
-      claimName: nfs-pvc
+    - name: shared-config
+      persistentVolumeClaim:
+        claimName: nfs-pvc
 ```
 
 Let's create the pod we have shown above,
@@ -226,7 +228,7 @@ As we have mounted the same PVC into the pods, the file created by one pod is av
 
 ## Backup
 
-Now, we are going to backup the PVC  `nfs-pvc` in a GCS bucket using Stash. We have to create a Secret and a `Repository` object with access credentials and backend information respectively.
+Now, we are going to backup the PVC `nfs-pvc` in a GCS bucket using Stash. We have to create a Secret and a `Repository` object with access credentials and backend information respectively.
 
 **Create Storage Secret:**
 
@@ -294,10 +296,10 @@ spec:
       kind: PersistentVolumeClaim
       name: nfs-pvc
     volumeMounts:
-    - name: nfs-pvc
-      mountPath: /shared/config
+      - name: nfs-pvc
+        mountPath: /shared/config
     directories:
-    - /shared/config
+      - /shared/config
   retentionPolicy:
     keepLast: 5
     prune: true
@@ -343,7 +345,7 @@ NAME                        BACKUPCONFIGURATION   PHASE       AGE
 nfs-pvc-backup-1562161802   nfs-pvc-backup        Succeeded   3m11s
 ```
 
->Note: Respective CronJob creates `BackupSession` crd with the following label: `stash.appscode.com/backup-configuration=\<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
+> Note: Respective CronJob creates `BackupSession` crd with the following label: `stash.appscode.com/backup-configuration=\<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
 
 **Verify Backup:**
 
@@ -366,7 +368,7 @@ If we navigate to `stash-backup/volumes/nfs-pvc` directory of our GCS bucket, we
   <figcaption align="center">Fig: Backed up data of a stand-alone PVC in GCS backend</figcaption>
 </figure>
 
->Stash keeps all backup data encrypted. So, snapshot files in the bucket will not contain any meaningful data until they are decrypted.
+> Stash keeps all backup data encrypted. So, snapshot files in the bucket will not contain any meaningful data until they are decrypted.
 
 ## Restore
 
@@ -408,11 +410,11 @@ spec:
       kind: PersistentVolumeClaim
       name: nfs-pvc
     volumeMounts:
-    - name:  nfs-pvc
-      mountPath:  /shared/config
+      - name: nfs-pvc
+        mountPath: /shared/config
   rules:
-  - paths:
-    - /shared/config
+    - paths:
+        - /shared/config
 ```
 
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to restore data inside a stand-alone PVC.
@@ -440,7 +442,7 @@ NAME              REPOSITORY-NAME   PHASE       AGE
 nfs-pvc-restore   gcs-repo          Succeeded   32s
 ```
 
-From the output of the above command, we can see that restore has been completed successfully.
+From the output of the above command, we can see that restoration process has been completed successfully.
 
 **Verify Restored Data:**
 
