@@ -77,8 +77,8 @@ Here, we are going to describe the various sections of a `Snapshot` object.
 - **status.hostname**
 `status.hostname` indicates the name of the **host** whose data was backed up in this snapshot. For `Deployment`,`ReplicaSet` and `ReplicationController` it is **host-0**. For `DaemonSet`, hostname is the respective **node name** where daemon pod is running. For `StatefulSet`, hostname is **host-\<pod ordinal\>** for the respective pods.
 
-- **status.path**
-`status.path` indicates the path that has been backed up in this snapshot.
+- **status.paths**
+`status.paths` indicates the paths that have been backed up in this snapshot.
 
 - **status.tree**
 `status.tree` indicates `tree` of the restic snapshot. For more details, please visit [here](https://restic.readthedocs.io/en/stable/100_references.html#trees-and-data).
