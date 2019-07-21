@@ -334,7 +334,7 @@ nfs-pvc-backup   */5 * * * *   False     0        <none>          28s
 
 **Wait for BackupSession:**
 
-Now, wait for a backup schedule to appear. You can watch for `BackupSession` crd using the following command,
+Now, wait for the next backup schedule. You can watch for `BackupSession` crd using the following command,
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=nfs-pvc-backup

@@ -81,7 +81,12 @@ spec:
       name: busybox
     spec:
       containers:
-        - command: ["/bin/sh", "-c", "echo sample_data > /source/data/data.txt; echo config_data > /source/config/config.cfg && sleep 3000"]
+        - command:
+            [
+              "/bin/sh",
+              "-c",
+              "echo sample_data > /source/data/data.txt; echo config_data > /source/config/config.cfg && sleep 3000",
+            ]
           image: busybox
           imagePullPolicy: IfNotPresent
           name: busybox
@@ -298,7 +303,7 @@ restoresession.stash.appscode.com/restore-deployment created
 
 **Wait for RestoreSession to Succeed:**
 
-Once, you have created the `RestoreSession` crd, Stash will create a job to restore. We can watch the `RestoreSession` phase to check if the restore process is succeeded or not.
+Once, you have created the `RestoreSession` crd, Stash will create a job to restore PVCs. We can watch the `RestoreSession` phase to check if the restore process has succeeded or not.
 
 Run the following command to watch RestoreSession phase,
 
@@ -310,7 +315,7 @@ NAME                 REPOSITORY-NAME   PHASE       AGE
 restore-deployment   gcs-repo          Succeeded   3m27s
 ```
 
-So, we can see from the output of the above command that the restore process succeeded.
+So, we can see from the output of the above command that the restore process has completed successfully.
 
 **Verify Restored PVC:**
 
@@ -615,7 +620,7 @@ ss-backup          * * * * *              2m
 
 **Wait for BackupSession:**
 
-Now, wait for a backup schedule to appear. You can watch for `BackupSession` crd using the following command,
+Now, wait for the next backup schedule. You can watch for `BackupSession` crd using the following command,
 
 ```console
 $ watch -n 3 kubectl get backupsession -n demo
@@ -680,10 +685,10 @@ spec:
   - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
 
     ```console
-    <volume claim name>-<statefulset name>-${POD_ORDINAL}
+    <pvc name>-<statefulset name>-${POD_ORDINAL}
     ```
 
-    So for the above example, `volumeClaimTemplate` name for `RestoreSession` will be `my-volume-stash-demo-${POD_ORDINAL}`.
+    So for the above example, `volumeClaimTemplate` name for `RestoreSession` will be `my-volume-restore-demo-${POD_ORDINAL}`.
     The `${POD_ORDINAL}` variable is resolved by Stash.
 
 Let’s create the `RestoreSession` object that we have shown above,
@@ -695,7 +700,7 @@ restoresession.stash.appscode.com/restore-statefulset created
 
 **Wait for RestoreSession to Succeed:**
 
-Once, you have created the `RestoreSession` crd, Stash will create a job to restore. We can watch the `RestoreSession` phase to check if the restore process is succeeded or not.
+Once, you have created the `RestoreSession` crd, Stash will create a job to restore. We can watch the `RestoreSession` phase to check if the restore process has succeeded or not.
 
 Run the following command to watch `RestoreSession` phase,
 
