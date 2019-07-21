@@ -84,11 +84,11 @@ namespace/demo created
 
 ## Take Volume Snapshot
 
-When you create a Statefulset, there is no need to create PVCs separately, because all replicas in Statefulset use different PVCs to store data. Kubernetes allows us to define a `volumeClaimTemplates` in Statefulset so that new PVC is created for each replica automatically. We will take snapshot of those PVCs using Stash.
+When you create a Statefulset, there is no need to create PVCs separately, because all replicas in Statefulset use different PVCs to store data. Kubernetes allows us to define a `volumeClaimTemplates` in Statefulset so that new PVC is created for each replica automatically. We are going to take snapshot of those PVCs using Stash.
 
 **Deploy StatefulSet :**
 
-Now, we will deploy a Statefulset. This Statefulset will automatically generate sample data in `/source/data` directory.
+Now, we are going to deploy a Statefulset. This Statefulset will automatically generate sample data in `/source/data` directory.
 
 Below is the YAML of the Statefulset that we are going to create,
 
@@ -264,7 +264,7 @@ statefulset-volume-snapshot-1563177551   statefulset-volume-snapshot   Running  
 statefulset-volume-snapshot-1563177551   statefulset-volume-snapshot   Succeeded    57s
 ```
 
-We can see above that the backup session has succeeded. Now, we will verify that the VolumeSnapshot has been created and the snapshots has been stored in the respective backend.
+We can see above that the backup session has succeeded. Now, we are going to verify that the VolumeSnapshot has been created and the snapshots has been stored in the respective backend.
 
 **Verify Volume Snapshot :**
 
@@ -405,7 +405,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` has been created.
+Once a restore process is complete, we are going to see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` has been created.
 
 Verify that the PVCs has been created by the following command,
 
@@ -425,7 +425,7 @@ Notice the `STATUS` field. It indicates that the respective PV has been provisio
 
 **Verify Restored Data :**
 
-We will create a new Statefulset with the restored PVCs to verify whether the backed up data has been restored.
+We are going to create a new Statefulset with the restored PVCs to verify whether the backed up data has been restored.
 
 Below, the YAML for the Statefulset we are going to create.
 
@@ -589,7 +589,7 @@ statefulset-volume-snapshot-1563181264   statefulset-volume-snapshot   Running  
 statefulset-volume-snapshot-1563181264   statefulset-volume-snapshot   Succeeded    57s
 ```
 
-We can see above that the backup session has succeeded. Now, we will verify that the VolumeSnapshot has been created and the snapshot has been stored in the respective backend.
+We can see above that the backup session has succeeded. Now, we are going to verify that the VolumeSnapshot has been created and the snapshot has been stored in the respective backend.
 
 **Verify Volume Snapshotting and Backup :**
 
@@ -710,7 +710,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we will see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` have been created successfully.
+Once a restore process is complete, we are going to see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` have been created successfully.
 
 check that the status of the PVCs are bound,
 
@@ -724,7 +724,7 @@ restore-data-restore-demo-2   Bound    pvc-74674656-a6e0-11e9-9f3a-42010a800050 
 
 **Verify Restored Data :**
 
-We will create a new Statefulset to verify whether the restored data has been restored successfully.
+We are going to create a new Statefulset to verify whether the restored data has been restored successfully.
 
 Below, the YAML for the Statefulset we are going to create.
 

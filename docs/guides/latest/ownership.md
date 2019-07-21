@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Handling Restored File Ownership in Stash
 
-Stash preserves permission bits of the restored files. However, it may change ownership (owner `uid` and `gid`) of the restored files in some cases. This tutorial will explain when and how ownership of the restored files can be changed. Then, we will explain how we can avoid or resolve this problem.
+Stash preserves permission bits of the restored files. However, it may change ownership (owner `uid` and `gid`) of the restored files in some cases. This tutorial will explain when and how ownership of the restored files can be changed. Then, we are going to explain how we can avoid or resolve this problem.
 
 ## Understanding Backup and Restore Behaviour
 
@@ -32,7 +32,7 @@ At first, let's understand how backup and restore behaves in different scenario.
 |   8   |        2000         |         3000          |    &#10003;     |             root              |         &#10003;          |        2000         |                 &#10003;                  |
 |   9   |        2000         |         3000          |    &#10003;     |             3000              |         &#10003;          |        3000         |                 &#10007;                  |
 
-If we look at the table carefully, we will notice the following behaviors:
+If we look at the table carefully, we are going to notice the following behaviors:
 
 1. The user of the backup `sidecar` does not have any effect on backup. It just needs read permission of the target files.
 2. If the restore container runs as `root` user then original ownership of the restored files are preserved.

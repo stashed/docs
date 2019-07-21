@@ -24,7 +24,7 @@ namespace/demo created
 
 ## Configure Backup
 
-Here, we are going to configure backup for a Deployment. At first, we will deploy a Deployment with a PVC and generate some sample data in it. Then, we will configure backup for the Deployment using Stash.
+Here, we are going to configure backup for a Deployment. At first, we are going to deploy a Deployment with a PVC and generate some sample data in it. Then, we are going to configure backup for the Deployment using Stash.
 
 **Deploy Deployment:**
 
@@ -210,7 +210,7 @@ deployment-backup          */40 * * * *            6m41s
 
 ## Trigger Instant Backup
 
-Now, we will trigger an instant backup of the volumes of the Deployment that we have configured in the previous section. In order to do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
+Now, we are going to trigger an instant backup of the volumes of the Deployment that we have configured in the previous section. In order to do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
 
 **Create BackupSession:**
 
@@ -256,7 +256,7 @@ NAME                       BACKUPCONFIGURATION   PHASE       AGE
 deployment-backupsession   deployment-backup     Succeeded   21s
 ```
 
-We can see from the above output that the instant backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
+We can see from the above output that the instant backup session has succeeded. Now, we are going to verify that the backed up data has been stored in the backend.
 
 **Verify Backup:**
 
@@ -268,7 +268,7 @@ NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        24 B   1                116s                     10m
 ```
 
-Now, if we navigate to the GCS bucket, we will see backed up data has been stored in `stash/instant/deployment` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
+Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `stash/instant/deployment` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
 
 <figure align="center">
   <img alt="Backup data in GCS Bucket" src="/docs/images/latest/advance-use-case/instant.png">

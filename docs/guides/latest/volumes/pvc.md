@@ -66,7 +66,7 @@ pvc-restore   118m
 
 ## Prepare Volume
 
-At first, let's prepare our desired PVC. Here, we are going to create a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) (PV) that will use an NFS server as storage. Then, we will create a PVC that will bind with the PV. Then, we will mount this PVC in two different pods. Each pod will generate a sample file into the PVC.
+At first, let's prepare our desired PVC. Here, we are going to create a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) (PV) that will use an NFS server as storage. Then, we are going to create a PVC that will bind with the PV. Then, we are going to mount this PVC in two different pods. Each pod will generate a sample file into the PVC.
 
 **Create PersistentVolume:**
 
@@ -91,7 +91,7 @@ spec:
     path: "/"
 ```
 
-Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label. We will use this label as selector in PVC so that the PVC binds with this PV.
+Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label. We are going to use this label as selector in PVC so that the PVC binds with this PV.
 
 Let's create the PV we have shown above,
 
@@ -145,7 +145,7 @@ Here, we can see that the PVC `nfs-pvc` has been bounded with PV `nfs-pv`.
 
 **Deploy Workload:**
 
-Now, we are going to deploy two sample pods that mount the PVC we have just created. Each of the pods will generate a sample file named `pod-1.conf` and `pod-2.conf` respectively. We will backup these files using Stash.
+Now, we are going to deploy two sample pods that mount the PVC we have just created. Each of the pods will generate a sample file named `pod-1.conf` and `pod-2.conf` respectively. We are going to backup these files using Stash.
 
 Below, is the YAML of the first pod that we are going to deploy,
 
@@ -361,7 +361,7 @@ gcs-repo   true        80 B   1                25s                      49m
 
 From the output above, we can see that 1 snapshot has been stored in the backend specified by Repository `gcs-repo`.
 
-If we navigate to `stash-backup/volumes/nfs-pvc` directory of our GCS bucket, we will see that the snapshot has been stored there.
+If we navigate to `stash-backup/volumes/nfs-pvc` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
 <figure align="center">
   <img alt="Backed up data of a stand-alone PVC in GCS backend" src="/docs/images/guides/latest/volumes/pvc_repo.png">
@@ -372,7 +372,7 @@ If we navigate to `stash-backup/volumes/nfs-pvc` directory of our GCS bucket, we
 
 ## Restore
 
-This section will show you how to restore the backed up data inside a stand-alone PVC using stash. Here, we will restore the data we have backed up in the previous section.
+This section will show you how to restore the backed up data inside a stand-alone PVC using stash. Here, we are going to restore the data we have backed up in the previous section.
 
 **Simulate Disaster:**
 
@@ -391,7 +391,7 @@ $ kubectl exec -n demo demo-pod-2 ls /shared/config/
 
 **Create RestoreSession:**
 
-Now, we will create a `RestoreSession` object to restore the backed up data into the desried PVC. Below is the YAML of the `RestoreSession` object that we are going to create,
+Now, we are going to create a `RestoreSession` object to restore the backed up data into the desried PVC. Below is the YAML of the `RestoreSession` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1

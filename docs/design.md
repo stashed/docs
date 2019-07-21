@@ -4,7 +4,7 @@ We are going to make a design overhaul of Stash to simplify backup and recovery 
 
 We  have introduced some new crd  such as [Function](#function), [Task](#action) etc. and made whole process more modular. This will make easy to add support for new features and the users will also be able to customize backup process. Furthermore, this will make stash resources inter-operable between different tools and even might allow to use stash resources as function in serverless concept.
 
-**We are hoping this design will graduate to GA. So, we are taking security seriously. We are going to make sure that nobody can bypass clusters security using Stash. This might requires to remove some existing features (for example, restore from different namespace). However, we will provide an alternate way to cover those use cases.**
+**We are hoping this design will graduate to GA. So, we are taking security seriously. We are going to make sure that nobody can bypass clusters security using Stash. This might requires to remove some existing features (for example, restore from different namespace). However, we are going to provide an alternate way to cover those use cases.**
 
 ## Goal
 
@@ -802,7 +802,7 @@ spec:
 
 A complete backup process may need to perform multiple function. For example, if you want to backup a PostgreSQL database, we need to initialize a `Repository`, then backup the database and finally update `Repository` and `BackupSession` status to inform backup is completed or push backup metrics to a `pushgateway` . `Task` specifies these functions sequentially along with their inputs.
 
-We have chosen to break complete backup process into several independent steps so that those individual functions can be used with other tool than Stash. It also make easy to add support for new feature. For example, to add support new database backup, we will just require to add a `Function` and `Task` crd. We will no longer need change anything in Stash operator code. This will also helps users to backup databases that are not officially supported by stash.
+We have chosen to break complete backup process into several independent steps so that those individual functions can be used with other tool than Stash. It also make easy to add support for new feature. For example, to add support new database backup, we are going to just require to add a `Function` and `Task` crd. We are going to no longer need change anything in Stash operator code. This will also helps users to backup databases that are not officially supported by stash.
 
 Some sample `Task` is given below:
 

@@ -147,7 +147,7 @@ You have to add the following 3 annotations to a targetted PVC to enable backup 
 
 ## Prepare PVC
 
-At first, let's prepare our desired PVC. Here, we are going to create a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) (PV) that will use an NFS server as storage. Then, we will create a PVC that will bind with the PV. Then, we will mount this PVC into a pod. This pod will generate a sample file into the PVC.
+At first, let's prepare our desired PVC. Here, we are going to create a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) (PV) that will use an NFS server as storage. Then, we are going to create a PVC that will bind with the PV. Then, we are going to mount this PVC into a pod. This pod will generate a sample file into the PVC.
 
 **Create PersistentVolume:**
 
@@ -172,7 +172,7 @@ spec:
     path: "/"
 ```
 
-Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label. We will use this label as selector in PVC so that the PVC binds with this PV.
+Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label. We are going to use this label as selector in PVC so that the PVC binds with this PV.
 
 Let's create the PV we have shown above,
 
@@ -226,7 +226,7 @@ Here, we can see that the PVC `nfs-pvc` has been bounded with PV `nfs-pv`.
 
 **Generate Sample Data:**
 
-Now, we are going to deploy a sample pod that mounts the PVC we have just created. The pod will generate a sample file named `hello.txt` in `/my/sample/data/` directory. We will backup this file using auto-backup.
+Now, we are going to deploy a sample pod that mounts the PVC we have just created. The pod will generate a sample file named `hello.txt` in `/my/sample/data/` directory. We are going to backup this file using auto-backup.
 
 Below, is the YAML of the pod that we are going to deploy,
 
@@ -329,7 +329,7 @@ NAME                            INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESS
 persistentvolumeclaim-nfs-pvc
 ```
 
-If we view the YAML of this `Repository`, we will see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `presistentvolumeclaim` and `nfs-pvc` respectively.
+If we view the YAML of this `Repository`, we are going to see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `presistentvolumeclaim` and `nfs-pvc` respectively.
 
 ```console
 $ kubectl get repository -n demo persistentvolumeclaim-nfs-pvc -o yaml
@@ -436,7 +436,7 @@ persistentvolumeclaim-nfs-pvc   true        41 B   1                3m37s       
 
 > Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
 
-If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of our GCS bucket, we will see that the snapshot has been stored there.
+If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
 <figure align="center">
   <img alt="Backup data of PVC 'nfs-pvc' in GCS backend" src="/docs/images/guides/latest/auto-backup/pvc_repo.png">

@@ -39,11 +39,11 @@ namespace/demo created
 
 ## Backup Volumes of a StatefulSet
 
-This section will show you how to use Stash to backup volumes of a StatefulSet. Here, we are going to deploy a StatefulSet with a PVC and generate some sample data in it. Then, we will backup this sample data using Stash.
+This section will show you how to use Stash to backup volumes of a StatefulSet. Here, we are going to deploy a StatefulSet with a PVC and generate some sample data in it. Then, we are going to backup this sample data using Stash.
 
 **Deploy StatefulSet:**
 
-At first, We will deploy a StatefulSet. This StatefulSet will automatically generate sample data in `/source/data` directory.
+At first, We are going to deploy a StatefulSet. This StatefulSet will automatically generate sample data in `/source/data` directory.
 
 Below is the YAML of the StatefulSet that we are going to create,
 
@@ -377,7 +377,7 @@ ss-backup-1561463408   ss-backup             Running     2m33s
 ss-backup-1561463408   ss-backup             Succeeded   4m33s
 ```
 
-We can see from the above output that the backup session has succeeded. Now, we will verify that the backed up data has been stored in the backend.
+We can see from the above output that the backup session has succeeded. Now, we are going to verify that the backed up data has been stored in the backend.
 
 **Verify Backup:**
 
@@ -389,7 +389,7 @@ NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        0 B    3                103s                     5m
 ```
 
-Now, if we navigate to the GCS bucket, we will see backed up data has been stored in `source/data/sample-statefulset` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
+Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `source/data/sample-statefulset` directory as specified by `spec.backend.gcs.prefix` field of Repository crd.
 
 <figure align="center">
   <img alt="Backup data in GCS Bucket" src="/docs/images/latest/workloads/gcs_bucket_ss.png">
@@ -609,7 +609,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully.
+In this section, we are going to verify that the desired data has been restored successfully.
 
 At first, check if the `stash-recovered` pods of a StatefulSet has gone into `Running` state by the following command,
 
@@ -850,7 +850,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully.
+In this section, we are going to verify that the desired data has been restored successfully.
 
 At first, check if the `stash-recovered` pods of a StatefulSet has gone into `Running` state by the following command,
 

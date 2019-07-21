@@ -115,7 +115,7 @@ stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
 
 ## Backup Deployment
 
-Now, we are going to backup a Deployment using the template we have configured earlier. We will mount two ConfigMap volume in two different directories of the Deployment. Then, we will backup those directories using automatic backup.
+Now, we are going to backup a Deployment using the template we have configured earlier. We are going to mount two ConfigMap volume in two different directories of the Deployment. Then, we are going to backup those directories using automatic backup.
 
 **Create Deployment:**
 
@@ -205,7 +205,7 @@ NAME                    INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACK
 deployment-stash-demo                                                                9s
 ```
 
-If we view the YAML of this Repository, we will see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `deployment` and `stash-demo` respectively.
+If we view the YAML of this Repository, we are going to see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `deployment` and `stash-demo` respectively.
 
 ```console
 $ kubectl get repository -n demo deployment-stash-demo -o yaml
@@ -306,7 +306,7 @@ deployment-stash-demo   true        246 B   2                70s                
 
 > Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
 
-If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we will see that the snapshot has been stored there.
+If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
 <figure align="center">
   <img alt="Backup data in GCS backend" src="/docs/images/guides/latest/auto-backup/deployment_repo.png">
@@ -321,7 +321,7 @@ Now, we are going to backup a StatefulSet with the same template we have used to
 
 **Create StatefulSet:**
 
-We are going to create a StatefulSet with 3 replicas. We will configure the StatefulSet to generate sample data in each replica.
+We are going to create a StatefulSet with 3 replicas. We are going to configure the StatefulSet to generate sample data in each replica.
 
 Below is the YAML of the StatefulSet that we are going to create,
 
@@ -513,7 +513,7 @@ statefulset-sts-demo   true        0 B    6                32s                  
 
 >For StatfulSet, Stash takes backup from every replica. Since we are using a StatefulSet with 3 replicas and we are taking backup of 2 directories, total 6 snapshots have been created for this BackupSession.
 
-If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS bucket, we will see that the snapshot been stored there.
+If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS bucket, we are going to see that the snapshot been stored there.
 
 <figure align="center">
   <img alt="Backup data of `sts-demo` StatefulSet in GCS backend" src="/docs/images/guides/latest/auto-backup/statefulset_repo.png">
@@ -522,7 +522,7 @@ If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS 
 
 ## Backup DaemonSet
 
-Now, we are going to use the same template to backup a DaemonSet. We will mount a ConfigMap in `/etc/config` directory. Then, we will backup this directory using automatic backup.
+Now, we are going to use the same template to backup a DaemonSet. We are going to mount a ConfigMap in `/etc/config` directory. Then, we are going to backup this directory using automatic backup.
 
 **Create DaemonSet:**
 
@@ -695,7 +695,7 @@ daemonset-dmn-demo   true        51 B   1                5s                     
 
 >For DaemonSet, Stash takes backup from every daemon pod running on different nodes. Since we are using a single node cluster (Minikube), only 1 snapshot has been created for this BackupSession.
 
-If we navigate to `stash-backup/demo/daemonset/dmn-demo` directory of our GCS bucket, we will see that the snapshot been stored there.
+If we navigate to `stash-backup/demo/daemonset/dmn-demo` directory of our GCS bucket, we are going to see that the snapshot been stored there.
 
 <figure align="center">
   <img alt="Backup data of `dmn-demo` DaemonSet in GCS backend" src="/docs/images/guides/latest/auto-backup/daemon_repo.png">
