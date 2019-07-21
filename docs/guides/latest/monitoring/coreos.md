@@ -31,9 +31,9 @@ CoreOS [prometheus-operator](https://github.com/coreos/prometheus-operator) prov
 
 ## Enable Monitoring in Stash
 
-Enable Prometheus monitoring using `prometheus.io/coreos-operator` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/v1alpha1/monitoring/overview.md#how-to-enable-monitoring).
+Enable Prometheus monitoring using `prometheus.io/coreos-operator` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/latest/monitoring/overview.md#how-to-enable-monitoring).
 
-Here, we are going to enable monitoring for both `backup & recovery` and `operator` metrics.
+Here, we are going to enable monitoring for both `backup`, `restore` and `operator` metrics.
 
 ```console
 $ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh | bash -s -- \
@@ -135,7 +135,7 @@ Here, `spec.serviceMonitorSelector` is used to select the `ServiceMonitor` crd t
 Let's create the `Prometheus` object we have shown above,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/0.8.3/docs/examples/monitoring/coreos/prometheus.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/0.8.3/docs/examples/guides/latest/monitoring/coreos/prometheus.yaml
 prometheus.monitoring.coreos.com/prometheus created
 ```
 
@@ -149,7 +149,7 @@ NAME                    DESIRED   CURRENT   AGE
 prometheus-prometheus   1         1         4m
 ```
 
-Check if the pod of the StatefulSet is running,
+Check StatefulSet's pod is running,
 
 ```console
 $ kubectl get pod prometheus-prometheus-0 -n monitoring
@@ -171,9 +171,10 @@ Forwarding from [::1]:9090 -> 9090
 
 Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:9090](http://localhost:9090) in your browser. You should see `pushgateway` and `api` endpoints of `stash-operator` service as target.
 
-<p align="center">
-  <img alt="Prometheus Target" src="/docs/images/v1alpha1/monitoring/prom-coreos-target.png" style="padding:10px">
-</p>
+<figure align="center">
+  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/prom-coreos-target.png">
+<figcaption align="center">Fig: Prometheus dashboard</figcaption>
+</figure>
 
 ## Cleanup
 
@@ -192,6 +193,6 @@ To uninstall Stash follow this [guide](/docs/setup/uninstall.md).
 
 ## Next Steps
 
-- Learn how monitoring in Stash works from [here](/docs/guides/v1alpha1/monitoring/overview.md).
-- Learn how to monitor Stash using builtin Prometheus from [here](/docs/guides/v1alpha1/monitoring/builtin.md).
-- Learn how to use Grafana dashboard to visualize monitoring data from [here](/docs/guides/v1alpha1/monitoring/grafana.md).
+- Learn how monitoring in Stash works from [here](/docs/guides/latest/monitoring/overview.md).
+- Learn how to monitor Stash using builtin Prometheus from [here](/docs/guides/latest/monitoring/builtin.md).
+- Learn how to use Grafana dashboard to visualize monitoring data from [here](/docs/guides/latest/monitoring/grafana.md).
