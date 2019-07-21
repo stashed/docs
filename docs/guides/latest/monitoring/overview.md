@@ -27,44 +27,44 @@ Stash uses [Prometheus PushGateway](https://github.com/prometheus/pushgateway) t
 <figcaption align="center">Fig: Monitoring process in Stash</figcaption>
 </figure>
 
-Stash operator runs two containers. The `operator` container runs controller and other necessary stuffs and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads pushes their metrics to this pushgateway. Then Prometheus server scraps these metrics through `stash-operator` service. Stash operator itself also provides some metrics at `/metrics` path of `:8443` port.
+Stash operator runs two containers. The `operator` container runs controller and other necessary stuffs and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads pushes its metrics to this pushgateway. Then Prometheus server scrapes these metrics through `stash-operator` service. Stash operator itself also provides some metrics at `/metrics` path of `:8443` port.
 
 ### Backup Metrics
 
 Following metrics available for backup process:
 
-|                 Metric                         |                      Uses                       |
-| --------------------------------------------   | ----------------------------------------------- |
-| `stash_backup_setup_success`                   | Indicates whether backup was successfully setup for the target   |
-| `stash_backup_session_success`                 | Indicates whether the current backup session succeeded or not |
-| `stash_backup_session_duration_total_seconds`  | Total time taken to complete the backup session |
-| `stash_backup_data_size_bytes`                 | Total size of the target data to backup (in bytes)  |
-| `stash_backup_data_uploaded_bytes`             | Amount of data uploaded to the repository in this session (in bytes)  |
-| `stash_backup_data_processing_time_seconds`    | Total time taken to backup the target data  |
-| `stash_backup_files_total`                     | Total number of files that has been backed up  |
-| `stash_backup_files_new`                       | Total number of new files that has been created since last backup  |
-| `stash_backup_files_modified`                  | Total number of files that has been modified since last backup    |
-| `stash_backup_files_unmodified`                | Total number of files that has not been changed since last backup  |
+| Metric                                        | Uses                                                                 |
+| --------------------------------------------- | -------------------------------------------------------------------- |
+| `stash_backup_setup_success`                  | Indicates whether backup was successfully setup for the target       |
+| `stash_backup_session_success`                | Indicates whether the current backup session succeeded or not        |
+| `stash_backup_session_duration_total_seconds` | Total time taken to complete the backup session                      |
+| `stash_backup_data_size_bytes`                | Total size of the target data to backup (in bytes)                   |
+| `stash_backup_data_uploaded_bytes`            | Amount of data uploaded to the repository in this session (in bytes) |
+| `stash_backup_data_processing_time_seconds`   | Total time taken to backup the target data                           |
+| `stash_backup_files_total`                    | Total number of files that has been backed up                        |
+| `stash_backup_files_new`                      | Total number of new files that has been created since last backup    |
+| `stash_backup_files_modified`                 | Total number of files that has been modified since last backup       |
+| `stash_backup_files_unmodified`               | Total number of files that has not been changed since last backup    |
 
 ### Repository Metrics
 
 Following metrics are available for backup repository:
 
-|                 Metric                        |                      Uses                       |
-| --------------------------------------------- | ----------------------------------------------- |
-| `stash_repository_integrity`                  | Result of repository integrity check after last backup |
-| `stash_repository_size_bytes`                 | Indicates size of repository after last backup (in bytes)                     |
-| `stash_repository_snapshot_count`             | Indicates number of snapshots stored in the repository    |
-| `stash_repository_snapshot_cleaned`           | Indicates number of old snapshots cleaned up according to retention policy on last backup session |
+| Metric                              | Uses                                                                                              |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `stash_repository_integrity`        | Result of repository integrity check after last backup                                            |
+| `stash_repository_size_bytes`       | Indicates size of repository after last backup (in bytes)                                         |
+| `stash_repository_snapshot_count`   | Indicates number of snapshots stored in the repository                                            |
+| `stash_repository_snapshot_cleaned` | Indicates number of old snapshots cleaned up according to retention policy on last backup session |
 
 ### Restore Metrics
 
 Following metrics are available for restore process:
 
-|                 Metric                          |                      Uses                       |
-| ---------------------------------------         | ----------------------------------------------- |
-| `stash_restore_session_success`                 | Result of repository integrity check after last backup  |
-| `stash_restore_session_duration_total_seconds`  | Indicates size of repository after last backup (in bytes)  |
+| Metric                                         | Uses                                                      |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| `stash_restore_session_success`                | Result of repository integrity check after last backup    |
+| `stash_restore_session_duration_total_seconds` | Indicates size of repository after last backup (in bytes) |
 
 ### Operator Metrics
 
@@ -72,19 +72,19 @@ Following metrics are available for Stash operator. These metrics are accessible
 
 **API Server Metrics:**
 
-|                         Metric Name                          |                                                         Uses                                                          |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| apiserver_audit_event_total                                  | Counter of audit events generated and sent to the audit backend.                                                      |
-| apiserver_client_certificate_expiration_seconds              | Distribution of the remaining lifetime on the certificate used to authenticate a request.                             |
-| apiserver_current_inflight_requests                          | Maximal number of currently used inflight request limit of this apiserver per request kind in last second.            |
-| apiserver_request_count                                      | Counter of apiserver requests broken out for each verb, API resource, client, and HTTP response contentType and code. |
-| apiserver_request_latencies                                  | Response latency distribution in microseconds for each verb, resource and subresource.                                |
-| apiserver_request_latencies_summary                          | Response latency summary in microseconds for each verb, resource and subresource.                                     |
-| authenticated_user_requests                                  | Counter of authenticated requests broken out by username.                                                             |
+| Metric Name                                     | Uses                                                                                                                  |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| apiserver_audit_event_total                     | Counter of audit events generated and sent to the audit backend.                                                      |
+| apiserver_client_certificate_expiration_seconds | Distribution of the remaining lifetime on the certificate used to authenticate a request.                             |
+| apiserver_current_inflight_requests             | Maximal number of currently used inflight request limit of this apiserver per request kind in last second.            |
+| apiserver_request_count                         | Counter of apiserver requests broken out for each verb, API resource, client, and HTTP response contentType and code. |
+| apiserver_request_latencies                     | Response latency distribution in microseconds for each verb, resource and subresource.                                |
+| apiserver_request_latencies_summary             | Response latency summary in microseconds for each verb, resource and subresource.                                     |
+| authenticated_user_requests                     | Counter of authenticated requests broken out by username.                                                             |
 
 **Go Metrics:**
 
-|              Metric Name              |                                Uses                                |
+| Metric Name                           | Uses                                                               |
 | ------------------------------------- | ------------------------------------------------------------------ |
 | go_gc_duration_seconds                | A summary of the GC invocation durations.                          |
 | go_goroutines                         | Number of goroutines that currently exist.                         |
@@ -114,7 +114,7 @@ Following metrics are available for Stash operator. These metrics are accessible
 
 **HTTP Metrics:**
 
-|              Metrics               |                    Uses                     |
+| Metrics                            | Uses                                        |
 | ---------------------------------- | ------------------------------------------- |
 | http_request_duration_microseconds | The HTTP request latencies in microseconds. |
 | http_request_size_bytes            | The HTTP request sizes in bytes.            |
@@ -123,7 +123,7 @@ Following metrics are available for Stash operator. These metrics are accessible
 
 **Process Metrics:**
 
-|          Metric Name          |                          Uses                          |
+| Metric Name                   | Uses                                                   |
 | ----------------------------- | ------------------------------------------------------ |
 | process_cpu_seconds_total     | Total user and system CPU time spent in seconds.       |
 | process_max_fds               | Maximum number of open file descriptors.               |
@@ -136,10 +136,10 @@ Following metrics are available for Stash operator. These metrics are accessible
 
 You can enable monitoring through some flags while installing or upgrading or updating Stash via both [script](/docs/setup/install.md#using-script) and [Helm](/docs/setup/install.md#using-helm). You can also chose which monitoring agent to use for monitoring. Stash will configure respective resources accordingly. Here, are the list of available flags and their uses,
 
-|       Script Flag        |            Helm Values             |                     Acceptable Values                      |                                                         Default                                                         |                                                                                    Uses                                                                                    |
+| Script Flag              | Helm Values                        | Acceptable Values                                          | Default                                                                                                                 | Uses                                                                                                                                                                       |
 | ------------------------ | ---------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--monitoring-agent`     | `monitoring.agent`                 | `prometheus.io/builtin` or `prometheus.io/coreos-operator` | `none`                                                                                                                  | Specify which monitoring agent to use for monitoring Stash.                                                                                                                |
-| `--monitoring-backup`    | `monitoring.backup`                | `true` or `false`                                          | `false`                                                                                                                 | Specify whether to monitor Stash backup and restore.                                                                                                                      |
+| `--monitoring-backup`    | `monitoring.backup`                | `true` or `false`                                          | `false`                                                                                                                 | Specify whether to monitor Stash backup and restore.                                                                                                                       |
 | `--monitoring-operator`  | `monitoring.operator`              | `true` or `false`                                          | `false`                                                                                                                 | Specify whether to monitor Stash operator.                                                                                                                                 |
 | `--prometheus-namespace` | `monitoring.prometheus.namespace`  | any namespace                                              | same namespace as Stash operator                                                                                        | Specify the namespace where Prometheus server is running or will be deployed                                                                                               |
 | `--servicemonitor-label` | `monitoring.serviceMonitor.labels` | any label                                                  | For Helm installation, `app: <generated app name>` and `release: <release name>`. For script installation, `app: stash` | Specify the labels for ServiceMonitor. Prometheus crd will select ServiceMonitor using these labels. Only usable when monitoring agent is `prometheus.io/coreos-operator`. |
@@ -147,6 +147,7 @@ You can enable monitoring through some flags while installing or upgrading or up
 You have to provides these flags while installing or upgrading or updating Stash. Here, are examples for both script and Helm installation process are given which enable monitoring with `prometheus.io/coreos-operator` Prometheuse server for `backup`, `restore` and `operator` metrics.
 
 **Helm:**
+
 ```console
 $ helm install appscode/stash --name stash-operator --version 0.8.3 --namespace kube-system \
   --set monitoring.agent=prometheus.io/coreos-operator \
@@ -157,6 +158,7 @@ $ helm install appscode/stash --name stash-operator --version 0.8.3 --namespace 
 ```
 
 **Script:**
+
 ```console
 $ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh  | bash -s -- \
   --monitoring-agent=prometheus.io/coreos-operator \

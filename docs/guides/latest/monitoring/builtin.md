@@ -29,7 +29,7 @@ namespace/monitoring created
 
 ## Enable Monitoring in Stash
 
-Enable Prometheus monitoring using `prometheus.io/builtin` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/v1alpha1/monitoring/overview.md#how-to-enable-monitoring). Here, we are going to enable monitoring for both `backup`, `restore` and `operator` metrics.
+Enable Prometheus monitoring using `prometheus.io/builtin` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/v1alpha1/monitoring/overview.md#how-to-enable-monitoring). Here, we are going to enable monitoring for `backup`, `restore` and `operator` metrics.
 
 ```console
 $ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh | bash -s -- \
@@ -39,7 +39,7 @@ $ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh | ba
   --prometheus-namespace=monitoring
 ```
 
-This will add necessary annotations to `stash-operator` service. Prometheus server will scrap metrics using those annotations. Let's check which annotations are added to the service,
+This will add necessary annotations to `stash-operator` service. Prometheus server will scrape metrics using those annotations. Let's check which annotations are added to the service,
 
 ```yaml
 $ kubectl get service -n kube-system stash-operator -o yaml
@@ -83,7 +83,7 @@ status:
   loadBalancer: {}
 ```
 
-Here, `prometheus.io/scrape: "true"` annotation indicates that Prometheus should scrap metrics for this service.
+Here, `prometheus.io/scrape: "true"` annotation indicates that Prometheus should scrape metrics for this service.
 
 The following three annotations point to `pushgateway` endpoints which provides backup and restore metrics.
 
@@ -101,11 +101,11 @@ prometheus.io/operator_port: "8443"
 prometheus.io/operator_scheme: https
 ```
 
-Now, we are ready to configure our Prometheus server to scrap those metrics.
+Now, we are ready to configure our Prometheus server to scrape those metrics.
 
 ## Deploy Prometheus Server
 
-We have deployed Stash in `kube-system` namespace. Stash exports operator metrics via TLS secured `api` endpoint. So, Prometheus server need to provide certificate while scrapping metrics from this endpoint. Stash has created a secret named `stash-apiserver-certs`  with this certificate in `monitoring` namespace as we have specified that we are going to deploy Prometheus in that namespace through `--prometheus-namespace` flag. We have to mount this secret in Prometheus deployment.
+We have deployed Stash in `kube-system` namespace. Stash exports operator metrics via TLS secured `api` endpoint. So, Prometheus server need to provide certificate while scraping metrics from this endpoint. Stash has created a secret named `stash-apiserver-certs` with this certificate in `monitoring` namespace as we have specified that we are going to deploy Prometheus in that namespace through `--prometheus-namespace` flag. We have to mount this secret in Prometheus deployment.
 
 Let's check `stash-apiserver-cert` certificate has been created in `monitoring` namespace.
 
@@ -128,7 +128,7 @@ clusterrolebinding.rbac.authorization.k8s.io/stash-prometheus-server created
 
 **Create ConfigMap:**
 
-Now, create a ConfigMap with necessary scrapping configuration. Bellow, the YAML of ConfigMap that we are going to create in this tutorial.
+Now, create a ConfigMap with necessary scraping configuration. Bellow, the YAML of ConfigMap that we are going to create in this tutorial.
 
 ```yaml
 apiVersion: v1
@@ -236,7 +236,7 @@ data:
         action: replace
 ```
 
-Here, we have two scrapping job. One is `stash-pushgateway` that scraps backup and restore metrics and another is `stash-operator` which scraps operator metrics.
+Here, we have two scraping job. One is `stash-pushgateway` that scrapes backup and restore metrics and another is `stash-operator` which scrapes operator metrics.
 
 Look at the `tls_config` field of `stash-operator` job. We have provided certificate file through `ca_file` field. This certificate comes from `stash-apiserver-cert` that we are going to mount in Prometheus deployment. Here, `server_name` is used to verify hostname. In our case, the certificate is valid for hostname `server` and `stash-operator.kube-system.svc`.
 
@@ -271,34 +271,34 @@ spec:
     spec:
       serviceAccountName: stash-prometheus-server
       containers:
-      - name: prometheus
-        image: prom/prometheus:v2.4.3
-        args:
-        - "--config.file=/etc/prometheus/prometheus.yml"
-        - "--storage.tsdb.path=/prometheus/"
-        ports:
-        - containerPort: 9090
-        volumeMounts:
-        - name: prometheus-config-volume
-          mountPath: /etc/prometheus/
-        - name: prometheus-storage-volume
-          mountPath: /prometheus/
-        - name: stash-apiserver-cert
-          mountPath: /etc/prometheus/secret/stash-apiserver-cert
+        - name: prometheus
+          image: prom/prometheus:v2.4.3
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+            - name: stash-apiserver-cert
+              mountPath: /etc/prometheus/secret/stash-apiserver-cert
       volumes:
-      - name: prometheus-config-volume
-        configMap:
-          defaultMode: 420
-          name: stash-prometheus-server-conf
-      - name: prometheus-storage-volume
-        emptyDir: {}
-      - name: stash-apiserver-cert
-        secret:
-          defaultMode: 420
-          secretName: stash-apiserver-cert
-          items: # avoid mounting private key
-          - key: tls.crt
-            path: tls.crt
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: stash-prometheus-server-conf
+        - name: prometheus-storage-volume
+          emptyDir: {}
+        - name: stash-apiserver-cert
+          secret:
+            defaultMode: 420
+            secretName: stash-apiserver-cert
+            items: # avoid mounting private key
+              - key: tls.crt
+                path: tls.crt
 ```
 
 Notice that, we have mounted `stash-apiserver-cert` secret as a volume at `/etc/prometheus/secret/stash-apiserver-cert` directory.
@@ -329,7 +329,7 @@ Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:909
 
 **Backup and Restore Metrics:**
 
- When you perform a backup or restore using Stash, it will send respective Prometheus metrics. You can check if the metrics have been sent successfully by performing backup and restore as described [here](docs/guides/latest/workloads/deployment.md).
+When you perform a backup or restore using Stash, it will send respective Prometheus metrics. You can check if the metrics have been sent successfully by performing backup and restore as described [here](docs/guides/latest/workloads/deployment.md).
 
 A screenshot that shows Prometheus metrics send by Stash backup and restore process is given below,
 

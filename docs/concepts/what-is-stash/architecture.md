@@ -49,7 +49,7 @@ Aggregated API Server self-hosts validating and mutating [webhooks](https://kube
 
 #### Pushgateway
 
-`pushgateway` container runs Prometheus [pushgateway](https://github.com/prometheus/pushgateway). All the backup sidecars/jobs and restore init-containers/jobs send Prometheus metrics to this pushgateway after completing their backup or restore process. Prometheus server can scrap those metrics from this pushgateway.
+`pushgateway` container runs Prometheus [pushgateway](https://github.com/prometheus/pushgateway). All the backup sidecars/jobs and restore init-containers/jobs send Prometheus metrics to this pushgateway after completing their backup or restore process. Prometheus server can scrape those metrics from this pushgateway.
 
 ### Backend
 
