@@ -1,5 +1,5 @@
 ---
-title: Volume Backup| Stash
+title: Volume Backup | Stash
 menu:
   product_stash_0.8.3:
     identifier: volume-backup
