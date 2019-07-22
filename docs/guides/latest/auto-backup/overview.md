@@ -27,7 +27,7 @@ You have to create only one `BackupConfigurationTemplate` for all similar types 
 The following diagram shows how automatic backup works in Stash. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Auto Backup Overview" src="/docs/images/guides/latest/auto-backup/default_backup.svg">
+  <img alt="Auto Backup Overview" src="/docs/images/guides/latest/auto-backup/auto_backup_overview.svg">
   <figcaption align="center">Fig: Auto Backup Overview</figcaption>
 </figure>
 

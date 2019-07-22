@@ -1,10 +1,10 @@
 ---
-title: Snapshotting StatefulSets | Stash
+title: Snapshot StatefulSet's Volumes | Stash
 description: An step by step guide showing how to snapshot the volumes of a StatefulSet
 menu:
   product_stash_0.8.3:
     identifier: volume-snapshot-statefulset
-    name: Snapshotting StatefulSets
+    name: Snapshot StatefulSet's Volumes
     parent: volume-snapshot
     weight: 30
 product_name: stash

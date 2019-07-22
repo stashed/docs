@@ -3,9 +3,9 @@ title: Builtin Prometheus | Stash
 description: Monitor Stash using official Prometheus server
 menu:
   product_stash_0.8.3:
-    identifier: monitoring-builtin
+    identifier: v1alpha1-monitoring-builtin
     name: Builtin Prometheus
-    parent: monitoring
+    parent: v1alpha1-monitoring
     weight: 20
 product_name: stash
 menu_name: product_stash_0.8.3

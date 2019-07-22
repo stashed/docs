@@ -1,10 +1,10 @@
 ---
-title: Snapshotting Deployments | Stash
+title: Snapshot Deployment's Volumes | Stash
 description: An step by step guide showing how to snapshot the volumes of a Deployment
 menu:
   product_stash_0.8.3:
     identifier: volume-snapshot-deployment
-    name: Snapshotting Deployments
+    name: Snapshot Deployments Volumes
     parent: volume-snapshot
     weight: 20
 product_name: stash
