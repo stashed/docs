@@ -16,9 +16,9 @@ section_menu_id: guides
 
 Stash supports backup databases. This guide will give you an overview of how database backup and restore works in Stash.
 
-## How Backup Works?
+## How Backup Works
 
-The following diagram shows how Stash takes backup of a database. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash takes backup of a database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
   <img alt="Database Backup Overview" src="/docs/images/guides/latest/databases/database_backup_overview.svg">
@@ -31,29 +31,29 @@ The backup process consists of the following steps:
 
 2. Then, she creates a `Repository` crd that specifies the backend information along with the secret that holds the credentials to access the backend.
 
-3. Then, she creates a `BackupConfiguration` crd targetting respective [AppBinding](/docs/concepts/crds/appbinding.md) crd of the desired database. The `BackupConfiguration` object also specifies the `Task` to use to backup the database.
+3. Then, she creates a `BackupConfiguration` crd targetting the [AppBinding](/docs/concepts/crds/appbinding.md) crd of the desired database. The `BackupConfiguration` object also specifies the `Task` to use to backup the database.
 
 4. Stash operator watches for `BackupConfiguration` crd.
 
-5. Once Stash operator found a `BackupConfiguration` crd, it creates a CronJob with the schedule specified in  `BackupConfiguration` object to trigger backup periodically.
+5. Once Stash operator finds a `BackupConfiguration` crd, it creates a CronJob with the schedule specified in  `BackupConfiguration` object to trigger backup periodically.
 
-6. When a schedule appears, the CronJob triggers a backup by creating a `BackupSession` crd.
+6. On the next scheduled slot, the CronJob triggers a backup by creating a `BackupSession` crd.
 
 7. Stash operator also watches for `BackupSession` crd.
 
-8. When it found a `BackupSession` object, it resolves the respective `Task` and `Function` and prepares a Job definition to backup.
+8. When it finds a `BackupSession` object, it resolves the respective `Task` and `Function` and prepares a Job definition to backup.
 
 9. Then, it creates the Job to backup the targetted database.
 
-10. The Job reads necessary information to connect with the database from the `AppBinding` crd. It reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
+10. The Job reads necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
 11. Then, the Job dumps the targeted database and upload the output to the backend. Stash pipes the output of dump command to uploading process. Hence, backup Job does not require a large volume to hold the entire dump output.
 
-12. Finally, when the backup is completed, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup.
+12. Finally, when the backup is completed, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
-## How Restore Works?
+## How Restore Works
 
-The following diagram shows how Stash restores backed up data into a database. Open the image in a new tab to see the enlarged image.
+The following diagram shows how Stash restores backed up data into a database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
   <img alt="Database Restore Overview" src="/docs/images/guides/latest/databases/database_restore_overview.svg">
@@ -66,11 +66,11 @@ The restore process consists of the following steps:
 
 2. Stash operator watches for `RestoreSession` object.
 
-3. Once it found a `RestoreSession` object, it resolves the respective `Task` and `Function` and prepares a Job definition to restore.
+3. Once it finds a `RestoreSession` object, it resolves the respective `Task` and `Function` and prepares a Job definition to restore.
 
 4. Then, it creates the Job to restore the target.
 
-5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
+5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
 6. Then, the job downloads the backed up data from the backend and inject into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
 
