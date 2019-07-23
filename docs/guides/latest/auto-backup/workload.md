@@ -93,7 +93,7 @@ Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `Sta
 
 **Required Annotations for Workloads:**
 
-You have to add the following 3 annotations to a targetted workload to enable backup for it:
+You have to add the following 3 annotations to a targeted workload to enable backup for it:
 
 1. Name of the `BackupConfigurationTemplate` object where a template for `Repository` and `BackupConfiguration` has been defined.
 

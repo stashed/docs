@@ -272,7 +272,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/volumes/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
-We are ready to start taking backup. Now, we have to create a `BackupConfiguration` object targetting `nfs-pvc`.
+We are ready to start taking backup. Now, we have to create a `BackupConfiguration` object targeting `nfs-pvc`.
 
 **Create BackupConfiguration:**
 

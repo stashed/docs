@@ -1,10 +1,10 @@
 ---
-title: Snapshot Deployment's Volumes | Stash
+title: Snapshot Deployment Volumes | Stash
 description: An step by step guide showing how to snapshot the volumes of a Deployment
 menu:
   product_stash_0.8.3:
     identifier: volume-snapshot-deployment
-    name: Snapshot Deployments Volumes
+    name: Snapshot Deployment Volumes
     parent: volume-snapshot
     weight: 20
 product_name: stash
@@ -82,7 +82,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+> Note: YAML files used in this tutorial are stored in [/docs/examples/guides/latest/volumesnapshot](/docs/examples/guides/latest/volumesnapshot) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Take Volume Snapshot
 
@@ -156,24 +156,27 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > /source/data/data.txt; echo sample_config > /source/config/config.cfg  && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
-        - mountPath: /source/config
-          name: source-config
+        - args:
+            [
+              "echo sample_data > /source/data/data.txt; echo sample_config > /source/config/config.cfg  && sleep 3000",
+            ]
+          command: ["/bin/sh", "-c"]
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /source/data
+              name: source-data
+            - mountPath: /source/config
+              name: source-config
       restartPolicy: Always
       volumes:
-      - name: source-data
-        persistentVolumeClaim:
-         claimName: source-data
-      - name: source-config
-        persistentVolumeClaim:
-          claimName: source-config
+        - name: source-data
+          persistentVolumeClaim:
+            claimName: source-data
+        - name: source-config
+          persistentVolumeClaim:
+            claimName: source-config
 ```
 
 Let's create the deployment we have shown above.
@@ -222,7 +225,7 @@ spec:
       name: stash-demo
     snapshotClassName: default-snapshot-class
   retentionPolicy:
-    name: 'keep-last-5'
+    name: "keep-last-5"
     keepLast: 5
     prune: true
 ```
@@ -233,7 +236,7 @@ Here,
 
 - `spec.driver` indicates the name of the agent to use to back up the target. Currently, Stash supports `Restic`, `VolumeSnapshotter` drivers. The `VolumeSnapshotter` is used to backup/restore PVC using `VolumeSnapshot` API.
 
-- `spec.target.ref`  refers to the backup target. `apiVersion`, `kind` and `name` refers to the `apiVersion`, `kind` and `name` of the targeted workload respectively. Stash will use this information to create a Volume Snapshotter Job for creating VolumeSnapshot.
+- `spec.target.ref` refers to the backup target. `apiVersion`, `kind` and `name` refers to the `apiVersion`, `kind` and `name` of the targeted workload respectively. Stash will use this information to create a Volume Snapshotter Job for creating VolumeSnapshot.
 
 - `spec.target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to be used for volume snapshotting.
 
@@ -248,13 +251,13 @@ backupconfiguration.stash.appscode.com/deployments-volume-snapshot created
 
 If everything goes well, Stash will create a `CronJob` to take periodic snapshot of `source-data` and `source-config` volumes of the deployment with the schedule specified in `spec.schedule` field of `BackupConfiguration` crd.
 
- Check that the `CronJob` has been created using the following command,
+Check that the `CronJob` has been created using the following command,
 
- ```console
- $ kubectl get cronjob -n demo
+```console
+$ kubectl get cronjob -n demo
 NAME                          SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 deployments-volume-snapshot   */1 * * * *   False     0        39s             2m41s
- ```
+```
 
 **Wait for BackupSession :**
 
@@ -302,7 +305,7 @@ kind: VolumeSnapshot
 metadata:
   creationTimestamp: "2019-07-15T06:14:09Z"
   finalizers:
-  - snapshot.storage.kubernetes.io/volumesnapshot-protection
+    - snapshot.storage.kubernetes.io/volumesnapshot-protection
   generation: 4
   name: source-data-1563171247
   namespace: demo
@@ -320,7 +323,6 @@ status:
   creationTime: "2019-07-15T06:14:10Z"
   readyToUse: true
   restoreSize: 1Gi
-
 ```
 
 Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshotContent` crd. It also represents the actual snapshot name that has been saved in Google Cloud. If we navigate to the `Snapshots` tab in the GCP console, we are going to see the snapshot `snapcontent-c1bc3390-a6c7-11e9-9f3a-42010a800050` has been stored successfully.
@@ -353,7 +355,7 @@ spec:
       - metadata:
           name: restore-data
         spec:
-          accessModes: [ "ReadWriteOnce" ]
+          accessModes: ["ReadWriteOnce"]
           storageClassName: "standard"
           resources:
             requests:
@@ -365,7 +367,7 @@ spec:
       - metadata:
           name: restore-config
         spec:
-          accessModes: [ "ReadWriteOnce" ]
+          accessModes: ["ReadWriteOnce"]
           storageClassName: "standard"
           resources:
             requests:
@@ -379,7 +381,7 @@ spec:
 Here,
 
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name`  is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with the desired PVC of your Deployment.
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with the desired PVC of your Deployment.
   - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be initialized. It requires the following fields to be set:
     - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
     - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
@@ -409,7 +411,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we are going to see that new PVCs with the name `source-data` and `source-config ` have been created.
+Once a restore process is complete, we are going to see that new PVCs with the name `source-data` and `source-config` have been created.
 
 Verify that the PVCs have been created by the following command,
 
@@ -422,9 +424,9 @@ restore-data     Bound    pvc-267335ff-a6ca-11e9-9f3a-42010a800050   1Gi        
 
 Notice the `STATUS` field. It indicates that the respective PV has been provisioned and initialized from the respective VolumeSnapshot by CSI driver and the PVC has been bound with the PV.
 
->The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
+> The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode) field controls when volume binding and dynamic provisioning should occur. Kubernetes allows `Immediate` and `WaitForFirstConsumer` modes for binding volumes. The `Immediate` mode indicates that volume binding and dynamic provisioning occurs once the PVC is created and `WaitForFirstConsumer` mode indicates that volume binding and provisioning does not occur until a pod is created that uses this PVC. By default `volumeBindingMode` is `Immediate`.
 
->If you use `volumeBindingMode: WaitForFirstConsumer`, respective PVC will be initialized from respective VolumeSnapshot after you create a workload with that PVC. In this case, Stash will mark the restore session as completed with phase `Unknown`.
+> If you use `volumeBindingMode: WaitForFirstConsumer`, respective PVC will be initialized from respective VolumeSnapshot after you create a workload with that PVC. In this case, Stash will mark the restore session as completed with phase `Unknown`.
 
 **Verify Restored Data :**
 
@@ -452,25 +454,25 @@ spec:
       name: busybox
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /restore/data
-          name: restore-data
-        - mountPath: /restore/config
-          name: restore-config
+        - args:
+            - sleep
+            - "3600"
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /restore/data
+              name: restore-data
+            - mountPath: /restore/config
+              name: restore-config
       restartPolicy: Always
       volumes:
-      - name: restore-data
-        persistentVolumeClaim:
-          claimName: restore-data
-      - name: restore-config
-        persistentVolumeClaim:
-          claimName: restore-config
+        - name: restore-data
+          persistentVolumeClaim:
+            claimName: restore-data
+        - name: restore-config
+          persistentVolumeClaim:
+            claimName: restore-config
 ```
 
 Let's create the deployment we have shown above.

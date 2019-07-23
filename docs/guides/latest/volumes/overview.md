@@ -31,7 +31,7 @@ The backup process consists of the following steps:
 
 2. Then, she creates a `Repository` crd that specifies the backend information along with the secret that holds the credentials to access the backend.
 
-3. Then, she creates a `BackupConfiguration` crd targetting the volume. The `BackupConfiguration` object also specifies the `Task` to use to backup the volume.
+3. Then, she creates a `BackupConfiguration` crd targeting the volume. The `BackupConfiguration` object also specifies the `Task` to use to backup the volume.
 
 4. Stash operator watches for `BackupConfiguration` crd.
 
