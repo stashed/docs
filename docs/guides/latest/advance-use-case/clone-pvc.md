@@ -1,3 +1,17 @@
+---
+title: Clone Data Volumes | Stash
+description: An step by step guide on how to clone data volumes using Stash.
+menu:
+  product_stash_0.8.3:
+    identifier: advance-use-case-clone-pvc
+    name: Clone Data Volumes
+    parent: advance-use-case
+    weight: 20
+product_name: stash
+menu_name: product_stash_0.8.3
+section_menu_id: guides
+---
+
 # Clone Data Volumes using Stash
 
 Using Stash you can clone data volumes of a workload into a different namespace in a cluster. You can provide a template for PVC in `RestoreSession`. Stash will create PVCs according to the template, then it will restore data in that PVC. Then you can use the cloned PVCs to deploy your desired workload. This guide will show you how to clone backed up data into new PVCs using Stash.

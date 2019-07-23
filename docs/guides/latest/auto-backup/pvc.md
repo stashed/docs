@@ -125,7 +125,7 @@ Now, automatic backup is configured for PVC. We just have to add some annotation
 
 **Required Annotations for PVC:**
 
-You have to add the following 3 annotations to a targetted PVC to enable backup for it:
+You have to add the following 3 annotations to a targeted PVC to enable backup for it:
 
 1. Name of the `BackupConfigurationTemplate` object where a template for `Repository` and `BackupConfiguration` has been defined.
 

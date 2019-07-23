@@ -2,7 +2,7 @@
 title: Monitoring | Stash
 menu:
   product_stash_0.8.3:
-    identifier: monitoring
+    identifier: v1alpha1-monitoring
     name: Monitoring
     parent: v1alpha1-guides
     weight: 40

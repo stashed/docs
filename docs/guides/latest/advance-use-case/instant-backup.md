@@ -1,6 +1,20 @@
+---
+title: Instant Backup | Stash
+description: An step by step guide on how to take instant backup using Stash.
+menu:
+  product_stash_0.8.3:
+    identifier: advance-use-case-instant-backup
+    name: Instant Backup
+    parent: advance-use-case
+    weight: 10
+product_name: stash
+menu_name: product_stash_0.8.3
+section_menu_id: guides
+---
+
 # Instant Backup
 
-This guide will show you how to trigger an instant backup in Stash.
+This guide will show you how to take an instant backup in Stash.
 
 ## Before You Begin
 
