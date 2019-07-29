@@ -117,7 +117,7 @@ service/headless created
 statefulset.apps/stash-demo created
 ```
 
-Now, wait for pod of the StatefulSet to go into the `Running` state.
+Now, wait for the pods of the StatefulSet to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -184,7 +184,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/repositor
 repository.stash.appscode.com/gcs-repo created
 ```
 
-Now, we are ready to backup our volumes to our desired backend.
+Now, we are ready to backup our sample data into this backend.
 
 ### Backup
 
@@ -373,11 +373,10 @@ $ watch -n 2 kubectl get backupsession -n demo
 Every 5.0s: kubectl get bs -n demo                               suaas-appscode: Tue Jun 25 17:54:41 2019
 
 NAME                   BACKUPCONFIGURATION   PHASE       AGE
-ss-backup-1561463408   ss-backup             Running     2m33s
 ss-backup-1561463408   ss-backup             Succeeded   4m33s
 ```
 
-We can see from the above output that the backup session has succeeded. Now, we are going to verify that the backed up data has been stored in the backend.
+We can see from the above output that the backup session has succeeded. Now, we are going to verify whether the backed up data has been stored in the backend.
 
 **Verify Backup:**
 
@@ -400,7 +399,7 @@ Now, if we navigate to the GCS bucket, we are going to see backed up data has be
 
 ## Restore Volumes of a StatefulSet
 
-This section will show you how to restore the backed up data from the backend we have taken in earlier section.
+This section will show you how to restore the backed up data from the backend we have taken in the earlier section.
 
 **Deploy StatefulSet:**
 
@@ -511,11 +510,11 @@ $ kubectl apply -f ./docs/examples/workloads/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will recovered on start-up.
+Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will recover on start-up.
 
 **Verify Init-Container:**
 
-Wait until the `init-container` has been injected to the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that `init-container` has been injected successfully.
+Wait until the `init-container` has been injected to the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that the `init-container` has been injected successfully.
 
 ```yaml
 $ kubectl describe statefulset -n demo stash-recovered
@@ -590,7 +589,7 @@ Volume Claims:
 ...
 ```
 
-Notice the `Init-Containers` section. We can see that init-container `stash-init` has been injected which is running `restore` command.
+Notice the `Init-Containers` section. We can see that the init-container `stash-init` has been injected which is running `restore` command.
 
 **Wait for RestoreSession to Succeeded:**
 
@@ -601,17 +600,18 @@ $ watch -n 3 kubectl get restoresession -n demo
 Every 5.0s: kubectl get restoresession -n demo               suaas-appscode: Tue Jun 25 18:27:30 2019
 
 NAME         REPOSITORY-NAME   PHASE       AGE
-ss-restore   gcs-repo          Running     2m15s
 ss-restore   gcs-repo          Succeeded   4m31s
 ```
 
 So, we can see from the output of the above command that the restore process succeeded.
 
+> **Note:** If you want to restore the backed up data inside the same StatefulSet whose volumes were backed up, you have to remove the corrupted data from the StatefulSet. Then, you have to create a RestoreSession targeting the StatefulSet.
+
 **Verify Restored Data:**
 
 In this section, we are going to verify that the desired data has been restored successfully.
 
-At first, check if the `stash-recovered` pods of a StatefulSet has gone into `Running` state by the following command,
+At first, check if the `stash-recovered` pods of a StatefulSet has gone into `Running` state by the following commands,
 
 ```console
 $ kubectl get pod -n demo
@@ -621,7 +621,7 @@ stash-recovered-1   1/1     Running   0          11m
 stash-recovered-2   1/1     Running   0          12m
 ```
 
-Verify that the backed up data has been restored in `/source/data` directory of the `stash-recovered` pods of a StatefulSet using the following command,
+Verify that the backed up data has been restored in `/source/data` directory of the `stash-recovered` pods of a StatefulSet using the following commands,
 
 ```console
 $ kubectl exec -n demo stash-recovered-0 -- cat /source/data/data.txt
@@ -634,7 +634,7 @@ stash-demo-2
 
 ### Customize Restore Process
 
-Generally, Stash restores data in individual replicas from a backup of respective replica of the original StatefulSet. That means, backed up data of `pod-0` of original StatefulSet will be restored in `pod-0` of new StatefulSet and so on. However, you can customize this behavior through `spec.rules` section of RestoreSession object. This is particularly helpful when your restored StatefulSet has different number of replicas than the original StatefulSet. You can control which data will be restored in the recovered replicas.
+Generally, Stash restores data in individual replicas from a backup of the respective replica of the original StatefulSet. That means, backed up data of `pod-0` of original StatefulSet will be restored in `pod-0` of new StatefulSet and so on. However, you can customize this behavior through the `spec.rules` section of RestoreSession object. This is particularly helpful when your restored StatefulSet has a different number of replicas than the original StatefulSet. You can control which data will be restored in the recovered replicas.
 
 **Deploy StatefulSet:**
 
@@ -743,7 +743,7 @@ Here,
 
 - `spec.rules`: `spec.rules` specify how Stash should restore data for each host.
   - `targetHosts` the first rule specify that backed up data of `host-1`(old pods of a StatefulSet-1) will be restored into targetHosts `host-3`(new pod-3 of the StatefulSet) and `host-4`(new pod-4 of the StatefulSet) and the second rule specify that data from a similar backup host will be restored on the respective restore host. That means, backed up data of `host-0` will be restored into `host-0`, backed up data of `host-1` will be restored into `host-1` and so on.
-  - `sourceHost` specify the name of the host whose backed up data will be restored.
+  - `sourceHost` specifies the name of the host whose backed up data will be restored.
 
 Let's create the `RestoreSession` crd we have shown above,
 
@@ -752,11 +752,11 @@ $ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/adv_resto
 restoresession.stash.appscode.com/ss-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will recovered on start-up.
+Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will restore desired data on start-up.
 
 **Verify Init-Container:**
 
-Wait until the `init-container` has been injected to the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that `init-container` has been injected successfully.
+Wait until the `init-container` has been injected to the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that the `init-container` has been injected successfully.
 
 ```yaml
 $ kubectl describe statefulset -n demo stash-recovered-adv
@@ -831,7 +831,7 @@ Volume Claims:
 ...
 ```
 
-Notice the `Init-Containers` section. We can see that init-container `stash-init` has been injected which is running `restore` command.
+Notice the `Init-Containers` section. We can see that the init-container `stash-init` has been injected which is running `restore` command.
 
 **Wait for RestoreSession to Succeeded:**
 
@@ -842,7 +842,6 @@ $ watch -n 3 kubectl get restoresession -n demo
 Every 5.0s: kubectl get restoresession -n demo               suaas-appscode: Tue Jun 25 18:27:30 2019
 
 NAME         REPOSITORY-NAME   PHASE       AGE
-ss-restore   gcs-repo          Running     2m
 ss-restore   gcs-repo          Succeeded   8m21s
 ```
 
@@ -852,7 +851,7 @@ So, we can see from the output of the above command that the restore process suc
 
 In this section, we are going to verify that the desired data has been restored successfully.
 
-At first, check if the `stash-recovered` pods of a StatefulSet has gone into `Running` state by the following command,
+At first, check if the `stash-recovered` pods of the StatefulSet has gone into `Running` state by the following commands,
 
 ```console
 $ kubectl get pod -n demo
@@ -864,7 +863,7 @@ stash-recovered-adv-3   1/1     Running   0          7m10s
 stash-recovered-adv-4   1/1     Running   0          8m1s
 ```
 
-Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` pods of a StatefulSet using the following command,
+Verify that the sample data has been restored in `/source/data` directory of the `stash-recovered` pods of the StatefulSet using the following commands,
 
 ```console
 $ kubectl exec -n demo stash-recovered-adv-0 -- cat /source/data/data.txt

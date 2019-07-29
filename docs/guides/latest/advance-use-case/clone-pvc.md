@@ -130,7 +130,7 @@ persistentvolumeclaim/source-config created
 deployment.apps/stash-demo created
 ```
 
-Now, wait for pod of the Deployment to go into `Running` state.
+Now, wait for the pod of the Deployment to go into `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -138,7 +138,7 @@ NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-67ccdfbbc7-z97rd   1/1     Running   0          77s
 ```
 
-Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following command,
+Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following commands,
 
 ```console
 $ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/data
@@ -257,7 +257,7 @@ We can see from the above output that the backup session has succeeded. This ind
 
 ### Restore
 
-Now, we are going to clone the volumes that we have backed up in the previous section. In order to do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
+Now, we are going to clone the volumes that we have backed up in the previous section. To do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
 
 **Create RestoreSession:**
 
@@ -304,7 +304,7 @@ spec:
 Here,
 
 - `spec.target.volumeMounts` specifies the directory where the newly created PVC will be mounted inside the restore job.
-- `spec.target.rules[*].paths` specifies the directories that will be restored from the backed up data.
+- `spec.rules[*].paths` specifies the directories that will be restored from the backed up data.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
   - `metadata.name` specifies the name of the restored PVC.
 
@@ -398,7 +398,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/depl
 deployment.apps/restore-demo created
 ```
 
-Now, wait for pod of the Deployment to go into the `Running` state.
+Now, wait for the pod of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -421,7 +421,7 @@ Here we are going to clone the volumes of a StatefulSet. At first, we are going 
 
 ### Backup
 
-Now, we are going to deploy a StatefulSet and generate some sample data in it's volume. Then, we are going to back up these volumes.
+Now, we are going to deploy a StatefulSet and generate some sample data in its volume. Then, we are going to back up these volumes.
 
 **Deploy StatefulSet:**
 
@@ -501,7 +501,7 @@ spec:
             storage: 2Gi
 ```
 
-The above StatefulSet will automatically create `data.txt` and `config.cfg` file in `/source/data` and `sourc/config` directory respectively and write some sample data in it.
+The above StatefulSet will automatically create `data.txt` and `config.cfg` file in `/source/data` and `source/config` directory respectively and write some sample data in it.
 
 Let's create the Statefulset we have shown above.
 
@@ -511,7 +511,7 @@ service/headless configured
 statefulset.apps/stash-demo created
 ```
 
-Now, wait for pod of the Statefulset to go into the `Running` state.
+Now, wait for the pod of the Statefulset to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -648,7 +648,7 @@ We can see from the above output that the backup session has succeeded. This ind
 
 ### Restore
 
-Now, we are going to restore the volumes that we have backed up in the previous section. In order to do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
+Now, we are going to restore the volumes that we have backed up in the previous section. To do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
 
 **Create RestoreSession:**
 
@@ -693,10 +693,10 @@ spec:
               storage: 2Gi
 ```
 
-- `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
+- `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes were backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
 
-  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
 
     ```console
     <pvc name>-<statefulset name>-${POD_ORDINAL}
@@ -730,7 +730,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC:**
 
-Once a restore process is complete, verify that new PVCs have been created successfully by the following command,
+Once a restore process is complete, verify that new PVCs has been created successfully by the following command,
 
 ```console
 $ kubectl get pvc -n demo
@@ -824,7 +824,7 @@ service/re-headless created
 statefulset.apps/restore-demo created
 ```
 
-Now, wait for pod of the StatefulSet to go into the `Running` state.
+Now, wait for the pod of the StatefulSet to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo

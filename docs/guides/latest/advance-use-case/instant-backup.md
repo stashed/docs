@@ -102,7 +102,7 @@ persistentvolumeclaim/source-data created
 deployment.apps/stash-demo created
 ```
 
-Now, wait for pod of the Deployment to go into `Running` state.
+Now, wait for the pod of the Deployment to go into `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -224,7 +224,7 @@ deployment-backup          */40 * * * *            6m41s
 
 ## Trigger Instant Backup
 
-Now, we are going to trigger an instant backup of the volumes of the Deployment that we have configured in the previous section. In order to do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
+Now, we are going to trigger an instant backup of the volumes of the Deployment that we have configured in the previous section. To do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
 
 **Create BackupSession:**
 
@@ -243,7 +243,7 @@ spec:
     name: deployment-backup
 ```
 
-- `metadata.labels` holds the respective `BackupConfiguration` name as label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`. You must provide the label in the following format:
+- `metadata.labels` holds the respective `BackupConfiguration` name as a label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`. You must provide the label in the following format:
   ```
   stash.appscode.com/backup-configuration: <BackupConfiguration name>
   ```
