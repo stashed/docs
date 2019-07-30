@@ -132,7 +132,7 @@ persistentvolumeclaim/source-config created
 
 **Deploy Deployment :**
 
-Now, we are going to deploy a Deployment that uses the above PVCs. This Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `sourc/config` directory respectively where we have mounted the desired PVCs.
+Now, we are going to deploy a Deployment that uses the above PVCs. This Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `/source/config` directory respectively where we have mounted the desired PVCs.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -381,7 +381,7 @@ spec:
 Here,
 
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with the desired PVC of your Deployment.
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with the desired PVC of your Deployment.
   - `spec.dataSource`: `spec.dataSource` specifies the source of the data from where the newly created PVC will be initialized. It requires the following fields to be set:
     - `apiGroup` is the group for resource being referenced. Now, Kubernetes supports only `snapshot.storage.k8s.io`.
     - `kind` is resource of the kind being referenced. Now, Kubernetes supports only `VolumeSnapshot`.
@@ -411,7 +411,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we are going to see that new PVCs with the name `source-data` and `source-config` have been created.
+Once the restore process is complete, we are going to see that new PVCs with the name `source-data` and `source-config` have been created.
 
 Verify that the PVCs have been created by the following command,
 

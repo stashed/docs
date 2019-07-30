@@ -35,7 +35,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [/docs/examples/guides/latest/advance-use-case/clone-pvc](/docs/examples/guides/latest/advance-use-case/clone-pvc) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+> **Note:** YAML files used in this tutorial are stored in [/docs/examples/guides/latest/advanced-use-case/clone-pvc](/docs/examples/guides/latest/advanced-use-case/clone-pvc) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Clone the Volumes of a Deployment
 
@@ -119,12 +119,12 @@ spec:
             claimName: source-config
 ```
 
-The above Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `sourc/config` directory respectively and write some sample data in it.
+The above Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `/source/config` directory respectively and write some sample data in it.
 
 Let's create the Deployment and PVCs we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/deployment/deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/deployment.yaml
 persistentvolumeclaim/source-data created
 persistentvolumeclaim/source-config created
 deployment.apps/stash-demo created
@@ -181,7 +181,7 @@ spec:
 Let's create the `Repository` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -225,7 +225,7 @@ spec:
 Let's create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/deployment/dep-backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/dep-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -311,7 +311,7 @@ Here,
 Let's create the `RestoreSession` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/deployment/restore-deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/restore-deployment.yaml
 restoresession.stash.appscode.com/restore-deployment created
 ```
 
@@ -333,7 +333,7 @@ So, we can see from the output of the above command that the restore process has
 
 **Verify Restored PVC:**
 
-Once a restore process is complete, we are going to see that new PVCs with the name `restore-data` and `restore-config` have been created.
+Once the restore process is complete, we are going to see that new PVCs with the name `restore-data` and `restore-config` have been created.
 
 Verify that the PVCs have been created by the following command,
 
@@ -394,7 +394,7 @@ spec:
 Create the deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/deployment/restore-deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/restore-deployment.yaml
 deployment.apps/restore-demo created
 ```
 
@@ -501,12 +501,12 @@ spec:
             storage: 2Gi
 ```
 
-The above StatefulSet will automatically create `data.txt` and `config.cfg` file in `/source/data` and `source/config` directory respectively and write some sample data in it.
+The above StatefulSet will automatically create `data.txt` and `config.cfg` file in `/source/data` and `/source/config` directory respectively and write some sample data in it.
 
 Let's create the Statefulset we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/statefulset/statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/statefulset.yaml
 service/headless configured
 statefulset.apps/stash-demo created
 ```
@@ -572,7 +572,7 @@ spec:
 Let’s create the Repository object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -616,7 +616,7 @@ spec:
 Let’s create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/statefulset/ss-backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/ss-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -696,7 +696,7 @@ spec:
 - `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes were backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
 
-  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet name `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want to deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
 
     ```console
     <pvc name>-<statefulset name>-${POD_ORDINAL}
@@ -708,7 +708,7 @@ spec:
 Let’s create the `RestoreSession` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/statefulset/restoresession.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/restore-statefulset created
 ```
 
@@ -730,7 +730,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC:**
 
-Once a restore process is complete, verify that new PVCs has been created successfully by the following command,
+Once the restore process is complete, verify that new PVCs have been created successfully by the following command,
 
 ```console
 $ kubectl get pvc -n demo
@@ -819,7 +819,7 @@ spec:
 Create the StatefulSet we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/clone-pvc/statefulset/restore-statefulset.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/restore-statefulset.yaml
 service/re-headless created
 statefulset.apps/restore-demo created
 ```

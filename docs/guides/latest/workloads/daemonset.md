@@ -349,7 +349,7 @@ Now, if we navigate to the GCS bucket, we are going to see backed up data has be
 
 > **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore the Backed Up Data
+## Restore the Backed up Data
 
 This section will show you how to restore the backed up data from the backend we have taken in the earlier section.
 
