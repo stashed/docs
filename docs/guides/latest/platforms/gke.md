@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Using Stash with Google Kubernetes Engine (GKE)
 
-This guide will show you how to use Stash to backup and restore volumes of a Kubernetes workload in [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/). Here, we are going to backup a volume of a Deployment into [GCS Bucket](https://cloud.google.com/storage/). Then, we are going to show how to restore this backed up data into a volume of another Deployment.
+This guide will show you how to use Stash to backup and restore volumes of a Kubernetes workload running in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/). Here, we are going to backup a volume of a Deployment into [GCS Bucket](https://cloud.google.com/storage/). Then, we are going to show how to restore this backed up data into a volume of another Deployment.
 
 ## Before You Begin
 
@@ -36,7 +36,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/platforms/gke](/docs/examples/guides/latest/platforms/gke) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/gke](/docs/examples/guides/latest/platforms/gke) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Backup the Volume of a Deployment
 
@@ -73,7 +73,7 @@ persistentvolumeclaim/source-pvc created
 
 **Deploy Deployment:**
 
-Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
+Now, we are going to deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -97,19 +97,19 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
+        - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+          command: ["/bin/sh", "-c"]
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /source/data
+              name: source-data
       restartPolicy: Always
       volumes:
-      - name: source-data
-        persistentVolumeClaim:
-          claimName: source-pvc
+        - name: source-data
+          persistentVolumeClaim:
+            claimName: source-pvc
 ```
 
 Let's create the Deployment we have shown above.
@@ -119,7 +119,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/platforms/gke/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
-Now, wait for the pod of the Deployment to go into the `Running` state.
+Now, wait for the pods of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -127,7 +127,7 @@ NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-798987998b-qz6bt   1/1     Running   0          45s
 ```
 
-Verify that the sample data has been created in `/source/data` directory using the following command,
+To verify that the sample data has been created in `/source/data` directory, use the following command:
 
 ```console
 $ kubectl exec -n demo stash-demo-798987998b-qz6bt -- cat /source/data/data.txt
@@ -136,7 +136,7 @@ sample_data
 
 ### Prepare Backend
 
-We are going to store our backed up data into an [GCS bucket](https://cloud.google.com/storage/). At first, we need to create a secret with the access credentials to our GCS bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](https://appscode.com/products/stash/0.8.3/guides/backends/overview/).
+We are going to store our backed up data into an [GCS bucket](https://cloud.google.com/storage/). At first, we need to create a secret with the access credentials to our GCS bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
 
 **Create Secret:**
 
@@ -227,12 +227,12 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-    - name: source-data
-      mountPath: /source/data
+      - name: source-data
+        mountPath: /source/data
     directories:
-    - /source/data
+      - /source/data
   retentionPolicy:
-    name: 'keep-last-5'
+    name: "keep-last-5"
     keepLast: 5
     prune: true
 ```
@@ -242,7 +242,7 @@ Here,
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
 - `spec.target.ref` refers to the `stash-demo` Deployment for backup target.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories`  specifies list of directories to backup.
+- `spec.target.directories` specifies list of directories to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -410,16 +410,16 @@ NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        8 B    1                3s                       1m15s
 ```
 
-Now, if we navigate to the GCS Bucket, we will see backed up data has been stored in `<bucket name>/source/data` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
+Now, if we navigate to the GCS Bucket, we are going to see backed up data has been stored in `<bucket name>/source/data` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
 
 <figure align="center">
   <img alt="Backup data in GCS Bucket" src="/docs/images/guides/latest/platforms/gke.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
->**Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
+> **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore the Backed Up Data
+## Restore the Backed up Data
 
 This section will show you how to restore the backed up data from [GCS bucket](https://cloud.google.com/storage/) we have taken in the earlier section.
 
@@ -437,7 +437,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -461,20 +461,20 @@ spec:
       name: busybox
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /restore/data
-          name: restore-data
+        - args:
+            - sleep
+            - "3600"
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /restore/data
+              name: restore-data
       restartPolicy: Always
       volumes:
-      - name: restore-data
-        persistentVolumeClaim:
-          claimName: restore-pvc
+        - name: restore-data
+          persistentVolumeClaim:
+            claimName: restore-pvc
 ```
 
 Let's create the Deployment and PVC we have shown above.
@@ -501,16 +501,16 @@ spec:
   repository:
     name: gcs-repo
   rules:
-  - paths:
-    - /source/data/
+    - paths:
+        - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-    - name: restore-data
-      mountPath: /source/data
+      - name: restore-data
+        mountPath: /source/data
 ```
 
 Here,
@@ -589,7 +589,7 @@ Pod Template:
     ReadOnly:   false
    tmp-dir:
     Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
-    Medium:     
+    Medium:
     SizeLimit:  <unset>
    stash-podinfo:
     Type:  DownwardAPI (a volume populated by information about the pod)
@@ -622,10 +622,10 @@ So, we can see from the output of the above command that the restore process has
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
+In this section, we are going to verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME                               READY   STATUS    RESTARTS   AGE
 stash-recovered-7876d7bbbb-w6t8f   1/1     Running   0          4m58s
 ```
@@ -637,7 +637,7 @@ $ kubectl exec -n demo stash-recovered-7876d7bbbb-w6t8f -- cat /restore/data/dat
 sample_data
 ```
 
-# Cleaning Up
+## Cleaning Up
 
 To clean up the Kubernetes resources created by this tutorial, run:
 

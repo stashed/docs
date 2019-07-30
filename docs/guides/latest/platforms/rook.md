@@ -12,9 +12,9 @@ menu_name: product_stash_0.8.3
 section_menu_id: guides
 ---
 
-# Using Stash with Rook Storage Service
+# Using Stash with Rook Managed Ceph Storage
 
-This guide will show you how to use Stash to backup and restore volumes of a Kubernetes workload in [Rook](https://rook.io/) storage service. Here, we are going to backup a volume of a Deployment into [AWS S3](https://aws.amazon.com/s3/) compatible [Rook Object Storage](https://rook.io/docs/rook/v1.0/ceph-object.html). Then, we are going to show how to restore this volume into a PersistentVolumeClaim of [Rook Object Storage](https://rook.io/docs/rook/v1.0/ceph-object.html). We are going to also re-deploy deployment using this recovered volume.
+This guide will show you how to use Stash to backup and restore volumes of a Kubernetes workload in [Rook](https://rook.io/) managed Ceph storage. Here, we are going to backup a volume of a Deployment into [AWS S3](https://aws.amazon.com/s3/) compatible [Ceph Object Storage](https://rook.io/docs/rook/v1.0/ceph-object.html). Then, we are going to show how to restore this volume into a PersistentVolumeClaim of [Ceph Object Storage](https://rook.io/docs/rook/v1.0/ceph-object.html). We are going to also re-deploy deployment using this recovered volume.
 
 ## Before You Begin
 
@@ -27,7 +27,7 @@ This guide will show you how to use Stash to backup and restore volumes of a Kub
   - [BackupSession](/docs/concepts/crds/backupsession.md/)
   - [RestoreSession](/docs/concepts/crds/restoresession.md/)
   - [Repository](/docs/concepts/crds/repository.md/)
-- You will need a [Rook Storage Service](https://rook.io/docs/rook/master/ceph-quickstart.html) with [Object Storage](https://rook.io/docs/rook/v1.0/ceph-object.html) and [Block Storage](https://rook.io/docs/rook/v1.0/ceph-block.html) configured. If you do not already have a Rook Storage Service configured, you can create one by following this [quickstart](https://rook.io/docs/rook/v1.0/ceph-quickstart.html) guide.
+- You will need a [Rook](https://rook.io/docs/rook/master/ceph-quickstart.html) deployment with [Ceph Object Storage](https://rook.io/docs/rook/v1.0/ceph-object.html) and [Ceph Block Storage](https://rook.io/docs/rook/v1.0/ceph-block.html) configured. If you do not already have a Rook Storage Service configured, you can create one by following this [quickstart](https://rook.io/docs/rook/v1.0/ceph-quickstart.html) guide.
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -36,11 +36,11 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/platforms/rook](/docs/examples/guides/latest/platforms/rook) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/rook](/docs/examples/guides/latest/platforms/rook) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 **Ensure StorageClass:**
 
-[Rook Block Storage](https://rook.io/docs/rook/v1.0/ceph-block.html) allows mounting Rook storage into pod using a PersistentVolumeClaim. In order to do that, we have to create a PersistentVolumeClaim with `rook-ceph-block`[StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/). Verify the StorageClass exist by the following command:
+[Ceph Block Storage](https://rook.io/docs/rook/v1.0/ceph-block.html) allows mounting Rook storage into pod using a PersistentVolumeClaim. In order to do that, we have to create a PersistentVolumeClaim with `rook-ceph-block`[StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/). Verify the StorageClass exist by the following command:
 
 ```console
 $ kubectl get storageclass
@@ -85,7 +85,7 @@ persistentvolumeclaim/source-pvc created
 
 **Deploy Deployment:**
 
-Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
+Now, we are going to deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -109,19 +109,19 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
+        - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+          command: ["/bin/sh", "-c"]
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /source/data
+              name: source-data
       restartPolicy: Always
       volumes:
-      - name: source-data
-        persistentVolumeClaim:
-          claimName: source-pvc
+        - name: source-data
+          persistentVolumeClaim:
+            claimName: source-pvc
   strategy:
     rollingUpdate:
       maxSurge: "0%"
@@ -135,7 +135,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/platforms/rook/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
-Now, wait for the pod of the Deployment to go into the `Running` state.
+Now, wait for the pods of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -143,7 +143,7 @@ NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-69f9ffbbf7-98lth   1/1     Running   0          13s
 ```
 
-Verify that the sample data has been created in `/source/data` directory using the following command,
+To verify that the sample data has been created in `/source/data` directory, use the following command:
 
 ```console
 $ kubectl exec -n demo stash-demo-69f9ffbbf7-98lth -- cat /source/data/data.txt
@@ -152,7 +152,7 @@ sample_data
 
 ### Prepare Backend
 
-We are going to store our backed up data into an [Ceph Storage Bucket](https://rook.io/docs/rook/v1.0/ceph-storage.html). At first, we need to create a secret with the access credentials to our Ceph storage bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](https://appscode.com/products/stash/0.8.3/guides/backends/overview/).
+We are going to store our backed up data into an [Ceph Storage Bucket](https://rook.io/docs/rook/v1.0/ceph-storage.html). At first, we need to create a secret with the access credentials to our Ceph storage bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
 
 **Create Secret:**
 
@@ -205,7 +205,7 @@ metadata:
 spec:
   backend:
     s3:
-      endpoint: 'http://rook-ceph-rgw-my-store-external.rook-ceph.svc'
+      endpoint: "http://rook-ceph-rgw-my-store-external.rook-ceph.svc"
       bucket: rook-bucket
       prefix: /source/data
     storageSecretName: rook-secret
@@ -244,12 +244,12 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-    - name: source-data
-      mountPath: /source/data
+      - name: source-data
+        mountPath: /source/data
     directories:
-    - /source/data
+      - /source/data
   retentionPolicy:
-    name: 'keep-last-5'
+    name: "keep-last-5"
     keepLast: 5
     prune: true
 ```
@@ -259,7 +259,7 @@ Here,
 - `spec.repository` refers to the `Repository` object `rook-repo` that holds backend information.
 - `spec.target.ref` refers to the `stash-demo` Deployment for backup target.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories`  specifies list of directories to backup.
+- `spec.target.directories` specifies list of directories to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -437,9 +437,10 @@ $ kubectl get repository -n demo
 NAME         INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 rook-repo    true        30 B   2                3m10s                    5m20s
 ```
+
 Here, `BACKUPCOUNT` field indicates the number of backup snapshots has taken in this repository.
 
-## Restore the Backed Up Data
+## Restore the Backed up Data
 
 This section will show you how to restore the backed up data from [Ceph Storage Bucket](https://rook.io/docs/rook/v1.0/ceph-storage.html) we have taken in the earlier section.
 
@@ -457,7 +458,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   storageClassName: "rook-ceph-block"
   resources:
     requests:
@@ -482,20 +483,20 @@ spec:
       name: busybox
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /restore/data
-          name: restore-data
+        - args:
+            - sleep
+            - "3600"
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /restore/data
+              name: restore-data
       restartPolicy: Always
       volumes:
-      - name: restore-data
-        persistentVolumeClaim:
-          claimName: restore-pvc
+        - name: restore-data
+          persistentVolumeClaim:
+            claimName: restore-pvc
   strategy:
     rollingUpdate:
       maxSurge: "0%"
@@ -526,16 +527,16 @@ spec:
   repository:
     name: rook-repo
   rules:
-  - paths:
-    - /source/data/
+    - paths:
+        - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-    - name: restore-data
-      mountPath: /source/data
+      - name: restore-data
+        mountPath: /source/data
 ```
 
 Here,
@@ -617,7 +618,7 @@ Pod Template:
     ReadOnly:   false
    tmp-dir:
     Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
-    Medium:     
+    Medium:
     SizeLimit:  <unset>
    stash-podinfo:
     Type:  DownwardAPI (a volume populated by information about the pod)
@@ -650,7 +651,7 @@ So, we can see from the output of the above command that the restore process has
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
+In this section, we are going to verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
 
 ```console
 $ kubectl get pod -n demo
@@ -665,7 +666,7 @@ $ kubectl exec -n demo stash-recovered-5c59587895-76tsx  -- cat /restore/data/da
 sample_data
 ```
 
-# Cleaning Up
+## Cleaning Up
 
 To clean up the Kubernetes resources created by this tutorial, run:
 

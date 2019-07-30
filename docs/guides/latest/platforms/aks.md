@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Using Stash with Azure Kubernetes Service (AKS)
 
-This guide will show you how to use Stash to backup and restore volumes of a Kubernetes workload in [Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/). Here, we are going to backup a volume of a Deployment into [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/). Then, we are going to show how to restore this backed up data into a volume of another Deployment.
+This guide will show you how to use Stash to backup and restore volumes of a Kubernetes workload running in [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/). Here, we are going to backup a volume of a Deployment into [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/). Then, we are going to show how to restore this backed up data into a volume of another Deployment.
 
 ## Before You Begin
 
@@ -27,7 +27,7 @@ This guide will show you how to use Stash to backup and restore volumes of a Kub
   - [BackupSession](/docs/concepts/crds/backupsession.md/)
   - [RestoreSession](/docs/concepts/crds/restoresession.md/)
   - [Repository](/docs/concepts/crds/repository.md/)
-- You will need a [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/) to store the backup snapshots.
+- You will need access to [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/) to store the backup snapshots.
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -36,7 +36,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/platforms/aks](/docs/examples/guides/latest/platforms/aks) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/aks](/docs/examples/guides/latest/platforms/aks) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Backup the Volume of a Deployment
 
@@ -73,7 +73,7 @@ persistentvolumeclaim/stash-sample-data created
 
 **Deploy Deployment:**
 
-Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
+Now, we are going to deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -97,19 +97,19 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
+        - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+          command: ["/bin/sh", "-c"]
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /source/data
+              name: source-data
       restartPolicy: Always
       volumes:
-      - name: source-data
-        persistentVolumeClaim:
-          claimName: stash-sample-data
+        - name: source-data
+          persistentVolumeClaim:
+            claimName: stash-sample-data
 ```
 
 Let's create the Deployment we have shown above.
@@ -119,7 +119,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/platforms/aks/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
-Now, wait for the pod of the Deployment to go into the `Running` state.
+Now, wait for the pods of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -129,7 +129,7 @@ stash-demo-8685fb5478-89flr   1/1     Running   0          4m47s
 stash-demo-8685fb5478-fjggh   1/1     Running   0          4m47s
 ```
 
-Verify that the sample data has been created in `/source/data` directory using the following command,
+To verify that the sample data has been created in `/source/data` directory, use the following command:
 
 ```console
 $ kubectl exec -n demo stash-demo-8685fb5478-4psw8 -- cat /source/data/data.txt
@@ -138,7 +138,7 @@ sample_data
 
 ### Prepare Backend
 
-We are going to store our backed up data into an [Azure Blob Container](https://azure.microsoft.com/en-us/services/storage/blobs/). At first, we need to create a secret with the access credentials to our Azure blob. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](https://appscode.com/products/stash/0.8.3/guides/backends/overview/).
+We are going to store our backed up data into an [Azure Blob Container](https://azure.microsoft.com/en-us/services/storage/blobs/). At first, we need to create a secret with the access credentials to our Azure blob storage account. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
 
 **Create Secret:**
 
@@ -229,12 +229,12 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-    - name: source-data
-      mountPath: /source/data
+      - name: source-data
+        mountPath: /source/data
     directories:
-    - /source/data
+      - /source/data
   retentionPolicy:
-    name: 'keep-last-5'
+    name: "keep-last-5"
     keepLast: 5
     prune: true
 ```
@@ -244,7 +244,7 @@ Here,
 - `spec.repository` refers to the `Repository` object `azure-repo` that holds backend [Azure Blob Container](https://azure.microsoft.com/en-us/services/storage/blobs/) information.
 - `spec.target.ref` refers to the `stash-demo` Deployment for backup target.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories`  specifies list of directories to backup.
+- `spec.target.directories` specifies list of directories to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -258,7 +258,7 @@ backupconfiguration.stash.appscode.com/deployment-backup created
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME                          READY   STATUS        RESTARTS   AGE
 stash-demo-5bdc545845-45smg   2/2     Running       0          45s
 stash-demo-5bdc545845-dw4dn   2/2     Running       0          54s
@@ -373,7 +373,7 @@ The `deployment-backup` CronJob will trigger a backup on each schedule by creati
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
-$ watch -n 2 kubectl get backupsession -n demo 
+$ watch -n 2 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo     suaas-appscode: Mon Jun 24 10:23:08 2019
 
 NAME                           BACKUPCONFIGURATION   PHASE       AGE
@@ -392,16 +392,16 @@ NAME         INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 azure-repo   true        8 B   1                2s                       1m10s
 ```
 
-Now, if we navigate to the Azure blob container, we will see backed up data has been stored in `<storage account name>/source/data` directory as specified by `spec.backend.azure.prefix` field of `Repository` crd.
+Now, if we navigate to the Azure blob container, we are going to see backed up data has been stored in `<storage account name>/source/data` directory as specified by `spec.backend.azure.prefix` field of `Repository` crd.
 
 <figure align="center">
   <img alt="Backup data in GCS Bucket" src="/docs/images/guides/latest/platforms/aks.png">
   <figcaption align="center">Fig: Backup data in Azure Blob Container</figcaption>
 </figure>
 
->**Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
+> **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore the Backed Up Data
+## Restore the Backed up Data
 
 This section will show you how to restore the backed up data from [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/) we have taken in the earlier section.
 
@@ -419,7 +419,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -443,20 +443,20 @@ spec:
       name: busybox
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /restore/data
-          name: restore-data
+        - args:
+            - sleep
+            - "3600"
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /restore/data
+              name: restore-data
       restartPolicy: Always
       volumes:
-      - name: restore-data
-        persistentVolumeClaim:
-          claimName: restore-pvc
+        - name: restore-data
+          persistentVolumeClaim:
+            claimName: restore-pvc
 ```
 
 Let's create the Deployment and PVC we have shown above.
@@ -483,16 +483,16 @@ spec:
   repository:
     name: azure-repo
   rules:
-  - paths:
-    - /source/data/
+    - paths:
+        - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-    - name: restore-data
-      mountPath: /source/data
+      - name: restore-data
+        mountPath: /source/data
 ```
 
 Here,
@@ -604,7 +604,7 @@ So, we can see from the output of the above command that the restore process has
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
+In this section, we are going to verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
 
 ```console
 $ kubectl get pod -n demo
@@ -621,7 +621,7 @@ $ kubectl exec -n demo stash-recovered-6669c8bcfd-7pz9m -- cat /restore/data/dat
 sample_data
 ```
 
-# Cleaning Up
+## Cleaning Up
 
 To clean up the Kubernetes resources created by this tutorial, run:
 

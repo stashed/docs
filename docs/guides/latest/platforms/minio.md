@@ -27,7 +27,7 @@ Minio is an open-source object storage server compatible with [AWS S3](https://a
   - [BackupSession](/docs/concepts/crds/backupsession.md/)
   - [RestoreSession](/docs/concepts/crds/restoresession.md/)
   - [Repository](/docs/concepts/crds/repository.md/)
-- You will need a TLS secured Minio server to store backed up data. If you already do not have a Minio server running, deploy one following the tutorial from [here](https://github.com/appscode/third-party-tools/blob/master/storage/minio/README.md). For this tutorial, we have deployed Minio server in storage namespace and it is accessible through `minio.storage.svc` dns.
+- You will need a TLS secured Minio server to store backed up data. If you already do not have a Minio server running, deploy one following the tutorial from [here](https://github.com/appscode/third-party-tools/blob/master/storage/minio/README.md). For this tutorial, we have deployed Minio server in `storage` namespace and it is accessible through `minio.storage.svc` dns.
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -36,7 +36,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/platforms/minio](/docs/examples/guides/latest/platforms/minio) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/minio](/docs/examples/guides/latest/platforms/minio) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Backup the Volume of a Deployment
 
@@ -73,7 +73,7 @@ persistentvolumeclaim/source-pvc created
 
 **Deploy Deployment:**
 
-Now, we will deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
+Now, we are going to deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
 
 Below is the YAML of the Deployment that we are going to create,
 
@@ -97,19 +97,19 @@ spec:
       name: busybox
     spec:
       containers:
-      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
+        - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+          command: ["/bin/sh", "-c"]
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /source/data
+              name: source-data
       restartPolicy: Always
       volumes:
-      - name: source-data
-        persistentVolumeClaim:
-          claimName: source-pvc
+        - name: source-data
+          persistentVolumeClaim:
+            claimName: source-pvc
 ```
 
 Let's create the Deployment we have shown above.
@@ -119,7 +119,7 @@ $ kubectl apply -f ./docs/examples/guides/latest/platforms/minio/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
-Now, wait for the pod of the Deployment to go into the `Running` state.
+Now, wait for the pods of the Deployment to go into the `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -129,7 +129,7 @@ stash-demo-69f9ffbbf7-88kgj   1/1     Running   0          60s
 stash-demo-69f9ffbbf7-q8qld   1/1     Running   0          60s
 ```
 
-Verify that the sample data has been created in `/source/data` directory using the following command,
+To verify that the sample data has been created in `/source/data` directory, use the following command:
 
 ```console
 $ kubectl exec -n demo stash-demo-69f9ffbbf7-6wwtr -- cat /source/data/data.txt
@@ -138,7 +138,7 @@ sample_data
 
 ### Prepare Backend
 
-We are going to store our backed up data into an [Minio Bucket](https://min.io/). At first, we need to create a secret with the access credentials to our Minio bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](https://appscode.com/products/stash/0.8.3/guides/backends/overview/).
+We are going to store our backed up data into an [Minio Bucket](https://min.io/). At first, we need to create a secret with the access credentials to our Minio bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
 
 **Create Secret:**
 
@@ -168,7 +168,7 @@ apiVersion: v1
 data:
   AWS_ACCESS_KEY_ID: YWRtaW4=
   AWS_SECRET_ACCESS_KEY: Y2hhbmdlaXQ=
-  CA_CERT_DATA:  <base64 endoded ca.crt data>
+  CA_CERT_DATA: <base64 endoded ca.crt data>
   RESTIC_PASSWORD: Y2hhbmdlaXQ=
 kind: Secret
 metadata:
@@ -194,7 +194,7 @@ metadata:
 spec:
   backend:
     s3:
-      endpoint: 'https://minio.storage.svc'
+      endpoint: "https://minio.storage.svc"
       bucket: minio-bucket
       prefix: /source/data
     storageSecretName: minio-secret
@@ -233,12 +233,12 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-    - name: source-data
-      mountPath: /source/data
+      - name: source-data
+        mountPath: /source/data
     directories:
-    - /source/data
+      - /source/data
   retentionPolicy:
-    name: 'keep-last-5'
+    name: "keep-last-5"
     keepLast: 5
     prune: true
 ```
@@ -248,7 +248,7 @@ Here,
 - `spec.repository` refers to the `Repository` object `minio-repo` that holds backend [Minio bucket](https://min.io/) information.
 - `spec.target.ref` refers to the `stash-demo` Deployment for backup target.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories`  specifies list of directories to backup.
+- `spec.target.directories` specifies list of directories to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -262,7 +262,7 @@ backupconfiguration.stash.appscode.com/deployment-backup created
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME                         READY   STATUS    RESTARTS   AGE
 stash-demo-6548cf5cc-7qx9d   2/2     Running   0          42s
 stash-demo-6548cf5cc-d26sx   2/2     Running   0          37s
@@ -423,16 +423,16 @@ NAME         INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 minio-repo   true        32 B   2                3m40s                    5m18s
 ```
 
-Now, if we navigate to the Minio Bucket, we will see backed up data has been stored in `<bucket name>/source/data` directory as specified by `spec.backend.s3.prefix` field of `Repository` crd.
+Now, if we navigate to the Minio Bucket, we are going to see backed up data has been stored in `<bucket name>/source/data` directory as specified by `spec.backend.s3.prefix` field of `Repository` crd.
 
 <figure align="center">
   <img alt="Backup data in Minio Bucket" src="/docs/images/guides/latest/platforms/minio.png">
   <figcaption align="center">Fig: Backup data in Minio Bucket</figcaption>
 </figure>
 
->**Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
+> **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore the Backed Up Data
+## Restore the Backed up Data
 
 This section will show you how to restore the backed up data from [Minio bucket](https://min.io/) we have taken in earlier section.
 
@@ -450,7 +450,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -474,20 +474,20 @@ spec:
       name: busybox
     spec:
       containers:
-      - args:
-        - sleep
-        - "3600"
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /restore/data
-          name: restore-data
+        - args:
+            - sleep
+            - "3600"
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          volumeMounts:
+            - mountPath: /restore/data
+              name: restore-data
       restartPolicy: Always
       volumes:
-      - name: restore-data
-        persistentVolumeClaim:
-          claimName: restore-pvc
+        - name: restore-data
+          persistentVolumeClaim:
+            claimName: restore-pvc
 ```
 
 Let's create the Deployment and PVC we have shown above.
@@ -514,16 +514,16 @@ spec:
   repository:
     name: minio-repo
   rules:
-  - paths:
-    - /source/data/
+    - paths:
+        - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-    - name: restore-data
-      mountPath: /source/data
+      - name: restore-data
+        mountPath: /source/data
 ```
 
 Here,
@@ -636,7 +636,7 @@ So, we can see from the output of the above command that the restore process has
 
 **Verify Restored Data:**
 
-In this section, we will verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
+In this section, we are going to verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
 
 ```console
 $ kubectl get pod -n demo
@@ -653,7 +653,7 @@ $ kubectl exec -n demo stash-recovered-6f5c46fdbf-s7rrq -- cat /restore/data/dat
 sample_data
 ```
 
-# Cleaning Up
+## Cleaning Up
 
 To clean up the Kubernetes resources created by this tutorial, run:
 
