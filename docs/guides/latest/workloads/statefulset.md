@@ -188,7 +188,7 @@ Now, we are ready to backup our sample data into this backend.
 
 ### Backup
 
-We have to create a `BackupConfiguration` crd targeting the `stash-demo` StatefulSet that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
+We have to create a `BackupConfiguration` crd targeting the `stash-demo` StatefulSet that we have deployed earlier. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
 
 **Create BackupConfiguration:**
 
@@ -225,6 +225,8 @@ Here,
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend information.
 - `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 1 minute interval.
 - `spec.target.ref` refers to the `stash-demo` StatefulSet.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
+- `spec.target.directories` specifies list of directories to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -500,8 +502,8 @@ spec:
 Here,
 
 - `spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
-
 - `spec.target.ref` refers to the target workload where the recovered data will be stored.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
 
 Let's create the `RestoreSession` crd we have shown above,
 
@@ -510,11 +512,11 @@ $ kubectl apply -f ./docs/examples/workloads/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will recover on start-up.
+Once, you have created the `RestoreSession` crd, Stash will inject `init-container` into `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will restore the desired data on start-up.
 
 **Verify Init-Container:**
 
-Wait until the `init-container` has been injected to the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that the `init-container` has been injected successfully.
+Wait until the `init-container` has been injected into the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that the `init-container` has been injected successfully.
 
 ```yaml
 $ kubectl describe statefulset -n demo stash-recovered
@@ -634,7 +636,7 @@ stash-demo-2
 
 ### Customize Restore Process
 
-Generally, Stash restores data in individual replicas from a backup of the respective replica of the original StatefulSet. That means, backed up data of `pod-0` of original StatefulSet will be restored in `pod-0` of new StatefulSet and so on. However, you can customize this behavior through the `spec.rules` section of RestoreSession object. This is particularly helpful when your restored StatefulSet has a different number of replicas than the original StatefulSet. You can control which data will be restored in the recovered replicas.
+Generally, Stash restores data in individual replicas from a backup of the respective replica of the original StatefulSet. That means, backed up data of `pod-0` of original StatefulSet will be restored in `pod-0` of new StatefulSet and so on. However, you can customize this behavior through the `spec.rules` section of RestoreSession object. This is particularly helpful when your restored StatefulSet has a different number of replicas than the original StatefulSet. You can control which data will be restored in the extra replicas.
 
 **Deploy StatefulSet:**
 
@@ -752,11 +754,11 @@ $ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/adv_resto
 restoresession.stash.appscode.com/ss-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will restore desired data on start-up.
+Once, you have created the `RestoreSession` crd, Stash will inject `init-container` into `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will restore the desired data on start-up.
 
 **Verify Init-Container:**
 
-Wait until the `init-container` has been injected to the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that the `init-container` has been injected successfully.
+Wait until the `init-container` has been injected into the `stash-recovered` StatefulSet. Let’s describe the StatefulSet to verify that the `init-container` has been injected successfully.
 
 ```yaml
 $ kubectl describe statefulset -n demo stash-recovered-adv

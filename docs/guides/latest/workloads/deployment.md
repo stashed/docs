@@ -41,7 +41,7 @@ namespace/demo created
 
 This section will show you how to use Stash to backup volumes of a Deployment. Here, we are going to deploy a Deployment with a PVC and generate some sample data in it. Then, we are going to backup this sample data using Stash.
 
-### Prepare workload
+### Prepare Workload
 
 At first, we are going to create a PVC then we are going to create a Deployment that will use this PVC.
 
@@ -183,7 +183,7 @@ Now, we are ready to backup our sample data into this backend.
 
 ### Backup
 
-We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
+We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
 
 **Create BackupConfiguration:**
 
@@ -220,6 +220,8 @@ Here,
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend information.
 - `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 1 minute interval.
 - `spec.target.ref` refers to the `stash-demo` Deployment.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
+- `spec.target.directories` specifies list of directories to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -381,7 +383,7 @@ Now, if we navigate to the GCS bucket, we are going to see backed up data has be
 
 > **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore Volumes of a Deployment
+## Restore the Backed Up Data
 
 This section will show you how to restore the backed up data from the backend we have taken in the earlier section.
 
@@ -389,7 +391,7 @@ This section will show you how to restore the backed up data from the backend we
 
 We are going to create a new Deployment named `stash-recovered` and restore the backed up data inside it.
 
-Below is the YAML of the Deployment that we are going to create,
+Below are the YAMLs of the Deployment and PVC that we are going to create,
 
 ```yaml
 apiVersion: v1
@@ -440,7 +442,7 @@ spec:
           claimName: demo-pvc
 ```
 
-Let's create the Deployment we have shown above.
+Let's create the Deployment and PVC we have shown above.
 
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/recovered_deployment.yaml
@@ -479,8 +481,8 @@ spec:
 Here,
 
 - `spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
-
-- `spec.target.ref` refers to the target workload where the recover data will be stored.
+- `spec.target.ref` refers to the target workload where the recovered data will be stored.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
 
 Let's create the `RestoreSession` crd we have shown above,
 
@@ -489,11 +491,11 @@ $ kubectl apply -f ./docs/examples/workloads/deployment/restoresession.yaml
 restoresession.stash.appscode.com/deployment-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` Deployment. Deployment will restart and the `init-container` will restore desired data on start-up.
+Once, you have created the `RestoreSession` crd, Stash will inject `init-container` into `stash-recovered` Deployment. Deployment will restart and the `init-container` will restore the desired data on start-up.
 
 **Verify Init-Container:**
 
-Wait until the `init-container` has been injected to the `stash-recovered` Deployment. Let’s describe the Deployment to verify that `init-container` has been injected successfully.
+Wait until the `init-container` has been injected into the `stash-recovered` Deployment. Let’s describe the Deployment to verify that `init-container` has been injected successfully.
 
 ```yaml
 $ kubectl describe deployment -n demo stash-recovered

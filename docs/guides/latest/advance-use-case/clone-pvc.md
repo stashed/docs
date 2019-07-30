@@ -593,7 +593,7 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  schedule: "* * * * *"
+  schedule: "*/3 * * * *"
   target:
     ref:
       apiVersion: apps/v1
@@ -696,7 +696,7 @@ spec:
 - `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes were backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
 
-  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want deploy a StatefulSet name `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
 
     ```console
     <pvc name>-<statefulset name>-${POD_ORDINAL}

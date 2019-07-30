@@ -151,7 +151,7 @@ Now, we are ready to backup our sample data into this backend.
 
 ### Backup
 
-We have to create a `BackupConfiguration` crd targeting the `stash-demo` DaemonSet that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
+We have to create a `BackupConfiguration` crd targeting the `stash-demo` DaemonSet that we have deployed earlier. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
 
 **Create BackupConfiguration:**
 
@@ -188,6 +188,8 @@ Here,
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend information.
 - `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 1 minute interval.
 - `spec.target.ref` refers to the `stash-demo` DaemonSet.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
+- `spec.target.directories` specifies list of directories to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -347,7 +349,7 @@ Now, if we navigate to the GCS bucket, we are going to see backed up data has be
 
 > **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore Volumes of a DaemonSet
+## Restore the Backed Up Data
 
 This section will show you how to restore the backed up data from the backend we have taken in the earlier section.
 
@@ -430,8 +432,8 @@ spec:
 Here,
 
 - `spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
-
 - `spec.target.ref` refers to the target workload where the recovered data will be stored.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
 
 Let's create the `RestoreSession` crd we have shown above,
 
@@ -440,11 +442,11 @@ $ kubectl apply -f ./docs/examples/workloads/daemonset/restoresession.yaml
 restoresession.stash.appscode.com/dmn-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` to `stash-recovered` DaemonSet. The pods of this DaemonSet will restart and the `init-container` will perform data recovery on start-up.
+Once, you have created the `RestoreSession` crd, Stash will inject `init-container` into `stash-recovered` DaemonSet. The pods of this DaemonSet will restart and the `init-container` will restore the desired data on start-up.
 
 **Verify Init-Container:**
 
-Wait until the `init-container` has been injected to the `stash-recovered` DaemonSet. Let's describe the DaemonSet to verify that the `init-container` has been injected successfully.
+Wait until the `init-container` has been injected into the `stash-recovered` DaemonSet. Let's describe the DaemonSet to verify that the `init-container` has been injected successfully.
 
 ```yaml
  $ kubectl describe daemonset -n demo stash-recovered
