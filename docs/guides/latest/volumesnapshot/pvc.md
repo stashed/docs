@@ -295,7 +295,7 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 
 ## Restore PVC from VolumeSnapshot
 
-This section will show you how to restore the PVC from the snapshot we have taken in earlier section.
+This section will show you how to restore the PVC from the snapshot we have taken in the earlier section.
 
 **Create RestoreSession :**
 
@@ -358,7 +358,7 @@ restore-pvc                     Succeeded   1m
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we are going to see that new PVC with the name `restore-data` has been created.
+Once the restore process is complete, we are going to see that new PVC with the name `restore-data` has been created.
 
 To verify that the PVC has been created, run by the following command,
 

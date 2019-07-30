@@ -82,7 +82,7 @@ Here, we are going to describe the various sections of a `BackupSession` object.
 
 #### metadata.labels
 
-`metadata.labels` holds respective `BackupConfiguration` name as label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`.
+`metadata.labels` holds respective `BackupConfiguration` name as a label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`.
 
 >If you create `BackupSession` manually to trigger a backup instantly, make sure that you have added `backup-configuration: <BackupConfiguration name>` label to your `BackupSession`. Otherwise, it will not trigger backup for workloads (those resources that are backed up using sidecar).
 

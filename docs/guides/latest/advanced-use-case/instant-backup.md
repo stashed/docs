@@ -34,7 +34,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/advance-use-case/instant-backup](/docs/examples/guides/latest/advance-use-case/instant-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+>**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/advanced-use-case/instant-backup](/docs/examples/guides/latest/advanced-use-case/instant-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Configure Backup
 
@@ -97,12 +97,12 @@ The above Deployment will automatically create a `data.txt` file in `/source/dat
 Let’s create the Deployment and PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/instant-backup/deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/deployment.yaml
 persistentvolumeclaim/source-data created
 deployment.apps/stash-demo created
 ```
 
-Now, wait for pod of the Deployment to go into `Running` state.
+Now, wait for the pod of the Deployment to go into `Running` state.
 
 ```console
 $ kubectl get pod -n demo
@@ -153,11 +153,11 @@ spec:
 Let’s create the `Repository` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/instant-backup/repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
-Now, we are ready to backup our volumes to our desired backend.
+Now, we are ready to backup our sample data into this backend.
 
 **Create BackupConfiguration:**
 
@@ -194,7 +194,7 @@ spec:
 Let’s create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/instant-backup/backupconfiguration.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -224,7 +224,7 @@ deployment-backup          */40 * * * *            6m41s
 
 ## Trigger Instant Backup
 
-Now, we are going to trigger an instant backup of the volumes of the Deployment that we have configured in the previous section. In order to do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
+Now, we are going to trigger an instant backup of the volumes of the Deployment that we have configured in the previous section. To do that, we have to create a `BackupSession` object pointing to the respective `BackupConfiguration` object.
 
 **Create BackupSession:**
 
@@ -243,7 +243,7 @@ spec:
     name: deployment-backup
 ```
 
-- `metadata.labels` holds the respective `BackupConfiguration` name as label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`. You must provide the label in the following format:
+- `metadata.labels` holds the respective `BackupConfiguration` name as a label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`. You must provide the label in the following format:
   ```
   stash.appscode.com/backup-configuration: <BackupConfiguration name>
   ```
@@ -252,7 +252,7 @@ spec:
 Let's create the `BackupSession` object that we have have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advance-use-case/instant-backup/backupsession.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/backupsession.yaml
 backupsession.stash.appscode.com/deployment-backupsession created
 ```
 
@@ -285,7 +285,7 @@ gcs-repo   true        24 B   1                116s                     10m
 Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `stash/instant/deployment` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/latest/advance-use-case/instant.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/images/latest/advanced-use-case/instant.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 

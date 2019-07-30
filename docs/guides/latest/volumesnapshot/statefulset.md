@@ -325,7 +325,7 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 
 ## Restore PVC from VolumeSnapshot
 
-This section will show you how to restore PVCs from the snapshots we have taken in earlier section.
+This section will show you how to restore PVCs from the snapshots we have taken in the earlier section.
 
 **Create RestoreSession :**
 
@@ -361,9 +361,9 @@ spec:
 
 Here,
 
-- `spec.target.replicas`: `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes was backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective or Specific VolumeSnapShots.
+- `spec.target.replicas`: `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes were backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective or Specific VolumeSnapShots.
 - `spec.target.volumeClaimTemplates`:
-  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this name template to match with the desired PVC of a StatefulSet. For example, if you want deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, the PVCs of your StatefulSet will be `my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in `RestoreSession` in the following format:
+  - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with the desired PVC of a StatefulSet. For example, if you want to deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, the PVCs of your StatefulSet will be `my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in `RestoreSession` in the following format:
 
     ```console
     <volume claim name>-<statefulset name>-${POD_ORDINAL}
@@ -405,7 +405,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we are going to see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` has been created.
+Once the restore process is complete, we are going to see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` has been created.
 
 Verify that the PVCs has been created by the following command,
 
@@ -648,7 +648,7 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 
 ### Restore Same Data in all Replicas
 
-This section will show you how to restore PVCs from the snapshot that  we have taken in earlier section.
+This section will show you how to restore PVCs from the snapshot that  we have taken in the earlier section.
 
 **Create RestoreSession :**
 
@@ -710,7 +710,7 @@ So, we can see from the output of the above command that the restore process suc
 
 **Verify Restored PVC :**
 
-Once a restore process is complete, we are going to see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` have been created successfully.
+Once the restore process is complete, we are going to see that new PVCs with the name `restore-data-restore-demo-0` , `restore-data-restore-demo-1` and `restore-data-restore-demo-2` have been created successfully.
 
 check that the status of the PVCs are bound,
 
