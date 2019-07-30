@@ -311,7 +311,7 @@ Here,
 Let's create the `RestoreSession` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/restore-deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/restoresession.yaml
 restoresession.stash.appscode.com/restore-deployment created
 ```
 
