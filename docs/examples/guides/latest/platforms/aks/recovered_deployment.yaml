@@ -6,6 +6,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
@@ -14,18 +15,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: stash-demo
+    app: stash-recovered
   name: stash-recovered
   namespace: demo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: stash-demo
+      app: stash-recovered
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: stash-recovered
       name: busybox
     spec:
       containers:

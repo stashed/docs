@@ -38,7 +38,7 @@ namespace/demo created
 
 > **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/rook](/docs/examples/guides/latest/platforms/rook) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
-**Ensure StorageClass:**
+**Choosing StorageClass:**
 
 [Ceph Block Storage](https://rook.io/docs/rook/v1.0/ceph-block.html) allows mounting Rook storage into pod using a PersistentVolumeClaim. In order to do that, we have to create a PersistentVolumeClaim with `rook-ceph-block`[StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/). Verify the StorageClass exist by the following command:
 
@@ -679,3 +679,9 @@ kubectl delete -n demo repository rook-repo
 kubectl delete -n demo secret rook-secret
 kubectl delete -n demo pvc --all
 ```
+
+# Next Steps
+
+1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/latest/workloads/statefulset.md).
+2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/latest/workloads/daemonset.md).
+3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/latest/volumes/pvc.md)

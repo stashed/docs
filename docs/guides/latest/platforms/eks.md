@@ -36,7 +36,19 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/eks](/docs/examples/guides/latest/platforms/eks) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+**Choosing StorageClass:**
+
+Stash works with any `StorageClass`. Check available `StorageClass` in your cluster using the following command:
+
+```console
+$ kubectl get storageclass -n demo
+NAME                 PROVISIONER                AGE
+standard             kubernetes.io/aws-ebs      10m
+```
+
+Here, we have `standard` StorageClass in our cluster.
+
+> **Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/platforms/eks](/docs/examples/guides/latest/platforms/eks) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Backup the Volume of a Deployment
 
@@ -59,6 +71,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
@@ -410,7 +423,7 @@ s3-repo      true        7 B    1                3s                       1m12s
 Now, if we navigate to the AWS s3 Bucket, we are going to see backed up data has been stored in `<bucket name>/source/data` directory as specified by `spec.backend.s3.prefix` field of `Repository` crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/latest/platforms/eks.png">
+  <img alt="Backup data in AWS s3 Bucket" src="/docs/images/guides/latest/platforms/eks.png">
   <figcaption align="center">Fig: Backup data in AWS s3 Bucket</figcaption>
 </figure>
 
@@ -434,7 +447,8 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
@@ -443,18 +457,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: stash-demo
+    app: stash-recovered
   name: stash-recovered
   namespace: demo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: stash-demo
+      app: stash-recovered
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: stash-recovered
       name: busybox
     spec:
       containers:
@@ -534,14 +548,14 @@ $ kubectl describe deployment -n demo stash-recovered
 Name:                   stash-recovered
 Namespace:              demo
 CreationTimestamp:      Thu, 18 Jul 2019 18:43:16 +0600
-Labels:                 app=stash-demo
-Selector:               app=stash-demo
+Labels:                 app=stash-recovered
+Selector:               app=stash-recovered
 Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
 StrategyType:           RollingUpdate
 MinReadySeconds:        0
 RollingUpdateStrategy:  25% max unavailable, 25% max surge
 Pod Template:
-  Labels:       app=stash-demo
+  Labels:       app=stash-recovered
   Annotations:  stash.appscode.com/last-applied-restoresession-hash: 16815722157162698035
   Init Containers:
    stash-init:
@@ -651,3 +665,9 @@ kubectl delete -n demo repository s3-repo
 kubectl delete -n demo secret s3-secret
 kubectl delete -n demo pvc --all
 ```
+
+## Next Steps
+
+1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/latest/workloads/statefulset.md).
+2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/latest/workloads/daemonset.md).
+3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/latest/volumes/pvc.md)

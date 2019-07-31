@@ -36,7 +36,19 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/minio](/docs/examples/guides/latest/platforms/minio) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+**Choosing StorageClass:**
+
+Stash works with any `StorageClass`. Check available `StorageClass` in your cluster using the following command:
+
+```console
+$ kubectl get storageclass -n demo
+NAME                 PROVISIONER                AGE
+standard (default)   k8s.io/minikube-hostpath   130m
+```
+
+Here, we have `standard` StorageClass in our cluster.
+
+> **Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/platforms/minio](/docs/examples/guides/latest/platforms/minio) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Backup the Volume of a Deployment
 
@@ -59,6 +71,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
@@ -450,7 +463,8 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
@@ -666,3 +680,9 @@ kubectl delete -n demo repository minio-repo
 kubectl delete -n demo secret minio-secret
 kubectl delete -n demo pvc --all
 ```
+
+## Next Steps
+
+1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/latest/workloads/statefulset.md).
+2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/latest/workloads/daemonset.md).
+3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/latest/volumes/pvc.md)

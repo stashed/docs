@@ -36,7 +36,19 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/platforms/aks](/docs/examples/guides/latest/platforms/aks) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+**Choosing StorageClass:**
+
+Stash works with any `StorageClass`. Check available `StorageClass` in your cluster using the following command:
+
+```console
+$ kubectl get storageclass -n demo
+NAME                 PROVISIONER                AGE
+standard             kubernetes.io/azure-disk   3m
+```
+
+Here, we have `standard` StorageClass in our cluster.
+
+> **Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/latest/platforms/aks](/docs/examples/guides/latest/platforms/aks) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Backup the Volume of a Deployment
 
@@ -59,6 +71,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
@@ -97,19 +110,19 @@ spec:
       name: busybox
     spec:
       containers:
-        - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-          command: ["/bin/sh", "-c"]
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /source/data
-              name: source-data
+      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /source/data
+          name: source-data
       restartPolicy: Always
       volumes:
-        - name: source-data
-          persistentVolumeClaim:
-            claimName: stash-sample-data
+      - name: source-data
+        persistentVolumeClaim:
+          claimName: stash-sample-data
 ```
 
 Let's create the Deployment we have shown above.
@@ -229,12 +242,12 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-      - name: source-data
-        mountPath: /source/data
+    - name: source-data
+      mountPath: /source/data
     directories:
-      - /source/data
+    - /source/data
   retentionPolicy:
-    name: "keep-last-5"
+    name: 'keep-last-5'
     keepLast: 5
     prune: true
 ```
@@ -395,8 +408,8 @@ azure-repo   true        8 B   1                2s                       1m10s
 Now, if we navigate to the Azure blob container, we are going to see backed up data has been stored in `<storage account name>/source/data` directory as specified by `spec.backend.azure.prefix` field of `Repository` crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/latest/platforms/aks.png">
-  <figcaption align="center">Fig: Backup data in Azure Blob Container</figcaption>
+  <img alt="Backup data in Azure Blob Storage Container" src="/docs/images/guides/latest/platforms/aks.png">
+  <figcaption align="center">Fig: Backup data in Azure Blob Storage Container</figcaption>
 </figure>
 
 > **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
@@ -419,7 +432,8 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
@@ -428,35 +442,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: stash-demo
+    app: stash-recovered
   name: stash-recovered
   namespace: demo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: stash-demo
+      app: stash-recovered
   template:
     metadata:
       labels:
-        app: stash-demo
+        app: stash-recovered
       name: busybox
     spec:
       containers:
-        - args:
-            - sleep
-            - "3600"
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /restore/data
-              name: restore-data
+      - args:
+        - sleep
+        - "3600"
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /restore/data
+          name: restore-data
       restartPolicy: Always
       volumes:
-        - name: restore-data
-          persistentVolumeClaim:
-            claimName: restore-pvc
+      - name: restore-data
+        persistentVolumeClaim:
+          claimName: restore-pvc
 ```
 
 Let's create the Deployment and PVC we have shown above.
@@ -483,16 +497,16 @@ spec:
   repository:
     name: azure-repo
   rules:
-    - paths:
-        - /source/data/
+  - paths:
+    - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-      - name: restore-data
-        mountPath: /source/data
+    - name: restore-data
+      mountPath: /source/data
 ```
 
 Here,
@@ -520,11 +534,11 @@ $ kubectl describe deployment -n demo stash-recovered
 Name:                   stash-recovered
 Namespace:              demo
 CreationTimestamp:      Thu, 18 Jul 2019 11:59:41 +0600
-Labels:                 app=stash-demo
-Selector:               app=stash-demo
+Labels:                 app=stash-recovered
+Selector:               app=stash-recovered
 Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
 Pod Template:
-  Labels:       app=stash-demo
+  Labels:       app=stash-recovered
   Annotations:  stash.appscode.com/last-applied-restoresession-hash: 15483804576325149444
   Init Containers:
    stash-init:
@@ -634,3 +648,9 @@ kubectl delete -n demo repository azure-repo
 kubectl delete -n demo secret azure-secret
 kubectl delete -n demo pvc --all
 ```
+
+## Next Steps
+
+1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/latest/workloads/statefulset.md).
+2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/latest/workloads/daemonset.md).
+3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/latest/volumes/pvc.md)
