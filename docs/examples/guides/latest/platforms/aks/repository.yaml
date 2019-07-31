@@ -1,0 +1,11 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: azure-repo
+  namespace: demo
+spec:
+  backend:
+    azure:
+      container: stashqa
+      prefix: /source/data
+    storageSecretName: azure-secret

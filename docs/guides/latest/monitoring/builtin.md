@@ -323,7 +323,7 @@ Forwarding from [::1]:9090 -> 9090
 Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:9090](http://localhost:9090) in your browser. You should see `pushgateway` and `api` endpoints of `stash-operator` service as targets.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/prom-builtin-target.png">
+  <img alt="Stash Monitoring Flow" src="/docs/images/guides/latest/monitoring/prom-builtin-target.png">
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 
@@ -334,7 +334,7 @@ When you perform a backup or restore using Stash, it will send respective Promet
 A screenshot that shows Prometheus metrics send by Stash backup and restore process is given below,
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/prometheus_backup_restore_met.png">
+  <img alt="Stash Monitoring Flow" src="/docs/images/guides/latest/monitoring/prometheus_backup_restore_met.png">
 <figcaption align="center">Fig: Stash Backup and Restore metrics</figcaption>
 </figure>
 

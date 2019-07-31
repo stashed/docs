@@ -1,0 +1,12 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: rook-repo
+  namespace: demo
+spec:
+  backend:
+    s3:
+      endpoint: 'http://rook-ceph-rgw-my-store-external.rook-ceph.svc'
+      bucket: rook-bucket
+      prefix: /source/data
+    storageSecretName: rook-secret

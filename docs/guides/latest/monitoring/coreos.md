@@ -172,7 +172,7 @@ Forwarding from [::1]:9090 -> 9090
 Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:9090](http://localhost:9090) in your browser. You should see `pushgateway` and `api` endpoints of `stash-operator` service as target.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/latest/monitoring/prom-coreos-target.png">
+  <img alt="Stash Monitoring Flow" src="/docs/images/guides/latest/monitoring/prom-coreos-target.png">
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 
