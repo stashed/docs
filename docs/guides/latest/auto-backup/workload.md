@@ -37,7 +37,7 @@ namespace/demo created
 
 ## Prepare Template
 
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To know which backed is supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
+We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To learn which backeds are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
 **Create Storage Secret:**
 
@@ -309,7 +309,7 @@ deployment-stash-demo   true        246 B   2                70s                
 If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
 <figure align="center">
-  <img alt="Backup data in GCS backend" src="/docs/images/guides/latest/auto-backup/deployment_repo.png">
+  <img alt="Backup data in GCS backend" src="/docs/images/guides/latest/auto-backup/workload/deployment_repo.png">
   <figcaption align="center">Fig: Backup data in GCS backend</figcaption>
 </figure>
 
@@ -516,7 +516,7 @@ statefulset-sts-demo   true        0 B    6                32s                  
 If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS bucket, we are going to see that the snapshot been stored there.
 
 <figure align="center">
-  <img alt="Backup data of `sts-demo` StatefulSet in GCS backend" src="/docs/images/guides/latest/auto-backup/statefulset_repo.png">
+  <img alt="Backup data of `sts-demo` StatefulSet in GCS backend" src="/docs/images/guides/latest/auto-backup/workload/statefulset_repo.png">
   <figcaption align="center">Fig: Backup data of StatefulSet "sts-demo" in GCS backend</figcaption>
 </figure>
 
@@ -698,7 +698,7 @@ daemonset-dmn-demo   true        51 B   1                5s                     
 If we navigate to `stash-backup/demo/daemonset/dmn-demo` directory of our GCS bucket, we are going to see that the snapshot been stored there.
 
 <figure align="center">
-  <img alt="Backup data of `dmn-demo` DaemonSet in GCS backend" src="/docs/images/guides/latest/auto-backup/daemon_repo.png">
+  <img alt="Backup data of `dmn-demo` DaemonSet in GCS backend" src="/docs/images/guides/latest/auto-backup/workload/daemon_repo.png">
   <figcaption align="center">Fig: Backup data of DaemonSet "dmn-demo" in GCS backend</figcaption>
 </figure>
 

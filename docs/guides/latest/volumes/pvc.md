@@ -43,7 +43,7 @@ namespace/demo created
 
 **Verify necessary Function and Task:**
 
-Stash uses `Function-Task` model to backup stand-alone volume. When you install Stash, it automatically creates the necessary `Function` and `Task` to backup a stand-alone volume.
+Stash uses a `Function-Task` model to backup stand-alone volume. When you install Stash, it automatically creates the necessary `Function` and `Task` to backup a stand-alone volume.
 
 Let's verify that Stash has created the necessary `Function` to backup/restore PVC by the following command,
 
