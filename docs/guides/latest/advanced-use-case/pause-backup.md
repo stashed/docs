@@ -77,12 +77,12 @@ spec:
           claimName: source-pvc
 ```
 
-The above Deployment will automatically create a data.txt file in `/source/data` directory and write some sample data in it.
+The above Deployment will automatically create a `data.txt` file in `/source/data` directory and write some sample data in it.
 
 Let's create the Deployment and PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./deployment.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/deployment.yaml
 persistentvolumeclaim/source-pvc created
 deployment.apps/stash-demo created
 ```
@@ -140,7 +140,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-kubectl apply -f ./repository.yaml
+kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -181,7 +181,7 @@ spec:
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./backupconfiguration.yaml 
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupconfiguration.yaml 
 backupconfiguration.stash.appscode.com/pause-backup created
 ```
 
@@ -228,6 +228,8 @@ We can see from the above output that the backup session has succeeded. This ind
 ## Pause Running Backup
 
 To stop Stash from taking backup volumes of the deployment, you can do the following things:
+
+**Patch BackupConfiguration:**
 
 - Set `spec.paused`: true in `BackupConfiguration` yaml and then apply the update. This happens:
   - The running backup process will stop immediately and paused `BackupConfiguration` CRD will not be applicable for the targeted workload.
@@ -284,11 +286,11 @@ Events:
   Normal  Backup Skipped  25s   Backup Triggering CronJob  Skipping creating BackupSession. Reason: Backup Configuration demo/pause-backup is paused.
 ```
 
-Look at the `Events` of the `BackupConfiguration` crd. The event shows that the creation of `BackupSession` has stopped. For that the hole backup process has stopped immediately.
+Look at the `Events` of the `BackupConfiguration` crd. The event shows that the creation of `BackupSession` has paused. This means the hole backup process has stopped.
 
 **Skipped Instant Backup:**
 
-If we try to create a `BackupSession` for instant backup the phase of the `BackupSession` crd will be `Skipped`. Now, we are going to create a `BackupSession` crd for instant backup. Below is the YAML of the `BackupSession` that we are going to create,
+If we try to create a `BackupSession` for instant backup  the `BackupSession` will be `Skipped`. Now, we are going to create a `BackupSession` crd for instant backup. Below is the YAML of the `BackupSession` that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -305,6 +307,11 @@ spec:
 
 let's create the `BackupSession` we have shown above.
 
+```console
+kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupsession.yaml
+backupsession.stash.appscode.com/instant-backupsession created
+```
+
 Wait for next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
@@ -315,10 +322,10 @@ demo        instant-backupsession      pause-backup          Skipped     1m2s
 demo        pause-backup-1564659789    pause-backup          Succeeded   2m
 ```
 
-So, we can see from the output of the above command that the restore process has Skipped. 
+So, we can see from the output of the above command that the restore process has Skipped. If you describe the `BackupSession` object you will see that there is a warning for skipping BackupSession.
 
 ```yaml
-$ kubectl describe bs -n demo deployment-backupsession
+$ kubectl describe backupsession -n demo deployment-backupsession
 Name:         deployment-backupsession
 Namespace:    demo
 Labels:       stash.appscode.com/backup-configuration=pause-backup
@@ -344,7 +351,6 @@ Events:
   Warning  BackupSessionSkipped  49s   BackupSession Controller  Backup Configuration is paused
 ```
 
-
 ## Cleaning Up
 
 To clean up the Kubernetes resources created by this tutorial, run:
@@ -353,6 +359,7 @@ To clean up the Kubernetes resources created by this tutorial, run:
 kubectl delete -n demo deployment stash-demo
 kubectl delete -n demo backupconfiguration pause-backup
 kubectl delete -n demo repository gce-repo
+kubectl delete -n demo backupsession deployment-backupsession
 kubectl delete -n demo secret gce-secret
 kubectl delete -n demo pvc --all
 ```
