@@ -14,13 +14,14 @@ section_menu_id: guides
 
 # Pause Backup
 
-Stash supports pausing backup temporarily. This guide will show you how to pause a scheduled backup in Stash.
+Stash supports pausing backups without deleting respective `BackupConfiguration`. This guide will show you how to pause a scheduled backup in Stash.
 
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster. If you do not already have a cluster, you can create one by using [Minikube](https://github.com/kubernetes/minikube).
 
 - Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
+
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
   - [BackupSession](/docs/concepts/crds/backupsession.md/)
@@ -195,7 +196,7 @@ spec:
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupconfiguration.yaml 
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/pause-backup created
 ```
 
@@ -243,7 +244,7 @@ We can see from the above output that the backup session has succeeded. This ind
 
 ## Pause Scheduled Backup
 
-Now, we are going to pause the scheduled backup temporarily. In order to do that, we have to set `spec.paused: true` in the respective `BackupConfiguration` crd.
+Now, we are going to pause the scheduled backup without deleting respective `BackupConfiguration`. In order to do that, we have to set `spec.paused: true` in the respective `BackupConfiguration` crd.
 
 When we set `spec.paused: true`, the following things are going to happen:
 
@@ -307,7 +308,7 @@ Events:
 
 **Verify Instant Backup Get Skipped:**
 
-If we try to trigger an instant backup by creating a `BackupSession`, it will get skipped. The sidecar container will write an event to the BackupSession describing why it has skipped taking the backup.
+If we try to trigger an instant backup by creating a `BackupSession` manually, it will be ignored. The sidecar container will write an event to the BackupSession describing why it has skipped taking the backup.
 
 Below is the YAML of the `BackupSession` that we are going to create,
 
