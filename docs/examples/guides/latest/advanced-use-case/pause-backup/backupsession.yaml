@@ -1,0 +1,11 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupSession
+metadata:
+  labels:
+    stash.appscode.com/backup-configuration: pause-backup
+  name: instant-backupsession
+  namespace: demo
+spec:
+  backupConfiguration:
+    name: pause-backup
+
