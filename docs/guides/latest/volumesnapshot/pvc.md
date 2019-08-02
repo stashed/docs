@@ -21,7 +21,7 @@ This guide will show you how to use Stash to snapshot standalone PersistentVolum
 - At first, you need to be familiar with the [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
 - You need to enable the Kubernetes `VolumeSnapshotDataSource` alpha feature via Kubernetes feature gates
   - `--feature-gates=VolumeSnapshotDataSource=true`
-- Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 - If you don't know how VolumeSnapshot works in Stash, please visit [here](/docs/guides/latest/volumesnapshot/overview.md).
 
 ## Prepare for VolumeSnapshot

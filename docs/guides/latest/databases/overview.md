@@ -78,4 +78,4 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-- Learn how to backup and restore a PostgreSQL database using Stash from [here](https://appscode.com/products/stash/0.8.3/guides/databases/postgres.md).
+- Learn how to backup and restore a PostgreSQL database using Stash from [here](/docs/guides/databases/postgres.md).
