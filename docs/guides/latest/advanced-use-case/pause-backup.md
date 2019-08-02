@@ -1,6 +1,20 @@
+---
+title: Pause Backup | Stash
+description: An step by step guide on how to pause a scheduled backup in Stash.
+menu:
+  product_stash_0.8.3:
+    identifier: advance-use-case-pause-backup
+    name: Pause Backup
+    parent: advance-use-case
+    weight: 20
+product_name: stash
+menu_name: product_stash_0.8.3
+section_menu_id: guides
+---
+
 # Pause Backup
 
-This guide will show you how to stop Stash from taking backup volumes of a Kubernetes workload.
+Stash supports pausing backup temporarily. This guide will show you how to pause a scheduled backup in Stash.
 
 ## Before You Begin
 
@@ -21,9 +35,9 @@ namespace/demo created
 
 > **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/advanced-use-case/pause-backup](/docs/examples/guides/latest/advanced-use-case/pause-backup) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
-## Run Backup
+## Configure Backup
 
-Here, we are going to deploy a Deployment with a PVC. This Deployment will automatically generate some sample data into the PVC. Then, we are going to backup this sample data using Stash.
+At first, we need to schedule a backup for a sample workload. Here, we are going to deploy a Deployment with a PVC. This Deployment will automatically generate some sample data into the PVC. Then, we are going to configure a scheduled backup for this Deployment.
 
 **Deploy Deployment:**
 
@@ -140,7 +154,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/repository.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -170,7 +184,7 @@ spec:
     volumeMounts:
     - name: source-data
       mountPath: /source/data
-    directories:
+    paths:
     - /source/data
   retentionPolicy:
     name: 'keep-last-5'
@@ -206,7 +220,8 @@ It will also create a `CronJob` with the schedule specified in `spec.schedule` f
 Verify that the `CronJob` has been created using the following command,
 
 ```console
-Every 3.0s: kubectl get backupconfiguration --all-namespaces                      suaas-appscode: Thu Aug  1 17:08:08 2019
+$ watch -n 1 kubectl get backupconfiguration -n demo
+Every 3.0s: kubectl get backupconfiguration -n demo                      suaas-appscode: Thu Aug  1 17:08:08 2019
 
 NAMESPACE   NAME           TASK   SCHEDULE      PAUSED   AGE
 demo        pause-backup          */1 * * * *            27s
@@ -217,7 +232,8 @@ demo        pause-backup          */1 * * * *            27s
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```console
-Every 3.0s: kubectl get backupssession --all-namespaces                      suaas-appscode: Thu Aug  1 17:43:57 2019
+$ watch -n 1 kubectl get backupssession -n demo
+Every 3.0s: kubectl get backupssession -n demo                      suaas-appscode: Thu Aug  1 17:43:57 2019
 
 NAMESPACE   NAME                      BACKUPCONFIGURATION   PHASE       AGE
 demo        pause-backup-1564659789   pause-backup          Succeeded   49s
@@ -225,24 +241,27 @@ demo        pause-backup-1564659789   pause-backup          Succeeded   49s
 
 We can see from the above output that the backup session has succeeded. This indicates that the volumes of the Deployment have been backed up in the backend successfully.
 
-## Pause Running Backup
+## Pause Scheduled Backup
 
-To stop Stash from taking backup volumes of the deployment, you can do the following things:
+Now, we are going to pause the scheduled backup temporarily. In order to do that, we have to set `spec.paused: true` in the respective `BackupConfiguration` crd.
 
-**Patch BackupConfiguration:**
+When we set `spec.paused: true`, the following things are going to happen:
 
-- Set `spec.paused`: true in `BackupConfiguration` yaml and then apply the update. This happens:
-  - The running backup process will stop immediately and paused `BackupConfiguration` CRD will not be applicable for the targeted workload.
-  - Stash sidecar containers will not be removed from existing workloads but the sidecar will stop taking backup.
+- Respective CronJob will not be removed. However, it will skip creating any new BackupSession for next the schedules.
+- Stash sidecar container which is responsible for taking backup will not be removed. So, your workload will not restart. However, it will skip taking backup even if a BackupSession is created to trigger an instant backup.
 
-You can do the things by using the following command,
+Let's patch the BackupConfiguration crd `pause-backup` and set `spec.paused: true`,
 
 ```console
-$ kubectl patch backupconfiguration -n demo stash-demo --type="merge" --patch='{"spec": {"paused": true}}'
+$ kubectl patch backupconfiguration -n demo pause-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/pause-backup patched
 ```
 
-Now, Describe the `BackupConfiguration` crd by using the following command,
+**Verify Scheduled Backup Get Skipped:**
+
+Now, wait for the next backup schedule. This time, the CronJob will not create any new BackupSession. Instead, it will write an event to the BackupConfiguration crd that it has skipped creating BackupSession because the backup is paused.
+
+Let's describe the `BackupConfiguration` to verify that the event has been created,
 
 ```yaml
 $ kubectl describe backupconfiguration -n demo pause-backup
@@ -254,13 +273,13 @@ Annotations:  kubectl.kubernetes.io/last-applied-configuration:
 API Version:  stash.appscode.com/v1beta1
 Kind:         BackupConfiguration
 Metadata:
-  Creation Timestamp:  2019-08-01T11:42:22Z
+  Creation Timestamp:  2019-08-02T06:13:05Z
   Finalizers:
     stash.appscode.com
   Generation:        2
-  Resource Version:  14465
+  Resource Version:  39756
   Self Link:         /apis/stash.appscode.com/v1beta1/namespaces/demo/backupconfigurations/pause-backup
-  UID:               5e1abe4b-c3d2-438a-ab8d-67ed7e663546
+  UID:               96ed2068-a1da-419b-bae3-478f1b876000
 Spec:
   Paused:  true
   Repository:
@@ -271,7 +290,7 @@ Spec:
     Prune:      true
   Schedule:     */1 * * * *
   Target:
-    Directories:
+    Paths:
       /source/data
     Ref:
       API Version:  apps/v1
@@ -283,14 +302,14 @@ Spec:
 Events:
   Type    Reason          Age   From                       Message
   ----    ------          ----  ----                       -------
-  Normal  Backup Skipped  25s   Backup Triggering CronJob  Skipping creating BackupSession. Reason: Backup Configuration demo/pause-backup is paused.
+  Normal  Backup Skipped  29s   Backup Triggering CronJob  Skipping creating BackupSession. Reason: Backup Configuration demo/pause-backup is paused.
 ```
 
-Look at the `Events` of the `BackupConfiguration` crd. The event shows that the creation of `BackupSession` has paused. This means the hole backup process has stopped.
+**Verify Instant Backup Get Skipped:**
 
-**Skipped Instant Backup:**
+If we try to trigger an instant backup by creating a `BackupSession`, it will get skipped. The sidecar container will write an event to the BackupSession describing why it has skipped taking the backup.
 
-If we try to create a `BackupSession` for instant backup  the `BackupSession` will be `Skipped`. Now, we are going to create a `BackupSession` crd for instant backup. Below is the YAML of the `BackupSession` that we are going to create,
+Below is the YAML of the `BackupSession` that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -305,28 +324,30 @@ spec:
     name: pause-backup
 ```
 
-let's create the `BackupSession` we have shown above.
+Let's create the `BackupSession` we have shown above.
 
 ```console
-kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupsession.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupsession.yaml
 backupsession.stash.appscode.com/instant-backupsession created
 ```
 
-Wait for next schedule for backup. Run the following command to watch `BackupSession` crd,
+Run the following command to watch the BackupSession phase,
 
 ```console
-Every 3.0s: kubectl get backupsession -n demo                      suaas-appscode: Thu Aug  1 19:10:39 2019
+$ watch -n 1 kubectl get backupsession -n demo instant-backupsession
+Every 1.0s: kubectl get backupsession -n demo instant-backupsession  suaas-appscode: Fri Aug  2 11:56:24 2019
 
-NAMESPACE   NAME                       BACKUPCONFIGURATION   PHASE       AGE
-demo        instant-backupsession      pause-backup          Skipped     1m2s
-demo        pause-backup-1564659789    pause-backup          Succeeded   2m
+NAME                    BACKUPCONFIGURATION   PHASE     AGE
+instant-backupsession   pause-backup          Skipped   3m22s
 ```
 
-So, we can see from the output of the above command that the restore process has Skipped. If you describe the `BackupSession` object you will see that there is a warning for skipping BackupSession.
+Notice the `PHASE` column. It is showing that the `BackupSession` has been skipped.
+
+If you describe the `BackupSession` object you are going to see that there is an event explaining why it has been skipped.
 
 ```yaml
-$ kubectl describe backupsession -n demo deployment-backupsession
-Name:         deployment-backupsession
+$ kubectl describe backupsession -n demo instant-backupsession
+Name:         instant-backupsession
 Namespace:    demo
 Labels:       stash.appscode.com/backup-configuration=pause-backup
 Annotations:  kubectl.kubernetes.io/last-applied-configuration:
@@ -334,11 +355,11 @@ Annotations:  kubectl.kubernetes.io/last-applied-configuration:
 API Version:  stash.appscode.com/v1beta1
 Kind:         BackupSession
 Metadata:
-  Creation Timestamp:  2019-08-01T11:53:56Z
+  Creation Timestamp:  2019-08-02T06:16:53Z
   Generation:          1
-  Resource Version:    15745
-  Self Link:           /apis/stash.appscode.com/v1beta1/namespaces/demo/backupsessions/deployment-backupsession
-  UID:                 6125ea45-6ef5-41d4-8ae2-66ec71376f28
+  Resource Version:    40010
+  Self Link:           /apis/stash.appscode.com/v1beta1/namespaces/demo/backupsessions/instant-backupsession
+  UID:                 6a44adab-e44e-4020-9c23-7545e3b3f13b
 Spec:
   Backup Configuration:
     Name:  pause-backup
@@ -347,8 +368,17 @@ Status:
 Events:
   Type     Reason                Age   From                      Message
   ----     ------                ----  ----                      -------
-  Warning  BackupSessionSkipped  49s   BackupSession Controller  Backup Configuration is paused
-  Warning  BackupSessionSkipped  49s   BackupSession Controller  Backup Configuration is paused
+  Warning  BackupSessionSkipped  5s    BackupSession Controller  Backup Configuration is paused
+  Warning  BackupSessionSkipped  5s    BackupSession Controller  Backup Configuration is paused
+```
+
+## Resume Backup
+
+You can resume backup by setting `spec.paused: false` in BackupConfiguration crd. and applying the update or you can patch BackupConfiguration using,
+
+```console
+$ kubectl patch backupconfiguration -n demo pause-backup --type="merge" --patch='{"spec": {"paused": false}}'
+backupconfiguration.stash.appscode.com/pause-backup patched
 ```
 
 ## Cleaning Up
