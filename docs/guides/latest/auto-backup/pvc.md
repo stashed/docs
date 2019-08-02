@@ -40,7 +40,7 @@ namespace/demo created
 
 **Verify necessary Function and Task:**
 
-Stash uses `Function-Task` model to automatically backup PVC. When you install Stash, it creates the necessary `Function` and `Task`.
+Stash uses a `Function-Task` model to automatically backup PVC. When you install Stash, it creates the necessary `Function` and `Task`.
 
 Let's verify that Stash has created the necessary `Function` to backup/restore PVC by the following command,
 
@@ -63,7 +63,7 @@ pvc-restore   6h55m
 
 ## Prepare Template
 
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To know which backed is supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
+We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
 **Create Storage Secret:**
 
@@ -439,7 +439,7 @@ persistentvolumeclaim-nfs-pvc   true        41 B   1                3m37s       
 If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
 <figure align="center">
-  <img alt="Backup data of PVC 'nfs-pvc' in GCS backend" src="/docs/images/guides/latest/auto-backup/pvc_repo.png">
+  <img alt="Backup data of PVC 'nfs-pvc' in GCS backend" src="/docs/images/guides/latest/auto-backup/pvc/pvc_repo.png">
   <figcaption align="center">Fig: Backup data of PVC "nfs-pvc" in GCS backend</figcaption>
 </figure>
 
