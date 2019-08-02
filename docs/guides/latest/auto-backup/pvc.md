@@ -19,7 +19,7 @@ This tutorial will show you how to configure automatic backup for PersistentVolu
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [Minikube](https://github.com/kubernetes/minikube).
-- Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 - You will need to have a PVC with `ReadWriteMany` access permission. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfigurationTemplate](/docs/concepts/crds/backupconfiguration_template.md/)

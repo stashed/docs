@@ -20,7 +20,7 @@ Using Stash you can clone data volumes of a workload into a different namespace 
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [Minikube](https://github.com/kubernetes/minikube).
 
-- Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)

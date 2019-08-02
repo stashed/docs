@@ -19,10 +19,10 @@ This tutorial will show you how to configure automatic backup for PostgreSQL dat
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [Minikube](https://github.com/kubernetes/minikube).
-- Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/0.12.0/setup/install/). This step is optional. You can deploy your database using any method you want. We are using `KubeDB` because it automates some tasks that you have to do manually otherwise.
 - If you are not familiar with how Stash backup databases and how auto-backup works, please check the following guides:
-  - [How Stash Backs up Databases](https://appscode.com/products/stash/0.8.3/guides/databases/overview/).
+  - [How Stash Backs up Databases](/docs/guides/databases/overview.md).
   - [How Auto Backup Works in Stash](/docs/guides/latest/auto-backup/overview.md).
 - You should be familiar with the following `Stash` concepts:
   - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md/)

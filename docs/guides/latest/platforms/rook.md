@@ -20,7 +20,7 @@ This guide will show you how to use Stash to backup and restore volumes of a Kub
 
 - At first, you need to have a Kubernetes cluster. If you don't already have a cluster, you can create one by using [Minikube](https://github.com/kubernetes/minikube).
 
-- Install `Stash` in your cluster following the steps [here](https://appscode.com/products/stash/0.8.3/setup/install/).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
