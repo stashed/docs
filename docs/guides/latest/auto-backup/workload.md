@@ -37,7 +37,7 @@ namespace/demo created
 
 ## Prepare Template
 
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To learn which backeds are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
+We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
 **Create Storage Secret:**
 
