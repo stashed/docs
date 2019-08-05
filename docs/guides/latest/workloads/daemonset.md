@@ -364,6 +364,16 @@ $ kubectl patch backupconfiguration -n demo dmn-backup --type="merge" --patch='{
 backupconfiguration.stash.appscode.com/dmn-backup patched
 ```
 
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+dmn-backup                 */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Deploy DaemonSet:**
 
 We are going to create a new DaemonSet named `stash-recovered` and restore the backed up data inside it.

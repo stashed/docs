@@ -385,6 +385,16 @@ $ kubectl patch backupconfiguration -n demo nfs-pvc-backup --type="merge" --patc
 backupconfiguration.stash.appscode.com/nfs-pvc-backup patched
 ```
 
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME             TASK   SCHEDULE      PAUSED   AGE
+nfs-pvc-backup          */1 * * * *   true     20m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Simulate Disaster:**
 
 At first, let's simulate a disaster scenario. Let's delete all the files from the PVC.

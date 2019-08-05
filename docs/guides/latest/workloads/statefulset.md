@@ -407,12 +407,22 @@ This section will show you how to restore the backed up data from the backend we
 
 At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we had created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
 
-Let's pause the `deployment-backup` BackupConfiguration,
+Let's pause the `ss-backup` BackupConfiguration,
 
 ```console
 $ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/ss-backup patched
 ```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+ss-backup                  */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
 
 **Deploy StatefulSet:**
 
@@ -659,6 +669,16 @@ Let's pause the `deployment-backup` BackupConfiguration,
 $ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/ss-backup patched
 ```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+ss-backup                  */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
 
 **Deploy StatefulSet:**
 

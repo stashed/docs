@@ -446,6 +446,15 @@ Let's pause the `deployment-backup` BackupConfiguration,
 $ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/deployment-backup patched
 ```
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+deployment-backup          */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
 
 **Deploy Deployment:**
 

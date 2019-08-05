@@ -398,6 +398,16 @@ $ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --p
 backupconfiguration.stash.appscode.com/deployment-backup patched
 ```
 
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+deployment-backup          */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Deploy Deployment:**
 
 We are going to create a new Deployment named `stash-recovered` and restore the backed up data inside it.

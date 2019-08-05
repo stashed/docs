@@ -347,6 +347,16 @@ $ kubectl patch backupconfiguration -n demo deployments-volume-snapshot --type="
 backupconfiguration.stash.appscode.com/deployments-volume-snapshot patched
 ```
 
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                          TASK   SCHEDULE      PAUSED   AGE
+deployments-volume-snapshot          */1 * * * *   true     18m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Create RestoreSession :**
 
 At first, we have to create a `RestoreSession` crd to restore the PVCs from the respective snapshot.

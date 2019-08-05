@@ -264,7 +264,7 @@ Run the following command to watch `BackupSession` phase,
 
 ```console
 $ watch -n 3 kubectl get backupsession -n demo
-Every 3.0s: kubectl get bs -n demo                               suaas-appscode: Wed Jul 10 17:18:52 2019
+Every 3.0s: kubectl get backupsession -n demo                               suaas-appscode: Wed Jul 10 17:18:52 2019
 
 NAME                       BACKUPCONFIGURATION   PHASE       AGE
 deployment-backupsession   deployment-backup     Succeeded   21s
@@ -285,7 +285,7 @@ gcs-repo   true        24 B   1                116s                     10m
 Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `stash/instant/deployment` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/latest/advanced-use-case/instant.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/latest/advanced-use-case/instant.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 

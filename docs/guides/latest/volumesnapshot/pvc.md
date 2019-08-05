@@ -308,6 +308,16 @@ $ kubectl patch backupconfiguration -n demo pvc-volume-snapshot --type="merge" -
 backupconfiguration.stash.appscode.com/pvc-volume-snapshot patched
 ```
 
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                  TASK   SCHEDULE      PAUSED   AGE
+pvc-volume-snapshot          */1 * * * *   true     22m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Create RestoreSession :**
 
 At first, we have to create a `RestoreSession` crd to restore the PVC from respective snapshot.
