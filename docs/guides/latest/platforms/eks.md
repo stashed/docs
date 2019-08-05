@@ -433,6 +433,17 @@ Now, if we navigate to the AWS s3 Bucket, we are going to see backed up data has
 
 This section will show you how to restore the backed up data from [AWS S3 Bucket](https://aws.amazon.com/s3/) we have taken in the earlier section.
 
+**Stop Taking Backup of the Old Deployment:**
+
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we had created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `deployment-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/deployment-backup patched
+```
+
 **Deploy Deployment:**
 
 We are going to create a new Deployment named `stash-recovered` with a new PVC and restore the backed up data inside it.

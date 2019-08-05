@@ -259,6 +259,17 @@ We can see from the above output that the backup session has succeeded. This ind
 
 Now, we are going to clone the volumes that we have backed up in the previous section. To do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
 
+**Stop Taking Backup of the Old Deployment:**
+
+At first, let's pause the `BackupConfiguration` to stop taking any further backup of the old Deployment so that no backup is taken during the restore process.
+
+Let's pause the `deployment-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/deployment-backup patched
+```
+
 **Create RestoreSession:**
 
 Below is the YAML of the `RestoreSession` object that we are going to create,

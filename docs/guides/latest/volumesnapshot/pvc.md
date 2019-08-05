@@ -152,7 +152,7 @@ pod/source-pod created
 Now, wait for the Pod to go into the `Running` state.
 
 ```console
-$ kubectl get pod -n demo 
+$ kubectl get pod -n demo
 NAME         READY   STATUS    RESTARTS   AGE
 source-pod   1/1     Running   0          25s
 ```
@@ -296,6 +296,17 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 ## Restore PVC from VolumeSnapshot
 
 This section will show you how to restore the PVC from the snapshot we have taken in the earlier section.
+
+**Stop Taking Backup of the Old PVC:**
+
+At first, let's stop taking any further backup of the old PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we had created to backup the `source-data` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `pvc-volume-snapshot` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo pvc-volume-snapshot --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/pvc-volume-snapshot patched
+```
 
 **Create RestoreSession :**
 
