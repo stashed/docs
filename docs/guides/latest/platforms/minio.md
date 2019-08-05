@@ -545,6 +545,7 @@ Here,
 - `spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
 - `spec.target.ref` refers to the target workload where the recovered data will be stored.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 
 Let's create the `RestoreSession` crd we have shown above,
 

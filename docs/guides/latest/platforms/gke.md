@@ -207,14 +207,14 @@ spec:
     storageSecretName: gcs-secret
 ```
 
-Now, we are ready to backup our sample data into this backend.
+Let's create the `Repository` we have shown above,
 
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/platforms/gke/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
-Now, we are ready to backup our volumes to the desired backend.
+Now, we are ready to backup our sample data into this backend.
 
 ### Backup
 
@@ -533,6 +533,7 @@ Here,
 
 - `spec.target.ref` refers to the target workload where the recovered data will be stored.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 
 Let's create the `RestoreSession` crd we have shown above,
 

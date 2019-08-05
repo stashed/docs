@@ -306,7 +306,8 @@ Here,
 - `spec.target.volumeMounts` specifies the directory where the newly created PVC will be mounted inside the restore job.
 - `spec.rules[*].paths` specifies the directories that will be restored from the backed up data.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
-  - `metadata.name` specifies the name of the restored PVC.
+  - `name` specifies the name of the volume mountPath. This name must be the same as the volumeClaimTemplate name.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 
 Let's create the `RestoreSession` object that we have shown above,
 
@@ -694,8 +695,10 @@ spec:
 ```
 
 - `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes were backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
+- `spec.target.volumeMounts`  specifies a list of volumes and their mountPath where the data will be restored.
+  - `name` specifies the name of the volume mountPath. This name must be the same as the volumeClaimTemplate name without the `POD_ORDINAL` part.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
-
   - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want to deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
 
     ```console
