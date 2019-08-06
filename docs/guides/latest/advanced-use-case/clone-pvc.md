@@ -261,9 +261,7 @@ Now, we are going to clone the volumes that we have backed up in the previous se
 
 **Stop Taking Backup of the Old Deployment:**
 
-At first, let's pause the scheduled backup of the old Deployment so that no backup is taken during the restore process.
-
-Let's pause the `deployment-backup` BackupConfiguration,
+At first, let's pause the scheduled backup of the old Deployment so that no backup is taken during the restore process. To pause the `deployment-backup` BackupConfiguration, run:
 
 ```console
 $ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
@@ -673,9 +671,7 @@ Now, we are going to restore the volumes that we have backed up in the previous 
 
 **Stop Taking Backup of the Old StatefulSet:**
 
-At first, let's pause the scheduled backup of the old StatefulSet so that no backup is taken during the restore process.
-
-Let's pause the `ss-backup` BackupConfiguration,
+At first, let's pause the scheduled backup of the old StatefulSet so that no backup is taken during the restore process. To pause the `ss-backup` BackupConfiguration, run:
 
 ```console
 $ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'

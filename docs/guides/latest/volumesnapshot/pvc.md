@@ -299,7 +299,7 @@ This section will show you how to restore the PVC from the snapshot we have take
 
 **Stop Taking Backup of the Old PVC:**
 
-At first, let's stop taking any further backup of the old PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we had created to backup the `source-data` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the old PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `source-data` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
 
 Let's pause the `pvc-volume-snapshot` BackupConfiguration,
 
