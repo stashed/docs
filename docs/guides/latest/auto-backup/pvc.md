@@ -133,10 +133,10 @@ You have to add the following 3 annotations to a targeted PVC to enable backup f
     stash.appscode.com/backup-blueprint: <BackupBlueprint name>
     ```
 
-2. List of directories that will be backed up. Use comma (`,`) to separate multiple directories. For example, `"/my/target/dir-1,/my/target/dir-2"`.
+2. List of file paths that will be backed up. Use comma (`,`) to separate multiple file paths. For example, `"/my/target/dir-1,/my/target/dir-2"`.
 
     ```yaml
-    stash.appscode.com/target-paths: "<directories to backup>"
+    stash.appscode.com/target-paths: "<paths to backup>"
     ```
 
 3. MountPath where the PVC will be mounted inside backup job. This should be same as the directory where the PVC has been mounted inside workload.
@@ -392,7 +392,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /my/sample/data
     ref:
       apiVersion: v1
@@ -406,7 +406,7 @@ spec:
   tempDir: {}
 ```
 
-Notice that the `spec.target.ref` is pointing to the `nfs-pvc` PVC. Also, notice that the `spec.target.directories` field has been populated with the information we had provided in `stash.appscode.com/target-directories` annotation.
+Notice that the `spec.target.ref` is pointing to the `nfs-pvc` PVC. Also, notice that the `spec.target.paths` field has been populated with the information we had provided in `stash.appscode.com/target-paths` annotation.
 
 **Wait for BackupSession:**
 
@@ -434,7 +434,7 @@ NAME                            INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESS
 persistentvolumeclaim-nfs-pvc   true        41 B   1                3m37s                    5m11s
 ```
 
-> Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
+> Stash creates one snapshot for each targeted file path. Since we are taking backup of two file paths, two snapshots have been created for this BackupSession.
 
 If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 

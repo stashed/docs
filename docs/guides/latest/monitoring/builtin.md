@@ -271,34 +271,34 @@ spec:
     spec:
       serviceAccountName: stash-prometheus-server
       containers:
-        - name: prometheus
-          image: prom/prometheus:v2.4.3
-          args:
-            - "--config.file=/etc/prometheus/prometheus.yml"
-            - "--storage.tsdb.path=/prometheus/"
-          ports:
-            - containerPort: 9090
-          volumeMounts:
-            - name: prometheus-config-volume
-              mountPath: /etc/prometheus/
-            - name: prometheus-storage-volume
-              mountPath: /prometheus/
-            - name: stash-apiserver-cert
-              mountPath: /etc/prometheus/secret/stash-apiserver-cert
-      volumes:
+      - name: prometheus
+        image: prom/prometheus:v2.4.3
+        args:
+        - "--config.file=/etc/prometheus/prometheus.yml"
+        - "--storage.tsdb.path=/prometheus/"
+        ports:
+        - containerPort: 9090
+        volumeMounts:
         - name: prometheus-config-volume
-          configMap:
-            defaultMode: 420
-            name: stash-prometheus-server-conf
+          mountPath: /etc/prometheus/
         - name: prometheus-storage-volume
-          emptyDir: {}
+          mountPath: /prometheus/
         - name: stash-apiserver-cert
-          secret:
-            defaultMode: 420
-            secretName: stash-apiserver-cert
-            items: # avoid mounting private key
-              - key: tls.crt
-                path: tls.crt
+          mountPath: /etc/prometheus/secret/stash-apiserver-cert
+      volumes:
+      - name: prometheus-config-volume
+        configMap:
+          defaultMode: 420
+          name: stash-prometheus-server-conf
+      - name: prometheus-storage-volume
+        emptyDir: {}
+      - name: stash-apiserver-cert
+        secret:
+          defaultMode: 420
+          secretName: stash-apiserver-cert
+          items: # avoid mounting private key
+          - key: tls.crt
+            path: tls.crt
 ```
 
 Notice that, we have mounted `stash-apiserver-cert` secret as a volume at `/etc/prometheus/secret/stash-apiserver-cert` directory.

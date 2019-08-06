@@ -100,7 +100,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   storageClassName: standard
   resources:
     requests:
@@ -128,18 +128,18 @@ metadata:
   namespace: demo
 spec:
   containers:
-    - name: busybox
-      image: busybox
-      command: ["/bin/sh", "-c"]
-      args: ["echo sample_data > /demo/data/data.txt && sleep 3000"]
-      volumeMounts:
-        - name: source-data
-          mountPath: /source/data
-  volumes:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c"]
+    args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+    volumeMounts:
     - name: source-data
-      persistentVolumeClaim:
-        claimName: source-data
-        readOnly: false
+      mountPath: /source/data
+  volumes:
+  - name: source-data
+    persistentVolumeClaim:
+      claimName: source-data
+      readOnly: false
 ```
 
 Let's create the Pod we have shown above.
@@ -313,18 +313,18 @@ spec:
   driver: VolumeSnapshotter
   target:
     volumeClaimTemplates:
-      - metadata:
-          name: restore-data
-        spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 1Gi
-          dataSource:
-            kind: VolumeSnapshot
-            name: source-data-1563186667
-            apiGroup: snapshot.storage.k8s.io
+    - metadata:
+        name: restore-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 1Gi
+        dataSource:
+          kind: VolumeSnapshot
+          name: source-data-1563186667
+          apiGroup: snapshot.storage.k8s.io
 ```
 
 Here,
@@ -388,19 +388,19 @@ metadata:
   namespace: demo
 spec:
   containers:
-    - name: busybox
-      image: busybox
-      args:
-        - sleep
-        - "3600"
-      volumeMounts:
-        - name: restore-data
-          mountPath: /restore/data
-  volumes:
+  - name: busybox
+    image: busybox
+    args:
+    - sleep
+    - "3600"
+    volumeMounts:
     - name: restore-data
-      persistentVolumeClaim:
-        claimName: restore-data
-        readOnly: false
+      mountPath: /restore/data
+  volumes:
+  - name: restore-data
+    persistentVolumeClaim:
+      claimName: restore-data
+      readOnly: false
 ```
 
 Let's create the Pod we have shown above.

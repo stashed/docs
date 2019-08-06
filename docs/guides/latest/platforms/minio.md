@@ -70,7 +70,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   storageClassName: standard
   resources:
     requests:
@@ -110,19 +110,19 @@ spec:
       name: busybox
     spec:
       containers:
-        - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-          command: ["/bin/sh", "-c"]
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /source/data
-              name: source-data
+      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /source/data
+          name: source-data
       restartPolicy: Always
       volumes:
-        - name: source-data
-          persistentVolumeClaim:
-            claimName: source-pvc
+      - name: source-data
+        persistentVolumeClaim:
+          claimName: source-pvc
 ```
 
 Let's create the Deployment we have shown above.
@@ -207,7 +207,7 @@ metadata:
 spec:
   backend:
     s3:
-      endpoint: "https://minio.storage.svc"
+      endpoint: 'https://minio-nodeport-svc.storage.svc'
       bucket: minio-bucket
       prefix: /source/data
     storageSecretName: minio-secret
@@ -246,12 +246,12 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-      - name: source-data
-        mountPath: /source/data
-    directories:
-      - /source/data
+    - name: source-data
+      mountPath: /source/data
+    paths:
+    - /source/data
   retentionPolicy:
-    name: "keep-last-5"
+    name: 'keep-last-5'
     keepLast: 5
     prune: true
 ```
@@ -260,8 +260,8 @@ Here,
 
 - `spec.repository` refers to the `Repository` object `minio-repo` that holds backend [Minio bucket](https://min.io/) information.
 - `spec.target.ref` refers to the `stash-demo` Deployment for backup target.
-- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories` specifies list of directories to backup.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target paths.
+- `spec.target.paths` specifies list of file paths to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -488,20 +488,20 @@ spec:
       name: busybox
     spec:
       containers:
-        - args:
-            - sleep
-            - "3600"
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /restore/data
-              name: restore-data
+      - args:
+        - sleep
+        - "3600"
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /restore/data
+          name: restore-data
       restartPolicy: Always
       volumes:
-        - name: restore-data
-          persistentVolumeClaim:
-            claimName: restore-pvc
+      - name: restore-data
+        persistentVolumeClaim:
+          claimName: restore-pvc
 ```
 
 Let's create the Deployment and PVC we have shown above.
@@ -528,16 +528,16 @@ spec:
   repository:
     name: minio-repo
   rules:
-    - paths:
-        - /source/data/
+  - paths:
+    - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-      - name: restore-data
-        mountPath: /source/data
+    - name: restore-data
+      mountPath: /source/data
 ```
 
 Here,

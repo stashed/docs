@@ -102,7 +102,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   storageClassName: standard
   resources:
     requests:
@@ -115,7 +115,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   storageClassName: standard
   resources:
     requests:
@@ -156,27 +156,24 @@ spec:
       name: busybox
     spec:
       containers:
-        - args:
-            [
-              "echo sample_data > /source/data/data.txt; echo sample_config > /source/config/config.cfg  && sleep 3000",
-            ]
-          command: ["/bin/sh", "-c"]
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /source/data
-              name: source-data
-            - mountPath: /source/config
-              name: source-config
+      - args: ["echo sample_data > /source/data/data.txt; echo sample_config > /source/config/config.cfg  && sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /source/data
+          name: source-data
+        - mountPath: /source/config
+          name: source-config
       restartPolicy: Always
       volumes:
-        - name: source-data
-          persistentVolumeClaim:
-            claimName: source-data
-        - name: source-config
-          persistentVolumeClaim:
-            claimName: source-config
+      - name: source-data
+        persistentVolumeClaim:
+         claimName: source-data
+      - name: source-config
+        persistentVolumeClaim:
+          claimName: source-config
 ```
 
 Let's create the deployment we have shown above.
@@ -225,7 +222,7 @@ spec:
       name: stash-demo
     snapshotClassName: default-snapshot-class
   retentionPolicy:
-    name: "keep-last-5"
+    name: 'keep-last-5'
     keepLast: 5
     prune: true
 ```
@@ -355,7 +352,7 @@ spec:
       - metadata:
           name: restore-data
         spec:
-          accessModes: ["ReadWriteOnce"]
+          accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
           resources:
             requests:
@@ -367,7 +364,7 @@ spec:
       - metadata:
           name: restore-config
         spec:
-          accessModes: ["ReadWriteOnce"]
+          accessModes: [ "ReadWriteOnce" ]
           storageClassName: "standard"
           resources:
             requests:
@@ -454,25 +451,25 @@ spec:
       name: busybox
     spec:
       containers:
-        - args:
-            - sleep
-            - "3600"
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /restore/data
-              name: restore-data
-            - mountPath: /restore/config
-              name: restore-config
+      - args:
+        - sleep
+        - "3600"
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /restore/data
+          name: restore-data
+        - mountPath: /restore/config
+          name: restore-config
       restartPolicy: Always
       volumes:
-        - name: restore-data
-          persistentVolumeClaim:
-            claimName: restore-data
-        - name: restore-config
-          persistentVolumeClaim:
-            claimName: restore-config
+      - name: restore-data
+        persistentVolumeClaim:
+          claimName: restore-data
+      - name: restore-config
+        persistentVolumeClaim:
+          claimName: restore-config
 ```
 
 Let's create the deployment we have shown above.

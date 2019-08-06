@@ -85,7 +85,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   nfs:
     server: "nfs-service.storage.svc.cluster.local"
     path: "/"
@@ -112,7 +112,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   storageClassName: ""
   resources:
     requests:
@@ -157,17 +157,16 @@ metadata:
   namespace: demo
 spec:
   containers:
-    - name: busybox
-      image: busybox
-      command:
-        ["/bin/sh", "-c", "touch /shared/config/pod-1.conf && sleep 3000"]
-      volumeMounts:
-        - name: shared-config
-          mountPath: /shared/config
-  volumes:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c","touch /shared/config/pod-1.conf && sleep 3000"]
+    volumeMounts:
     - name: shared-config
-      persistentVolumeClaim:
-        claimName: nfs-pvc
+      mountPath: /shared/config
+  volumes:
+  - name: shared-config
+    persistentVolumeClaim:
+      claimName: nfs-pvc
 ```
 
 Here, we have mount the `nfs-pvc` into `/shared/config` directory of the pod. Let's deploy the pod we have shown above,
@@ -195,17 +194,16 @@ metadata:
   namespace: demo
 spec:
   containers:
-    - name: busybox
-      image: busybox
-      command:
-        ["/bin/sh", "-c", "touch /shared/config/pod-2.conf && sleep 3000"]
-      volumeMounts:
-        - name: shared-config
-          mountPath: /shared/config
-  volumes:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c","touch /shared/config/pod-2.conf && sleep 3000"]
+    volumeMounts:
     - name: shared-config
-      persistentVolumeClaim:
-        claimName: nfs-pvc
+      mountPath: /shared/config
+  volumes:
+  - name: shared-config
+    persistentVolumeClaim:
+      claimName: nfs-pvc
 ```
 
 Let's create the pod we have shown above,
@@ -296,10 +294,10 @@ spec:
       kind: PersistentVolumeClaim
       name: nfs-pvc
     volumeMounts:
-      - name: nfs-pvc
-        mountPath: /shared/config
-    directories:
-      - /shared/config
+    - name: nfs-pvc
+      mountPath: /shared/config
+    paths:
+    - /shared/config
   retentionPolicy:
     keepLast: 5
     prune: true
@@ -310,8 +308,8 @@ Here,
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to perform a backup of a stand-alone PVC.
 - `spec.repository.name` specifies the name of the `Repository` object that holds the backend information where the backed up data has been stored.
 - `spec.target.ref` refers to the targeted PVC that will be backed up.
-- `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the backup job.
-- `spec.target.directories` specifies the directories inside the PVC that will be backed up.
+- `spec.target.volumeMounts` specifies the path where the targeted PVC will be mounted inside the backup job.
+- `spec.target.paths` specifies the file paths inside the PVC that will be backed up.
 
 Let's create the `BackupConfiguration` object that we have shown above,
 
@@ -410,16 +408,16 @@ spec:
       kind: PersistentVolumeClaim
       name: nfs-pvc
     volumeMounts:
-      - name: nfs-pvc
-        mountPath: /shared/config
+    - name:  nfs-pvc
+      mountPath:  /shared/config
   rules:
-    - paths:
-        - /shared/config
+  - paths:
+    - /shared/config
 ```
 
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to restore data inside a stand-alone PVC.
 - `spec.target.ref` refers to the targeted PVC where the data will be restored.
-- `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
+- `spec.target.volumeMounts` specifies the path where the targeted PVC will be mounted inside the restore job.
 - `spec.rules[*].paths` specifies the directories that will be restored from the backed up data.
 
 Let's create the `RestoreSession` object that we have shown above,
