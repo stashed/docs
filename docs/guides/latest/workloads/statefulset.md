@@ -403,6 +403,27 @@ Now, if we navigate to the GCS bucket, we are going to see backed up data has be
 
 This section will show you how to restore the backed up data from the backend we have taken in the earlier section.
 
+**Stop Taking Backup of the Old StatefulSet:**
+
+At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `ss-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/ss-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+ss-backup                  */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Deploy StatefulSet:**
 
 We are going to create a new StatefulSet named `stash-recovered` and restore the backed up data inside it.
@@ -637,6 +658,27 @@ stash-demo-2
 ### Customize Restore Process
 
 Generally, Stash restores data in individual replicas from a backup of the respective replica of the original StatefulSet. That means, backed up data of `pod-0` of original StatefulSet will be restored in `pod-0` of new StatefulSet and so on. However, you can customize this behavior through the `spec.rules` section of RestoreSession object. This is particularly helpful when your restored StatefulSet has a different number of replicas than the original StatefulSet. You can control which data will be restored in the additional replicas.
+
+**Stop Taking Backup of the Old StatefulSet:**
+
+At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `deployment-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/ss-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+ss-backup                  */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
 
 **Deploy StatefulSet:**
 

@@ -247,7 +247,7 @@ Now, wait for the next backup schedule. You can watch for `BackupSession` crd us
 
 ```console
 $ watch -n 3 kubectl get backupconfiguration -n demo
-Every 3.0s: kubectl get backupconfiguration --all-namespaces                  suaas-appscode: Mon Jul  8 18:20:47 2019
+Every 3.0s: kubectl get backupconfiguration -n demo                  suaas-appscode: Mon Jul  8 18:20:47 2019
 
 NAMESPACE   NAME                           BACKUPCONFIGURATION   PHASE       AGE
 demo        deployment-backup-1562588351   deployment-backup     Succeeded   96s
@@ -258,6 +258,25 @@ We can see from the above output that the backup session has succeeded. This ind
 ### Restore
 
 Now, we are going to clone the volumes that we have backed up in the previous section. To do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
+
+**Stop Taking Backup of the Old Deployment:**
+
+At first, let's pause the scheduled backup of the old Deployment so that no backup is taken during the restore process. To pause the `deployment-backup` BackupConfiguration, run:
+
+```console
+$ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/deployment-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+deployment-backup          */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
 
 **Create RestoreSession:**
 
@@ -649,6 +668,25 @@ We can see from the above output that the backup session has succeeded. This ind
 ### Restore
 
 Now, we are going to restore the volumes that we have backed up in the previous section. To do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
+
+**Stop Taking Backup of the Old StatefulSet:**
+
+At first, let's pause the scheduled backup of the old StatefulSet so that no backup is taken during the restore process. To pause the `ss-backup` BackupConfiguration, run:
+
+```console
+$ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/ss-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+ss-backup                  */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
 
 **Create RestoreSession:**
 

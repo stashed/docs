@@ -353,6 +353,27 @@ Now, if we navigate to the GCS bucket, we are going to see backed up data has be
 
 This section will show you how to restore the backed up data from the backend we have taken in the earlier section.
 
+**Stop Taking Backup of the Old DaemonSet:**
+
+At first, let's stop taking any further backup of the old DaemonSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` DaemonSet. Then, Stash will stop taking any further backup for this DaemonSet. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `dmn-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo dmn-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/dmn-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+dmn-backup                 */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Deploy DaemonSet:**
 
 We are going to create a new DaemonSet named `stash-recovered` and restore the backed up data inside it.

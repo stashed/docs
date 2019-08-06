@@ -374,6 +374,27 @@ If we navigate to `stash-backup/volumes/nfs-pvc` directory of our GCS bucket, we
 
 This section will show you how to restore the backed up data inside a stand-alone PVC using stash. Here, we are going to restore the data we have backed up in the previous section.
 
+**Stop Taking Backup of the PVC:**
+
+At first, let's stop taking any further backup of the PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `nfs-pvc` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `nfs-pvc-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo nfs-pvc-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/nfs-pvc-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME             TASK   SCHEDULE      PAUSED   AGE
+nfs-pvc-backup          */1 * * * *   true     20m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Simulate Disaster:**
 
 At first, let's simulate a disaster scenario. Let's delete all the files from the PVC.
