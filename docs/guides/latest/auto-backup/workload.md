@@ -37,7 +37,7 @@ namespace/demo created
 
 ## Prepare Backup Blueprint
 
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupBlueprint` to match your backend. To know which backed is supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
+We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupBlueprint` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
 
@@ -156,7 +156,7 @@ spec:
   selector:
     matchLabels:
       app: stash-demo
-  blueprint:
+  template:
     metadata:
       labels:
         app: stash-demo
@@ -359,7 +359,7 @@ spec:
     matchLabels:
       app: stash-demo
   serviceName: headless
-  blueprint:
+  template:
     metadata:
       labels:
         app: stash-demo
@@ -375,7 +375,7 @@ spec:
           name: source-data-1
         - mountPath: /source/data-2
           name:  source-data-2
-  volumeClaimblueprints:
+  volumeClaimTemplates:
   - metadata:
       name: source-data-1
     spec:
@@ -555,7 +555,7 @@ spec:
   selector:
     matchLabels:
       app: stash-demo
-  blueprint:
+  template:
     metadata:
       labels:
         app: stash-demo
@@ -615,7 +615,7 @@ metadata:
   name: daemonset-dmn-demo
   namespace: demo
   ...
-spe
+spec:
   backend:
     gcs:
       bucket: appscode-qa

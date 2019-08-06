@@ -101,7 +101,7 @@ A `BackupSession` object has the following fields in the `spec` section:
 
 #### status.totalHosts
 
-Not every pods or replica of the target are subject of backup. Thus, we refer those entities that are subject of backup as a host. `status.totalHosts` specifies the total number of hosts that will be backed up for this BackupSession. For more details on how many hosts will be backed up for which types of workload, please visit [here](#hosts-of-a-backup-process).
+Not every pod or replica of the target is subject of backup. Thus, we refer those entities that are subject of backup as a host. `status.totalHosts` specifies the total number of hosts that will be backed up for this BackupSession. For more details on how many hosts will be backed up for which types of workload, please visit [here](#hosts-of-a-backup-process).
 
 #### status.phase
 
@@ -130,20 +130,20 @@ Each stats entry consists of the following fields:
     - **totalFiles:** `totalFiles` shows the total number of files that were backed up in this snapshot.
     - **newFiles:** `newFiles` shows the number of new files that were backed up in this snapshot.
     - **modifiedFiles:** `modifiedFiles` shows the number of files that were modified since last backup of this directory.
-    - **unmodifiedFiles:** `unmodifiedFiles` shows the number of files that haven't been changed since last backup of this path.
+    - **unmodifiedFiles:** `unmodifiedFiles` shows the number of files that haven't changed since the last backup of this path.
 - **error:** `error` shows the reason for failure if the backup process failed for this host.
 
 ### Hosts of a backup process
 
 Stash uses two different models for backup depending on the target type. It uses **sidecar model** for Kubernetes workloads and **job model** for rest of the targets. In the sidecar model, Stash injects a sidecar inside the targeted workload and the sidecar is responsible for taking backup. In the job model, Stash launches a job to take a backup of the target.
 
-Stash uses an identifier called **host** to separate the backed up data of different subject in the backed. This host identification process depends on the backup model and the target types. The backup strategy and host identification strategy for different types of  target is explained below.
+Stash uses an identifier called **host** to separate the backed up data of different subject in the backed. This host identification process depends on the backup model and the target types. The backup strategy and host identification strategy for different types of target is explained below.
 
 **Kubernetes Workloads:**
 
 Stash uses sidecar model to backup Kubernetes workloads. However, not every sidecar takes backup. How many sidecars will take backup depends on the type of the workload. We can divide them into the following categories:
 
-- **Deployment, ReplicaSet and ReplicationController:** For these types of workload, all the replicas mounts the same volumes. So, taking a backup from only one replica is enough. In this case, Stash uses leader election to elect the leader pod. Only the sidecar inside the leader pod takes backup. This leader pod is identified as **host-0**. The total number of hosts for these types of workload is 1.
+- **Deployment, ReplicaSet and ReplicationController:** For these types of stateless workloads, all the replicas mount the same volumes. So, taking backup from only one replica is enough. In this case, Stash uses leader election to elect the leader pod. Only the sidecar of the leader pod takes backup. This leader pod is identified as **host-0**. The total number of hosts for these types of workload is 1.
 - **StatefulSet:** Every replica of a StatefulSet mounts different volumes. So, taking a backup from each replica is necessary. In this case, sidecar inside each replica takes backup. Stash identifies **pod-0** as **host-0**, **pod-1** as **host-1**, **pod-2** as **host-2** and so on. Hence, the total number of hosts for a StatefulSet is the number of replicas.
 - **DaemonSet:** Daemon replicas on every node may contain different data. So, taking a backup of each daemon pod is necessary. In this case, sidecar inside each daemon pod takes backup. Stash considers the individual daemon pod as a separate host and the **node name** where the daemon pod is running act as their **host** identifier. The total number of hosts for a DaemonSet is the number of daemon pod running in the cluster.
 
@@ -153,7 +153,7 @@ Stash uses job model to backup a stand-alone PVC. Stash launches a job to backup
 
 **Databases:**
 
-Stash uses job model to backup a database. Stash launches a job to backup the targeted database. In this case, the number of hosts depends on database types.
+Stash uses job model to backup a database. Stash launches a job to backup the targeted database. In this case, the number of hosts depends on the database type.
 
 - **Stand-alone database:** For stand-alone database, the backup target is identified as **host-0** and the total number of host is 1.
 - **Replicated cluster:** For replicated clustered database such as MongoDB ReplicaSet, all the replicas contain the same data. In this case, taking a backup of only one replica is enough. This replica is identified as **host-0** and the total number of host is 1.
@@ -161,7 +161,7 @@ Stash uses job model to backup a database. Stash launches a job to backup the ta
 
 **VolumeSnapshot:**
 
-Stash uses job model for taking VolumeSnapshot. Each volume is considered as different hosts and they are identified by their name. Hence, the number of total hosts for VolumeSnapshot is the number of targeted volumes. However, since VolumeSnapshot is handled by the respective CSI driver, host identifier does not play any role to separate their data.
+Stash uses job model for taking volume snapshots. Each volume is considered as different hosts and they are identified by their name. Hence, the number of total hosts for VolumeSnapshot is the number of targeted volumes. However, since VolumeSnapshot is handled by the respective CSI driver, host identifier does not play any role to separate their data.
 
 ## Next Steps
 

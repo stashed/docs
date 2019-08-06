@@ -72,7 +72,7 @@ An `AppBinding` object has the following fields in the `spec` section that are r
 
 #### spec.type
 
-`spec.type` is an optional field that indicates the type of the app that this `AppBinding` is pointing to. Stash uses this field to resolve the  values of `TARGET_APP_TYPE`, `TARGET_APP_GROUP` and `TARGET_APP_RESOURCE` variables of [BackupBlueprint](/docs/concepts/crds/backupblueprint.md) object.
+`spec.type` is an optional field that indicates the type of the app that this `AppBinding` is pointing to. Stash uses this field to resolve the values of `TARGET_APP_TYPE`, `TARGET_APP_GROUP` and `TARGET_APP_RESOURCE` variables of [BackupBlueprint](/docs/concepts/crds/backupblueprint.md) object.
 
 This field follows the following format: `<app group>/<resource kind>`. The above AppBinding is pointing to a `postgres` resource under `kubedb.com` group.
 
@@ -81,11 +81,8 @@ Here, the variables are parsed as follows:
 |       Variable        |                                                   Usage                                                   |
 | --------------------- | --------------------------------------------------------------------------------------------------------- |
 | `TARGET_APP_GROUP`    | Represents the application group where the respective app belongs (i.e: `kubedb.com`).                               |
-| `TARGET_APP_RESOURCE` | Represents the resource kind under that application group that the respective app works with (i.e: `postgres`).       |
-| `TARGET_APP_TYPE`     | Represents the total types of the application. It's simply `TARGET_APP_GROUP/TARGET_APP_RESOURCE` (i.e: `kubedb.com/postgres`). |
-
-
-> The type field 
+| `TARGET_APP_RESOURCE` | Represents the resource under that application group that this appbinding represents (i.e: `postgres`).       |
+| `TARGET_APP_TYPE`     | Represents the complete type of the application. It's simply `TARGET_APP_GROUP/TARGET_APP_RESOURCE` (i.e: `kubedb.com/postgres`). |
 
 #### spec.secret
 
@@ -151,5 +148,4 @@ You can configure following fields in `spec.clientConfig` section:
 
 ## Next Steps
 
-- Learn how to backup databases using Stash from [here](/docs/guides/databases/backup.md).
-- Learn how to restore backed up database using Stash from [here](/docs/guides/databases/restore.md).
+- Learn how to backup/restore databases using Stash from [here](/docs/guides/latest/databases/overview.md).

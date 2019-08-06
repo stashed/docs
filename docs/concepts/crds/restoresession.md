@@ -126,7 +126,7 @@ A `RestoreSession` object has the following fields in the `spec` section.
 
 > Note: Stash stores absolute path of the backed up files. Hence, your restored volume must be mounted on the same `mountPath` as the original volume. Otherwise, the backed up files will not be restored into your desired volume.
 
-- **spec.target.volumeClaimTemplates :** `spec.target.volumeClaimTemplates` specifies a list of PVC templates that will be created by restoring data from respective VolumeSnapshots. You have to set `spec.dataSource` section to the respective VolumeSnapshot. You can templatize `spec.dataSource.name` section. Stash will resolve the template and dynamically creates respective PVCs and initialize them from respective VolumeSnapshots. Use this field only if `spec.driver` is set to `VolumeSnapshotter`. For more details on how to restore PVCs from VolumeSnapshot, please visit [here](/docs/guides/latest/volume-snapshot/restore.md).
+- **spec.target.volumeClaimTemplates :** `spec.target.volumeClaimTemplates` specifies a list of PVC templates that will be created by restoring data from respective VolumeSnapshots. You have to set `spec.dataSource` section to the respective VolumeSnapshot. You can templatize `spec.dataSource.name` section. Stash will resolve the template and dynamically creates respective PVCs and initialize them from respective VolumeSnapshots. Use this field only if `spec.driver` is set to `VolumeSnapshotter`. For more details on how to restore PVCs from VolumeSnapshot, please visit [here](/docs/guides/latest/volumesnapshot/pvc.md).
 
 - **spec.target.replicas :** `spec.target.replicas` used to specify the number of replicas of a StatefulSet whose PVCs was snapshotted by `VolumeSnapshotter`. Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective VolumeSnapshots. Use this field only if `spec.driver` is set to `VolumeSnapshotter` and `spec.target.volumeClaimTemplates` specified PVC template of a StatefulSet.
 
@@ -242,15 +242,15 @@ Individual host stats entry consists of the following fields:
 
 Stash uses two different models for restoring backed up data depending on the target type. It uses **init-container model** for Kubernetes workloads and  **job model** for rest of the targets. In the init-container model, Stash injects an init-container inside the targeted workload and the init-container is responsible for restoring the desired data on workload restart. In the job model, Stash launches a job to restore the desired data.
 
-Stash uses an identifier called **host** to identify the entity where the restore process will be run. This host identification process depends on the restore model and the target types. The restore strategy and host identification strategy for different types of  target is explained below.
+Stash uses an identifier called **host** to identify the entity where the restore process will be run. This host identification process depends on the restore model and the target types. The restore strategy and host identification strategy for different types of target is explained below.
 
 **Kubernetes Workloads:**
 
 Stash uses init-container model to restore Kubernetes workloads. However, not every init-container will run restore process. How many init-containers will run restore process depends on the type of the workload. We can divide them into the following categories:
 
-- **Deployment, ReplicaSet and ReplicationController:** For these types of workload, all the replicas mounts the same volumes. So, restoring into only one replica is enough. In this case, Stash uses leader election to elect the leader pod. Only the init-container inside the leader pod runs restore process. This leader pod is identified as **host-0**. The total number of hosts for these types of workload is 1.
-- **StatefulSet:** Every replica of a StatefulSet mounts different volumes. So, restoring into each replica is necessary. In this case, init-container inside each replica runs restore process. Stash identifies **pod-0** as **host-0**, **pod-1** as **host-1**, **pod-2** as **host-2** and so on. Hence, the total number of hosts for a StatefulSet is the number of replicas.
-- **DaemonSet:** Daemon replicas on every node may contain different data. So, restoring into each daemon pod is necessary. In this case, init-container inside each daemon pod runs restore process. Stash considers the individual daemon pod as a separate host and the **node name** where the daemon pod is running act as their **host** identifier. The total number of hosts for a DaemonSet is the number of daemon pod running in the cluster.
+- **Deployment, ReplicaSet and ReplicationController:** For these types of stateless workloads, all the replicas mount the same volumes. So, restoring into only one replica is enough. In this case, Stash uses leader election to elect the leader pod. Only the init-container inside the leader pod runs the restore process. This leader pod is identified as **host-0**. The total number of hosts for these types of workloads is 1.
+- **StatefulSet:** Every replica of a StatefulSet mounts different volumes. So, restoring into each replica is necessary. In this case, init-container inside each replica runs the restore process. Stash identifies **pod-0** as **host-0**, **pod-1** as **host-1**, **pod-2** as **host-2** and so on. Hence, the total number of hosts for a StatefulSet is the number of replicas.
+- **DaemonSet:** Daemon replicas on every node may contain different data. So, restoring into each daemon pod is necessary. In this case, init-container inside each daemon pod runs the restore process. Stash considers the individual daemon pod as a separate host and the **node name** where the daemon pod is running act as their **host** identifier. The total number of hosts for a DaemonSet is the number of daemon pod running in the cluster.
 
 **Stand-alone PVC:**
 
@@ -258,7 +258,7 @@ Stash uses job model to restore a stand-alone PVC. Stash launches a job to resto
 
 **Databases:**
 
-Stash uses job model to restore a database. Stash launches a job to restore into the targeted database. In this case, the number of hosts depends on database types.
+Stash uses job model to restore a database. Stash launches a job to restore into the targeted database. In this case, the number of hosts depends on the database type.
 
 - **Stand-alone database:** For stand-alone database, the restore target is identified as **host-0** and the total number of host is 1.
 - **Replicated cluster:** For replicated clustered database such as MongoDB ReplicaSet, all the replicas contain the same data. In this case, Stash restores same data into each replica. Thus, the total number of host is 1 and it is identified as **host-0**.
@@ -266,7 +266,7 @@ Stash uses job model to restore a database. Stash launches a job to restore into
 
 **VolumeSnapshot:**
 
-Stash uses job model for restoring volume from VolumeSnapshot. Each volume is considered as different hosts and they are identified by their name. Hence, the number of total hosts is the number of targeted volumes to be restored.
+Stash uses job model for restoring volume from volume snapshots. Each volume is considered a different host and they are identified by their name. Hence, the number of total hosts is the number of targeted volumes to be restored.
 
 **Restore using volumeClaimTemplates:**
 

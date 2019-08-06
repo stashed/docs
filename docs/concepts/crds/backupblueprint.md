@@ -61,7 +61,7 @@ spec:
     prune: true
 ```
 
-The sample `BackupBlueprint` that has been shown above can be used to backup Deployments, DaemonSets, StatefulSets, ReplicaSets and ReplicationControllers. You only have to add some annotations to these workloads. For more details on how auto backup works in Stash, please visit [here](/docs/guides/auto-backup/overview.md).
+The sample `BackupBlueprint` that has been shown above can be used to backup Deployments, DaemonSets, StatefulSets, ReplicaSets and ReplicationControllers. You only have to add some annotations to these workloads. For more details on how auto backup works in Stash, please visit [here](/docs/guides/latest/auto-backup/overview.md).
 
 Here, we are going to describe the various sections of `BackupBlueprint` crd.
 
@@ -115,6 +115,6 @@ You can provide a blueprint for the `BackupConfiguration` object that will be cr
 
 ## Next Steps
 
-- Learn how to use `BackupBlueprint` for auto backup of workloads data from [here](/docs/guides/auto-backup/workload.md).
-- Learn how to use `BackupBlueprint` for auto backup of database from [here](/docs/guides/auto-backup/database.md).
-- Learn how to use `BackupBlueprint` for auto backup of stand-alone PVC from [here](/docs/guides/auto-backup/volume.md).
+- Learn how to use `BackupBlueprint` for auto backup of workloads data from [here](/docs/guides/latest/auto-backup/workload.md).
+- Learn how to use `BackupBlueprint` for auto backup of database from [here](/docs/guides/latest/auto-backup/database.md).
+- Learn how to use `BackupBlueprint` for auto backup of stand-alone PVC from [here](/docs/guides/latest/auto-backup/pvc.md).

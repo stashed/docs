@@ -270,6 +270,6 @@ repository/local-repo-with-emptydir created
 
 ## Next Steps
 
-- Learn how to use Stash to backup workloads data from [here](/docs/guides/latest/workloads/backup.md).
-- Learn how to use Stash to backup databases from [here](/docs/guides/latest/databases/backup.md).
-- Learn how to use Stash to backup stand-alone PVC from [here](/docs/guides/latest/volumes/backup.md).
+- Learn how to use Stash to backup workloads data from [here](/docs/guides/latest/workloads/overview.md).
+- Learn how to use Stash to backup databases from [here](/docs/guides/latest/databases/overview.md).
+- Learn how to use Stash to backup stand-alone PVC from [here](/docs/guides/latest/volumes/overview.md).
