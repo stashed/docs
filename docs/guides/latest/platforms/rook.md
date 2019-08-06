@@ -444,6 +444,27 @@ Here, `BACKUPCOUNT` field indicates the number of backup snapshots has taken in 
 
 This section will show you how to restore the backed up data from [Ceph Storage Bucket](https://rook.io/docs/rook/v1.0/ceph-storage.html) we have taken in the earlier section.
 
+**Stop Taking Backup of the Old Deployment:**
+
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `deployment-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/deployment-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+deployment-backup          */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Deploy Deployment:**
 
 We are going to create a new Deployment named `stash-recovered` with a new PVC and restore the backed up data inside it.
@@ -544,6 +565,7 @@ Here,
 - `spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
 - `spec.target.ref` refers to the target workload where the recovered data will be stored.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 
 Let's create the `RestoreSession` crd we have shown above,
 

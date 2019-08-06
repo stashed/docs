@@ -151,6 +151,8 @@ sample_data
 
 We are going to store our backed up data into an [GCS bucket](https://cloud.google.com/storage/). At first, we need to create a secret with the access credentials to our GCS bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
 
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
+
 **Create Secret:**
 
 Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
@@ -207,14 +209,14 @@ spec:
     storageSecretName: gcs-secret
 ```
 
-Now, we are ready to backup our sample data into this backend.
+Let's create the `Repository` we have shown above,
 
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/platforms/gke/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
-Now, we are ready to backup our volumes to the desired backend.
+Now, we are ready to backup our sample data into this backend.
 
 ### Backup
 
@@ -436,6 +438,26 @@ Now, if we navigate to the GCS Bucket, we are going to see backed up data has be
 
 This section will show you how to restore the backed up data from [GCS bucket](https://cloud.google.com/storage/) we have taken in the earlier section.
 
+**Stop Taking Backup of the Old Deployment:**
+
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `deployment-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/deployment-backup patched
+```
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+deployment-backup          */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Deploy Deployment:**
 
 We are going to create a new Deployment named `stash-recovered` with a new PVC and restore the backed up data inside it.
@@ -533,6 +555,7 @@ Here,
 
 - `spec.target.ref` refers to the target workload where the recovered data will be stored.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 
 Let's create the `RestoreSession` crd we have shown above,
 

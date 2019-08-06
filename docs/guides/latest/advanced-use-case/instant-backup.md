@@ -121,6 +121,8 @@ sample_data
 
 We are going to store our backed up data into a GCS bucket. We have to create a Secret and a Repository object with access credentials and backend information respectively.
 
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
+
 Let’s create a secret called `gcs-secret` with access credentials of our desired GCS backend,
 
 ```console
@@ -264,7 +266,7 @@ Run the following command to watch `BackupSession` phase,
 
 ```console
 $ watch -n 3 kubectl get backupsession -n demo
-Every 3.0s: kubectl get bs -n demo                               suaas-appscode: Wed Jul 10 17:18:52 2019
+Every 3.0s: kubectl get backupsession -n demo                               suaas-appscode: Wed Jul 10 17:18:52 2019
 
 NAME                       BACKUPCONFIGURATION   PHASE       AGE
 deployment-backupsession   deployment-backup     Succeeded   21s
@@ -285,7 +287,7 @@ gcs-repo   true        24 B   1                116s                     10m
 Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `stash/instant/deployment` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/latest/advanced-use-case/instant.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/latest/advanced-use-case/instant.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 

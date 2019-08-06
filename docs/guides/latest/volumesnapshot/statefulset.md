@@ -327,6 +327,27 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 
 This section will show you how to restore PVCs from the snapshots we have taken in the earlier section.
 
+**Stop Taking Backup of the Old StatefulSet:**
+
+At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `statefulset-volume-snapshot` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo statefulset-volume-snapshot --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/statefulset-volume-snapshot patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                          TASK   SCHEDULE      PAUSED   AGE
+statefulset-volume-snapshot          */1 * * * *   true     20m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Create RestoreSession :**
 
 At first, we have to create a `RestoreSession` crd to restore PVCs from respective the snapshots.
@@ -648,6 +669,27 @@ Here, `spec.snapshotContentName` field specifies the name of the `VolumeSnapshot
 ### Restore Same Data in all Replicas
 
 This section will show you how to restore PVCs from the snapshot that  we have taken in the earlier section.
+
+**Stop Taking Backup of the Old StatefulSet:**
+
+At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `statefulset-volume-snapshot` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo statefulset-volume-snapshot --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/statefulset-volume-snapshot patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                          TASK   SCHEDULE      PAUSED   AGE
+statefulset-volume-snapshot          */1 * * * *   true     20m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
 
 **Create RestoreSession :**
 

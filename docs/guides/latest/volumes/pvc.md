@@ -228,6 +228,8 @@ As we have mounted the same PVC into the pods, the file created by one pod is av
 
 Now, we are going to backup the PVC `nfs-pvc` in a GCS bucket using Stash. We have to create a Secret and a `Repository` object with access credentials and backend information respectively.
 
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
+
 **Create Storage Secret:**
 
 Let's create a Secret named `gcs-secret` with access credentials of our desired GCS backend,
@@ -372,6 +374,27 @@ If we navigate to `stash-backup/volumes/nfs-pvc` directory of our GCS bucket, we
 
 This section will show you how to restore the backed up data inside a stand-alone PVC using stash. Here, we are going to restore the data we have backed up in the previous section.
 
+**Stop Taking Backup of the PVC:**
+
+At first, let's stop taking any further backup of the PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `nfs-pvc` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+
+Let's pause the `nfs-pvc-backup` BackupConfiguration,
+
+```console
+$ kubectl patch backupconfiguration -n demo nfs-pvc-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/nfs-pvc-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME             TASK   SCHEDULE      PAUSED   AGE
+nfs-pvc-backup          */1 * * * *   true     20m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
+
 **Simulate Disaster:**
 
 At first, let's simulate a disaster scenario. Let's delete all the files from the PVC.
@@ -417,7 +440,8 @@ spec:
 
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to restore data inside a stand-alone PVC.
 - `spec.target.ref` refers to the targeted PVC where the data will be restored.
-- `spec.target.volumeMounts` specifies the path where the targeted PVC will be mounted inside the restore job.
+- `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume then the backed up files will not be restored into your desired volume.
 - `spec.rules[*].paths` specifies the file paths that will be restored from the backed up data.
 
 Let's create the `RestoreSession` object that we have shown above,

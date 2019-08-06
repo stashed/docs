@@ -18,6 +18,8 @@ Stash supports [Google Cloud Storage(GCS)](https://cloud.google.com/storage/) as
 
 In order to use Google Cloud Storage as backend, you have to create a `Secret` and a `Repository` object pointing to the desired GCS bucket.
 
+> If the bucket already exists, the Google Cloud service account you provide to Stash only needs `Storage Object Creator` role permission. However, if the bucket does not exist, Stash  will create the bucket. In this case, the Google Cloud service account key used for Stash must have `Storage Object Admin` role permission. To avoid giving this elevated level of permission to Stash, create the bucket manually (either from GCP console or gcloud cli) ahead of time.
+
 #### Create Storage Secret
 
 To configure storage secret for this backend, following secret keys are needed:

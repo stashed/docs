@@ -124,6 +124,8 @@ A `RestoreSession` object has the following fields in the `spec` section.
 
 - **spec.target.volumeMounts :** `spec.target.volumeMounts` specifies a list of volumes and their `mountPath` where the data will be restored. Stash will mount these volumes inside the `init-container` or restore job.
 
+> Note: Stash stores absolute path of the backed up files. Hence, your restored volume must be mounted on the same `mountPath` as the original volume. Otherwise, the backed up files will not be restored into your desired volume.
+
 - **spec.target.volumeClaimTemplates :** `spec.target.volumeClaimTemplates` specifies a list of PVC templates that will be created by restoring data from respective VolumeSnapshots. You have to set `spec.dataSource` section to the respective VolumeSnapshot. You can templatize `spec.dataSource.name` section. Stash will resolve the template and dynamically creates respective PVCs and initialize them from respective VolumeSnapshots. Use this field only if `spec.driver` is set to `VolumeSnapshotter`. For more details on how to restore PVCs from VolumeSnapshot, please visit [here](/docs/guides/latest/volume-snapshot/restore.md).
 
 - **spec.target.replicas :** `spec.target.replicas` used to specify the number of replicas of a StatefulSet whose PVCs was snapshotted by `VolumeSnapshotter`. Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective VolumeSnapshots. Use this field only if `spec.driver` is set to `VolumeSnapshotter` and `spec.target.volumeClaimTemplates` specified PVC template of a StatefulSet.
@@ -227,7 +229,7 @@ Not every pods or replica of the target will run restore process. Thus, we refer
 
 #### status.stats
 
-`status.stats` section is an array of restore statistics of individual hosts. Each host adds their statistics in this array after completing their restore process.
+`status.stats` section is an array of restore statistics of individual hosts. Each host adds their statistics in this array after completing their restore process. This field is only available for the `Restic` driver but not available for the `VolumeSnapshotter` driver. The default value of the driver is `Restic`.
 
 Individual host stats entry consists of the following fields:
 

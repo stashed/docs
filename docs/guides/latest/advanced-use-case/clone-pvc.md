@@ -145,7 +145,12 @@ config_data
 
 **Create Repository:**
 
-We are going to store our backed up data into a GCS bucket. Let's create a secret called `gcs-secret` with access credentials of our desired GCS backend,
+We are going to store our backed up data into a GCS bucket. We have to create a Secret and a Repository object with access credentials and backend information respectively.
+
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
+
+Let's create a secret called `gcs-secret` with access credentials of our desired GCS backend,
+
 
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
@@ -243,7 +248,7 @@ Now, wait for the next backup schedule. You can watch for `BackupSession` crd us
 
 ```console
 $ watch -n 3 kubectl get backupconfiguration -n demo
-Every 3.0s: kubectl get backupconfiguration --all-namespaces                  suaas-appscode: Mon Jul  8 18:20:47 2019
+Every 3.0s: kubectl get backupconfiguration -n demo                  suaas-appscode: Mon Jul  8 18:20:47 2019
 
 NAMESPACE   NAME                           BACKUPCONFIGURATION   PHASE       AGE
 demo        deployment-backup-1562588351   deployment-backup     Succeeded   96s
@@ -254,6 +259,25 @@ We can see from the above output that the backup session has succeeded. This ind
 ### Restore
 
 Now, we are going to clone the volumes that we have backed up in the previous section. To do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
+
+**Stop Taking Backup of the Old Deployment:**
+
+At first, let's pause the scheduled backup of the old Deployment so that no backup is taken during the restore process. To pause the `deployment-backup` BackupConfiguration, run:
+
+```console
+$ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/deployment-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+deployment-backup          */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
 
 **Create RestoreSession:**
 
@@ -302,7 +326,8 @@ Here,
 - `spec.target.volumeMounts` specifies the directory where the newly created PVC will be mounted inside the restore job.
 - `spec.rules[*].paths` specifies the file paths that will be restored from the backed up data.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
-  - `metadata.name` specifies the name of the restored PVC.
+  - `name` specifies the name of the volume mountPath. This name must be the same as the volumeClaimTemplate name.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 
 Let's create the `RestoreSession` object that we have shown above,
 
@@ -643,6 +668,25 @@ We can see from the above output that the backup session has succeeded. This ind
 
 Now, we are going to restore the volumes that we have backed up in the previous section. To do that, we have to create a `RestoreSession` object with `volumeClaimTemplates`.
 
+**Stop Taking Backup of the Old StatefulSet:**
+
+At first, let's pause the scheduled backup of the old StatefulSet so that no backup is taken during the restore process. To pause the `ss-backup` BackupConfiguration, run:
+
+```console
+$ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/ss-backup patched
+```
+
+Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+
+```console
+$ kubectl get backupconfiguration -n demo
+NAME                TASK   SCHEDULE      PAUSED   AGE
+ss-backup                  */1 * * * *   true     26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
+
 **Create RestoreSession:**
 
 Below is the YAML of the `RestoreSession` object that we are going to create,
@@ -687,8 +731,10 @@ spec:
 ```
 
 - `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes were backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
+- `spec.target.volumeMounts`  specifies a list of volumes and their mountPath where the data will be restored.
+  - `name` specifies the name of the volume mountPath. This name must be the same as the volumeClaimTemplate name without the `POD_ORDINAL` part.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
-
   - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want to deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
 
     ```console
