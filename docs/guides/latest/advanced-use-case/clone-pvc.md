@@ -300,7 +300,7 @@ spec:
 Here,
 
 - `spec.target.volumeMounts` specifies the directory where the newly created PVC will be mounted inside the restore job.
-- `spec.rules[*].paths` specifies the directories that will be restored from the backed up data.
+- `spec.rules[*].paths` specifies the file paths that will be restored from the backed up data.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
   - `metadata.name` specifies the name of the restored PVC.
 

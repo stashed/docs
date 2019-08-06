@@ -112,7 +112,7 @@ In the first case, if Stash can't resolve the variable, the default value will b
 
 ##### Stash Provided Variables
 
-Stash operator provides the following built-in variables based on `BackupConfiguration`, `BackupSession`, `RestoreSession`, `Repository`, `Task`, `Function`, `BackupConfigurationTemplate` etc.
+Stash operator provides the following built-in variables based on `BackupConfiguration`, `BackupSession`, `RestoreSession`, `Repository`, `Task`, `Function`, `BackupBlueprint` etc.
 
 |     Environment Variable     |                                                                                      Usage                                                                                       |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

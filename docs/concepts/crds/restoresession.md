@@ -149,8 +149,8 @@ Each restore rule has the following fields:
 
 - **targetHosts :** `targetHosts` field contains a list of host names which are subject to this rule. If `targetHosts` field is empty, this rule applies to all hosts for which there is no specific rule. In the sample `RestoreSession` given above, the first rule applies to only `host-3` and `host-4` and the second rule is applicable to all hosts.
 - **sourceHost :** `sourceHost` specifies the name of host whose backed up data will be restored by this rule. In the sample `RestoreSession`, the first rule specify that backed up data of `host-0` (i.e. `pod-0` of old StatefulSet) will be restored into `host-3` and `host-4` (i.e. `pod-3` and `pod-4` of new StatefulSet). If you keep `sourceHost` field empty as the second rule of the above example, data from a similar restore host will be restored on the respective restore host. That means, backed up data of `host-0` will be restored into `host-0`, backed up data of `host-1` will be restored into `host-1` and so on.
-- **paths :** `paths` specifies a list of directories that will be restored into the hosts who are subject to this rule.
-- **snapshots :** `snapshots` specifies the list of snapshots that will be restored into the hosts who are subject to this rule. If you don't specify snapshot field, latest snasphot of the directories specified in `paths` section will be restored.
+- **paths :** `paths` specifies a list of file paths that will be restored into the hosts who are subject to this rule.
+- **snapshots :** `snapshots` specifies the list of snapshots that will be restored into the hosts who are subject to this rule. If you don't specify snapshot field, latest snasphot of the file paths specified in `paths` section will be restored.
 
 Restore rules comply with the following conditions:
 
