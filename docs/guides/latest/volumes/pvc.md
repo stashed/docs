@@ -441,6 +441,7 @@ spec:
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to restore data inside a stand-alone PVC.
 - `spec.target.ref` refers to the targeted PVC where the data will be restored.
 - `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
+  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
 - `spec.rules[*].paths` specifies the directories that will be restored from the backed up data.
 
 Let's create the `RestoreSession` object that we have shown above,
