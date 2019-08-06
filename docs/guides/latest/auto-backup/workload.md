@@ -39,6 +39,8 @@ namespace/demo created
 
 We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
+> Note: If the bucket already exists, you don't need to give any special permission to Stash. However, if the bucket does not exist, Stash  will create the bucket. In this case, you must give `create`, `delete`, `get` and  `list` permission of storage objects. These permissions are included in `Storage Object Admin` role.  Make sure the service account key you use for Stash has these permissions.
+
 **Create Storage Secret:**
 
 At first, let's create a Storage Secret for the GCS backend,

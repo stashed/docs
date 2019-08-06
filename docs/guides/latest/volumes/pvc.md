@@ -230,6 +230,8 @@ As we have mounted the same PVC into the pods, the file created by one pod is av
 
 Now, we are going to backup the PVC `nfs-pvc` in a GCS bucket using Stash. We have to create a Secret and a `Repository` object with access credentials and backend information respectively.
 
+> Note: If the bucket already exists, you don't need to give any special permission to Stash. However, if the bucket does not exist, Stash  will create the bucket. In this case, you must give `create`, `delete`, `get` and  `list` permission of storage objects. These permissions are included in `Storage Object Admin` role.  Make sure the service account key you use for Stash has these permissions.
+
 **Create Storage Secret:**
 
 Let's create a Secret named `gcs-secret` with access credentials of our desired GCS backend,
