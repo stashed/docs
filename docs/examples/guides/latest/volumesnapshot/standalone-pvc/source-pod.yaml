@@ -5,15 +5,15 @@ metadata:
   namespace: demo
 spec:
   containers:
-    - name: busybox
-      image: busybox
-      command: ["/bin/sh", "-c"]
-      args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-      volumeMounts:
-        - name: source-data
-          mountPath: /source/data
-  volumes:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c"]
+    args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
+    volumeMounts:
     - name: source-data
-      persistentVolumeClaim:
-        claimName: source-data
-        readOnly: false
+      mountPath: /source/data
+  volumes:
+  - name: source-data
+    persistentVolumeClaim:
+      claimName: source-data
+      readOnly: false

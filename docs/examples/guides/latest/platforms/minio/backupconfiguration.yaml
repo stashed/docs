@@ -15,7 +15,7 @@ spec:
     volumeMounts:
     - name: source-data
       mountPath: /source/data
-    directories:
+    paths:
     - /source/data
   retentionPolicy:
     name: 'keep-last-5'

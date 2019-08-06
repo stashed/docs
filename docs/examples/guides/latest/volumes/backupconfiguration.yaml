@@ -17,7 +17,7 @@ spec:
     volumeMounts:
     - name: nfs-pvc
       mountPath: /shared/config
-    directories:
+    paths:
     - /shared/config
   retentionPolicy:
     keepLast: 5

@@ -7,8 +7,8 @@ metadata:
   namespace: demo
 spec:
   ports:
-    - port: 80
-      name: web
+  - port: 80
+    name: web
   clusterIP: None
   selector:
     app: restore-demo
@@ -30,24 +30,24 @@ spec:
         app: restore-demo
     spec:
       containers:
-        - args:
-            - sleep
-            - "3600"
-          name: nginx
-          image: nginx
-          ports:
-            - containerPort: 80
-              name: web
-          volumeMounts:
-            - name: restore-data
-              mountPath: /restore/data
+      - args:
+        - sleep
+        - "3600"
+        name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: restore-data
+          mountPath: /restore/data
   volumeClaimTemplates:
     - metadata:
         name: restore-data
         namespace: demo
       spec:
         accessModes:
-          - ReadWriteOnce
+        - ReadWriteOnce
         storageClassName: standard
         resources:
           requests:

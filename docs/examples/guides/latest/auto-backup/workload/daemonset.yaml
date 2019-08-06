@@ -15,8 +15,8 @@ metadata:
   name: dmn-demo
   namespace: demo
   annotations:
-    stash.appscode.com/backup-template: workload-backup-template
-    stash.appscode.com/target-directories: "/etc/config"
+    stash.appscode.com/backup-blueprint: workload-backup-blueprint
+    stash.appscode.com/target-paths: "/etc/config"
     stash.appscode.com/volume-mounts: "dmn-config:/etc/config"
 spec:
   selector:

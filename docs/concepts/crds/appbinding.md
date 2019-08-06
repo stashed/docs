@@ -61,6 +61,7 @@ spec:
     - renameKey:
         from: POSTGRES_PASSWORD
         to: password
+  version: 10.2
 ```
 
 Here, we are going to describe the sections of an `AppBinding` crd that are relevant to Stash.
@@ -71,7 +72,20 @@ An `AppBinding` object has the following fields in the `spec` section that are r
 
 #### spec.type
 
-`spec.type` is an optional field that indicates the type of the app that this `AppBinding` is pointing to. Currently, Stash does not use this field. So, you can ignore this field while creating an `AppBinding` object manually.
+`spec.type` is an optional field that indicates the type of the app that this `AppBinding` is pointing to. Stash uses this field to resolve the  values of `TARGET_APP_TYPE`, `TARGET_APP_GROUP` and `TARGET_APP_RESOURCE` variables of [BackupBlueprint](/docs/concepts/crds/backupblueprint.md) object.
+
+This field follows the following format: `<app group>/<resource kind>`. The above AppBinding is pointing to a `postgres` resource under `kubedb.com` group.
+
+Here, the variables are parsed as follows:
+
+|       Variable        |                                                   Usage                                                   |
+| --------------------- | --------------------------------------------------------------------------------------------------------- |
+| `TARGET_APP_GROUP`    | Represents the application group where the respective app belongs (i.e: `kubedb.com`).                               |
+| `TARGET_APP_RESOURCE` | Represents the resource kind under that application group that the respective app works with (i.e: `postgres`).       |
+| `TARGET_APP_TYPE`     | Represents the total types of the application. It's simply `TARGET_APP_GROUP/TARGET_APP_RESOURCE` (i.e: `kubedb.com/postgres`). |
+
+
+> The type field 
 
 #### spec.secret
 

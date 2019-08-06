@@ -141,9 +141,9 @@ stash-demo-67ccdfbbc7-z97rd   1/1     Running   0          77s
 Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following commands,
 
 ```console
-$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/data
+$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/data/data.txt
 sample_data
-$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/config
+$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/config/config.cfg
 config_data
 ```
 
@@ -409,9 +409,9 @@ restore-demo-85fbcb5dcf-vpbt8       1/1     Running   0          2m50s
 Verify that the backed up data has been restored in `/source/data` and `/source/config` directory using the following command,
 
 ```console
-$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/data
+$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/data/data.txt
 sample_data
-$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/config
+$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/config/config.cfg
 config_data
 ```
 

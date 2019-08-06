@@ -8,7 +8,7 @@ $ kubectl apply -f ./docs/examples/pv-cli/tasks.yaml
 $ kubectl apply -f ./docs/examples/pv-cli/repo_secret.yaml
 secret/local-secret created
 $ kubectl apply -f ./docs/examples/pv-cli/backup_template.yaml
-backupconfigurationtemplate.stash.appscode.com/pvc-backup created
+backupblueprints.stash.appscode.com/pvc-backup created
 $ kubectl apply -f ./docs/examples/pv-cli/rbac.yaml
 clusterrole.rbac.authorization.k8s.io/update-status-roles created
 serviceaccount/pvc-backup-restore created

@@ -5,9 +5,9 @@ metadata:
   namespace: demo
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: 0
+  - name: http
+    port: 80
+    targetPort: 0
   selector:
     app: stash-recovered-adv
   clusterIP: None
@@ -31,21 +31,21 @@ spec:
         app: stash-recovered-adv
     spec:
       containers:
-        - name: busybox
-          image: busybox
-          command:
-            - sleep
-            - '3600'
-          volumeMounts:
-            - name: source-data
-              mountPath: "/source/data"
-          imagePullPolicy: IfNotPresent
+      - name: busybox
+        image: busybox
+        command:
+        - sleep
+        - '3600'
+        volumeMounts:
+        - name: source-data
+          mountPath: "/source/data"
+        imagePullPolicy: IfNotPresent
   volumeClaimTemplates:
-    - metadata:
-        name: source-data
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        storageClassName: "standard"
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: source-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi

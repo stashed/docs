@@ -8,16 +8,16 @@ spec:
   target:
     replicas : 3
     volumeClaimTemplates:
-      - metadata:
-          name: restore-data-restore-demo-${POD_ORDINAL}
-        spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 1Gi
-          dataSource:
-            kind: VolumeSnapshot
+    - metadata:
+        name: restore-data-restore-demo-${POD_ORDINAL}
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 1Gi
+        dataSource:
+          kind: VolumeSnapshot
 #            name: source-data-stash-demo-${POD_ORDINAL}-1563177551
-            name: source-data-stash-demo-0-1563181264
-            apiGroup: snapshot.storage.k8s.io
+          name: source-data-stash-demo-0-1563181264
+

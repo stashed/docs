@@ -1,29 +1,52 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupSession
 metadata:
-  name: deployment-backup-2do7af
-  namespace: demo
+  creationTimestamp: "2019-08-02T10:55:09Z"
+  generation: 1
   labels:
-    backup-configuration: deployment-backup
+    app.kubernetes.io/component: stash-backup
+    app.kubernetes.io/managed-by: stash.appscode.com
+    stash.appscode.com/backup-configuration: deployment-stash-demo
+  name: deployment-stash-demo-1564743309
+  namespace: demo
+  ownerReferences:
+  - apiVersion: stash.appscode.com/v1beta1
+    blockOwnerDeletion: false
+    kind: BackupConfiguration
+    name: deployment-stash-demo
+    uid: f319b4da-b513-11e9-b011-080027aded7e
+  resourceVersion: "67422"
+  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/backupsessions/deployment-stash-demo-1564743309
+  uid: fed255df-b513-11e9-b011-080027aded7e
 spec:
   backupConfiguration:
-    name: deployment-backup
+    name: deployment-stash-demo
 status:
   phase: Succeeded
-  totalHosts: 1
-  sessionDuration: 3.861369766s
+  sessionDuration: 43.044662123s
   stats:
-  - hostname: host-0
+  - duration: 43.044662123s
+    hostname: host-0
     phase: Succeeded
-    duration: 3.861369766s
     snapshots:
-    - directory: /source/data
-      fileStats:
+    - fileStats:
         modifiedFiles: 0
-        newFiles: 0
-        totalFiles: 2
-        unmodifiedFiles: 2
-      name: ea5381cc
-      processingTime: 0m0s
-      size: 30 B
-      uploaded: 0 B
+        newFiles: 1
+        totalFiles: 1
+        unmodifiedFiles: 0
+      name: 79b223e2
+      path: /source/data-1
+      processingTime: "0:04"
+      size: 41 B
+      uploaded: 693 B
+    - fileStats:
+        modifiedFiles: 0
+        newFiles: 1
+        totalFiles: 1
+        unmodifiedFiles: 0
+      name: ab6fef46
+      path: /source/data-2
+      processingTime: "0:03"
+      size: 41 B
+      uploaded: 693 B
+  totalHosts: 1

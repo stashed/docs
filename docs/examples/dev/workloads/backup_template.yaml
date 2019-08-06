@@ -20,7 +20,7 @@ spec:
       storage: 1Gi
 ---
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfigurationTemplate
+kind: BackupBlueprint
 metadata:
   name: workload-backup-template
 spec:

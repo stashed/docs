@@ -7,15 +7,15 @@ spec:
   driver: VolumeSnapshotter
   target:
     volumeClaimTemplates:
-      - metadata:
-          name: restore-data
-        spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 1Gi
-          dataSource:
-            kind: VolumeSnapshot
-            name: source-data-1563186667
-            apiGroup: snapshot.storage.k8s.io
+    - metadata:
+        name: restore-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 1Gi
+        dataSource:
+          kind: VolumeSnapshot
+          name: source-data-1563186667
+          apiGroup: snapshot.storage.k8s.io

@@ -5,7 +5,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   storageClassName: "rook-ceph-block"
   resources:
     requests:

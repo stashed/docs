@@ -5,16 +5,16 @@ metadata:
   namespace: demo
 spec:
   containers:
-    - name: busybox
-      image: busybox
-      args:
-        - sleep
-        - "3600"
-      volumeMounts:
-        - name: restore-data
-          mountPath: /restore/data
-  volumes:
+  - name: busybox
+    image: busybox
+    args:
+    - sleep
+    - "3600"
+    volumeMounts:
     - name: restore-data
-      persistentVolumeClaim:
-        claimName: restore-data
-        readOnly: false
+      mountPath: /restore/data
+  volumes:
+  - name: restore-data
+    persistentVolumeClaim:
+      claimName: restore-data
+      readOnly: false

@@ -1,15 +1,15 @@
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfigurationTemplate
+kind: BackupBlueprint
 metadata:
-  name: workload-backup-template
+  name: workload-backup-blueprint
 spec:
-  # ============== Template for Repository ==========================
+  # ============== Blueprint for Repository ==========================
   backend:
     gcs:
       bucket: appscode-qa
       prefix: stash-backup/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
-  # ============== Template for BackupConfiguration =================
+  # ============== Blueprint for BackupConfiguration =================
   schedule: "*/5 * * * *"
   retentionPolicy:
     name: 'keep-last-5'
