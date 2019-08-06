@@ -75,7 +75,3 @@ The restore process consists of the following steps:
 6. Then, the job downloads the backed up data from the backend and inject into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
-
-## Next Steps
-
-- Learn how to backup and restore a PostgreSQL database using Stash from [here](/docs/guides/databases/postgres.md).

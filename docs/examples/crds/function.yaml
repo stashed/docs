@@ -3,7 +3,7 @@ kind: Function
 metadata:
   name: postgres-backup-11.2
 spec:
-  image: appscode/postgres-stash:11.2
+  image: stashed/postgres-stash:11.2
   args:
   - backup-pg
   - --provider=${REPOSITORY_PROVIDER:=}

@@ -95,9 +95,9 @@ Stash uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts
 
   A complete backup or restore process may consist of several steps. For example, in order to backup a PostgreSQL database we first need to dump the database, upload the dumped file to backend and then we need to update `Repository` and `BackupSession` status and send Prometheus metrics. We represent such individual steps via `Function` objects. An entire backup or restore process needs an ordered execution of one or more functions. A `Task` specifies an ordered collection of functions along with their parameters. `Function` and `Task` enables users to extend or customize the backup/restore process. For more details about `Task`, please visit [here](/docs/concepts/crds/task.md).
 
-- **BackupConfigurationTemplate**
+- **BackupBlueprint**
 
-  A `BackupConfigurationTemplate` enables users to provide a template for `Repository` and `BackupConfiguration` object. Then, s/he just needs to add some annotations to the workload s/he wants to backup. Stash will automatically create respective `Repository` and `BackupConfiguration` according to the template. In this way, users can create a single template for all similar types of workloads and backup them by applying some annotations on them. In Stash parlance, we call this process **default backup**. For more details about `BackupConfigurationTemplate`, please visit [here](/docs/concepts/crds/backupconfiguration_template.md).
+  A `BackupBlueprint` enables users to provide a blueprint for `Repository` and `BackupConfiguration` object. Then, s/he just needs to add some annotations to the workload s/he wants to backup. Stash will automatically create respective `Repository` and `BackupConfiguration` according to the blueprint. In this way, users can create a single blueprint for all similar types of workloads and backup them only by applying some annotations on them. In Stash parlance, we call this process **Auto Backup**. For more details about `BackupBlueprint`, please visit [here](/docs/concepts/crds/backupblueprint.md).
 
 - **AppBinding**
 

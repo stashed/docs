@@ -114,6 +114,13 @@ MongoDB :
 | `username` | Username of the target database.               |
 | `password` | Password for the user specified by `username`. |
 
+Elasticsearch:
+
+|       Key        |          Usage          |
+| ---------------- | ----------------------- |
+| `ADMIN_USERNAME` | Admin username          |
+| `ADMIN_PASSWORD` | Password for admin user |
+
 #### spec.clientConfig
 
 `spec.clientConfig` defines how to communicate with the target database. You can use either an URL or a Kubernetes service to connect with the database. You don't have to specify both of them.

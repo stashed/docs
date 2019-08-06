@@ -61,7 +61,7 @@ pvc-backup    6h55m
 pvc-restore   6h55m
 ```
 
-## Prepare Template
+## Prepare Backup Blueprint
 
 We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupBlueprint` to match your backend. To know which backed is supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
@@ -82,7 +82,7 @@ secret/gcs-secret created
 
 **Create BackupBlueprint:**
 
-Now, we have to create a `BackupBlueprint` crd with a template for `Repository` and `BackupConfiguration` object.
+Now, we have to create a `BackupBlueprint` crd with a blueprint for `Repository` and `BackupConfiguration` object.
 
 Below is the YAML of the `BackupBlueprint` object that we are going to create,
 
@@ -112,7 +112,7 @@ Here,
 
 - `spec.task.name` specifies the `Task` crd name that will be used to backup the targeted PVC.
 
-Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-template).
+Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-blueprint).
 
 Let's create the `BackupBlueprint` that we have shown above,
 
@@ -127,7 +127,7 @@ Now, automatic backup is configured for PVC. We just have to add some annotation
 
 You have to add the following 3 annotations to a targeted PVC to enable backup for it:
 
-1. Name of the `BackupBlueprint` object where a template for `Repository` and `BackupConfiguration` has been defined.
+1. Name of the `BackupBlueprint` object where a blueprint for `Repository` and `BackupConfiguration` has been defined.
 
     ```yaml
     stash.appscode.com/backup-blueprint: <BackupBlueprint name>
@@ -317,7 +317,7 @@ status:
   phase: Bound
 ```
 
-Now, Stash will create a `Repository` crd and a `BackupConfiguration` crd according to the template.
+Now, Stash will create a `Repository` crd and a `BackupConfiguration` crd according to the blueprint.
 
 **Verify Repository:**
 
@@ -448,7 +448,7 @@ If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of
 To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```console
-kubectl delete -n demo backupBlueprint/pvc-backup-template
+kubectl delete -n demo backupBlueprint/pvc-backup-blueprint
 kubectl delete -n demo repository/persistentvolumeclaim-nfs-pvc
 kubectl delete -n demo backupconfiguration/persistentvolumeclaim-nfs-pvc
 
