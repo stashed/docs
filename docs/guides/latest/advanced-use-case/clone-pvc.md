@@ -149,7 +149,12 @@ config_data
 
 **Create Repository:**
 
-We are going to store our backed up data into a GCS bucket. Let's create a secret called `gcs-secret` with access credentials of our desired GCS backend,
+We are going to store our backed up data into a GCS bucket. We have to create a Secret and a Repository object with access credentials and backend information respectively.
+
+> For GCS backend, if the bucket does not exist, Stash needs some permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
+
+Let's create a secret called `gcs-secret` with access credentials of our desired GCS backend,
+
 
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
