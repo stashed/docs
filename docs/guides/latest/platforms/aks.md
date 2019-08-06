@@ -70,7 +70,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   storageClassName: standard
   resources:
     requests:
@@ -244,7 +244,7 @@ spec:
     volumeMounts:
     - name: source-data
       mountPath: /source/data
-    directories:
+    paths:
     - /source/data
   retentionPolicy:
     name: 'keep-last-5'
@@ -256,8 +256,8 @@ Here,
 
 - `spec.repository` refers to the `Repository` object `azure-repo` that holds backend [Azure Blob Container](https://azure.microsoft.com/en-us/services/storage/blobs/) information.
 - `spec.target.ref` refers to the `stash-demo` Deployment for backup target.
-- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories` specifies list of directories to backup.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target paths.
+- `spec.target.paths` specifies list of file paths to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 

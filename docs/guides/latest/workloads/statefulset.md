@@ -83,17 +83,12 @@ spec:
       containers:
       - name: busybox
         image: busybox
-        command:
-          [
-            "/bin/sh",
-            "-c",
-            "echo $(POD_NAME) > /source/data/data.txt && sleep 3000",
-          ]
+        command: ["/bin/sh", "-c","echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
         env:
-        - name: POD_NAME
+        - name:  POD_NAME
           valueFrom:
             fieldRef:
-              fieldPath: metadata.name
+              fieldPath:  metadata.name
         volumeMounts:
         - name: source-data
           mountPath: "/source/data"
@@ -102,7 +97,7 @@ spec:
   - metadata:
       name: source-data
     spec:
-      accessModes: ["ReadWriteOnce"]
+      accessModes: [ "ReadWriteOnce" ]
       storageClassName: "standard"
       resources:
         requests:
@@ -210,12 +205,12 @@ spec:
       kind: StatefulSet
       name: stash-demo
     volumeMounts:
-      - name: source-data
-        mountPath: /source/data
-    directories:
-      - /source/data
+    - name: source-data
+      mountPath: /source/data
+    paths:
+    - /source/data
   retentionPolicy:
-    name: "keep-last-5"
+    name: 'keep-last-5'
     keepLast: 5
     prune: true
 ```
@@ -225,8 +220,8 @@ Here,
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend information.
 - `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 1 minute interval.
 - `spec.target.ref` refers to the `stash-demo` StatefulSet.
-- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories` specifies list of directories to backup.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target paths.
+- `spec.target.paths` specifies list of file paths to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -413,13 +408,13 @@ Below is the YAML of the StatefulSet that we are going to create,
 apiVersion: v1
 kind: Service
 metadata:
-  name: re_headless
+  name: re-headless
   namespace: demo
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: 0
+  - name: http
+    port: 80
+    targetPort: 0
   selector:
     app: stash-recovered
   clusterIP: None
@@ -436,31 +431,31 @@ spec:
   selector:
     matchLabels:
       app: stash-recovered
-  serviceName: re_headless
+  serviceName: re-headless
   template:
     metadata:
       labels:
         app: stash-recovered
     spec:
       containers:
-        - name: busybox
-          image: busybox
-          command:
-            - sleep
-            - "3600"
-          volumeMounts:
-            - name: source-data
-              mountPath: "/source/data"
-          imagePullPolicy: IfNotPresent
+      - name: busybox
+        image: busybox
+        command:
+        - sleep
+        - '3600'
+        volumeMounts:
+        - name: source-data
+          mountPath: "/source/data"
+        imagePullPolicy: IfNotPresent
   volumeClaimTemplates:
-    - metadata:
-        name: source-data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: "standard"
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: source-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
 ```
 
 Let's create the StatefulSet we have shown above.
@@ -487,16 +482,16 @@ spec:
   repository:
     name: gcs-repo
   rules:
-    - paths:
-        - /source/data
+  - paths:
+    - /source/data
   target:
     ref:
       apiVersion: apps/v1
-      kind: Deployment
+      kind: StatefulSet
       name: stash-recovered
     volumeMounts:
-      - name: source-data
-        mountPath: /source/data
+    - name:  source-data
+      mountPath:  /source/data
 ```
 
 Here,
@@ -652,9 +647,9 @@ metadata:
   namespace: demo
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: 0
+  - name: http
+    port: 80
+    targetPort: 0
   selector:
     app: stash-recovered-adv
   clusterIP: None
@@ -678,24 +673,24 @@ spec:
         app: stash-recovered-adv
     spec:
       containers:
-        - name: busybox
-          image: busybox
-          command:
-            - sleep
-            - "3600"
-          volumeMounts:
-            - name: source-data
-              mountPath: "/source/data"
-          imagePullPolicy: IfNotPresent
+      - name: busybox
+        image: busybox
+        command:
+        - sleep
+        - '3600'
+        volumeMounts:
+        - name: source-data
+          mountPath: "/source/data"
+        imagePullPolicy: IfNotPresent
   volumeClaimTemplates:
-    - metadata:
-        name: source-data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: "standard"
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: source-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
 ```
 
 Let's create the StatefulSet we have shown above.
@@ -728,17 +723,17 @@ spec:
       kind: StatefulSet
       name: stash-recovered-adv
     volumeMounts:
-      - mountPath: /source/data
-        name: source-data
+    - mountPath: /source/data
+      name: source-data
   rules:
-    - targetHosts: ["host-3", "host-4"]
-      sourceHost: "host-1"
-      paths:
-        - /source/data
-    - targetHosts: [] # empty host match all hosts
-      sourceHost: "" # no source host indicates that the host is pod itself
-      paths:
-        - /source/data
+  - targetHosts: ["host-3","host-4"]
+    sourceHost: "host-1"
+    paths:
+    - /source/data
+  - targetHosts: []
+    sourceHost: ""
+    paths:
+    - /source/data
 ```
 
 Here,

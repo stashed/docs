@@ -101,13 +101,13 @@ You have to add the following 3 annotations to a targeted workload to enable bac
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
-2. List of paths that will be backed up. Use comma (`,`) to separate multiple directories. For example, `"/my/target/dir-1,/my/target/dir-2"`.
+2. List of paths that will be backed up. Use comma (`,`) to separate multiple file paths. For example, `"/my/target/dir-1,/my/target/dir-2"`.
 
 ```yaml
 stash.appscode.com/target-paths: "<paths to backup>"
 ```
 
-3. List of Volumes and their MountPath where the target directories are located. Use `"<volumenName>:<mountPath>"` format to specify the volumes. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1,vol-2:/mount/path-2"`.
+3. List of Volumes and their MountPath where the target file paths are located. Use `"<volumenName>:<mountPath>"` format to specify the volumes. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1,vol-2:/mount/path-2"`.
 
 ```yaml
 stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
@@ -115,7 +115,7 @@ stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
 
 ## Backup Deployment
 
-Now, we are going to backup a Deployment using the template we have configured earlier. We are going to mount two ConfigMap volume in two different directories of the Deployment. Then, we are going to backup those directories using automatic backup.
+Now, we are going to backup a Deployment using the template we have configured earlier. We are going to mount two ConfigMap volume in two different file paths of the Deployment. Then, we are going to backup those file paths using automatic backup.
 
 **Create Deployment:**
 
@@ -259,7 +259,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /source/data-1
     - /source/data-2
     ref:
@@ -275,7 +275,7 @@ spec:
   tempDir: {}
 ```
 
-Notice that the `spec.target.ref` is pointing to the `stash-demo` Deployment. Also, notice that the `spec.target.directories` and `spec.target.volumeMounts` fields have been populated with the information we had provided as annotation of the Deployment.
+Notice that the `spec.target.ref` is pointing to the `stash-demo` Deployment. Also, notice that the `spec.target.paths` and `spec.target.volumeMounts` fields have been populated with the information we had provided as annotation of the Deployment.
 
 **Wait for BackupSession:**
 
@@ -304,7 +304,7 @@ NAME                    INTEGRITY   SIZE    SNAPSHOT-COUNT   LAST-SUCCESSFUL-BAC
 deployment-stash-demo   true        246 B   2                70s                      5m
 ```
 
-> Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
+> Stash creates one snapshot for each targeted file path. Since we are taking backup of two file paths, two snapshots have been created for this BackupSession.
 
 If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
@@ -472,7 +472,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /source/data-1
     - /source/data-2
     ref:
@@ -511,7 +511,7 @@ NAME                   INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKU
 statefulset-sts-demo   true        0 B    6                32s                      7m29s
 ```
 
->For StatfulSet, Stash takes backup from every replica. Since we are using a StatefulSet with 3 replicas and we are taking backup of 2 directories, total 6 snapshots have been created for this BackupSession.
+>For StatfulSet, Stash takes backup from every replica. Since we are using a StatefulSet with 3 replicas and we are taking backup of 2 file paths, total 6 snapshots have been created for this BackupSession.
 
 If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS bucket, we are going to see that the snapshot been stored there.
 
@@ -576,7 +576,7 @@ spec:
           name: my-daemon-config
 ```
 
-Notice the `metadata.annotations` field. We have specified automatic backup specific annotations to backup our desired directory.
+Notice the `metadata.annotations` field. We have specified automatic backup specific annotations to backup our desired file path.
 
 Let's create the DaemonSet we have shown above,
 
@@ -656,7 +656,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /etc/config
     ref:
       apiVersion: apps/v1
