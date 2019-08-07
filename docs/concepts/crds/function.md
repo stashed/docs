@@ -197,7 +197,7 @@ If you want to use a variable that is not present this table, you have to provid
 
 If you are using a [PSP enabled cluster](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) and the function needs any specific permission then you can specify the PSP name using `spec.podSecurityPolicyName` field. Stash will add this PSP in the respective RBAC roles that will be created for this function.
 
->Note that Stash operator can't give permission to use a PSP to a backup job if the operator itself does not have permission to use it. So, if you want to specify PSP name in this section, make sure to add that in `stash-operator` ClusterRole too. For more details about using PSP in Stash, please visit [here](/docs/setup/psp.md).
+>Note that Stash operator can't give permission to use a PSP to a backup job if the operator itself does not have permission to use it. So, if you want to specify PSP name in this section, make sure to add that in `stash-operator` ClusterRole too.
 
 ## Next Steps
 

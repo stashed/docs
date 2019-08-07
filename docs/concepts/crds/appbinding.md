@@ -78,10 +78,10 @@ This field follows the following format: `<app group>/<resource kind>`. The abov
 
 Here, the variables are parsed as follows:
 
-|       Variable        |                                                   Usage                                                   |
-| --------------------- | --------------------------------------------------------------------------------------------------------- |
-| `TARGET_APP_GROUP`    | Represents the application group where the respective app belongs (i.e: `kubedb.com`).                               |
-| `TARGET_APP_RESOURCE` | Represents the resource under that application group that this appbinding represents (i.e: `postgres`).       |
+|       Variable        |                                                               Usage                                                               |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `TARGET_APP_GROUP`    | Represents the application group where the respective app belongs (i.e: `kubedb.com`).                                            |
+| `TARGET_APP_RESOURCE` | Represents the resource under that application group that this appbinding represents (i.e: `postgres`).                           |
 | `TARGET_APP_TYPE`     | Represents the complete type of the application. It's simply `TARGET_APP_GROUP/TARGET_APP_RESOURCE` (i.e: `kubedb.com/postgres`). |
 
 #### spec.secret
