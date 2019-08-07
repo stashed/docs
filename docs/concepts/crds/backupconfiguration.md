@@ -46,7 +46,7 @@ spec:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-demo
-    directories:
+    paths:
     - /source/data
     volumeMounts:
     - name: source-data
@@ -90,7 +90,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 `spec.driver` indicates the mechanism used to backup a target. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`.
 
-| Driver              | Usage                                                                                                                                                                                                                    |
+|       Driver        |                                                                                                          Usage                                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `Restic`            | Used to backup workload data, persistent volumes data and databases. It uses [restic](https://restic.net) to backup the target.                                                                                          |
 | `VolumeSnapshotter` | Used to take snapshot of PersistentVolumeClaims of a targeted workload. It leverages Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) crd and CSI driver to snapshot the PVCs. |
@@ -101,9 +101,9 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 - **spec.target.ref :** `spec.target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
 
-- **spec.target.directories :** `spec.target.directories` specifies list of directories to backup.
+- **spec.target.paths :** `spec.target.paths` specifies list of file paths to backup.
 
-- **spec.target.volumeMounts :** `spec.target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target directories. Stash will mount these volumes inside a sidecar container or a backup job.
+- **spec.target.volumeMounts :** `spec.target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target file paths. Stash will mount these volumes inside a sidecar container or a backup job.
 
 - **spec.target.snapshotClassName:** `spec.target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `spec.driver` is set to `VolumeSnapshotter`.
 
@@ -117,9 +117,9 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 #### spec.task
 
-`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) template used to backup the target.
+`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target.
 
-- **spec.task.name:** `spec.task.name` indicates the name of the `Task` template used for this backup process.
+- **spec.task.name:** `spec.task.name` indicates the name of the `Task` to use for this backup process.
 - **spec.task.params:** `spec.task.params` is an array of custom parameters to use to configure the task.
 
 > `spec.task` section is not required for backing up workload data (i.e. Deployment, DaemonSet, StatefulSet etc.). However, it is necessary for backing up databases and stand-alone PVCs.
@@ -196,6 +196,6 @@ Stash mounts an `emptyDir` for holding temporary files. It is also used for `cac
 
 ## Next Steps
 
-- Learn how to configure `BackupConfiguration` to backup workloads data from [here](/docs/guides/workloads/backup.md).
-- Learn how to configure `BackupConfiguration` to backup databases from [here](/docs/guides/databases/backup.md).
-- Learn how to configure `BackupConfiguration` to backup stand-alone PVC from [here](/docs/guides/volumes/backup.md).
+- Learn how to configure `BackupConfiguration` to backup workloads data from [here](/docs/guides/latest/workloads/overview.md).
+- Learn how to configure `BackupConfiguration` to backup databases from [here](/docs/guides/latest/databases/overview.md).
+- Learn how to configure `BackupConfiguration` to backup stand-alone PVC from [here](/docs/guides/latest/volumes/overview.md).

@@ -1,29 +1,37 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupSession
 metadata:
-  name: deployment-backup-2do7af
+  name: deployment-stash-demo-1564743309
   namespace: demo
-  labels:
-    backup-configuration: deployment-backup
 spec:
   backupConfiguration:
-    name: deployment-backup
+    name: deployment-stash-demo
 status:
-  phase: Succeeded
   totalHosts: 1
-  sessionDuration: 3.861369766s
+  phase: Succeeded
+  sessionDuration: 43.044662123s
   stats:
   - hostname: host-0
     phase: Succeeded
-    duration: 3.861369766s
+    duration: 43.044662123s
     snapshots:
-    - directory: /source/data
+    - name: 79b223e2
+      path: /source/data-1
+      processingTime: "0:04"
+      size: 41 B
+      uploaded: 693 B
       fileStats:
         modifiedFiles: 0
-        newFiles: 0
-        totalFiles: 2
-        unmodifiedFiles: 2
-      name: ea5381cc
-      processingTime: 0m0s
-      size: 30 B
-      uploaded: 0 B
+        newFiles: 1
+        totalFiles: 1
+        unmodifiedFiles: 0
+    - name: ab6fef46
+      path: /source/data-2
+      processingTime: "0:03"
+      size: 41 B
+      uploaded: 693 B
+      fileStats:
+        modifiedFiles: 0
+        newFiles: 1
+        totalFiles: 1
+        unmodifiedFiles: 0

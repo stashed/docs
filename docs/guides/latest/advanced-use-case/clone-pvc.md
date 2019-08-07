@@ -95,28 +95,24 @@ spec:
       name: busybox
     spec:
       containers:
-        - command:
-            [
-              "/bin/sh",
-              "-c",
-              "echo sample_data > /source/data/data.txt; echo config_data > /source/config/config.cfg && sleep 3000",
-            ]
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /source/data
-              name: source-data
-            - mountPath: /source/config
-              name: source-config
+      - args: ["echo sample_data > /source/data/data.txt; echo config_data > /source/config/config.cfg && sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /source/data
+          name: source-data
+        - mountPath: /source/config
+          name: source-config
       restartPolicy: Always
       volumes:
-        - name: source-data
-          persistentVolumeClaim:
-            claimName: source-data
-        - name: source-config
-          persistentVolumeClaim:
-            claimName: source-config
+      - name: source-data
+        persistentVolumeClaim:
+          claimName: source-data
+      - name: source-config
+        persistentVolumeClaim:
+          claimName: source-config
 ```
 
 The above Deployment will automatically create `data.txt` and `config.cfg` file in `/source/data` and `/source/config` directory respectively and write some sample data in it.
@@ -141,9 +137,9 @@ stash-demo-67ccdfbbc7-z97rd   1/1     Running   0          77s
 Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following commands,
 
 ```console
-$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/data
+$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/data/data.txt
 sample_data
-$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/config
+$ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/config/config.cfg
 config_data
 ```
 
@@ -214,15 +210,15 @@ spec:
       kind: Deployment
       name: stash-demo
     volumeMounts:
-      - name: source-data
-        mountPath: /source/data
-      - name: source-config
-        mountPath: /source/config
-    directories:
-      - /source/data
-      - /source/config
+    - name: source-data
+      mountPath: /source/data
+    - name: source-config
+      mountPath: /source/config
+    paths:
+    - /source/data
+    - /source/config
   retentionPolicy:
-    name: "keep-last-5"
+    name: 'keep-last-5'
     keepLast: 5
     prune: true
 ```
@@ -297,38 +293,38 @@ spec:
   repository:
     name: gcs-repo
   rules:
-    - paths:
-        - /source/data
-        - /source/config
+  - paths:
+    - /source/data
+    - /source/config
   target:
     volumeMounts:
-      - name: restore-data
-        mountPath: /source/data
-      - name: restore-config
-        mountPath: /source/config
+    - name:  restore-data
+      mountPath:  /source/data
+    - name:  restore-config
+      mountPath:  /source/config
     volumeClaimTemplates:
-      - metadata:
-          name: restore-data
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 2Gi
-      - metadata:
-          name: restore-config
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 2Gi
+    - metadata:
+        name:  restore-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 2Gi
+    - metadata:
+        name:  restore-config
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 2Gi
 ```
 
 Here,
 
 - `spec.target.volumeMounts` specifies the directory where the newly created PVC will be mounted inside the restore job.
-- `spec.rules[*].paths` specifies the directories that will be restored from the backed up data.
+- `spec.rules[*].paths` specifies the file paths that will be restored from the backed up data.
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
   - `name` specifies the name of the volume mountPath. This name must be the same as the volumeClaimTemplate name.
   - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
@@ -395,25 +391,25 @@ spec:
       name: busybox
     spec:
       containers:
-        - args:
-            - sleep
-            - "3600"
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          name: busybox
-          volumeMounts:
-            - mountPath: /restore/data
-              name: restore-data
-            - mountPath: /source/config
-              name: restore-config
+      - args:
+        - sleep
+        - "3600"
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /restore/data
+          name: restore-data
+        - mountPath: /restore/config
+          name: restore-config
       restartPolicy: Always
       volumes:
-        - name: restore-data
-          persistentVolumeClaim:
-            claimName: restore-data
-        - name: restore-config
-          persistentVolumeClaim:
-            claimName: restore-config
+      - name: restore-data
+        persistentVolumeClaim:
+          claimName: restore-data
+      - name: restore-config
+        persistentVolumeClaim:
+          claimName: restore-config
 ```
 
 Create the deployment we have shown above.
@@ -434,9 +430,9 @@ restore-demo-85fbcb5dcf-vpbt8       1/1     Running   0          2m50s
 Verify that the backed up data has been restored in `/source/data` and `/source/config` directory using the following command,
 
 ```console
-$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/data
+$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/data/data.txt
 sample_data
-$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/config
+$ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/config/config.cfg
 config_data
 ```
 
@@ -460,9 +456,9 @@ metadata:
   namespace: demo
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: 0
+  - name: http
+    port: 80
+    targetPort: 0
   selector:
     app: stash-demo
   clusterIP: None
@@ -486,44 +482,41 @@ spec:
         app: stash-demo
     spec:
       containers:
-        - args:
-            [
-              "echo $(POD_NAME) > /source/data/data.txt; echo $(POD_NAME) > /source/config/config.cfg && sleep 3000",
-            ]
-          command: ["/bin/sh", "-c"]
-          env:
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-          name: busybox
-          image: busybox
-          ports:
-            - containerPort: 80
-              name: http
-          volumeMounts:
-            - name: source-data
-              mountPath: "/source/data"
-            - name: source-config
-              mountPath: "/source/config"
-          imagePullPolicy: IfNotPresent
+      - args: ["echo $(POD_NAME) > /source/data/data.txt; echo $(POD_NAME) > /source/config/config.cfg && sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        env:
+        - name:  POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath:  metadata.name
+        name: busybox
+        image: busybox
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: source-data
+          mountPath: "/source/data"
+        - name: source-config
+          mountPath: "/source/config"
+        imagePullPolicy: IfNotPresent
   volumeClaimTemplates:
-    - metadata:
-        name: source-data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: "standard"
-        resources:
-          requests:
-            storage: 2Gi
-    - metadata:
-        name: source-config
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: "standard"
-        resources:
-          requests:
-            storage: 2Gi
+  - metadata:
+      name: source-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 2Gi
+  - metadata:
+      name: source-config
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 2Gi
 ```
 
 The above StatefulSet will automatically create `data.txt` and `config.cfg` file in `/source/data` and `/source/config` directory respectively and write some sample data in it.
@@ -625,15 +618,15 @@ spec:
       kind: StatefulSet
       name: stash-demo
     volumeMounts:
-      - name: source-data
-        mountPath: /source/data
-      - name: source-config
-        mountPath: /source/config
-    directories:
-      - /source/data
-      - /source/config
+    - name: source-data
+      mountPath: /source/data
+    - name: source-config
+      mountPath: /source/config
+    paths:
+    - /source/data
+    - /source/config
   retentionPolicy:
-    name: "keep-last-5"
+    name: 'keep-last-5'
     keepLast: 5
     prune: true
 ```
@@ -708,33 +701,33 @@ spec:
   repository:
     name: gcs-repo
   rules:
-    - paths:
-        - /source/data
-        - /source/config
+  - paths:
+    - /source/data
+    - /source/config
   target:
     replicas: 3
     volumeMounts:
-      - name: restore-data-restore-demo
-        mountPath: /source/data
-      - name: restore-config-restore-demo
-        mountPath: /source/config
+    - name:  restore-data-restore-demo
+      mountPath:  /source/data
+    - name:  restore-config-restore-demo
+      mountPath:  /source/config
     volumeClaimTemplates:
-      - metadata:
-          name: restore-data-restore-demo-${POD_ORDINAL}
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 2Gi
-      - metadata:
-          name: restore-config-restore-demo-${POD_ORDINAL}
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 2Gi
+    - metadata:
+        name: restore-data-restore-demo-${POD_ORDINAL}
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 2Gi
+    - metadata:
+        name: restore-config-restore-demo-${POD_ORDINAL}
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 2Gi
 ```
 
 - `spec.target.replicas` `spec.target.replicas` specify the number of replicas of a StatefulSet whose volumes were backed up and Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective Volumes.
@@ -803,9 +796,9 @@ metadata:
   namespace: demo
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: 0
+  - name: http
+    port: 80
+    targetPort: 0
   selector:
     app: restore-demo
   clusterIP: None
@@ -829,25 +822,25 @@ spec:
         app: restore-demo
     spec:
       containers:
-        - command:
-            - sleep
-            - "3600"
-          name: busybox
-          image: busybox
-          ports:
-            - containerPort: 80
-              name: http
-          volumeMounts:
-            - name: restore-data
-              mountPath: "/restore/data"
-            - name: restore-config
-              mountPath: "/restore/config"
-          imagePullPolicy: IfNotPresent
+      - command:
+        - sleep
+        - '3600'
+        name: busybox
+        image: busybox
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: restore-data
+          mountPath: "/restore/data"
+        - name: restore-config
+          mountPath: "/restore/config"
+        imagePullPolicy: IfNotPresent
   volumeClaimTemplates:
     - metadata:
         name: restore-data
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
         resources:
           requests:
@@ -855,7 +848,7 @@ spec:
     - metadata:
         name: restore-config
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes: [ "ReadWriteOnce" ]
         storageClassName: "standard"
         resources:
           requests:

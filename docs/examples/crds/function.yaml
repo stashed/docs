@@ -1,9 +1,9 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: Function
 metadata:
-  name: pg-backup
+  name: postgres-backup-11.2
 spec:
-  image: appscode/stash:pg
+  image: stashed/postgres-stash:11.2
   args:
   - backup-pg
   - --provider=${REPOSITORY_PROVIDER:=}
@@ -40,7 +40,7 @@ kind: Function
 metadata:
   name: update-status
 spec:
-  image: appscode/stash:pg
+  image: appscode/stash:0.9.0
   args:
   - update-status
   - --namespace=${NAMESPACE:=default}

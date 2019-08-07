@@ -19,7 +19,7 @@ section_menu_id: concepts
 
 A complete backup or restore process may consist of several steps. For example, in order to backup a PostgreSQL database we first need to dump the database and upload the dumped file to a backend. Then we need to update the respective`Repository` and `BackupSession` status and send Prometheus metrics. In Stash, we call such individual steps a `Function`.
 
-A `Function` is a Kubernetes `CustomResourceDefinition`(CRD) which basically specifies a template for a container that performs only a specific action. For example, `pg-backup` function only dumps and uploads the dumped file into the backend where `update-status` function updates the status of respective `BackupSession` and `Repository` and sends Prometheus metrics to pushgateway based on the output of `pg-backup` function.
+A `Function` is a Kubernetes `CustomResourceDefinition`(CRD) which basically specifies a template for a container that performs only a specific action. For example, `postgres-backup-*` function only dumps and uploads the dumped file into the backend where `update-status` function updates the status of respective `BackupSession` and `Repository` and sends Prometheus metrics to pushgateway based on the output of `postgres-backup-*` function.
 
 When you install Stash, some `Function`s will be pre-installed for supported targets like databases, etc. However, you can create your own function to customize or extend the backup/restore process.
 
@@ -33,9 +33,9 @@ A sample `Function` object to backup a PostgreSQL is shown below,
 apiVersion: stash.appscode.com/v1beta1
 kind: Function
 metadata:
-  name: pg-backup
+  name: postgres-backup-11.2
 spec:
-  image: appscode/stash:pg
+  image: stashed/postgres-stash:11.2
   args:
   - backup-pg
   - --provider=${REPOSITORY_PROVIDER:=}
@@ -112,44 +112,51 @@ In the first case, if Stash can't resolve the variable, the default value will b
 
 ##### Stash Provided Variables
 
-Stash operator provides the following built-in variables based on `BackupConfiguration`, `BackupSession`, `RestoreSession`, `Repository`, `Task`, `Function`, `BackupConfigurationTemplate` etc.
+Stash operator provides the following built-in variables based on `BackupConfiguration`, `BackupSession`, `RestoreSession`, `Repository`, `Task`, `Function`, `BackupBlueprint` etc.
 
-|    Environment Variable     |                                                                                      Usage                                                                                       |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NAMESPACE`                 | Namespace of backup or restore job/workload                                                                                                                                      |
-| `BACKUP_SESSION`            | Name of the respective BackupSession object                                                                                                                                      |
-| `RESTORE_SESSION`           | Name of the respective RestoreSession object                                                                                                                                     |
-| `REPOSITORY_NAME`           | Name of the Repository object that holds respective backend information                                                                                                          |
-| `REPOSITORY_PROVIDER`       | Type of storage provider. i.e. gcs, s3, aws, local etc.                                                                                                                          |
-| `REPOSITORY_SECRET_NAME`    | Name of the secret that holds the credentials to access the backend                                                                                                              |
-| `REPOSITORY_BUCKET`         | Name of the bucket where backed up data will be stored                                                                                                                           |
-| `REPOSITORY_PREFIX`         | A prefix of the directory inside bucket where backed up data will be stored                                                                                                      |
-| `REPOSITORY_ENDPOINT`       | URL of S3 compatible Minio/Rook server                                                                                                                                           |
-| `REPOSITORY_URL`            | URL of the REST server for REST backend                                                                                                                                          |
-| `HOSTNAME`                  | An identifier for the backed up data. If multiple pods backup in same Repository (i.e. StatefulSet or DaemonSet) this host name is to used identify data of the individual host. |
-| `TARGET_NAME`               | Name of the target of backup or restore                                                                                                                                          |
-| `TARGET_API_VERSION`        | API version of the target of backup or restore                                                                                                                                   |
-| `TARGET_KIND`               | Kind of the target of backup or restore                                                                                                                                          |
-| `TARGET_NAMESPACE`          | Namespace of the target object for backup or restore                                                                                                                             |
-| `TARGET_MOUNT_PATH`         | Directory where target PVC will be mounted in stand-alone PVC backup or restore                                                                                                  |
-| `TARGET_DIRECTORIES`        | Array of directories that are subject to backup                                                                                                                                  |
-| `RESTORE_DIRECTORIES`       | Array of directories that are subject to restore                                                                                                                                 |
-| `RESTORE_SNAPSHOTS`         | Name of the snapshot that will be restored                                                                                                                                       |
-| `RETENTION_KEEP_LAST`       | Number of latest snapshots to keep                                                                                                                                               |
-| `RETENTION_KEEP_HOURLY`     | Number of hourly snapshots to keep                                                                                                                                               |
-| `RETENTION_KEEP_DAILY`      | Number of daily snapshots to keep                                                                                                                                                |
-| `RETENTION_KEEP_WEEKLY`     | Number of weekly snapshots to keep                                                                                                                                               |
-| `RETENTION_KEEP_MONTHLY`    | Number of monthly snapshots to keep                                                                                                                                              |
-| `RETENTION_KEEP_YEARLY`     | Number of yearly snapshots to keep                                                                                                                                               |
-| `RETENTION_KEEP_TAGS`       | Keep only those snapshots that have these tags                                                                                                                                   |
-| `RETENTION_PRUNE`           | Specify whether to remove data of old snapshot completely from the backend                                                                                                       |
-| `RETENTION_DRY_RUN`         | Specify whether to run cleanup in test mode                                                                                                                                      |
-| `ENABLE_CACHE`              | Specify whether to use cache while backup or restore                                                                                                                             |
-| `MAX_CONNECTIONS`           | Specifies number of parallel connections to upload/download data to/from backend                                                                                                 |
-| `NICE_ADJUSTMENT`           | Adjustment value to configure `nice` to throttle the load on cpu.                                                                                                                |
-| `IONICE_CLASS`              | Name of the `ionice` class                                                                                                                                                       |
-| `IONICE_CLASS_DATA`         | Value of the `ionice` class data                                                                                                                                                 |
-| `ENABLE_STATUS_SUBRESOURCE` | Specifies whether crd has subresource enabled                                                                                                                                    |
+|     Environment Variable     |                                                                                      Usage                                                                                       |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NAMESPACE`                  | Namespace of backup or restore job/workload                                                                                                                                      |
+| `BACKUP_SESSION`             | Name of the respective BackupSession object                                                                                                                                      |
+| `RESTORE_SESSION`            | Name of the respective RestoreSession object                                                                                                                                     |
+| `REPOSITORY_NAME`            | Name of the Repository object that holds respective backend information                                                                                                          |
+| `REPOSITORY_PROVIDER`        | Type of storage provider. i.e. gcs, s3, aws, local etc.                                                                                                                          |
+| `REPOSITORY_SECRET_NAME`     | Name of the secret that holds the credentials to access the backend                                                                                                              |
+| `REPOSITORY_BUCKET`          | Name of the bucket where backed up data will be stored                                                                                                                           |
+| `REPOSITORY_PREFIX`          | A prefix of the directory inside bucket where backed up data will be stored                                                                                                      |
+| `REPOSITORY_ENDPOINT`        | URL of S3 compatible Minio/Rook server                                                                                                                                           |
+| `REPOSITORY_URL`             | URL of the REST server for REST backend                                                                                                                                          |
+| `HOSTNAME`                   | An identifier for the backed up data. If multiple pods backup in same Repository (i.e. StatefulSet or DaemonSet) this host name is to used identify data of the individual host. |
+| `SOURCE_HOSTNAME`            | An identifier of the host whose backed up data will be restored                                                                                                                  |
+| `TARGET_NAME`                | Name of the target of backup or restore                                                                                                                                          |
+| `TARGET_API_VERSION`         | API version of the target of backup or restore                                                                                                                                   |
+| `TARGET_KIND`                | Kind of the target of backup or restore                                                                                                                                          |
+| `TARGET_NAMESPACE`           | Namespace of the target object for backup or restore                                                                                                                             |
+| `TARGET_MOUNT_PATH`          | Directory where target PVC will be mounted in stand-alone PVC backup or restore                                                                                                  |
+| `TARGET_PATHS`               | Array of file paths that are subject to backup                                                                                                                                   |
+| `RESTORE_PATHS`              | Array of file paths that are subject to restore                                                                                                                                  |
+| `RESTORE_SNAPSHOTS`          | Name of the snapshot that will be restored                                                                                                                                       |
+| `TARGET_APP_VERSION`         | Version of the application pointed by an AppBinding                                                                                                                              |
+| `TARGET_APP_GROUP`           | The application group where the app pointed by an AppBinding belongs                                                                                                             |
+| `TARGET_APP_RESOURCE`        | The resource kind under an application group that the app pointed by an AppBinding works with                                                                                    |
+| `TARGET_APP_TYPE`            | The total types of the application. It's simply `TARGET_APP_GROUP/TARGET_APP_RESOURCE`                                                                                           |
+| `TARGET_APP_REPLICAS`        | Number of replicas of an application targeted for backup or restore                                                                                                              |
+| `RETENTION_KEEP_LAST`        | Number of latest snapshots to keep                                                                                                                                               |
+| `RETENTION_KEEP_HOURLY`      | Number of hourly snapshots to keep                                                                                                                                               |
+| `RETENTION_KEEP_DAILY`       | Number of daily snapshots to keep                                                                                                                                                |
+| `RETENTION_KEEP_WEEKLY`      | Number of weekly snapshots to keep                                                                                                                                               |
+| `RETENTION_KEEP_MONTHLY`     | Number of monthly snapshots to keep                                                                                                                                              |
+| `RETENTION_KEEP_YEARLY`      | Number of yearly snapshots to keep                                                                                                                                               |
+| `RETENTION_KEEP_TAGS`        | Keep only those snapshots that have these tags                                                                                                                                   |
+| `RETENTION_PRUNE`            | Specify whether to remove data of old snapshot completely from the backend                                                                                                       |
+| `RETENTION_DRY_RUN`          | Specify whether to run cleanup in test mode                                                                                                                                      |
+| `ENABLE_CACHE`               | Specify whether to use cache while backup or restore                                                                                                                             |
+| `MAX_CONNECTIONS`            | Specifies number of parallel connections to upload/download data to/from backend                                                                                                 |
+| `NICE_ADJUSTMENT`            | Adjustment value to configure `nice` to throttle the load on cpu.                                                                                                                |
+| `IONICE_CLASS`               | Name of the `ionice` class                                                                                                                                                       |
+| `IONICE_CLASS_DATA`          | Value of the `ionice` class data                                                                                                                                                 |
+| `ENABLE_STATUS_SUBRESOURCE`  | Specifies whether crd has subresource enabled                                                                                                                                    |
+| `PROMETHEUS_PUSHGATEWAY_URL` | URL of the Prometheus pushgateway that collects the backup/restore metrics                                                                                                       |
 
 If you want to use a variable that is not present this table, you have to provide its value in `spec.task.params` section of `BackupConfiguration` crd.
 
@@ -190,7 +197,7 @@ If you want to use a variable that is not present this table, you have to provid
 
 If you are using a [PSP enabled cluster](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) and the function needs any specific permission then you can specify the PSP name using `spec.podSecurityPolicyName` field. Stash will add this PSP in the respective RBAC roles that will be created for this function.
 
->Note that Stash operator can't give permission to use a PSP to a backup job if the operator itself does not have permission to use it. So, if you want to specify PSP name in this section, make sure to add that in `stash-operator` ClusterRole too. For more details about using PSP in Stash, please visit [here](/docs/setup/psp.md).
+>Note that Stash operator can't give permission to use a PSP to a backup job if the operator itself does not have permission to use it. So, if you want to specify PSP name in this section, make sure to add that in `stash-operator` ClusterRole too.
 
 ## Next Steps
 

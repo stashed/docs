@@ -39,7 +39,7 @@ The backup process consists of the following steps:
 
 2. Then, she creates a `Repository` crd which represents the original repository in the backend.
 
-3. Then, she creates a `BackupConfiguration` crd which specifies the targeted workload and desired directories to backup. It also specifies the `Repository` object that holds the backend information where the backed up data will be stored.
+3. Then, she creates a `BackupConfiguration` crd which specifies the targeted workload and desired file paths to backup. It also specifies the `Repository` object that holds the backend information where the backed up data will be stored.
 
 4. Stash operator watches for `BackupConfiguration` objects.
 
@@ -51,7 +51,7 @@ The backup process consists of the following steps:
 
 8. The `stash` sidecar inside the workload watches for `BackupSession` crd.
 
-9. When it finds a `BackupSession` crd, it initiates backup of the targeted directories.
+9. When it finds a `BackupSession` crd, it initiates backup of the targeted file paths.
 
 10. Once the backup process is completed, the `sidecar` sends Prometheus metrics to the Pushgateway running inside the `stash-operator` pod. It also updates respective `BackupSession` and `Repository` status to reflect the backup process.
 

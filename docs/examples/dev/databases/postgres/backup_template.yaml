@@ -1,5 +1,5 @@
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfigurationTemplate
+kind: BackupBlueprint
 metadata:
   name: pg-backup
 spec:

@@ -31,18 +31,18 @@ A sample `Task` object to backup a PostgreSQL database is shown below:
 apiVersion: stash.appscode.com/v1beta1
 kind: Task
 metadata:
-  name: pg-backup
+  name: postgres-backup-11.2
 spec:
   steps:
-  - name: pg-backup
+  - name: postgres-backup-11.2
     params:
-    - name: outputDir # specifies where to write the output file
+    - name: outputDir # specifies where to write output file
       value: /tmp/output
     - name: secretVolume # specifies where backend secret has been mounted
       value: secret-volume
   - name: update-status
     params:
-    - name: outputDir # specifies where the previous step wrote the output file. it will read that file and update the status of respective resources accordingly.
+    - name: outputDir # specifies where previous step wrote output file. it will read that file and update status of respective resources accordingly.
       value: /tmp/output
   volumes:
   - name: secret-volume
@@ -50,7 +50,7 @@ spec:
       secretName: ${REPOSITORY_SECRET_NAME}
 ```
 
-This `Task` uses two functions to backup a PostgreSQL database. The first step indicates `pg-backup` function that dumps PostgreSQL database and uploads the dumped file. The second step indicates `update-status` function which updates the status of the `BackupSession` and `Repository` crd for respective backup.
+This `Task` uses two functions to backup a PostgreSQL database. The first step uses `postgres-backup-11.2` function that dumps PostgreSQL database and uploads the dumped file. The second step uses `update-status` function which updates the status of the `BackupSession` and `Repository` crd for respective backup.
 
 Here, we are going to describe the various sections of a `Task` crd.
 
@@ -69,7 +69,7 @@ Each `step` consists of the following fields:
   - **name :** `name` of the variable.
   - **value :** value of the variable.
 
-In the above example `Task`, we have used `outputDir` variable in `pg-backup` function that Stash can't resolve automatically. So, we have passed the value using the `params` section in the `Task` object.
+In the above example `Task`, we have used `outputDir` variable in `postgres-backup-11.2` function that Stash can't resolve automatically. So, we have passed the value using the `params` section in the `Task` object.
 
 >Stash executes the `Functions` in the order they appear in `spec.steps` section. All the functions except the last one will be used to create `init-container` specification and the last function will be used to create `container` specification for respective backup job. This guarantees an ordered execution of the steps.
 
@@ -91,5 +91,5 @@ You might be wondering why we have introduced `Function` and `Task` crd. We have
 
 ## Next Steps
 
-- Learn how Stash backup databases using `Function-Task` model from [here](/docs/guides/databases/backup.md).
-- Learn how Stash backup stand-alone PVC using `Function-Task` model from [here](/docs/guides/volumes/backup.md).
+- Learn how Stash backup databases using `Function-Task` model from [here](/docs/guides/latest/databases/overview.md).
+- Learn how Stash backup stand-alone PVC using `Function-Task` model from [here](/docs/guides/latest/volumes/overview.md).

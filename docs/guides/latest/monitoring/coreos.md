@@ -195,4 +195,3 @@ To uninstall Stash follow this [guide](/docs/setup/uninstall.md).
 
 - Learn how monitoring in Stash works from [here](/docs/guides/latest/monitoring/overview.md).
 - Learn how to monitor Stash using builtin Prometheus from [here](/docs/guides/latest/monitoring/builtin.md).
-- Learn how to use Grafana dashboard to visualize monitoring data from [here](/docs/guides/latest/monitoring/grafana.md).

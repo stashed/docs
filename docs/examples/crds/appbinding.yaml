@@ -29,3 +29,4 @@ spec:
   - renameKey:
       from: POSTGRES_PASSWORD
       to: password
+  version: "10.2"

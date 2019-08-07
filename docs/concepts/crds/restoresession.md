@@ -21,13 +21,6 @@ A `RestoreSession` is a Kubernetes `CustomResourceDefinition`(CRD) which specifi
 
 You have to create a `RestoreSession` object whenever you want to restore. When a `RestoreSession` object is created, Stash injects an `init-container` into the target workload and restarts it. The `init-container` restores the desired data. If the target is a database or a stand-alone PVC, Stash launches a job to perform the restore process.
 
->In this article, we are going to use **host** word to indicate an entity (pod) where data is restored.
-
->- For `Deployment`, `ReplicationController` and `ReplicaSet`, restore process run in only one pod. This pod is referred as **host-0**.
->- For `StatefulSet`, restore process runs in all pods. In this case, **pod-0** is known as **host-0**, **pod-1** is known as **host-1**, **pod-2** is known as **host-2** and so on.
->- For `DaemonSet`, restore process runs in all daemon pods. In this case, the **node name** where the pod is running act as their **host** name.
->- For database or stand-alone PVC, restore is done by a job. In this case, the restore job's pod is known as **host-0**.
-
 ## RestoreSession CRD Specification
 
 Like any official Kubernetes resource, a `RestoreSession` has `TypeMeta`, `ObjectMeta`, `Spec` and `Status` sections.
@@ -87,8 +80,8 @@ spec:
     medium: Memory
     size: 2Gi
 status:
-  phase: Succeeded
   totalHosts: 5
+  phase: Succeeded
   sessionDuration: 4.148288404s
   stats:
   - duration: 884.431745ms
@@ -133,9 +126,9 @@ A `RestoreSession` object has the following fields in the `spec` section.
 
 > Note: Stash stores absolute path of the backed up files. Hence, your restored volume must be mounted on the same `mountPath` as the original volume. Otherwise, the backed up files will not be restored into your desired volume.
 
-- **spec.target.volumeClaimTemplates :** `spec.target.volumeClaimTemplates` specifies a list of PVC templates that will be created by restoring data from respective VolumeSnapshots. You have to set `spec.dataSource` section to the respective VolumeSnapshot. You can templatize `spec.dataSource.name` section. Stash will resolve the template and dynamically creates respective PVCs and initialize them from respective VolumeSnapshots. Use this field only if `spec.driver` is set to `VolumeSnapshotter`. For more details on how to restore PVCs from VolumeSnapshot, please visit [here](/docs/guides/latest/volume-snapshot/restore.md).
+- **spec.target.volumeClaimTemplates :** You can specify a list of PVC template using `spec.target.volumeClaimTemplates` field. Stash will create those PVCs then it will restore the desired data into them. Then, you can use those PVCs to deploy your desired workload.
 
-- **spec.target.replicas :** `spec.target.replicas` used to specify the number of replicas of a StatefulSet whose PVCs was snapshotted by `VolumeSnapshotter`. Stash uses this field to dynamically create the desired number of PVCs and initialize them from respective VolumeSnapshots. Use this field only if `spec.driver` is set to `VolumeSnapshotter` and `spec.target.volumeClaimTemplates` specified PVC template of a StatefulSet.
+- **spec.target.replicas :** If you want to restore the volumes of a StatefulSet through `spec.target.volumeClaimTemplate` field, you can specify the number of replicas of the StatefulSet using `spec.target.replicas`. In this case, you have to use `${POD_ORDINAL}` variable suffix in the claim name. Stash will replace that variable with respective ordinal and it will create the volumes for each replica. For more details, please visit [here](/docs/guides/latest/advanced-use-case/clone-pvc.md#clone-the-volumes-of-a-satefulset).
 
 #### spec.repository
 
@@ -143,7 +136,7 @@ A `RestoreSession` object has the following fields in the `spec` section.
 
 #### spec.task
 
-`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) template used to restore the target data.
+`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to restore the target data.
 
 - **spec.task.name:** `spec.task.name` indicates the name of the `Task` template to use for this restore process.
 - **spec.task.params:** `spec.task.params` is an array of custom parameters to use to configure the task.
@@ -157,15 +150,15 @@ A `RestoreSession` object has the following fields in the `spec` section.
 Each restore rule has the following fields:
 
 - **targetHosts :** `targetHosts` field contains a list of host names which are subject to this rule. If `targetHosts` field is empty, this rule applies to all hosts for which there is no specific rule. In the sample `RestoreSession` given above, the first rule applies to only `host-3` and `host-4` and the second rule is applicable to all hosts.
-- **sourceHost :** `sourceHost` specifies the name of host whose backed up data will be restored by this rule. In the sample `RestoreSession`, the first rule specify that backed up data of `host-0` (i.e. `pod-0` of old StatefulSet) will be restored into `host-3` and `host-4` (i.e. `pod-3` and `pod-4` of new StatefulSet). If you keep `sourceHost` field empty as the second rule of the above example, data from a similar backup host will be restored on the respective restore host. That means, backed up data of `host-0` will be restored into `host-0`, backed up data of `host-1` will be restored into `host-1` and so on.
-- **paths :** `paths` specifies a list of directories that will be restored into the hosts who are subject to this rule.
-- **snapshots :** `snapshots` specifies the list of snapshots that will be restored into the hosts who are subject to this rule. If you don't specify snapshot field, latest snasphot of the directories specified in `paths` section will be restored.
+- **sourceHost :** `sourceHost` specifies the name of host whose backed up data will be restored by this rule. In the sample `RestoreSession`, the first rule specify that backed up data of `host-0` (i.e. `pod-0` of old StatefulSet) will be restored into `host-3` and `host-4` (i.e. `pod-3` and `pod-4` of new StatefulSet). If you keep `sourceHost` field empty as the second rule of the above example, data from a similar restore host will be restored on the respective restore host. That means, backed up data of `host-0` will be restored into `host-0`, backed up data of `host-1` will be restored into `host-1` and so on.
+- **paths :** `paths` specifies a list of file paths that will be restored into the hosts who are subject to this rule.
+- **snapshots :** `snapshots` specifies the list of snapshots that will be restored into the hosts who are subject to this rule. If you don't specify snapshot field, latest snasphot of the file paths specified in `paths` section will be restored.
 
 Restore rules comply with the following conditions:
 
 - There could be at most one rule with empty `targetHosts` field.
 - No two rules with non-emtpy `targetHosts` can't be matched for a single host.
-- Stash backup only one directory in a single snapshot. So, if you specify `snapshots` field in a rule, you can't specify `paths` field as it may cause restore failure if a directory wasn't backed up in a snapshot specified in the `snapshots` field.
+- Stash restore only one file path in a single snapshot. So, if you specify `snapshots` field in a rule, you can't specify `paths` field as it may cause restore failure if a file path wasn't backed up in the snapshot specified in the `snapshots` field.
 - If no rule matches for a host, no data will be restored on that host.
 - The order of the rules does not have any effect on the restore process.
 
@@ -214,7 +207,7 @@ Restore rules comply with the following conditions:
 
 Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster restore performance. You can configure the `emptyDir` using `spec.tempDir` section. You can also disable `caching` using this field. The following fields are configurable in `spec.tempDir` section:
 
-- **spec.tempDir.medium :** Specifies the type of storage medium should back this directory.
+- **spec.tempDir.medium :** Specifies the type of storage medium should back this file path.
 - **spec.tempDir.sizeLimit :** Maximum limit of storage for this volume.
 - **spec.tempDir.disableCaching :** Disable caching while restoring. This may negatively impact restore performance. This field is set to `false` by default.
 
@@ -222,17 +215,17 @@ Stash mounts an `emptyDir` for holding temporary files. It is also used for `cac
 
 `.status` section of `RestoreSession` shows progress, stats and overall phase of the restore process. The restore init-container or job adds its respective stats in `.status` section after it completes its task. `.status` section consists of the following fields:
 
+#### status.totalHosts
+
+Not every pods or replica of the target will run restore process. Thus, we refer those entities that runs restore process as a host. `status.totalHosts` specifies the total number of hosts that will run restore process for this RestoreSession. For more details on how many hosts will run restore process for which types of workload, please visit [here](#hosts-of-a-restore-process).
+
 #### status.phase
 
 `status.phase` indicates the overall phase of the restore process for this RestoreSession. `status.phase` will be `Succeeded` only if the phase of all hosts are `Succeeded`. If any of the hosts fail to complete restore, `status.phase` will be `Failed`.
 
-#### status.totalHosts
-
-A `RestoreSession` may trigger restore of multiple hosts. For example, all the pod's of a `Deployment`, `ReplicaSet` and `ReplicationController` mounts same volume. In this case, Stash will restore data only in one pod. Thus, the total number of hosts for these workloads will be 1. On the other hand, pods of `StatefulSet` and `DaemonSet` may have different volumes mounted into different replicas. In this case, Stash will restore data in each pod. Thus, the total number of hosts for these workloads will be the number of replicas for `StatefulSet` and the number of running daemon pods for `DaemonSet`.
-
 #### status.sessionDuration
 
-`status.sessionDuration` indicates the total time taken to complete the restoration of all hosts. It is simply the sum of restore duration of all individual hosts.
+`status.sessionDuration` indicates the total time taken to complete the restoration of all hosts.
 
 #### status.stats
 
@@ -245,8 +238,42 @@ Individual host stats entry consists of the following fields:
 - **duration :** `duration` indicates the total time taken to complete restore process for this host.
 - **error :** `error` shows the reason for failure if the restore process fails for this host.
 
+### Hosts of a restore process
+
+Stash uses two different models for restoring backed up data depending on the target type. It uses **init-container model** for Kubernetes workloads and  **job model** for rest of the targets. In the init-container model, Stash injects an init-container inside the targeted workload and the init-container is responsible for restoring the desired data on workload restart. In the job model, Stash launches a job to restore the desired data.
+
+Stash uses an identifier called **host** to identify the entity where the restore process will be run. This host identification process depends on the restore model and the target types. The restore strategy and host identification strategy for different types of target is explained below.
+
+**Kubernetes Workloads:**
+
+Stash uses init-container model to restore Kubernetes workloads. However, not every init-container will run restore process. How many init-containers will run restore process depends on the type of the workload. We can divide them into the following categories:
+
+- **Deployment, ReplicaSet and ReplicationController:** For these types of stateless workloads, all the replicas mount the same volumes. So, restoring into only one replica is enough. In this case, Stash uses leader election to elect the leader pod. Only the init-container inside the leader pod runs the restore process. This leader pod is identified as **host-0**. The total number of hosts for these types of workloads is 1.
+- **StatefulSet:** Every replica of a StatefulSet mounts different volumes. So, restoring into each replica is necessary. In this case, init-container inside each replica runs the restore process. Stash identifies **pod-0** as **host-0**, **pod-1** as **host-1**, **pod-2** as **host-2** and so on. Hence, the total number of hosts for a StatefulSet is the number of replicas.
+- **DaemonSet:** Daemon replicas on every node may contain different data. So, restoring into each daemon pod is necessary. In this case, init-container inside each daemon pod runs the restore process. Stash considers the individual daemon pod as a separate host and the **node name** where the daemon pod is running act as their **host** identifier. The total number of hosts for a DaemonSet is the number of daemon pod running in the cluster.
+
+**Stand-alone PVC:**
+
+Stash uses job model to restore a stand-alone PVC. Stash launches a job to restore into the targeted PVC. This job is identified as **host-0**. In this case, the total number of host is 1.
+
+**Databases:**
+
+Stash uses job model to restore a database. Stash launches a job to restore into the targeted database. In this case, the number of hosts depends on the database type.
+
+- **Stand-alone database:** For stand-alone database, the restore target is identified as **host-0** and the total number of host is 1.
+- **Replicated cluster:** For replicated clustered database such as MongoDB ReplicaSet, all the replicas contain the same data. In this case, Stash restores same data into each replica. Thus, the total number of host is 1 and it is identified as **host-0**.
+- **Sharded cluster:** For sharded database cluster, Stash restores the backed up data of individual shard into the respective shard. Hence, the number of hosts for a sharded database is the number of shards and they are identified as **host-0**, **host-1**, **host-2**, etc. However, the number of hosts may increase based on the database type.
+
+**VolumeSnapshot:**
+
+Stash uses job model for restoring volume from volume snapshots. Each volume is considered a different host and they are identified by their name. Hence, the number of total hosts is the number of targeted volumes to be restored.
+
+**Restore using volumeClaimTemplates:**
+
+If `volumeClaimTemplates` is specified in a RestoreSession, Stash creates the PVCs according to the template then it launches one job for each replica specified by `spec.target.replicas` field. In this case, the total number of hosts is number of replicas specified by `spec.target.replicas` field. If this field is not provided then the total number of hosts is 1.
+
 ## Next Steps
 
-- Learn how restore of workloads data works from [here](/docs/guides/workloads/restore.md).
-- Learn how restore of databases works from [here](/docs/guides/databases/restore.md).
-- Learn how restore stand-alone PVC works from [here](/docs/guides/volumes/restore.md).
+- Learn how restore of workloads data works from [here](/docs/guides/latest/workloads/overview.md).
+- Learn how restore of databases works from [here](/docs/guides/latest/databases/overview.md).
+- Learn how restore stand-alone PVC works from [here](/docs/guides/latest/volumes/overview.md).

@@ -22,7 +22,7 @@ This tutorial will show you how to configure automatic backup for PostgreSQL dat
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/0.12.0/setup/install/). This step is optional. You can deploy your database using any method you want. We are using `KubeDB` because it automates some tasks that you have to do manually otherwise.
 - If you are not familiar with how Stash backup databases and how auto-backup works, please check the following guides:
-  - [How Stash Backs up Databases](/docs/guides/databases/overview.md).
+  - [How Stash Backs up Databases](/docs/guides/latest/databases/overview.md).
   - [How Auto Backup Works in Stash](/docs/guides/latest/auto-backup/overview.md).
 - You should be familiar with the following `Stash` concepts:
   - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md/)
@@ -220,7 +220,7 @@ spec:
   storage:
     storageClassName: "standard"
     accessModes:
-      - ReadWriteOnce
+    - ReadWriteOnce
     resources:
       requests:
         storage: 1Gi
@@ -296,7 +296,7 @@ spec:
   storage:
     storageClassName: "standard"
     accessModes:
-      - ReadWriteOnce
+    - ReadWriteOnce
     resources:
       requests:
         storage: 1Gi

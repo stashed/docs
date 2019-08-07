@@ -1,16 +1,16 @@
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfigurationTemplate
+kind: BackupBlueprint
 metadata:
-  name: workload-backup-template
+  name: workload-backup-blueprint
 spec:
-  # ============== Template for Repository ==========================
+  # ============== Blueprint for Repository ==========================
   backend:
     gcs:
       bucket: stash-backup
       prefix: stash/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
   wipeOut: false
-  # ============== Template for BackupConfiguration =================
+  # ============== Blueprint for BackupConfiguration =================
   schedule: "* * * * *"
   # task: # no task section is required for workload data backup
   #   name: workload-backup

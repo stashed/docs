@@ -57,7 +57,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -209,7 +209,7 @@ spec:
     volumeMounts:
     - name: source-data
       mountPath: /source/data
-    directories:
+    paths:
     - /source/data
   retentionPolicy:
     name: 'keep-last-5'
@@ -222,8 +222,8 @@ Here,
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend information.
 - `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 1 minute interval.
 - `spec.target.ref` refers to the `stash-demo` Deployment.
-- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target directories.
-- `spec.target.directories` specifies list of directories to backup.
+- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target paths.
+- `spec.target.paths` specifies list of file paths to backup.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
@@ -489,16 +489,16 @@ spec:
   repository:
     name: gcs-repo
   rules:
-    - paths:
-        - /source/data
+  - paths:
+    - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-recovered
     volumeMounts:
-      - name: source-data
-        mountPath: /source/data
+    - name:  source-data
+      mountPath:  /source/data
 ```
 
 Here,

@@ -31,7 +31,7 @@ This concept section is divided into the following modules:
   - [RestoreSession](/docs/concepts/crds/restoresession.md) introduces the concept of `RestoreSession` crd that represents a restore run of a target resource.
   - [Function](/docs/concepts/crds/function.md) introduces the concept of `Function` crd that represents a step of a backup or restore process.
   - [Task](/docs/concepts/crds/task.md) introduces the concept of `Task` crd which specifies an ordered collection of multiple `Function`s and their parameters that make up a complete backup or restore process.
-  - [BackupConfigurationTemplate](/docs/concepts/crds/backupconfiguration_template.md) introduces the concept of `BackupConfigurationTemplate` crd that specifies a template for `Repository` and `BackupConfiguration` object which provides an option to share backup configuration across similar targets.
+  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md) introduces the concept of `BackupBlueprint` crd that specifies a blueprint for `Repository` and `BackupConfiguration` object which provides an option to share backup configuration across similar targets.
   - [AppBinding](/docs/concepts/appbinding.md) introduces the concept of `AppBinding` crd which holds the information that are necessary to connect with an application like database.
   - [Snapshot](/docs/concepts/crds/snapshot.md) introduces the concept of `Snapshot` object that represents backed up snapshots in a Kubernetes native way.
 

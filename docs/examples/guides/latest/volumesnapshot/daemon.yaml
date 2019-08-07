@@ -6,7 +6,7 @@ metadata:
 spec:
   storageClassName: "standard"
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -39,6 +39,6 @@ spec:
           name: source-data
       restartPolicy: Always
       volumes:
-        - name: source-data
-          persistentVolumeClaim:
-            claimName: backup-pvc
+      - name: source-data
+        persistentVolumeClaim:
+          claimName: backup-pvc

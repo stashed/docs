@@ -22,7 +22,7 @@ This tutorial will show you how to configure automatic backup for PersistentVolu
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 - You will need to have a PVC with `ReadWriteMany` access permission. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfigurationTemplate](/docs/concepts/crds/backupconfiguration_template.md/)
+  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md/)
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
   - [BackupSession](/docs/concepts/crds/backupsession.md/)
   - [Repository](/docs/concepts/crds/repository.md/)
@@ -61,9 +61,9 @@ pvc-backup    6h55m
 pvc-restore   6h55m
 ```
 
-## Prepare Template
+## Prepare Backup Blueprint
 
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
+We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupBlueprint` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
 
@@ -82,25 +82,25 @@ $ kubectl create secret generic -n demo gcs-secret \
 secret/gcs-secret created
 ```
 
-**Create BackupConfigurationTemplate:**
+**Create BackupBlueprint:**
 
-Now, we have to create a `BackupConfigurationTemplate` crd with a template for `Repository` and `BackupConfiguration` object.
+Now, we have to create a `BackupBlueprint` crd with a blueprint for `Repository` and `BackupConfiguration` object.
 
-Below is the YAML of the `BackupConfigurationTemplate` object that we are going to create,
+Below is the YAML of the `BackupBlueprint` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfigurationTemplate
+kind: BackupBlueprint
 metadata:
-  name: pvc-backup-template
+  name: pvc-backup-blueprint
 spec:
-  # ============== Template for Repository ==========================
+  # ============== Blueprint for Repository ==========================
   backend:
     gcs:
       bucket: appscode-qa
       prefix: stash-backup/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
-  # ============== Template for BackupConfiguration =================
+  # ============== Blueprint for BackupConfiguration =================
   task:
     name: pvc-backup
   schedule: "*/5 * * * *"
@@ -114,13 +114,13 @@ Here,
 
 - `spec.task.name` specifies the `Task` crd name that will be used to backup the targeted PVC.
 
-Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupconfiguration_template.md#repository-template).
+Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-blueprint).
 
-Let's create the `BackupConfigurationTemplate` that we have shown above,
+Let's create the `BackupBlueprint` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/backupconfiguration_template.yaml
-backupconfigurationtemplate.stash.appscode.com/pvc-backup-template created
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/backupblueprint.yaml
+backupblueprint.stash.appscode.com/pvc-backup-blueprint created
 ```
 
 Now, automatic backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
@@ -129,16 +129,16 @@ Now, automatic backup is configured for PVC. We just have to add some annotation
 
 You have to add the following 3 annotations to a targeted PVC to enable backup for it:
 
-1. Name of the `BackupConfigurationTemplate` object where a template for `Repository` and `BackupConfiguration` has been defined.
+1. Name of the `BackupBlueprint` object where a blueprint for `Repository` and `BackupConfiguration` has been defined.
 
     ```yaml
-    stash.appscode.com/backup-template: <BackupConfigurationTemplate name>
+    stash.appscode.com/backup-blueprint: <BackupBlueprint name>
     ```
 
-2. List of directories that will be backed up. Use comma (`,`) to separate multiple directories. For example, `"/my/target/dir-1,/my/target/dir-2"`.
+2. List of file paths that will be backed up. Use comma (`,`) to separate multiple file paths. For example, `"/my/target/dir-1,/my/target/dir-2"`.
 
     ```yaml
-    stash.appscode.com/target-directories: "<directories to backup>"
+    stash.appscode.com/target-paths: "<paths to backup>"
     ```
 
 3. MountPath where the PVC will be mounted inside backup job. This should be same as the directory where the PVC has been mounted inside workload.
@@ -268,7 +268,7 @@ hello from sample file.
 
 ## Backup
 
-Now, we are going to add auto backup specific annotations to the PVC. Stash watches for PVC with auto-backup annotations. Once it finds a PVC with auto-backup annotations, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupConfigurationTemplate`. Then, rest of the backup process will proceed as normal backup of a stand-alone PVC as describe [here](/docs/guides/latest/volumes/pvc.md).
+Now, we are going to add auto backup specific annotations to the PVC. Stash watches for PVC with auto-backup annotations. Once it finds a PVC with auto-backup annotations, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupBlueprint`. Then, rest of the backup process will proceed as normal backup of a stand-alone PVC as describe [here](/docs/guides/latest/volumes/pvc.md).
 
 **Add Annotations:**
 
@@ -276,8 +276,8 @@ Let's add the auto backup specific annotation to the PVC,
 
 ```console
 $ kubectl annotate pvc nfs-pvc -n demo --overwrite \
-  stash.appscode.com/backup-template=pvc-backup-template \
-  stash.appscode.com/target-directories="/my/sample/data" \
+  stash.appscode.com/backup-blueprint=pvc-backup-blueprint \
+  stash.appscode.com/target-paths="/my/sample/data" \
   stash.appscode.com/mountpath="/my/sample/data"
 ```
 
@@ -294,9 +294,9 @@ metadata:
   annotations:
     pv.kubernetes.io/bind-completed: "yes"
     pv.kubernetes.io/bound-by-controller: "yes"
-    stash.appscode.com/backup-template: pvc-backup-template
+    stash.appscode.com/backup-blueprint: pvc-backup-blueprint
     stash.appscode.com/mountpath: /my/sample/data
-    stash.appscode.com/target-directories: /my/sample/data
+    stash.appscode.com/target-paths: /my/sample/data
   name: nfs-pvc
   namespace: demo
 spec:
@@ -319,7 +319,7 @@ status:
   phase: Bound
 ```
 
-Now, Stash will create a `Repository` crd and a `BackupConfiguration` crd according to the template.
+Now, Stash will create a `Repository` crd and a `BackupConfiguration` crd according to the blueprint.
 
 **Verify Repository:**
 
@@ -394,7 +394,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /my/sample/data
     ref:
       apiVersion: v1
@@ -408,7 +408,7 @@ spec:
   tempDir: {}
 ```
 
-Notice that the `spec.target.ref` is pointing to the `nfs-pvc` PVC. Also, notice that the `spec.target.directories` field has been populated with the information we had provided in `stash.appscode.com/target-directories` annotation.
+Notice that the `spec.target.ref` is pointing to the `nfs-pvc` PVC. Also, notice that the `spec.target.paths` field has been populated with the information we had provided in `stash.appscode.com/target-paths` annotation.
 
 **Wait for BackupSession:**
 
@@ -436,7 +436,7 @@ NAME                            INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESS
 persistentvolumeclaim-nfs-pvc   true        41 B   1                3m37s                    5m11s
 ```
 
-> Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
+> Stash creates one snapshot for each targeted file path. Since we are taking backup of two file paths, two snapshots have been created for this BackupSession.
 
 If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
@@ -450,7 +450,7 @@ If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of
 To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```console
-kubectl delete -n demo backupconfigurationtemplate/pvc-backup-template
+kubectl delete -n demo backupBlueprint/pvc-backup-blueprint
 kubectl delete -n demo repository/persistentvolumeclaim-nfs-pvc
 kubectl delete -n demo backupconfiguration/persistentvolumeclaim-nfs-pvc
 

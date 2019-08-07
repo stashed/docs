@@ -5,8 +5,9 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   storageClassName: standard
   resources:
     requests:
       storage: 1Gi
+      

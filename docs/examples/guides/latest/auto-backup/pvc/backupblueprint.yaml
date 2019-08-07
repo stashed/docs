@@ -1,15 +1,15 @@
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfigurationTemplate
+kind: BackupBlueprint
 metadata:
-  name: pvc-backup-template
+  name: pvc-backup-blueprint
 spec:
-  # ============== Template for Repository ==========================
+  # ============== Blueprint for Repository ==========================
   backend:
     gcs:
       bucket: appscode-qa
       prefix: stash-backup/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
-  # ============== Template for BackupConfiguration =================
+  # ============== Blueprint for BackupConfiguration =================
   task:
     name: pvc-backup
   schedule: "*/5 * * * *"

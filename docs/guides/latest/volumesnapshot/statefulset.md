@@ -102,8 +102,8 @@ metadata:
   namespace: demo
 spec:
   ports:
-    - port: 80
-      name: web
+  - port: 80
+    name: web
   clusterIP: None
   selector:
     app: stash
@@ -125,32 +125,32 @@ spec:
         app: stash
     spec:
       containers:
-        - args: ["echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
-          command: ["/bin/sh", "-c"]
-          env:
-            - name:  POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath:  metadata.name
-          name: nginx
-          image: nginx
-          ports:
-            - containerPort: 80
-              name: web
-          volumeMounts:
-            - name: source-data
-              mountPath: /source/data
+      - args: ["echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        env:
+        - name:  POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath:  metadata.name
+        name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: source-data
+          mountPath: /source/data
   volumeClaimTemplates:
-    - metadata:
-        name: source-data
-        namespace: demo
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: standard
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: source-data
+      namespace: demo
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi
 ```
 
 Let's create the Statefulset we have shown above.
@@ -212,7 +212,7 @@ spec:
       apiVersion: apps/v1
       kind: StatefulSet
       name: stash-demo
- #    replicas : 1
+    replicas : 1
     snapshotClassName: default-snapshot-class
   retentionPolicy:
     name: 'keep-last-5'
@@ -365,19 +365,18 @@ spec:
   target:
     replicas : 3
     volumeClaimTemplates:
-      - metadata:
-          name: restore-data-restore-demo-${POD_ORDINAL}
-        spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "standard"
-          resources:
-            requests:
-              storage: 1Gi
-          dataSource:
-            kind: VolumeSnapshot
-            name: source-data-stash-demo-${POD_ORDINAL}-1563177551
-#           name: source-data-stash-demo-0-1563177551
-            apiGroup: snapshot.storage.k8s.io
+    - metadata:
+        name: restore-data-restore-demo-${POD_ORDINAL}
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 1Gi
+        dataSource:
+          kind: VolumeSnapshot
+#            name: source-data-stash-demo-${POD_ORDINAL}-1563177551
+          name: source-data-stash-demo-0-1563181264
 ```
 
 Here,
@@ -460,8 +459,8 @@ metadata:
   namespace: demo
 spec:
   ports:
-    - port: 80
-      name: web
+  - port: 80
+    name: web
   clusterIP: None
   selector:
     app: restore-demo
@@ -483,24 +482,24 @@ spec:
         app: restore-demo
     spec:
       containers:
-        - args:
-            - sleep
-            - "3600"
-          name: nginx
-          image: nginx
-          ports:
-            - containerPort: 80
-              name: web
-          volumeMounts:
-            - name: restore-data
-              mountPath: /restore/data
+      - args:
+        - sleep
+        - "3600"
+        name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: restore-data
+          mountPath: /restore/data
   volumeClaimTemplates:
     - metadata:
         name: restore-data
         namespace: demo
       spec:
         accessModes:
-          - ReadWriteOnce
+        - ReadWriteOnce
         storageClassName: standard
         resources:
           requests:

@@ -50,8 +50,8 @@ spec:
     medium: Memory
     size: 2Gi
 status:
-  phase: Succeeded
   totalHosts: 5
+  phase: Succeeded
   sessionDuration: 4.148288404s
   stats:
   - duration: 884.431745ms

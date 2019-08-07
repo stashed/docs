@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Auto Backup for Workloads
 
-This tutorial will show you how to configure automatic backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployments, StatefulSets, and DaemonSets using a common template.
+This tutorial will show you how to configure automatic backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployments, StatefulSets, and DaemonSets using a common blueprint.
 
 ## Before You Begin
 
@@ -25,7 +25,7 @@ This tutorial will show you how to configure automatic backup for Kubernetes wor
 - You should be familiar with the following Stash concepts:
   - [Repository](/docs/concepts/crds/repository.md)
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupConfigurationTemplate](/docs/concepts/crds/backupconfiguration_template.md)
+  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
   - [BackupSession](/docs/concepts/crds/backupsession.md)
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
@@ -35,9 +35,9 @@ $ kubectl create namespace demo
 namespace/demo created
 ```
 
-## Prepare Template
+## Prepare Backup Blueprint
 
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupConfigurationTemplate` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
+We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupBlueprint` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
 
@@ -56,25 +56,25 @@ $ kubectl create secret generic -n demo gcs-secret \
 secret/gcs-secret created
 ```
 
-**Create BackupConfigurationTemplate:**
+**Create BackupBlueprint:**
 
-Now, we have to create a `BackupConfigurationTemplate` crd with a template for `Repository` and `BackupConfiguration` object.
+Now, we have to create a `BackupBlueprint` crd with a blueprint for `Repository` and `BackupConfiguration` object.
 
-Below is the YAML of the `BackupConfigurationTemplate` object that we are going to create,
+Below is the YAML of the `BackupBlueprint` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfigurationTemplate
+kind: BackupBlueprint
 metadata:
-  name: workload-backup-template
+  name: workload-backup-blueprint
 spec:
-  # ============== Template for Repository ==========================
+  # ============== Blueprint for Repository ==========================
   backend:
     gcs:
       bucket: appscode-qa
       prefix: stash-backup/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
-  # ============== Template for BackupConfiguration =================
+  # ============== Blueprint for BackupConfiguration =================
   schedule: "*/5 * * * *"
   retentionPolicy:
     name: 'keep-last-5'
@@ -82,13 +82,13 @@ spec:
     prune: true
 ```
 
-Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. Since the resolved prefix will be different for different workload, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupconfiguration_template.md#repository-template).
+Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. Since the resolved prefix will be different for different workload, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupconfiguration_blueprint.md#repository-blueprint).
 
-Let's create the `BackupConfigurationTemplate` that we have shown above,
+Let's create the `BackupBlueprint` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/backupconfiguration_template.yaml
-backupconfigurationtemplate.stash.appscode.com/workload-backup-template created
+$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/backupblueprint.yaml
+backupblueprint.stash.appscode.com/workload-backup-blueprint created
 ```
 
 Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload to enable periodic backup.
@@ -97,19 +97,19 @@ Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `Sta
 
 You have to add the following 3 annotations to a targeted workload to enable backup for it:
 
-1. Name of the `BackupConfigurationTemplate` object where a template for `Repository` and `BackupConfiguration` has been defined.
+1. Name of the `BackupBlueprint` object where a blueprint for `Repository` and `BackupConfiguration` has been defined.
 
 ```yaml
-stash.appscode.com/backup-template: <BackupConfigurationTemplate name>
+stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
-2. List of directories that will be backed up. Use comma (`,`) to separate multiple directories. For example, `"/my/target/dir-1,/my/target/dir-2"`.
+2. List of paths that will be backed up. Use comma (`,`) to separate multiple file paths. For example, `"/my/target/dir-1,/my/target/dir-2"`.
 
 ```yaml
-stash.appscode.com/target-directories: "<directories to backup>"
+stash.appscode.com/target-paths: "<paths to backup>"
 ```
 
-3. List of Volumes and their MountPath where the target directories are located. Use `"<volumenName>:<mountPath>"` format to specify the volumes. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1,vol-2:/mount/path-2"`.
+3. List of Volumes and their MountPath where the target file paths are located. Use `"<volumenName>:<mountPath>"` format to specify the volumes. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1,vol-2:/mount/path-2"`.
 
 ```yaml
 stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
@@ -117,7 +117,7 @@ stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
 
 ## Backup Deployment
 
-Now, we are going to backup a Deployment using the template we have configured earlier. We are going to mount two ConfigMap volume in two different directories of the Deployment. Then, we are going to backup those directories using automatic backup.
+Now, we are going to backup a Deployment using the blueprint we have configured earlier. We are going to mount two ConfigMap volume in two different directories of the Deployment. Then, we are going to backup those directories using automatic backup.
 
 **Create Deployment:**
 
@@ -148,8 +148,8 @@ metadata:
   name: stash-demo
   namespace: demo
   annotations:
-    stash.appscode.com/backup-template: workload-backup-template
-    stash.appscode.com/target-directories: "/source/data-1,/source/data-2"
+    stash.appscode.com/backup-blueprint: workload-backup-blueprint
+    stash.appscode.com/target-paths: "/source/data-1,/source/data-2"
     stash.appscode.com/volume-mounts: "source-data-1:/source/data-1,source-data-2:/source/data-2"
 spec:
   replicas: 3
@@ -184,7 +184,7 @@ spec:
           name: stash-sample-data-2
 ```
 
-Notice the `metadata.annotations` field. We have specified the automatic backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `workload-backup-template` BackupConfigurationTemplate for creating `Repository` and `BackupConfiguration` for this Deployment. BackupConfigurationTemplate is a non-namespaced resource, so we just need to specify the name of the template.
+Notice the `metadata.annotations` field. We have specified the automatic backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `workload-backup-blueprint` BackupBlueprint for creating `Repository` and `BackupConfiguration` for this Deployment. BackupBlueprint is a non-namespaced resource, so we just need to specify the name of the blueprint.
 
 Let's create the above Deployment,
 
@@ -261,7 +261,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /source/data-1
     - /source/data-2
     ref:
@@ -277,7 +277,7 @@ spec:
   tempDir: {}
 ```
 
-Notice that the `spec.target.ref` is pointing to the `stash-demo` Deployment. Also, notice that the `spec.target.directories` and `spec.target.volumeMounts` fields have been populated with the information we had provided as annotation of the Deployment.
+Notice that the `spec.target.ref` is pointing to the `stash-demo` Deployment. Also, notice that the `spec.target.paths` and `spec.target.volumeMounts` fields have been populated with the information we had provided as annotation of the Deployment.
 
 **Wait for BackupSession:**
 
@@ -306,7 +306,7 @@ NAME                    INTEGRITY   SIZE    SNAPSHOT-COUNT   LAST-SUCCESSFUL-BAC
 deployment-stash-demo   true        246 B   2                70s                      5m
 ```
 
-> Stash creates one snapshot for each targeted directory. Since we are taking backup of two directories, two snapshots have been created for this BackupSession.
+> Stash creates one snapshot for each targeted file path. Since we are taking backup of two file paths, two snapshots have been created for this BackupSession.
 
 If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS bucket, we are going to see that the snapshot has been stored there.
 
@@ -319,7 +319,7 @@ If we navigate to `stash-backup/demo/deployment/stash-demo` directory of our GCS
 
 ## Backup StatefulSet
 
-Now, we are going to backup a StatefulSet with the same template we have used to backup Deployment in the previous section.
+Now, we are going to backup a StatefulSet with the same blueprint we have used to backup Deployment in the previous section.
 
 **Create StatefulSet:**
 
@@ -350,8 +350,8 @@ metadata:
   labels:
     app: stash-demo
   annotations:
-    stash.appscode.com/backup-template: workload-backup-template
-    stash.appscode.com/target-directories: "/source/data-1,/source/data-2"
+    stash.appscode.com/backup-blueprint: workload-backup-blueprint
+    stash.appscode.com/target-paths: "/source/data-1,/source/data-2"
     stash.appscode.com/volume-mounts: "source-data-1:/source/data-1,source-data-2:/source/data-2"
 spec:
   replicas: 3
@@ -438,7 +438,7 @@ spec:
     storageSecretName: gcs-secret
 ```
 
-Notice that the variables of the `prefix` field of `BackupConfigurationTemplate` is now replaced with `demo`, `statefulset` and `sts-demo` respectively.
+Notice that the variables of the `prefix` field of `BackupBlueprint` is now replaced with `demo`, `statefulset` and `sts-demo` respectively.
 
 **Verify BackupConfiguratoin:**
 
@@ -474,7 +474,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /source/data-1
     - /source/data-2
     ref:
@@ -513,7 +513,7 @@ NAME                   INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKU
 statefulset-sts-demo   true        0 B    6                32s                      7m29s
 ```
 
->For StatfulSet, Stash takes backup from every replica. Since we are using a StatefulSet with 3 replicas and we are taking backup of 2 directories, total 6 snapshots have been created for this BackupSession.
+>For StatfulSet, Stash takes backup from every replica. Since we are using a StatefulSet with 3 replicas and we are taking backup of 2 file paths, total 6 snapshots have been created for this BackupSession.
 
 If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS bucket, we are going to see that the snapshot been stored there.
 
@@ -524,7 +524,7 @@ If we navigate to `stash-backup/demo/statefulset/sts-demo` directory of our GCS 
 
 ## Backup DaemonSet
 
-Now, we are going to use the same template to backup a DaemonSet. We are going to mount a ConfigMap in `/etc/config` directory. Then, we are going to backup this directory using automatic backup.
+Now, we are going to use the same blueprint to backup a DaemonSet. We are going to mount a ConfigMap in `/etc/config` directory. Then, we are going to backup this directory using automatic backup.
 
 **Create DaemonSet:**
 
@@ -548,8 +548,8 @@ metadata:
   name: dmn-demo
   namespace: demo
   annotations:
-    stash.appscode.com/backup-template: workload-backup-template
-    stash.appscode.com/target-directories: "/etc/config"
+    stash.appscode.com/backup-blueprint: workload-backup-blueprint
+    stash.appscode.com/target-paths: "/etc/config"
     stash.appscode.com/volume-mounts: "dmn-config:/etc/config"
 spec:
   selector:
@@ -578,7 +578,7 @@ spec:
           name: my-daemon-config
 ```
 
-Notice the `metadata.annotations` field. We have specified automatic backup specific annotations to backup our desired directory.
+Notice the `metadata.annotations` field. We have specified automatic backup specific annotations to backup our desired file path.
 
 Let's create the DaemonSet we have shown above,
 
@@ -658,7 +658,7 @@ spec:
   runtimeSettings: {}
   schedule: '*/5 * * * *'
   target:
-    directories:
+    paths:
     - /etc/config
     ref:
       apiVersion: apps/v1
@@ -715,7 +715,7 @@ kubectl delete -n demo daemonset/dmn-demo
 
 kubectl delete -n demo repository --all
 kubectl delete -n demo secret/gcs-secret
-kubectl delete -n demo backupconfigurationtemplate/workload-backup-template
+kubectl delete -n demo backupblueprint/workload-backup-blueprint
 ```
 
 If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/uninstall.md).
