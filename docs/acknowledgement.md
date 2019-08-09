@@ -6,7 +6,7 @@ menu:
     identifier: acknowledgement-stash
     name: Acknowledgement
     parent: welcome
-    weight: 20
+    weight: 1010
 product_name: stash
 menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: welcome

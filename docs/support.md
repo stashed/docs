@@ -6,7 +6,7 @@ menu:
     identifier: support-stash
     name: Support
     parent: welcome
-    weight: 25
+    weight: 1020
 product_name: stash
 menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: welcome

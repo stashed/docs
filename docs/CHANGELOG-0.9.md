@@ -4,15 +4,15 @@ description: Changelog
 menu:
   product_stash_v0.9.0-rc.0:
     identifier: changelog-stash-0.9
-    name: Changelog
+    name: Changelog-0.9
     parent: welcome
-    weight: 10
+    weight: 90
 product_name: stash
 menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: welcome
-url: /products/stash/v0.9.0-rc.0/welcome/changelog/
+url: /products/stash/v0.9.0-rc.0/welcome/changelog-0.9/
 aliases:
-  - /products/stash/v0.9.0-rc.0/CHANGELOG/
+  - /products/stash/v0.9.0-rc.0/CHANGELOG-0.9/
 ---
 # Change Log
 
