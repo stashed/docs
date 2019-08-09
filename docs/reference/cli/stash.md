@@ -1,18 +1,17 @@
 ---
 title: Stash
 menu:
-  product_stash_0.1.0:
+  product_stash_v0.9.0-rc.0:
     identifier: stash
     name: Stash
     parent: stash-cli
     weight: 0
-
 product_name: stash
 section_menu_id: reference
-menu_name: product_stash_0.1.0
-url: /products/stash/0.1.0/reference/cli/
+menu_name: product_stash_v0.9.0-rc.0
+url: /products/stash/v0.9.0-rc.0/reference/cli/
 aliases:
-  - /products/stash/0.1.0/reference/cli/cli/
+  - /products/stash/v0.9.0-rc.0/reference/cli/cli/
 
 ---
 ## stash

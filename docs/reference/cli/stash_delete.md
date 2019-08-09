@@ -1,13 +1,13 @@
 ---
 title: Delete
 menu:
-  product_stash_0.1.0:
+  product_stash_v0.9.0-rc.0:
     identifier: stash-delete
     name: Delete
     parent: stash-cli
 product_name: stash
 section_menu_id: reference
-menu_name: product_stash_0.1.0
+menu_name: product_stash_v0.9.0-rc.0
 ---
 ## stash delete
 
