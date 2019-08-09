@@ -2,17 +2,17 @@
 title: Table of Contents | Guides
 description: Table of Contents | Guides
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: v1alpha1-guides-readme
     name: Readme
     parent: v1alpha1-guides
     weight: -1
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: guides
-url: /products/stash/0.8.3/guides/v1alpha1/
+url: /products/stash/v0.9.0-rc.0/guides/v1alpha1/
 aliases:
-  - /products/stash/0.8.3/guides/v1alpha1/README/
+  - /products/stash/v0.9.0-rc.0/guides/v1alpha1/README/
 ---
 # Guides
 

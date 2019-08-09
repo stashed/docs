@@ -2,13 +2,13 @@
 title: Azure Backend | Stash
 description: Configure Stash to use Microsoft Azure Storage as Backend.
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: backend-azure
     name: Azure Blob Storage
     parent: backend
     weight: 40
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: guides
 ---
 
@@ -72,7 +72,7 @@ spec:
 Create the `Repository` we have shown above using the following command,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/0.8.3/docs/examples/guides/latest/backends/azure.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/v0.9.0-rc.0/docs/examples/guides/latest/backends/azure.yaml
 repository/azure-repo created
 ```
 

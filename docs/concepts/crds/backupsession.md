@@ -1,13 +1,13 @@
 ---
 title: BackupSession Overview
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: backupsession-overview
     name: BackupSession
     parent: crds
     weight: 20
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: concepts
 ---
 

@@ -2,13 +2,13 @@
 title: REST Backend | Stash
 description: Configure Stash to REST Server as Backend.
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: backend-rest
     name: REST Server
     parent: backend
     weight: 80
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: guides
 ---
 
@@ -70,7 +70,7 @@ spec:
 Create the `Repository` we have shown above using the following command,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/0.8.3/docs/examples/guides/latest/backends/rest.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/v0.9.0-rc.0/docs/examples/guides/latest/backends/rest.yaml
 repository/rest-repo created
 ```
 

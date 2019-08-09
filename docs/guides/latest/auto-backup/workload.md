@@ -2,13 +2,13 @@
 title: Auto Backup Workload | Stash
 description: An step by step guide on how to configure automatic backup for workloads.
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: auto-backup-workload
     name: Auto Backup for Workloads
     parent: auto-backup
     weight: 20
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: guides
 ---
 

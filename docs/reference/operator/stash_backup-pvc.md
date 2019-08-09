@@ -1,13 +1,13 @@
 ---
 title: Backup-Pvc
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: stash-backup-pvc
     name: Backup-Pvc
     parent: operator
 product_name: stash
 section_menu_id: reference
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 ---
 ## stash backup-pvc
 

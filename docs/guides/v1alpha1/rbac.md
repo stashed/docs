@@ -2,13 +2,13 @@
 title: RBAC | Stash
 description: RBAC
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: rbac-stash
     name: RBAC
     parent: v1alpha1-guides
     weight: 45
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: guides
 ---
 > New to Stash? Please start [here](/docs/concepts/README.md).

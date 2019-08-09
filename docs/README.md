@@ -2,18 +2,18 @@
 title: Welcome | Stash
 description: Welcome to Stash
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: readme-stash
     name: Readme
     parent: welcome
     weight: -1
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: welcome
-url: /products/stash/0.8.3/welcome/
+url: /products/stash/v0.9.0-rc.0/welcome/
 aliases:
-  - /products/stash/0.8.3/
-  - /products/stash/0.8.3/README/
+  - /products/stash/v0.9.0-rc.0/
+  - /products/stash/v0.9.0-rc.0/README/
 ---
 # Stash
  Stash by AppsCode is a Kubernetes operator for [restic](https://restic.net). If you are running production workloads in Kubernetes, you might want to take backup of your disks. Using Stash, you can backup Kubernetes volumes mounted in following types of workloads:

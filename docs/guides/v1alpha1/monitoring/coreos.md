@@ -2,13 +2,13 @@
 title: CoreOS Prometheus Operator | Stash
 description: Monitor Stash using CoreOS Prometheus operator
 menu:
-  product_stash_0.8.3:
+  product_stash_v0.9.0-rc.0:
     identifier: v1alpha1-monitoring-coreos-operator
     name: Prometheus Operator
     parent: v1alpha1-monitoring
     weight: 30
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: guides
 ---
 
@@ -36,7 +36,7 @@ Enable Prometheus monitoring using `prometheus.io/coreos-operator` agent while i
 Here, we are going to enable monitoring for both `backup & recovery` and `operator` metrics.
 
 ```console
-$ curl -fsSL https://github.com/stashed/installer/raw/0.8.3/deploy/stash.sh | bash -s -- \
+$ curl -fsSL https://github.com/stashed/installer/raw/v0.9.0-rc.0/deploy/stash.sh | bash -s -- \
   --monitoring-agent=prometheus.io/coreos-operator \
   --monitoring-backup=true \
   --monitoring-operator=true \
@@ -135,7 +135,7 @@ Here, `spec.serviceMonitorSelector` is used to select the `ServiceMonitor` crd t
 Let's create the `Prometheus` object we have shown above,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/0.8.3/docs/examples/monitoring/coreos/prometheus.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/v0.9.0-rc.0/docs/examples/monitoring/coreos/prometheus.yaml
 prometheus.monitoring.coreos.com/prometheus created
 ```
 

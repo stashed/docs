@@ -2,13 +2,13 @@
 title: GKE | Stash
 description: Using Stash in Google Kubernetes Engine
 menu:
-  product_stash_0.8.3:
-    identifier: platforms-gke
+  product_stash_v0.9.0-rc.0:
+    identifier: v1alpha1-platforms-gke
     name: GKE
-    parent: platforms
+    parent: v1alpha1-platforms
     weight: 30
 product_name: stash
-menu_name: product_stash_0.8.3
+menu_name: product_stash_v0.9.0-rc.0
 section_menu_id: guides
 ---
 
