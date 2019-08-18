@@ -69,8 +69,7 @@ For keystone v3 application credential authentication (application credential id
 | `RESTIC_PASSWORD`        | Password used that will be used to encrypt the backup snapshots.|
 | `OS_AUTH_URL`            | URL of the Keystone server.                             |
 | `OS_APPLICATION_CREDENTIAL_ID` | The ID of the application credential used for authentication. If not provided, the application credential must be identified by its name and its owning user.|
-| `OS_APPLICATION_CREDENTIAL_SECRET` | The secret for authenticating the application credential.
-|
+| `OS_APPLICATION_CREDENTIAL_SECRET` | The secret for authenticating the application credential. |
 
 For keystone v3 application credential authentication (application credential name):
 
@@ -80,10 +79,8 @@ For keystone v3 application credential authentication (application credential na
 | `OS_AUTH_URL`            | URL of the Keystone server.                             |
 | `OS_USERNAME` | User name|
 | `OS_USER_DOMAIN_NAME` | User domain name|
-| `OS_APPLICATION_CREDENTIAL_NAME` | The name of the application credential used for authentication. If provided, must be accompanied by a user object.
-|
-| `OS_APPLICATION_CREDENTIAL_SECRET` | The secret for authenticating the application credential.
-|
+| `OS_APPLICATION_CREDENTIAL_NAME` | The name of the application credential used for authentication. If provided, must be accompanied by a user object. |
+| `OS_APPLICATION_CREDENTIAL_SECRET` | The secret for authenticating the application credential. |
 
 **Token-based authentication:**
 
