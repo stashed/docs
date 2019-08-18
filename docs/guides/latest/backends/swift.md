@@ -73,6 +73,7 @@ For keystone v3 application credential authentication (application credential id
 |
 
 For keystone v3 application credential authentication (application credential name):
+
 | Key                      | Description                                                |
 |--------------------------|------------------------------------------------------------|
 | `RESTIC_PASSWORD`        | Password used that will be used to encrypt the backup snapshots.|
