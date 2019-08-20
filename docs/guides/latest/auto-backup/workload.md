@@ -99,21 +99,21 @@ You have to add the following 3 annotations to a targeted workload to enable bac
 
 1. Name of the `BackupBlueprint` object where a blueprint for `Repository` and `BackupConfiguration` has been defined.
 
-```yaml
-stash.appscode.com/backup-blueprint: <BackupBlueprint name>
-```
+    ```yaml
+    stash.appscode.com/backup-blueprint: <BackupBlueprint name>
+    ```
 
 2. List of paths that will be backed up. Use comma (`,`) to separate multiple file paths. For example, `"/my/target/dir-1,/my/target/dir-2"`.
 
-```yaml
-stash.appscode.com/target-paths: "<paths to backup>"
-```
+    ```yaml
+    stash.appscode.com/target-paths: "<paths to backup>"
+    ```
 
-3. List of Volumes and their MountPath where the target file paths are located. Use `"<volumenName>:<mountPath>"` format to specify the volumes. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1,vol-2:/mount/path-2"`.
+3. List of Volumes and their MountPath and SubPath where the target file paths are located. Use `"<volumenName>:<mountPath>:<subPath>"` format to specify the volumes. The `:<subPath>` part is optional. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1:sub/path-1,vol-2:/mount/path-2"`.
 
-```yaml
-stash.appscode.com/volume-mounts: "<volume>:<mountPath>"
-```
+    ```yaml
+    stash.appscode.com/volume-mounts: "<volume>:<mountPath>:<subPath (optional)>"
+    ```
 
 ## Backup Deployment
 
