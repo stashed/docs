@@ -19,10 +19,10 @@ This guide will show you how Stash backs up and restores volumes of various work
 ## Before You Begin
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
-  - [BackupSession](/docs/concepts/crds/backupsession.md/)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md/)
-  - [Repository](/docs/concepts/crds/repository.md/)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
+  - [BackupSession](/docs/concepts/crds/backupsession.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession.md)
+  - [Repository](/docs/concepts/crds/repository.md)
 
 ## How Backup Process Works
 

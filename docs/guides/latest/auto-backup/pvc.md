@@ -22,10 +22,10 @@ This tutorial will show you how to configure automatic backup for PersistentVolu
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 - You will need to have a PVC with `ReadWriteMany` access permission. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
 - You should be familiar with the following `Stash` concepts:
-  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md/)
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
-  - [BackupSession](/docs/concepts/crds/backupsession.md/)
-  - [Repository](/docs/concepts/crds/repository.md/)
+  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
+  - [BackupSession](/docs/concepts/crds/backupsession.md)
+  - [Repository](/docs/concepts/crds/repository.md)
   - [Function](/docs/concepts/crds/function.md)
   - [Task](/docs/concepts/crds/task.md)
 

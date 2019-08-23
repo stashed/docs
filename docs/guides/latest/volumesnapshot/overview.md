@@ -24,9 +24,9 @@ This guide will show you how Stash takes snapshot of PersistentVolumeClaims and 
   - `--feature-gates=VolumeSnapshotDataSource=true`
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 - You should be familiar with the following Stash concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
-  - [BackupSession](/docs/concepts/crds/backupsession.md/)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md/)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
+  - [BackupSession](/docs/concepts/crds/backupsession.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession.md)
 - You should be also familiar with the following Kubernetes concepts:
   - [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/#volumesnapshots)
   - [VolumeSnapshotContent](https://kubernetes.io/docs/concepts/storage/volume-snapshots/#volume-snapshot-contents)
