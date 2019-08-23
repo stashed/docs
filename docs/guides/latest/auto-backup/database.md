@@ -25,10 +25,10 @@ This tutorial will show you how to configure automatic backup for PostgreSQL dat
   - [How Stash Backs up Databases](/docs/guides/latest/databases/overview.md).
   - [How Auto Backup Works in Stash](/docs/guides/latest/auto-backup/overview.md).
 - You should be familiar with the following `Stash` concepts:
-  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md/)
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
-  - [BackupSession](/docs/concepts/crds/backupsession.md/)
-  - [Repository](/docs/concepts/crds/repository.md/)
+  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
+  - [BackupSession](/docs/concepts/crds/backupsession.md)
+  - [Repository](/docs/concepts/crds/repository.md)
   - [Function](/docs/concepts/crds/function.md)
   - [Task](/docs/concepts/crds/task.md)
 

@@ -23,9 +23,9 @@ This guide will show you how to take an instant backup in Stash.
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
-  - [BackupSession](/docs/concepts/crds/backupsession.md/)
-  - [Repository](/docs/concepts/crds/repository.md/)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
+  - [BackupSession](/docs/concepts/crds/backupsession.md)
+  - [Repository](/docs/concepts/crds/repository.md)
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 

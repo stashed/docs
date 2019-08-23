@@ -25,10 +25,10 @@ This guide will show you how to backup a stand-alone PersistentVolumeClaim (PVC)
 - You will need to have a PVC with `ReadWriteMany` access mode. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access mode. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md/)
-  - [BackupSession](/docs/concepts/crds/backupsession.md/)
-  - [Repository](/docs/concepts/crds/repository.md/)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md/)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
+  - [BackupSession](/docs/concepts/crds/backupsession.md)
+  - [Repository](/docs/concepts/crds/repository.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Function](/docs/concepts/crds/function.md)
   - [Task](/docs/concepts/crds/task.md)
 
