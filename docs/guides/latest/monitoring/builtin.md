@@ -329,7 +329,7 @@ Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:909
 
 **Backup and Restore Metrics:**
 
-When you perform a backup or restore using Stash, it will send respective Prometheus metrics. You can check if the metrics have been sent successfully by performing backup and restore as described [here](docs/guides/latest/workloads/deployment.md).
+When you perform a backup or restore using Stash, it will send respective Prometheus metrics. You can check if the metrics have been sent successfully by performing backup and restore as described [here](/docs/guides/latest/workloads/deployment.md).
 
 A screenshot that shows Prometheus metrics send by Stash backup and restore process is given below,
 
