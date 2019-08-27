@@ -511,7 +511,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/deployment/restoresession.yaml
+$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/restoresession.yaml
 restoresession.stash.appscode.com/deployment-restore created
 ```
 
