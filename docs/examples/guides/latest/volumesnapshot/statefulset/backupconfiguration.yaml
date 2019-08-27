@@ -4,7 +4,7 @@ metadata:
   name: statefulset-volume-snapshot
   namespace: demo
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "*/5 * * * *"
   driver: VolumeSnapshotter
   target:
     ref:

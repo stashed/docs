@@ -168,7 +168,7 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  schedule: "*/1 * * * *"
+  schedule: "*/5 * * * *"
   target:
     ref:
       apiVersion: apps/v1
@@ -188,7 +188,7 @@ spec:
 Here,
 
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend information.
-- `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 1 minute interval.
+- `spec.schedule` is a cron expression that indicates `BackupSession` will be created at 5 minute interval.
 - `spec.target.ref` refers to the `stash-demo` DaemonSet.
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target paths.
 - `spec.target.paths` specifies list of file paths to backup.

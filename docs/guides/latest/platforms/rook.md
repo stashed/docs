@@ -237,7 +237,7 @@ metadata:
 spec:
   repository:
     name: rook-repo
-  schedule: "*/1 * * * *"
+  schedule: "*/5 * * * *"
   target:
     ref:
       apiVersion: apps/v1
