@@ -145,7 +145,7 @@ Here, we can see that the PVC `nfs-pvc` has been bounded with PV `nfs-pv`.
 
 **Deploy Workload:**
 
-Now, we are going to deploy two sample pods that mount the PVC we have just created. Each of the pods will generate a sample file named `pod-1.conf` and `pod-2.conf` respectively. We are going to backup these files using Stash.
+Now, we are going to deploy two sample pods `demo-pod-1` and `demo-pod-2` that will mount `pod-1/data` and `pod-2/data` [subPath](https://kubernetes.io/docs/concepts/storage/volumes/#using-subpath) of the `nfs-pvc` respectively. Each of the pods will generate a sample file named `hello.txt` with some demo data. We are going to backup the entire PVC using Stash that contains the sample files.
 
 Below, is the YAML of the first pod that we are going to deploy,
 
@@ -159,29 +159,31 @@ spec:
   containers:
   - name: busybox
     image: busybox
-    command: ["/bin/sh", "-c","touch /shared/config/pod-1.conf && sleep 3000"]
+    command: ["/bin/sh", "-c","echo 'hello from pod 1.' > /sample/data/hello.txt && sleep 3000"]
     volumeMounts:
-    - name: shared-config
-      mountPath: /shared/config
+    - name: my-volume
+      mountPath: /sample/data
+      subPath: pod-1/data
   volumes:
-  - name: shared-config
+  - name: my-volume
     persistentVolumeClaim:
       claimName: nfs-pvc
 ```
 
-Here, we have mount the `nfs-pvc` into `/shared/config` directory of the pod. Let's deploy the pod we have shown above,
+Here, we have mounted `pod-1/data` directory of the `nfs-pvc` into `/sample/data` directory of this pod.
+
+Let's deploy the pod we have shown above,
 
 ```console
 $ kubectl apply -f ./docs/examples/guides/latest/volumes/pod-1.yaml
 pod/demo-pod-1 created
 ```
 
-Verify that the pod has generated a sample file named `pod-1.conf` in `/shared/config/` directory,
+Verify that the sample data has been generated into `/sample/data/` directory,
 
 ```console
-$ kubectl exec -n demo demo-pod-1 ls /shared/config
-index.html
-pod-1.conf
+$ kubectl exec -n demo demo-pod-1 cat /sample/data/hello.txt
+hello from pod 1.
 ```
 
 Below is the YAML of the second pod that we are going to deploy,
@@ -196,15 +198,18 @@ spec:
   containers:
   - name: busybox
     image: busybox
-    command: ["/bin/sh", "-c","touch /shared/config/pod-2.conf && sleep 3000"]
+    command: ["/bin/sh", "-c","echo 'hello from pod 2.' > /sample/data/hello.txt && sleep 3000"]
     volumeMounts:
-    - name: shared-config
-      mountPath: /shared/config
+    - name: my-volume
+      mountPath: /sample/data
+      subPath: pod-2/data
   volumes:
-  - name: shared-config
+  - name: my-volume
     persistentVolumeClaim:
       claimName: nfs-pvc
 ```
+
+Now, we have mounted `pod-2/data` directory of the `nfs-pvc` into `/sample/data` directory of this pod.
 
 Let's create the pod we have shown above,
 
@@ -213,16 +218,12 @@ $ kubectl apply -f ./docs/examples/guides/latest/volumes/pod-2.yaml
 pod/demo-pod-2 created
 ```
 
-Verify that the pod has generated a sample file named `pod-2.conf` in `/shared/config/` directory,
+Verify that the sample data has been generated into `/sample/data/` directory,
 
 ```console
-$ kubectl exec -n demo demo-pod-2 ls /shared/config
-index.html
-pod-1.conf
-pod-2.conf
+$ kubectl exec -n demo demo-pod-2 cat /sample/data/hello.txt
+hello from pod 2.
 ```
-
-As we have mounted the same PVC into the pods, the file created by one pod is available to others. Hence, we are seeing both `pod-1.conf` and `pod-2.conf` inside pod `demo-pod-2`.
 
 ## Backup
 
@@ -295,11 +296,6 @@ spec:
       apiVersion: v1
       kind: PersistentVolumeClaim
       name: nfs-pvc
-    volumeMounts:
-    - name: nfs-pvc
-      mountPath: /shared/config
-    paths:
-    - /shared/config
   retentionPolicy:
     keepLast: 5
     prune: true
@@ -310,8 +306,6 @@ Here,
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to perform a backup of a stand-alone PVC.
 - `spec.repository.name` specifies the name of the `Repository` object that holds the backend information where the backed up data has been stored.
 - `spec.target.ref` refers to the targeted PVC that will be backed up.
-- `spec.target.volumeMounts` specifies the path where the targeted PVC will be mounted inside the backup job.
-- `spec.target.paths` specifies the file paths inside the PVC that will be backed up.
 
 Let's create the `BackupConfiguration` object that we have shown above,
 
@@ -340,12 +334,11 @@ Now, wait for the next backup schedule. You can watch for `BackupSession` crd us
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=nfs-pvc-backup
 
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-...  workstation: Wed Jul  3 19:53:13 2019
-
 NAME                        BACKUPCONFIGURATION   PHASE       AGE
 nfs-pvc-backup-1562161802   nfs-pvc-backup        Succeeded   3m11s
 ```
 
-> Note: Respective CronJob creates `BackupSession` crd with the following label: `stash.appscode.com/backup-configuration=\<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
+> Note: Respective CronJob creates `BackupSession` crd with the following label: `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
 
 **Verify Backup:**
 
@@ -376,7 +369,7 @@ This section will show you how to restore the backed up data inside a stand-alon
 
 **Stop Taking Backup of the PVC:**
 
-At first, let's stop taking any further backup of the PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `nfs-pvc` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `nfs-pvc` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/latest/advanced-use-case/pause-backup.md).
 
 Let's pause the `nfs-pvc-backup` BackupConfiguration,
 
@@ -388,7 +381,7 @@ backupconfiguration.stash.appscode.com/nfs-pvc-backup patched
 Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
 
 ```console
-$ kubectl get backupconfiguration -n demo
+$ kubectl get backupconfiguration -n demo nfs-pvc-backup
 NAME             TASK   SCHEDULE      PAUSED   AGE
 nfs-pvc-backup          */1 * * * *   true     20m
 ```
@@ -399,20 +392,31 @@ Notice the `PAUSED` column. Value `true` for this field means that the BackupCon
 
 At first, let's simulate a disaster scenario. Let's delete all the files from the PVC.
 
+Delete the data of pod `demo-pod-1`:
+
 ```console
-$ kubectl exec -n demo demo-pod-2 -- sh -c "rm /shared/config/*"
+# delete data
+$ kubectl exec -n demo demo-pod-1 -- sh -c "rm /sample/data/*"
+
+# verify that data has been removed successfully
+$ kubectl exec -n demo demo-pod-1 ls /sample/data/
+# empty output which means all the files have been deleted
 ```
 
-Verify that all the files have been removed from the PVC,
+Delete the data of pod `demo-pod-2`:
 
 ```console
-$ kubectl exec -n demo demo-pod-2 ls /shared/config/
+# delete data
+$ kubectl exec -n demo demo-pod-2 -- sh -c "rm /sample/data/*"
+
+# verify that data has been removed successfully
+$ kubectl exec -n demo demo-pod-2 ls /sample/data/
 # empty output which means all the files have been deleted
 ```
 
 **Create RestoreSession:**
 
-Now, we are going to create a `RestoreSession` object to restore the backed up data into the desried PVC. Below is the YAML of the `RestoreSession` object that we are going to create,
+Now, we are going to create a `RestoreSession` object to restore the backed up data into the desired PVC. Below is the YAML of the `RestoreSession` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -430,19 +434,13 @@ spec:
       apiVersion: v1
       kind: PersistentVolumeClaim
       name: nfs-pvc
-    volumeMounts:
-    - name:  nfs-pvc
-      mountPath:  /shared/config
   rules:
-  - paths:
-    - /shared/config
+  - snapshots: ["latest"]
 ```
 
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to restore data inside a stand-alone PVC.
 - `spec.target.ref` refers to the targeted PVC where the data will be restored.
-- `spec.target.volumeMounts` specifies the directory where the targeted PVC will be mounted inside the restore job.
-  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume then the backed up files will not be restored into your desired volume.
-- `spec.rules[*].paths` specifies the file paths that will be restored from the backed up data.
+- `spec.rules[*].snapshots` specifies that we want to restore the latest snapshot of the `nfs-pvc`.
 
 Let's create the `RestoreSession` object that we have shown above,
 
@@ -459,7 +457,6 @@ Now, wait for the restore process to complete. You can watch the `RestoreSession
 $ watch -n 1 kubectl get restoresession -n demo nfs-pvc-restore
 
 Every 1.0s: kubectl get restoresession -n demo nfs-pvc-restore                  workstation: Wed Jul  3 20:10:52 2019
-
 NAME              REPOSITORY-NAME   PHASE       AGE
 nfs-pvc-restore   gcs-repo          Succeeded   32s
 ```
@@ -468,13 +465,20 @@ From the output of the above command, we can see that restoration process has be
 
 **Verify Restored Data:**
 
-Let's verify if the deleted files have been restored in `/shared/config/` directory by the following command,
+Let's verify if the deleted files have been restored successfully into the PVC. We are going to exec into individual pod and check whether the sample data exist or not.
+
+Verify that the data of `demo-pod-1` has been restored:
 
 ```console
-$ kubectl exec -n demo demo-pod-2 ls /shared/config/
-index.html
-pod-1.conf
-pod-2.conf
+$ kubectl exec -n demo demo-pod-1 cat /sample/data/hello.txt
+hello from pod 1.
+```
+
+Verify that the data of `demo-pod-2` has been restored:
+
+```console
+$ kubectl exec -n demo demo-pod-2 cat /sample/data/hello.txt
+hello from pod 2.
 ```
 
 So, we can see from the above output that the files we had deleted in **Simulate Disaster** section have been restored successfully.

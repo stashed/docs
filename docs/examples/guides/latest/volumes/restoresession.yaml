@@ -13,9 +13,5 @@ spec:
       apiVersion: v1
       kind: PersistentVolumeClaim
       name: nfs-pvc
-    volumeMounts:
-    - name:  nfs-pvc
-      mountPath:  /shared/config
   rules:
-  - paths:
-    - /shared/config
+  - snapshots: ["latest"]
