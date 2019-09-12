@@ -2,13 +2,13 @@
 title: Auto Backup Databases | Stash
 description: An step by step guide on how to configure automatic backup for Databases.
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .Version }}:
     identifier: auto-backup-database
     name: Auto Backup for Databases
     parent: auto-backup
     weight: 40
 product_name: stash
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .Version }}
 section_menu_id: guides
 ---
 

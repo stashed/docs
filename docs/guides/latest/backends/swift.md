@@ -2,13 +2,13 @@
 title: Swift Backend | Stash
 description: Configure Stash to use OpenStack Swift as Backend.
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .Version }}:
     identifier: backend-swift
     name: OpenStack Swift
     parent: backend
     weight: 60
 product_name: stash
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .Version }}
 section_menu_id: guides
 ---
 
@@ -143,7 +143,7 @@ spec:
 Create the `Repository` we have shown above using the following command,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/v0.9.0-rc.0/docs/examples/guides/latest/backends/swift.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{ .Version }}/docs/examples/guides/latest/backends/swift.yaml
 repository/swift-repo created
 ```
 

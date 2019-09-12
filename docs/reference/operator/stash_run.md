@@ -1,13 +1,13 @@
 ---
 title: Run
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .Version }}:
     identifier: stash-run
     name: Run
     parent: operator
 product_name: stash
 section_menu_id: reference
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .Version }}
 ---
 ## stash run
 

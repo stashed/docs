@@ -2,13 +2,13 @@
 title: Azure Backend | Stash
 description: Configure Stash to use Microsoft Azure Storage as Backend.
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .Version }}:
     identifier: v1alpha1-backend-azure
     name: Azure Blob Storage
     parent: v1alpha1-backend
     weight: 40
 product_name: stash
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .Version }}
 section_menu_id: guides
 ---
 

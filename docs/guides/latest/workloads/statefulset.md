@@ -2,13 +2,13 @@
 title: Backup and Restore Volumes of a StatefulSet | Stash
 description: A step by step guide showing how to backup and restore volumes of a StatefulSet.
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .Version }}:
     identifier: workload-statefulset
     name: Backup & Restore Volumes of a StatefulSet
     parent: workload
     weight: 30
 product_name: stash
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .Version }}
 section_menu_id: guides
 ---
 
