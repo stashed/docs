@@ -1,13 +1,13 @@
 ---
 title: Function Overview
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: function-overview
     name: Function
     parent: crds
     weight: 30
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: concepts
 ---
 

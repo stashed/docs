@@ -2,13 +2,13 @@
 title: EKS | Stash
 description: Using Stash in Amazon EKS
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: platforms-eks
     name: EKS
     parent: platforms
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 

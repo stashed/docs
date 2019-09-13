@@ -2,13 +2,13 @@
 title: Stand-alone Volume Backup Overview | Stash
 description: An overview on how stand-alone volume backup works in Stash.
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: volume-backup-overview
     name: How does it work?
     parent: volume-backup
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 

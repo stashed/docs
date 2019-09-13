@@ -2,13 +2,13 @@
 title: Builtin Prometheus | Stash
 description: Monitor Stash using official Prometheus server
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: monitoring-builtin
     name: Builtin Prometheus
     parent: monitoring
     weight: 20
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 

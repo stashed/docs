@@ -1,13 +1,13 @@
 ---
 title: Repository Overview
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: repository-overview
     name: Repository
     parent: crds
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: concepts
 ---
 

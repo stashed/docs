@@ -2,13 +2,13 @@
 title: Local Backend | Stash
 description: Configure Stash to Use Local Backend.
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: backend-local
     name: Kubernetes Volumes
     parent: backend
     weight: 20
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 

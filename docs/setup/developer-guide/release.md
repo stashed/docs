@@ -2,13 +2,13 @@
 title: Release | Stash
 description: Stash Release
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: release
     name: Release
     parent: developer-guide
     weight: 15
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: setup
 ---
 # Release Process

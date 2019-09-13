@@ -1,13 +1,13 @@
 ---
 title: Version
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: stash-version
     name: Version
     parent: operator
 product_name: stash
 section_menu_id: reference
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 ---
 ## stash version
 

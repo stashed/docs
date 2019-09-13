@@ -2,17 +2,17 @@
 title: Changelog | Stash
 description: Release History
 menu:
-  product_stash_{{ .Version }}:
+  product_stash_{{ .version }}:
     identifier: release-history
     name: Changelog
     parent: welcome
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .Version }}
+menu_name: product_stash_{{ .version }}
 section_menu_id: welcome
-url: /products/stash/{{ .Version }}/welcome/changelog/
+url: /products/stash/{{ .version }}/welcome/changelog/
 aliases:
-  - /products/stash/{{ .Version }}/CHANGELOG/
+  - /products/stash/{{ .version }}/CHANGELOG/
 ---
 
 ## Current Release
