@@ -2,17 +2,17 @@
 title: Table of Contents | Guides
 description: Table of Contents | Guides
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .version }}:
     identifier: latest-guides-readme
     name: Readme
     parent: latest-guides
     weight: -1
 product_name: stash
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .version }}
 section_menu_id: guides
-url: /products/stash/v0.9.0-rc.0/guides/latest/
+url: /products/stash/{{ .version }}/guides/latest/
 aliases:
-  - /products/stash/v0.9.0-rc.0/guides/latest/README/
+  - /products/stash/{{ .version }}/guides/latest/README/
 ---
 
 # Guides
