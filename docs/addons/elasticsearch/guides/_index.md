@@ -1,11 +1,11 @@
 ---
 title: elasticsearchQL Backup Guides | Stash
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .version }}:
     identifier: stash-elasticsearch-guides
     name: Guides
     parent: stash-elasticsearch
     weight: 30
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .version }}
 ---
 

@@ -2,17 +2,17 @@
 title: Table of Contents | Postgres
 description: Table of Contents | Postgres
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .version }}:
     identifier: stash-postgres-readme
     name: Readme
     parent: stash-postgres
     weight: -1
 product_name: stash
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .version }}
 section_menu_id: stash-addons
-url: /products/stash/v0.9.0-rc.0/addons/postgres/
+url: /products/stash/{{ .version }}/addons/postgres/
 aliases:
-- /products/stash/v0.9.0-rc.0/addons/postgres/README/
+- /products/stash/{{ .version }}/addons/postgres/README/
 ---
 
 # Stash Postgres Addons

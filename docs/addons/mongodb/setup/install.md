@@ -2,13 +2,13 @@
 title: Install stash-mongodb Catalog | Stash
 description: An guide on how to install stash-mongodb catalog
 menu:
-  product_stash_v0.9.0-rc.0:
+  product_stash_{{ .version }}:
     identifier: stash-mongodb-install
     name: Install
     parent: stash-mongodb-setup
     weight: 10
 product_name: stash
-menu_name: product_stash_v0.9.0-rc.0
+menu_name: product_stash_{{ .version }}
 section_menu_id: stash-addons
 ---
 

@@ -3,13 +3,13 @@ title: PostgreSQL Backup Overview | Stash
 description: How PostgreSQL Backup Works in Stash
 menu:
   product_stash_{{ .version }}:
-    identifier: database-backup-overview
+    identifier: stash-postgres-overview
     name: How does it work?
-    parent: database-backup
+    parent: stash-postgres
     weight: 10
 product_name: stash
 menu_name: product_stash_{{ .version }}
-section_menu_id: guides
+section_menu_id: stash-addons
 ---
 
 
