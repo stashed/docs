@@ -74,7 +74,7 @@ spec:
 Create the `Repository` we have shown above using the following command,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{ .Version }}/docs/examples/guides/latest/backends/gcs.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/gcs.yaml
 repository/gcs-repo created
 ```
 

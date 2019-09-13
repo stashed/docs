@@ -36,7 +36,7 @@ Enable Prometheus monitoring using `prometheus.io/coreos-operator` agent while i
 Here, we are going to enable monitoring for both `backup`, `restore` and `operator` metrics.
 
 ```console
-$ curl -fsSL https://github.com/stashed/installer/raw/{{ .Version }}/deploy/stash.sh | bash -s -- \
+$ curl -fsSL https://github.com/stashed/installer/raw/{{< param "info.version" >}}/deploy/stash.sh | bash -s -- \
   --monitoring-agent=prometheus.io/coreos-operator \
   --monitoring-backup=true \
   --monitoring-operator=true \
@@ -135,7 +135,7 @@ Here, `spec.serviceMonitorSelector` is used to select the `ServiceMonitor` crd t
 Let's create the `Prometheus` object we have shown above,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{ .Version }}/docs/examples/guides/latest/monitoring/coreos/prometheus.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/monitoring/coreos/prometheus.yaml
 prometheus.monitoring.coreos.com/prometheus created
 ```
 
