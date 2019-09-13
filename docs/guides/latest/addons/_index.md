@@ -1,5 +1,5 @@
 ---
-title: Database Backup | Stash
+title: Addons | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: database-backup

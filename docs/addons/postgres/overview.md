@@ -1,6 +1,6 @@
 ---
-title: Database Backup Overview | Stash
-description: An overview of how Database backup works in Stash.
+title: PostgreSQL Backup Overview | Stash
+description: How PostgreSQL Backup Works in Stash
 menu:
   product_stash_{{ .version }}:
     identifier: database-backup-overview
@@ -12,7 +12,8 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-# Database Backup Overview
+
+# How Stash Backup & Restore PostgreSQL Database
 
 Stash 0.9.0+ supports backup and restore of any database. This guide will give you an overview of how database backup and restore works in Stash.
 
