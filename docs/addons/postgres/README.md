@@ -1,6 +1,6 @@
 ---
-title: Table of Contents | Postgres
-description: Table of Contents | Postgres
+title: PostgreSQL Addon Overview | Stash
+description: PostgreSQL Addon Overview | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-postgres-readme
@@ -15,6 +15,22 @@ aliases:
 - /products/stash/{{ .version }}/addons/postgres/README/
 ---
 
-# Stash Postgres Addons
+# Stash PostgreSQL Addon
 
-This is stash-postgres addons readme.
+Stash 0.9.0+ supports extending its functionality through addon mechanism. Stash PostgreSQL addon enables Stash to backup and restore PostgreSQL database.
+
+This guide will give you an overview of which PostgreSQL versions are supported and how the docs are organized.
+
+## Supported PostgreSQL Version
+
+Stash supports backup and restore of the following PostgreSQL versions:
+
+- [11.2](/docs/addons/postgres/guides/11.2/standalone.md)
+
+## Documentation Overview
+
+Stash PostgreSQL documentations are organized as below:
+
+- [How does it works?](/docs/addons/postgres/overview.md) gives an overview how backup and restore process for PostgreSQL database works in Stash.
+- [Setup](/docs/addons/postgres/setup/install.md) shows how to install and uninstall PostgreSQL addon for Stash.
+- [Guides](/docs/addons/postgres/guides/11.2/standalone.md) contains step by step guides for backup and restore different versions of PostgreSQL databases under their respective version sub-category.

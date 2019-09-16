@@ -4,7 +4,7 @@ description: How PostgreSQL Backup Works in Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-postgres-overview
-    name: How does it work?
+    name: How does it works?
     parent: stash-postgres
     weight: 10
 product_name: stash
@@ -77,6 +77,6 @@ The restore process consists of the following steps:
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 
-## Next
+## Next Steps
 
-- Install PostgreSQL addon for Stash by following the guide from [here](/docs/addons/postgres/setup/install.md)
+- Install PostgreSQL addon for Stash following the guide from [here](/docs/addons/postgres/setup/install.md).
