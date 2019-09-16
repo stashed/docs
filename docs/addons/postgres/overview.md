@@ -15,15 +15,15 @@ section_menu_id: stash-addons
 
 # How Stash Backup & Restore PostgreSQL Database
 
-Stash 0.9.0+ supports backup and restore of any database. This guide will give you an overview of how database backup and restore works in Stash.
+Stash 0.9.0+ supports backup and restore of many databases. This guide will give you an overview of how PostgreSQL database backup and restore works in Stash.
 
 ## How Backup Works
 
-The following diagram shows how Stash takes backup of a database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash takes backup of a PostgreSQL database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Backup Overview" src="/docs/images/guides/latest/databases/database_backup_overview.svg">
-  <figcaption align="center">Fig: Database Backup Overview</figcaption>
+  <img alt="PostgreSQL Backup Overview" src="/docs/images/addons/postgres/backup_overview.svg">
+  <figcaption align="center">Fig: PostgreSQL Backup Overview</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -54,10 +54,10 @@ The backup process consists of the following steps:
 
 ## How Restore Works
 
-The following diagram shows how Stash restores backed up data into a database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash restores backed up data into a PostgreSQL database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/guides/latest/databases/database_restore_overview.svg">
+  <img alt="Database Restore Overview" src="/docs/images/addons/postgres/restore_overview.svg">
   <figcaption align="center">Fig: Database Restore Overview</figcaption>
 </figure>
 
@@ -76,3 +76,7 @@ The restore process consists of the following steps:
 6. Then, the job downloads the backed up data from the backend and inject into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
+
+## Next
+
+- Install PostgreSQL addon for Stash by following the guide from [here](/docs/addons/postgres/setup/install.md)
