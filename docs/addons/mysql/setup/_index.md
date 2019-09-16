@@ -1,5 +1,5 @@
 ---
-title: Setup stash-mysql | Stash
+title: Setup MySQL Addon | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-mysql-setup

@@ -1,5 +1,5 @@
 ---
-title: Setup stash-mongodb | Stash
+title: Setup MongoDB Addon | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-mongodb-setup

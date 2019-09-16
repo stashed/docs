@@ -1,5 +1,5 @@
 ---
-title: Setup stash-elasticsearch | Stash
+title: Setup Elasticsearch Addon | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-elasticsearch-setup

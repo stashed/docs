@@ -1,5 +1,5 @@
 ---
-title: mongodbQL Backup Guides | Stash
+title: MongoDB Backup & Restore Guides | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-mongodb-guides

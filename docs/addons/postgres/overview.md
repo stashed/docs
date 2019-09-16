@@ -1,6 +1,6 @@
 ---
-title: PostgreSQL Backup Overview | Stash
-description: How PostgreSQL Backup Works in Stash
+title: PostgreSQL Backup & Restore Overview | Stash
+description: How PostgreSQL Backup & Restore Works in Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-postgres-overview

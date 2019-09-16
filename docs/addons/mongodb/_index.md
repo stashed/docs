@@ -1,9 +1,9 @@
 ---
-title: stash-mongodb
+title: Stash MongoDB Addon
 menu:
   product_stash_{{ .version }}:
     identifier: stash-mongodb
-    name: Mongodb
+    name: MongoDB
     parent: stash-addons
     weight: 40
 menu_name: product_stash_{{ .version }}

@@ -1,6 +1,6 @@
 ---
-title: Install stash-postgres Catalog | Stash
-description: An guide on how to install stash-postgres catalog
+title: Install PostgreSQL Addon | Stash
+description: An guide on how to install PostgreSQL addon for Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-postgres-install

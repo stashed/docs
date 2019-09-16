@@ -1,5 +1,5 @@
 ---
-title: stash-postgres
+title: Stash PostgreSQL Addon
 menu:
   product_stash_{{ .version }}:
     identifier: stash-postgres

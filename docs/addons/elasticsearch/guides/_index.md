@@ -1,5 +1,5 @@
 ---
-title: elasticsearchQL Backup Guides | Stash
+title: Elasticsearch Backup & Restore Guides | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-elasticsearch-guides

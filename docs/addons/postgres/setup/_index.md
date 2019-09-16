@@ -1,5 +1,5 @@
 ---
-title: Setup stash-postgres | Stash
+title: Setup PostgreSQL Addon | Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-postgres-setup

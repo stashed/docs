@@ -1,6 +1,6 @@
 ---
-title: Uninstall stash-postgres Catalog | Stash
-description: An guide on how to uninstall stash-postgres catalog
+title: Uninstall PostgreSQL Addon | Stash
+description: An guide on how to uninstall PostgreSQL addon for Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-postgres-uninstall
@@ -49,7 +49,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash 
 </div>
 </div>
 
-## Customizing Uninstallation
+## Customizing Uninstaller
 
 In order to uninstall PostgreSQL addon only for a specific database version, use `--version` flag to specify the desired version.
 

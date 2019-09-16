@@ -1,5 +1,5 @@
 ---
-title: stash-mysql
+title: Stash MySQL Addon
 menu:
   product_stash_{{ .version }}:
     identifier: stash-mysql
@@ -8,4 +8,3 @@ menu:
     weight: 30
 menu_name: product_stash_{{ .version }}
 ---
-
