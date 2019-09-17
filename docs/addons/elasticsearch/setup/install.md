@@ -107,7 +107,7 @@ Now, Stash is ready to backup Elasticsearch database.
 In order to install `Function` and `Task` only for a specific Elasticsearch version, use `--version` flag to specify the desired database version.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch --version=7.2
+curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch --version=6.5
 ```
 
 The flowing flags are available for customizing Elasticsearch addon installation:

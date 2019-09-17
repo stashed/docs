@@ -54,5 +54,5 @@ curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash 
 In order to uninstall Elasticsearch addon only for a specific database version, use `--version` flag to specify the desired version.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --uninstall --catalog=stash-elasticsearch --version=7.2
+curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --uninstall --catalog=stash-elasticsearch --version=6.5
 ```
