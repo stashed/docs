@@ -25,7 +25,7 @@ This guide will give you an overview of which MySQL versions are supported and h
 
 Stash supports backup and restore of the following MySQL versions:
 
-- [8.0.14](/docs/addons/mysql/guides/8.0.14/standalone.md)
+- [8.0.14](/docs/addons/mysql/guides/8.0.14/mysql.md)
 
 ## Documentation Overview
 
@@ -33,4 +33,4 @@ Stash MySQL documentations are organized as below:
 
 - [How does it works?](/docs/addons/mysql/overview.md) gives an overview how backup and restore process for MySQL database works in Stash.
 - [Setup](/docs/addons/mysql/setup/install.md) shows how to install and uninstall MySQL addon for Stash.
-- [Guides](/docs/addons/mysql/guides/8.0.14/standalone.md) contains step by step guides for backup and restore different versions of MySQL databases under their respective version sub-category.
+- [Guides](/docs/addons/mysql/guides/8.0.14/mysql.md) contains step by step guides for backup and restore different versions of MySQL databases under their respective version sub-category.
