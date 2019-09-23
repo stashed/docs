@@ -48,7 +48,7 @@ The backup process consists of the following steps:
 
 10. The backup Job reads necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-11. Then, the Job dumps the targeted database and uploads the output to the backend. Stash stores the dumped files temporarily before uploading into the backend. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `BackupConfiguration` crd.
+11. Then, the Job dumps the targeted database and uploads the output to the backend. Stash stores the dumped files temporarily before uploading into the backend. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `BackupConfiguration` crd to use to store those dumped files temporarily.
 
 12. Finally, when the backup is completed, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
@@ -73,7 +73,7 @@ The restore process consists of the following steps:
 
 5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up data from the backend and insert into the desired database. Stash stores the downloaded files temporarily before inserting into the targeted database. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `RestoreSession` crd.
+6. Then, the job downloads the backed up data from the backend and insert into the desired database. Stash stores the downloaded files temporarily before inserting into the targeted database. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `RestoreSession` crd to use to store those restored files temporarily.
 
 7. Finally, when the restore process is completed, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 
