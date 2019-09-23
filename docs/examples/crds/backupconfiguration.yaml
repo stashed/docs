@@ -11,6 +11,7 @@ spec:
   #   name: workload-backup # task field is not required for workload data backup but it is necessary for database backup.
   schedule: "* * * * *" # backup at every minutes
   paused: false
+  backupHistoryLimit: 3
   target:
     ref:
       apiVersion: apps/v1

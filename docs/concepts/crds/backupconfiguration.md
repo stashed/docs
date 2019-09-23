@@ -41,6 +41,7 @@ spec:
   #   name: workload-backup # task field is not required for workload data backup but it is necessary for database backup.
   schedule: "* * * * *" # backup at every minutes
   paused: false
+  backupHistoryLimit: 3
   target:
     ref:
       apiVersion: apps/v1
@@ -115,6 +116,10 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 `spec.schedule` is a [cron expression](https://en.wikipedia.org/wiki/Cron) that specifies the schedule of backup. Stash creates a Kubernetes [CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/) with this schedule.
 
+#### spec.backupHistoryLimit
+
+`spec.backupHistoryLimit` specifies number of `BackupSession` and its associate resources (Job,PVC etc.) to keep for debugging purpose. The default value of this field is 1. Stash will cleanup old `BackupSession` and it's associate resources after each backup according to `backupHistoryLimit`.
+
 #### spec.task
 
 `spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target.
@@ -176,6 +181,12 @@ Stash mounts an `emptyDir` for holding temporary files. It is also used for `cac
 - **spec.tempDir.medium :** Specifies the type of storage medium should back this directory.
 - **spec.tempDir.sizeLimit :** Maximum limit of storage for this volume.
 - **spec.tempDir.disableCaching :** Disable caching while backup. This may negatively impact backup performance. This is set to `false` by default.
+
+#### spec.interimVolumeTemplate
+
+For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `spec.interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [spec.backupHistoryLimit](#specbackuphistorylimit).
+
+>Note that the usage of this field is different than `spec.tempDir` which is used for caching purpose. Stash has introduced this field because the `emptyDir` volume that is used for `spec.tempDir` does not play nice with large databases( i.e. 100Gi database). Also, it provides debugging capability as Stash keeps it until it hits the limit specified in `spec.backupHistoryLimit`.
 
 #### spec.retentionPolicy
 

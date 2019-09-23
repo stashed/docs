@@ -12,6 +12,7 @@ spec:
   wipeOut: false
   # ============== Blueprint for BackupConfiguration =================
   schedule: "* * * * *"
+  backupHistoryLimit: 3
   # task: # no task section is required for workload data backup
   #   name: workload-backup
   runtimeSettings:
