@@ -114,7 +114,7 @@ In the first case, if Stash can't resolve the variable, the default value will b
 
 Stash operator provides the following built-in variables based on `BackupConfiguration`, `BackupSession`, `RestoreSession`, `Repository`, `Task`, `Function`, `BackupBlueprint` etc.
 
-|     Environment Variable     |                                                                                      Usage                                                                                       |
+| Environment Variable         | Usage                                                                                                                                                                            |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `NAMESPACE`                  | Namespace of backup or restore job/workload                                                                                                                                      |
 | `BACKUP_SESSION`             | Name of the respective BackupSession object                                                                                                                                      |
@@ -157,6 +157,7 @@ Stash operator provides the following built-in variables based on `BackupConfigu
 | `IONICE_CLASS_DATA`          | Value of the `ionice` class data                                                                                                                                                 |
 | `ENABLE_STATUS_SUBRESOURCE`  | Specifies whether crd has subresource enabled                                                                                                                                    |
 | `PROMETHEUS_PUSHGATEWAY_URL` | URL of the Prometheus pushgateway that collects the backup/restore metrics                                                                                                       |
+| `INTERIM_DATA_DIR`           | Directory to store backed up or restored data temporarily before uploading to the backend or injecting into the target                                                           |
 
 If you want to use a variable that is not present this table, you have to provide its value in `spec.task.params` section of `BackupConfiguration` crd.
 
@@ -180,7 +181,7 @@ If you want to use a variable that is not present this table, you have to provid
 
 `spec.runtimeSettings.container` allows to configure runtime environment of a backup job at container level. You can configure the following container level parameters:
 
-  |       Field       |                                                                                                           Usage                                                                                                            |
+  | Field             | Usage                                                                                                                                                                                                                      |
   | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `resources`       | Compute resources required by sidecar container or backup job. To know how to manage resources for containers, please visit [here](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/). |
   | `livenessProbe`   | Periodic probe of backup sidecar/job container's liveness. Container will be restarted if the probe fails.                                                                                                                 |
@@ -189,7 +190,7 @@ If you want to use a variable that is not present this table, you have to provid
   | `securityContext` | Security options that backup sidecar/job's container should run with. For more details, please visit [here](https://kubernetes.io/docs/concepts/policy/security-context/).                                                 |
   | `nice`            | Set CPU scheduling priority for the backup process. For more details about `nice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#nice).                                                     |
   | `ionice`          | Set I/O scheduling class and priority for the backup process. For more details about `ionice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#ionice).                                       |
-  | `env`             | A list of the environment variables to set in the container that will be created for this function.                                                                                                                         |
+  | `env`             | A list of the environment variables to set in the container that will be created for this function.                                                                                                                        |
   | `envFrom`         | This allows to set environment variables to the container that will be created for this function from a Secret or ConfigMap.                                                                                               |
 
 
