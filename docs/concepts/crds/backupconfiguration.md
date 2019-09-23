@@ -118,7 +118,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 #### spec.backupHistoryLimit
 
-`spec.backupHistoryLimit` specifies number of `BackupSession` and its associate resources (Job,PVC etc.) to keep for debugging purpose. The default value of this field is 1. Stash will cleanup old `BackupSession` and it's associate resources after each backup according to `backupHistoryLimit`.
+`spec.backupHistoryLimit` specifies the number of `BackupSession` and its associate resources (Job, PVC etc.) to keep for debugging purpose. The default value of this field is 1. Stash will cleanup the old `BackupSession` and it's associate resources after each backup according to `backupHistoryLimit`.
 
 #### spec.task
 
