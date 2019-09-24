@@ -211,6 +211,12 @@ Stash mounts an `emptyDir` for holding temporary files. It is also used for `cac
 - **spec.tempDir.sizeLimit :** Maximum limit of storage for this volume.
 - **spec.tempDir.disableCaching :** Disable caching while restoring. This may negatively impact restore performance. This field is set to `false` by default.
 
+#### spec.interimVolumeTemplate
+
+For some targets (i.e. some databases), Stash can't directly pipe the restored data into the target. In this case, it has to store the restored data temporarily before injecting into the target. `spec.interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted automatically if you delete the `RestoreSession`.
+
+>Note that the usage of this field is different than `spec.tempDir` which is used for caching purpose. Stash has introduced this field because the `emptyDir` volume that is used for `spec.tempDir` does not play nice with large databases( i.e. 100Gi database). Also, it provides debugging capability as Stash keeps it until you delete the `RestoreSession`.
+
 ### RestoreSession `Status`
 
 `.status` section of `RestoreSession` shows progress, stats and overall phase of the restore process. The restore init-container or job adds its respective stats in `.status` section after it completes its task. `.status` section consists of the following fields:
