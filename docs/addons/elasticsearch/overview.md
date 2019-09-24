@@ -19,10 +19,10 @@ Stash 0.9.0+ supports backup and restore of many databases. This guide will give
 
 ## How Backup Works
 
-The following diagram shows how Stash takes backup of a Elasticsearch database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash takes a backup of an Elasticsearch database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Elasticsearch Backup Overview" src="/docs/images/addons/elasticsearch/backup_overview.svg">
+ <img alt="Elasticsearch Backup Overview" src="/docs/images/addons/elasticsearch/backup_overview.svg">
   <figcaption align="center">Fig: Elasticsearch Backup Overview</figcaption>
 </figure>
 
@@ -54,10 +54,10 @@ The backup process consists of the following steps:
 
 ## How Restore Works
 
-The following diagram shows how Stash restores backed up data into a Elasticsearch database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash restores backed up data into an Elasticsearch database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/addons/elasticsearch/restore_overview.svg">
+ <img alt="Database Restore Overview" src="/docs/images/addons/elasticsearch/restore_overview.svg">
   <figcaption align="center">Fig: Database Restore Overview</figcaption>
 </figure>
 

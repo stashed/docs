@@ -22,7 +22,7 @@ Stash 0.9.0+ supports backup and restore of many databases. This guide will give
 The following diagram shows how Stash takes backup of a MongoDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="MongoDB Backup Overview" src="/docs/images/addons/mongodb/backup_overview.svg">
+ <img alt="MongoDB Backup Overview" src="/docs/images/addons/mongodb/backup_overview.svg">
   <figcaption align="center">Fig: MongoDB Backup Overview</figcaption>
 </figure>
 
@@ -61,7 +61,7 @@ This section will show you backup works for different MongoDB configurations.
 For a standalone MongoDB database, the backup job directly dump the database using `mongodump` and pipe the output to the backup process.
 
 <figure align="center">
-  <img alt="Standalone MongoDB Backup Overview" src="/docs/images/addons/mongodb/standalone_backup.svg">
+ <img alt="Standalone MongoDB Backup Overview" src="/docs/images/addons/mongodb/standalone_backup.svg">
   <figcaption align="center">Fig: Standalone MongoDB Backup</figcaption>
 </figure>
 
@@ -75,17 +75,17 @@ For MongoDB ReplicaSet cluster, Stash takes backup from one of the secondary rep
 4. Unlock the secondary replica.
 
 <figure align="center">
-  <img alt="MongoDB ReplicaSet Cluster Backup Overview" src="/docs/images/addons/mongodb/replicaset_backup.svg">
+ <img alt="MongoDB ReplicaSet Cluster Backup Overview" src="/docs/images/addons/mongodb/replicaset_backup.svg">
   <figcaption align="center">Fig: MongoDB ReplicaSet Cluster Backup</figcaption>
 </figure>
 
 #### MongoDB Sharded Cluster
 
-For MongoDB sharded cluster, Stash takes backup of the individual shards as well as the config sever. Stash takes backup from a secondary replica of the shards and the config server. If there is no secondary replica then Stash will take backup from the primary replica. The backup process consists of the following steps:
+For MongoDB sharded cluster, Stash takes backup of the individual shards as well as the config server. Stash takes backup from a secondary replica of the shards and the config server. If there is no secondary replica then Stash will take backup from the primary replica. The backup process consists of the following steps:
 
 1. Disable balancer.
 2. Lock config server.
-3. Identify a secondary replica for each shards.
+3. Identify a secondary replica for each shard.
 4. Lock the secondary replica.
 5. Run backup on the secondary replica.
 6. Unlock the secondary replica.
@@ -93,7 +93,7 @@ For MongoDB sharded cluster, Stash takes backup of the individual shards as well
 8. Enable balancer.
 
 <figure align="center">
-  <img alt="MongoDB Sharded Cluster Backup Overview" src="/docs/images/addons/mongodb/sharded_backup.svg">
+ <img alt="MongoDB Sharded Cluster Backup Overview" src="/docs/images/addons/mongodb/sharded_backup.svg">
   <figcaption align="center">Fig: MongoDB Sharded Cluster Backup</figcaption>
 </figure>
 
@@ -102,7 +102,7 @@ For MongoDB sharded cluster, Stash takes backup of the individual shards as well
 The following diagram shows how Stash restores backed up data into a MongoDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/addons/mongodb/restore_overview.svg">
+ <img alt="Database Restore Overview" src="/docs/images/addons/mongodb/restore_overview.svg">
   <figcaption align="center">Fig: Database Restore Overview</figcaption>
 </figure>
 
@@ -128,10 +128,10 @@ This section will show you restore process works for different MongoDB configura
 
 #### Standalone MongoDB
 
-For a standalone MongoDB database, the restore job download the backed up data from the backend and pipe the downloaded data to `mongorestore` command which insert the data into the desired MongoDB database.
+For a standalone MongoDB database, the restore job downloads the backed up data from the backend and pipe the downloaded data to `mongorestore` command which insert the data into the desired MongoDB database.
 
 <figure align="center">
-  <img alt="Standalone MongoDB Restore Overview" src="/docs/images/addons/mongodb/standalone_restore.svg">
+ <img alt="Standalone MongoDB Restore Overview" src="/docs/images/addons/mongodb/standalone_restore.svg">
   <figcaption align="center">Fig: Standalone MongoDB Restore</figcaption>
 </figure>
 
@@ -140,16 +140,16 @@ For a standalone MongoDB database, the restore job download the backed up data f
 For MongoDB ReplicaSet cluster, Stash identifies the primary replica and restore into it.
 
 <figure align="center">
-  <img alt="MongoDB ReplicaSet Cluster Restore Overview" src="/docs/images/addons/mongodb/replicaset_restore.svg">
+ <img alt="MongoDB ReplicaSet Cluster Restore Overview" src="/docs/images/addons/mongodb/replicaset_restore.svg">
   <figcaption align="center">Fig: MongoDB ReplicaSet Cluster Restore</figcaption>
 </figure>
 
 #### MongoDB Sharded Cluster
 
-For MongoDB sharded cluster, Stash identifies the primary replica of each shards as well as the config server and restore respective backed up data into them.
+For MongoDB sharded cluster, Stash identifies the primary replica of each shard as well as the config server and restore respective backed up data into them.
 
 <figure align="center">
-  <img alt="MongoDB Sharded Cluster Restore" src="/docs/images/addons/mongodb/sharded_restore.svg">
+ <img alt="MongoDB Sharded Cluster Restore" src="/docs/images/addons/mongodb/sharded_restore.svg">
   <figcaption align="center">Fig: MongoDB Sharded Cluster Restore</figcaption>
 </figure>
 
