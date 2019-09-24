@@ -106,7 +106,7 @@ You can provide a blueprint for the `BackupConfiguration` object that will be cr
 
 - **spec.schedule :** `spec.schedule` is the schedule that will be used to create `BackupConfiguration` for respective target. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specschedule).
 
-- **spec.backupHistoryLimit :** `spec.backupHistoryLimit` specifies a limit for backup history to keep for debugging purpose. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specbackuphistroylimit).
+- **spec.backupHistoryLimit :** `spec.backupHistoryLimit` specifies a limit for backup history to keep for debugging purposes. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specbackuphistroylimit).
 
 - **spec.task :** `spec.task` specifies the name and the parameters of [Task](/docs/concepts/crds/task.md) to use to backup the target. You can template the name field with `TARGET_APP_VERSION` variable for database backup. Stash will replace this variable with respective database version. This will allow you to backup multiple database versions with the same `BackupBlueprint`. For more details, please check the following [guide](/docs/guides/latest/auto-backup/database.md).
 
