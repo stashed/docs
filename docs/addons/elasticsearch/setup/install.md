@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Install Elasticsearch Addon for Stash
 
-Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extends its capability through addon mechanism. In order to backup Elasticsearch database, you have to install Elasticsearch addon (`stash-elasticsearch`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore Elasticsearch database.
+Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extend its capability via addons. In order to backup Elasticsearch databases, you have to install Elasticsearch addon (`stash-elasticsearch`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore Elasticsearch database.
 
 You can install the addon either as a helm chart or you can create only the YAMLs of the respective resources.
 
@@ -100,7 +100,7 @@ pvc-backup                  7h7m
 pvc-restore                 7h7m
 ```
 
-Now, Stash is ready to backup Elasticsearch database.
+Now, Stash is ready to backup Elasticsearch databases.
 
 ## Customizing Installation
 

@@ -12,10 +12,9 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-
 # How Stash Backup & Restore MySQL Database
 
-Stash 0.9.0+ supports backup and restore of many databases. This guide will give you an overview of how MySQL database backup and restore works in Stash.
+Stash 0.9.0+ supports backup and restore operation of many databases. This guide will give you an overview of how MySQL database backup and restore process works in Stash.
 
 ## How Backup Works
 
@@ -52,13 +51,13 @@ The backup process consists of the following steps:
 
 12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
-## How Restore Works
+## How Restore Process Works
 
 The following diagram shows how Stash restores backed up data into a MySQL database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
   <img alt="Database Restore Overview" src="/docs/images/addons/mysql/restore_overview.svg">
-  <figcaption align="center">Fig: Database Restore Overview</figcaption>
+  <figcaption align="center">Fig: MySQL Restore Process Overview</figcaption>
 </figure>
 
 The restore process consists of the following steps:
@@ -73,7 +72,7 @@ The restore process consists of the following steps:
 
 5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up data from the backend and inject into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
+6. Then, the job downloads the backed up data from the backend and injects into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 

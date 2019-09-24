@@ -12,10 +12,9 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-
 # How Stash Backup & Restore Elasticsearch Database
 
-Stash 0.9.0+ supports backup and restore of many databases. This guide will give you an overview of how Elasticsearch database backup and restore works in Stash.
+Stash 0.9.0+ supports backup and restore operation of many databases. This guide will give you an overview of how Elasticsearch database backup and restore process works in Stash.
 
 ## How Backup Works
 
@@ -52,13 +51,13 @@ The backup process consists of the following steps:
 
 12. Finally, when the backup is completed, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
-## How Restore Works
+## How Restore Process Works
 
 The following diagram shows how Stash restores backed up data into an Elasticsearch database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
  <img alt="Database Restore Overview" src="/docs/images/addons/elasticsearch/restore_overview.svg">
-  <figcaption align="center">Fig: Database Restore Overview</figcaption>
+  <figcaption align="center">Fig: Elasticsearch Restore Process</figcaption>
 </figure>
 
 The restore process consists of the following steps:

@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Install MySQL Addon for Stash
 
-Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extends its capability through addon mechanism. In order to backup MySQL database, you have to install MySQL addon (`stash-mysql`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore MySQL database.
+Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extend its capability via addons. In order to backup MySQL databases, you have to install MySQL addon (`stash-mysql`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore MySQL database.
 
 You can install the addon either as a helm chart or you can create only the YAMLs of the respective resources.
 
@@ -76,7 +76,7 @@ pvc-backup              7h7m
 pvc-restore             7h7m
 ```
 
-Now, Stash is ready to backup MySQL database.
+Now, Stash is ready to backup MySQL databases.
 
 ## Customizing Installation
 

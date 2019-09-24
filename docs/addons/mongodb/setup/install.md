@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Install MongoDB Addon for Stash
 
-Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extends its capability through addon mechanism. In order to backup MongoDB database, you have to install MongoDB addon (`stash-mongodb`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore MongoDB database.
+Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extend its capability via addons. In order to backup MongoDB databases, you have to install MongoDB addon (`stash-mongodb`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore MongoDB database.
 
 You can install the addon either as a helm chart or you can create only the YAMLs of the respective resources.
 
@@ -88,7 +88,7 @@ pvc-backup              7h7m
 pvc-restore             7h7m
 ```
 
-Now, Stash is ready to backup MongoDB database.
+Now, Stash is ready to backup MongoDB databases.
 
 ## Customizing Installation
 

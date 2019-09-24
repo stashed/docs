@@ -12,10 +12,9 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-
 # How Stash Backup & Restore MongoDB Database
 
-Stash 0.9.0+ supports backup and restore of many databases. This guide will give you an overview of how MongoDB database backup and restore works in Stash.
+Stash 0.9.0+ supports backup and restore operation of many databases. This guide will give you an overview of how MongoDB database backup and restore process works in Stash.
 
 ## How Backup Works
 
@@ -52,13 +51,13 @@ The backup process consists of the following steps:
 
 12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
-### MongoDB Backup in Different Configuration
+### Backup Different MongoDB Configurations
 
-This section will show you backup works for different MongoDB configurations.
+This section will show you how backup works for different MongoDB configurations.
 
 #### Standalone MongoDB
 
-For a standalone MongoDB database, the backup job directly dump the database using `mongodump` and pipe the output to the backup process.
+For a standalone MongoDB database, the backup job directly dumps the database using `mongodump` and pipe the output to the backup process.
 
 <figure align="center">
  <img alt="Standalone MongoDB Backup Overview" src="/docs/images/addons/mongodb/standalone_backup.svg">
@@ -97,13 +96,13 @@ For MongoDB sharded cluster, Stash takes backup of the individual shards as well
   <figcaption align="center">Fig: MongoDB Sharded Cluster Backup</figcaption>
 </figure>
 
-## How Restore Works
+## How Restore Process Works
 
 The following diagram shows how Stash restores backed up data into a MongoDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
  <img alt="Database Restore Overview" src="/docs/images/addons/mongodb/restore_overview.svg">
-  <figcaption align="center">Fig: Database Restore Overview</figcaption>
+  <figcaption align="center">Fig: MongoDB Restore Process Overview</figcaption>
 </figure>
 
 The restore process consists of the following steps:
@@ -118,17 +117,17 @@ The restore process consists of the following steps:
 
 5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up data from the backend and inject into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
+6. Then, the job downloads the backed up data from the backend and injects into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 
-### Restore MongoDB in Different Configuration
+### Restoring Different MongoDB Configurations
 
 This section will show you restore process works for different MongoDB configurations.
 
 #### Standalone MongoDB
 
-For a standalone MongoDB database, the restore job downloads the backed up data from the backend and pipe the downloaded data to `mongorestore` command which insert the data into the desired MongoDB database.
+For a standalone MongoDB database, the restore job downloads the backed up data from the backend and pipe the downloaded data to `mongorestore` command which inserts the data into the desired MongoDB database.
 
 <figure align="center">
  <img alt="Standalone MongoDB Restore Overview" src="/docs/images/addons/mongodb/standalone_restore.svg">
