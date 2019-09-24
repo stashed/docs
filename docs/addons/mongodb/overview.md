@@ -52,6 +52,51 @@ The backup process consists of the following steps:
 
 12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
+### MongoDB Backup in Different Configuration
+
+This section will show you backup works for different MongoDB configurations.
+
+#### Standalone MongoDB
+
+For a standalone MongoDB database, the backup job directly dump the database using `mongodump` and pipe the output to the backup process.
+
+<figure align="center">
+  <img alt="Standalone MongoDB Backup Overview" src="/docs/images/addons/mongodb/standalone_backup.svg">
+  <figcaption align="center">Fig: Standalone MongoDB Backup</figcaption>
+</figure>
+
+#### MongoDB ReplicaSet Cluster
+
+For MongoDB ReplicaSet cluster, Stash takes backup from one of the secondary replicas. The backup process consists of the following steps:
+
+1. Identify a secondary replica.
+2. Lock the secondary replica.
+3. Backup the secondary replica.
+4. Unlock the secondary replica.
+
+<figure align="center">
+  <img alt="MongoDB ReplicaSet Cluster Backup Overview" src="/docs/images/addons/mongodb/replicaset_backup.svg">
+  <figcaption align="center">Fig: MongoDB ReplicaSet Cluster Backup</figcaption>
+</figure>
+
+#### MongoDB Sharded Cluster
+
+For MongoDB sharded cluster, Stash takes backup of the individual shards as well as the config sever. Stash takes backup from a secondary replica of the shards and the config server. If there is no secondary replica then Stash will take backup from the primary replica. The backup process consists of the following steps:
+
+1. Disable balancer.
+2. Lock config server.
+3. Identify a secondary replica for each shards.
+4. Lock the secondary replica.
+5. Run backup on the secondary replica.
+6. Unlock the secondary replica.
+7. Unlock config server.
+8. Enable balancer.
+
+<figure align="center">
+  <img alt="MongoDB Sharded Cluster Backup Overview" src="/docs/images/addons/mongodb/sharded_backup.svg">
+  <figcaption align="center">Fig: MongoDB Sharded Cluster Backup</figcaption>
+</figure>
+
 ## How Restore Works
 
 The following diagram shows how Stash restores backed up data into a MongoDB database. Open the image in a new tab to see the enlarged version.
@@ -76,6 +121,37 @@ The restore process consists of the following steps:
 6. Then, the job downloads the backed up data from the backend and inject into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
+
+### Restore MongoDB in Different Configuration
+
+This section will show you restore process works for different MongoDB configurations.
+
+#### Standalone MongoDB
+
+For a standalone MongoDB database, the restore job download the backed up data from the backend and pipe the downloaded data to `mongorestore` command which insert the data into the desired MongoDB database.
+
+<figure align="center">
+  <img alt="Standalone MongoDB Restore Overview" src="/docs/images/addons/mongodb/standalone_restore.svg">
+  <figcaption align="center">Fig: Standalone MongoDB Restore</figcaption>
+</figure>
+
+#### MongoDB ReplicaSet Cluster
+
+For MongoDB ReplicaSet cluster, Stash identifies the primary replica and restore into it.
+
+<figure align="center">
+  <img alt="MongoDB ReplicaSet Cluster Restore Overview" src="/docs/images/addons/mongodb/replicaset_restore.svg">
+  <figcaption align="center">Fig: MongoDB ReplicaSet Cluster Restore</figcaption>
+</figure>
+
+#### MongoDB Sharded Cluster
+
+For MongoDB sharded cluster, Stash identifies the primary replica of each shards as well as the config server and restore respective backed up data into them.
+
+<figure align="center">
+  <img alt="MongoDB Sharded Cluster Restore" src="/docs/images/addons/mongodb/sharded_restore.svg">
+  <figcaption align="center">Fig: MongoDB Sharded Cluster Restore</figcaption>
+</figure>
 
 ## Next Steps
 
