@@ -21,7 +21,7 @@ Stash 0.9.0+ uses two different models for backup/restore based on target types.
 
 The job model is further divided into two categories. In the first category, the targeted resource is well known to Stash (example, a PVC). Hence, the Stash operator itself can create the required job to backup/restore the target. In the second category, Stash follows `Function-Task` model where the targeted resource is not known to Stash. In this case, the user creates some [Function](/docs/concepts/crds/function.md) which resembles a step of backup/restore process and a [Task](/docs/concepts/crds/task.md) which specifies the order of execution of these steps. Stash uses these `Function` and `Task` to generate the required job definition to backup/restore the target.
 
-The `Function-Task` model enables Stash to backup/restore the resources that the operator itself is not aware of. Users can extend Stash by creating respective `Function` and `Task` to backup their desired resources.
+The `Function-Task` model enables Stash to backup/restore the resources that the operator itself is not aware of. Users can extend Stash by creating respective `Function`, `Task`, and docker images for respective `Function` to backup their desired resources.
 
 A Stash addon is a collection of [Functions](/docs/concepts/crds/function.md) and a [Task](/docs/concepts/crds/task.md) to backup & restore a specific resource.
 
