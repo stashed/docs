@@ -61,11 +61,11 @@ When a user creates a [BackupConfiguration](#backupconfiguration) object, Stash 
 
 ### Backup Sidecar / Backup Job
 
-When an user creates a [BackupConfiguration](#backupconfiguration) object, Stash injects a `sidecar` to the target if it is a workload (i.e. `Deployment`, `DaemonSet`, `StatefulSet` etc.). This `sidecar` takes backup when the respective CronJob triggers a backup. If the target is a database or stand-alone volume, Stash creates a job to take backup at each trigger.
+When a user creates a [BackupConfiguration](#backupconfiguration) object, Stash injects a `sidecar` to the target if it is a workload (i.e. `Deployment`, `DaemonSet`, `StatefulSet` etc.). This `sidecar` takes backup when the respective CronJob triggers a backup. If the target is a database or stand-alone volume, Stash creates a job to take backup at each trigger.
 
 ### Restore Init-Container / Restore Job
 
-When an user creates a [RestoreSession](#restoresession) object, Stash injects an `init-container` to the target if it is a workload (i.e. `Deployment`, `DaemonSet`, `StatefulSet` etc.). This `init-container` performs restore process on restart. If the target is a database or stand-alone volume, Stash creates a job to restore the target.
+When a user creates a [RestoreSession](#restoresession) object, Stash injects an `init-container` to the target if it is a workload (i.e. `Deployment`, `DaemonSet`, `StatefulSet` etc.). This `init-container` performs restore process on restart. If the target is a database or stand-alone volume, Stash creates a job to restore the target.
 
 ### Custom Resources
 

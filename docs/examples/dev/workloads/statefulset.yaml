@@ -96,7 +96,7 @@ spec:
         volumeMounts:
         - mountPath: /source/data
           name: source-data
-      - image: appscode/stash:v0.9.0-rc.0
+      - image: appscode/stash:{{ .version }}
         name: stash
         imagePullPolicy: IfNotPresent
         args:

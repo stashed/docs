@@ -1,28 +1,28 @@
 ---
-title: Database Backup Overview | Stash
-description: An overview of how Database backup works in Stash.
+title: Elasticsearch Backup Overview | Stash
+description: How Elasticsearch Backup Works in Stash
 menu:
   product_stash_{{ .version }}:
-    identifier: database-backup-overview
-    name: How does it work?
-    parent: database-backup
+    identifier: stash-elasticsearch-overview
+    name: How does it works?
+    parent: stash-elasticsearch
     weight: 10
 product_name: stash
 menu_name: product_stash_{{ .version }}
-section_menu_id: guides
+section_menu_id: stash-addons
 ---
 
-# Database Backup Overview
+# How Stash Backup & Restore Elasticsearch Database
 
-Stash 0.9.0+ supports backup and restore of any database. This guide will give you an overview of how database backup and restore works in Stash.
+Stash 0.9.0+ supports backup and restore operation of many databases. This guide will give you an overview of how Elasticsearch database backup and restore process works in Stash.
 
 ## How Backup Works
 
-The following diagram shows how Stash takes backup of a database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash takes a backup of an Elasticsearch database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Backup Overview" src="/docs/images/guides/latest/databases/database_backup_overview.svg">
-  <figcaption align="center">Fig: Database Backup Overview</figcaption>
+ <img alt="Elasticsearch Backup Overview" src="/docs/images/addons/elasticsearch/backup_overview.svg">
+  <figcaption align="center">Fig: Elasticsearch Backup Overview</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -47,17 +47,17 @@ The backup process consists of the following steps:
 
 10. The backup Job reads necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-11. Then, the Job dumps the targeted database and uploads the output to the backend. Stash pipes the output of dump command to uploading process. Hence, backup Job does not require a large volume to hold the entire dump output.
+11. Then, the Job dumps the targeted database and uploads the output to the backend. Stash stores the dumped files temporarily before uploading into the backend. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `BackupConfiguration` crd to use to store those dumped files temporarily.
 
-12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
+12. Finally, when the backup is completed, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
-## How Restore Works
+## How Restore Process Works
 
-The following diagram shows how Stash restores backed up data into a database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash restores backed up data into an Elasticsearch database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/guides/latest/databases/database_restore_overview.svg">
-  <figcaption align="center">Fig: Database Restore Overview</figcaption>
+ <img alt="Database Restore Overview" src="/docs/images/addons/elasticsearch/restore_overview.svg">
+  <figcaption align="center">Fig: Elasticsearch Restore Process</figcaption>
 </figure>
 
 The restore process consists of the following steps:
@@ -72,6 +72,10 @@ The restore process consists of the following steps:
 
 5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up data from the backend and inject into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
+6. Then, the job downloads the backed up data from the backend and insert into the desired database. Stash stores the downloaded files temporarily before inserting into the targeted database. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `RestoreSession` crd to use to store those restored files temporarily.
 
-7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
+7. Finally, when the restore process is completed, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
+
+## Next Steps
+
+- Install Elasticsearch addon for Stash following the guide from [here](/docs/addons/elasticsearch/setup/install.md).
