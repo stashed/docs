@@ -112,11 +112,11 @@ curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash 
 
 The flowing flags are available for customizing Elasticsearch addon installation:
 
-| Flag                | Usage                                                                                          |
-| ------------------- | ---------------------------------------------------------------------------------------------- |
-| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag. |
-| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.  |
-| `--image`           | Specify the name of the docker image to use for respective addons.                             |
-| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                               |
-| `--es-backup-args`  | Specify optional arguments to pass to `multielaticdump` command during backup.                 |
-| `--es-restore-args` | Specify optional arguments to pass to `multielastic` command during restore.                   |
+| Flag                | Usage                                                                                                                                                                                                                                                                                                         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                                                |
+| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                                                 |
+| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                                            |
+| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                                              |
+| `--es-backup-args`  | Specify optional arguments to pass to `multielaticdump` command during backup. This args applies to all Elasticsearch instances in this cluster. To set arguments for a specific Elasticsearch database instance, set `esArgs` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
+| `--es-restore-args` | Specify optional arguments to pass to `multielastic` command during restore. This args applies to all Elasticsearch instances in this cluster. To set arguments for a specific Elasticsearch database instance, set `esArgs` parameter in `spec.task.params` field of the respective `RestoreSession`.        |

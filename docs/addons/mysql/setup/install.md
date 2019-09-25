@@ -88,11 +88,11 @@ curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash 
 
 The flowing flags are available for customizing MySQL addon installation:
 
-| Flag                | Usage                                                                                          |
-| ------------------- | ---------------------------------------------------------------------------------------------- |
-| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag. |
-| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.  |
-| `--image`           | Specify the name of the docker image to use for respective addons.                             |
-| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                               |
-| `--my-backup-args`  | Specify optional arguments to pass to `mysqldump` command during backup.                       |
-| `--my-restore-args` | Specify optional arguments to pass to `mysql` command during restore.                          |
+| Flag                | Usage                                                                                                                                                                                                                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                          |
+| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                           |
+| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                      |
+| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                        |
+| `--my-backup-args`  | Specify optional arguments to pass to `mysqldump` command during backup. This args applies to all MySQL instances in this cluster. To set arguments for a specific MySQL database instance, set `myArgs` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
+| `--my-restore-args` | Specify optional arguments to pass to `mysql` command during restore. This args applies to all MySQL instances in this cluster. To set arguments for a specific MySQL database instance, set `myArgs` parameter in `spec.task.params` field of the respective `RestoreSession`.         |

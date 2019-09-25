@@ -100,11 +100,11 @@ curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash 
 
 The flowing flags are available for customizing MongoDB addon installation:
 
-| Flag                | Usage                                                                                          |
-| ------------------- | ---------------------------------------------------------------------------------------------- |
-| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag. |
-| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.  |
-| `--image`           | Specify the name of the docker image to use for respective addons.                             |
-| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                               |
-| `--mg-backup-args`  | Specify optional arguments to pass to `mongodump` command during backup.                       |
-| `--mg-restore-args` | Specify optional arguments to pass to `mongorestore` command during restore.                   |
+| Flag                | Usage                                                                                                                                                                                                                                                                                       |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                              |
+| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                               |
+| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                          |
+| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                            |
+| `--mg-backup-args`  | Specify optional arguments to pass to `mongodump` command during backup. This args applies to all MongoDB instances in this cluster. To set arguments for a specific MongoDB database instance, set `mgArgs` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
+| `--mg-restore-args` | Specify optional arguments to pass to `mongorestore` command during restore. This args applies to all MongoDB instances in this cluster. To set arguments for a specific MongoDB database instance, set `mgArgs` parameter in `spec.task.params` field of the respective `RestoreSession`.  |
