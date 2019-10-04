@@ -25,6 +25,10 @@ This guide will give you an overview of which PostgreSQL versions are supported 
 
 Stash supports backup and restore of the following PostgreSQL versions:
 
+- [9.6](/docs/addons/postgres/guides/9.6/standalone.md)
+- [10.2](/docs/addons/postgres/guides/10.2/standalone.md)
+- [10.6](/docs/addons/postgres/guides/10.6/standalone.md)
+- [11.1](/docs/addons/postgres/guides/11.1/standalone.md)
 - [11.2](/docs/addons/postgres/guides/11.2/standalone.md)
 
 ## Documentation Overview
