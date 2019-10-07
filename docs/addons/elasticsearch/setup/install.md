@@ -34,7 +34,7 @@ You can install the addon either as a helm chart or you can create only the YAML
 Run the following script to install `stash-elasticsearch` addon as Kubernetes YAMLs.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/script.sh | bash -s -- --catalog=stash-elasticsearch
+curl -fsSL https://github.com/stashed/catalog/raw/{{ .version }}/deploy/script.sh | bash -s -- --catalog=stash-elasticsearch
 ```
 
 </div>
@@ -45,7 +45,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/script.sh | bash
 Run the following script to install `stash-elasticsearch` addon as a Helm chart.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch
+curl -fsSL https://github.com/stashed/catalog/raw/{{ .version }}/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch
 ```
 
 </div>
@@ -107,16 +107,16 @@ Now, Stash is ready to backup Elasticsearch databases.
 In order to install `Function` and `Task` only for a specific Elasticsearch version, use `--version` flag to specify the desired database version.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch --version=6.5
+curl -fsSL https://github.com/stashed/catalog/raw/{{ .version }}/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch --version=6.5
 ```
 
 The flowing flags are available for customizing Elasticsearch addon installation:
 
-| Flag                | Usage                                                                                                                                                                                                                                                                                                         |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                                                |
-| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                                                 |
-| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                                            |
-| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                                              |
+| Flag                | Usage                                                                                                                                                                                                                                                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                                                    |
+| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                                                     |
+| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                                                |
+| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                                                  |
 | `--es-backup-args`  | Specify optional arguments to pass to `multielaticdump` command during backup. These arguments apply to all Elasticsearch instances in this cluster. To set arguments for a specific Elasticsearch database instance, set `esArgs` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
 | `--es-restore-args` | Specify optional arguments to pass to `multielastic` command during restore. These arguments apply to all Elasticsearch instances in this cluster. To set arguments for a specific Elasticsearch database instance, set `esArgs` parameter in `spec.task.params` field of the respective `RestoreSession`.        |
