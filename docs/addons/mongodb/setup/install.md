@@ -34,7 +34,7 @@ You can install the addon either as a helm chart or you can create only the YAML
 Run the following script to install `stash-mongodb` addon as Kubernetes YAMLs.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/script.sh | bash -s -- --catalog=stash-mongodb
+curl -fsSL https://github.com/stashed/catalog/raw/{{ .version }}/deploy/script.sh | bash -s -- --catalog=stash-mongodb
 ```
 
 </div>
@@ -45,7 +45,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/script.sh | bash
 Run the following script to install `stash-mongodb` addon as a Helm chart.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --catalog=stash-mongodb
+curl -fsSL https://github.com/stashed/catalog/raw/{{ .version }}/deploy/chart.sh | bash -s -- --catalog=stash-mongodb
 ```
 
 </div>
@@ -95,16 +95,16 @@ Now, Stash is ready to backup MongoDB databases.
 In order to install `Function` and `Task` only for a specific MongoDB version, use `--version` flag to specify the desired database version.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/master/deploy/chart.sh | bash -s -- --catalog=stash-mongodb --version=3.6
+curl -fsSL https://github.com/stashed/catalog/raw/{{ .version }}/deploy/chart.sh | bash -s -- --catalog=stash-mongodb --version=3.6
 ```
 
 The flowing flags are available for customizing MongoDB addon installation:
 
-| Flag                | Usage                                                                                                                                                                                                                                                                                       |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                              |
-| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                               |
-| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                          |
-| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                            |
+| Flag                | Usage                                                                                                                                                                                                                                                                                           |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                                  |
+| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                                   |
+| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                              |
+| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                                |
 | `--mg-backup-args`  | Specify optional arguments to pass to `mongodump` command during backup. These arguments apply to all MongoDB instances in this cluster. To set arguments for a specific MongoDB database instance, set `mgArgs` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
 | `--mg-restore-args` | Specify optional arguments to pass to `mongorestore` command during restore. These arguments apply to all MongoDB instances in this cluster. To set arguments for a specific MongoDB database instance, set `mgArgs` parameter in `spec.task.params` field of the respective `RestoreSession`.  |
