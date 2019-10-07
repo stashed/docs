@@ -144,7 +144,6 @@ $ kubectl create clusterrolebinding "cluster-admin-$(whoami)" \
 
 In addition, if your GKE cluster is a [private cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters), you will need to either add an additional firewall rule that allows master nodes access port `8443/tcp` on worker nodes, or change the existing rule that allows access to ports `443/tcp` and `10250/tcp` to also allow access to port `8443/tcp`. The procedure to add or modify firewall rules is described in the official GKE documentation for private clusters mentioned before.
 
-
 ## Verify installation
 To check if Stash operator pods have started, run the following command:
 ```console
@@ -172,47 +171,34 @@ Now, you are ready to [take your first backup](/docs/guides/README.md) using Sta
 ## Configuring RBAC
 Stash introduces resources, such as, `Restic`, `Repository`, `Recovery` and `Snapshot`. Stash installer will create 2 user facing cluster roles:
 
-| ClusterRole         | Aggregates To | Desription                            |
-|---------------------|---------------|---------------------------------------|
-| appscode:stash:edit | admin, edit   | Allows edit access to Stash CRDs, intended to be granted within a namespace using a RoleBinding. |
+| ClusterRole         | Aggregates To | Desription                                                                                            |
+| ------------------- | ------------- | ----------------------------------------------------------------------------------------------------- |
+| appscode:stash:edit | admin, edit   | Allows edit access to Stash CRDs, intended to be granted within a namespace using a RoleBinding.      |
 | appscode:stash:view | view          | Allows read-only access to Stash CRDs, intended to be granted within a namespace using a RoleBinding. |
 
 These user facing roles supports [ClusterRole Aggregation](https://kubernetes.io/docs/admin/authorization/rbac/#aggregated-clusterroles) feature in Kubernetes 1.9 or later clusters.
 
+## Install Stash kubectl plugin
 
-## Using kubectl for Restic
+Stash provides a CLI using kubectl plugin to work with the stash Objects quickly. Download pre-build binaries from [stashed/cli Githhub release]() and put the binary to some directory in your `PATH`. To install linux 64-bit you can run the following commands:
+
 ```console
-# List all Restic objects
-$ kubectl get restic --all-namespaces
-
-# List Restic objects for a namespace
-$ kubectl get restic -n <namespace>
-
-# Get Restic YAML
-$ kubectl get restic -n <namespace> <name> -o yaml
-
-# Describe Restic. Very useful to debug problems.
-$ kubectl describe restic -n <namespace> <name>
+# Linux amd 64-bit
+wget -O kubectl-stash https://github.com/stashed/cli/releases/download/{{< param "info.version" >}}/kubectl-stash-linux-amd64 \
+  && chmod +x kubectl-stash \
+  && sudo mv kubectl-stash /usr/local/bin/
 ```
 
+If you prefer to install kubectl Stash cli from source code, you will need to set up a GO development environment following [these instructions](https://golang.org/doc/code.html). Then, install the CLI using `go get` from source code.
 
-## Using kubectl for Recovery
 ```console
-# List all Recovery objects
-$ kubectl get recovery --all-namespaces
-
-# List Recovery objects for a namespace
-$ kubectl get recovery -n <namespace>
-
-# Get Recovery YAML
-$ kubectl get recovery -n <namespace> <name> -o yaml
-
-# Describe Recovery. Very useful to debug problems.
-$ kubectl describe recovery -n <namespace> <name>
+go get github.com/stashed/cli/...
 ```
 
+>Please note that this will install kubectl stash cli from master branch which might include breaking and/or undocumented changes.
 
 ## Detect Stash version
+
 To detect Stash version, exec into the operator pod and run `stash version` command.
 
 ```console
