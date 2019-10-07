@@ -184,7 +184,7 @@ Stash provides a CLI using kubectl plugin to work with the stash Objects quickly
 
 ```console
 # Linux amd 64-bit
-wget -O kubectl-stash https://github.com/stashed/cli/releases/download/{{< param "info.version" >}}/kubectl-stash-linux-amd64 \
+wget -O kubectl-stash https://github.com/stashed/cli/releases/download/v0.1.0/kubectl-stash-linux-amd64 \
   && chmod +x kubectl-stash \
   && sudo mv kubectl-stash /usr/local/bin/
 ```
