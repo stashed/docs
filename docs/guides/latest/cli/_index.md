@@ -2,7 +2,7 @@
 title: kubectl plugin | Stash
 menu:
   product_stash_{{ .version }}:
-    identifier: cli 
+    identifier: cli
     name: CLI
     parent: latest-guides
     weight: 120

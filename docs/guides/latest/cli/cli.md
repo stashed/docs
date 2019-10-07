@@ -2,7 +2,7 @@
 title: kubectl Plugin | Stash
 menu:
   product_stash_{{ .version }}:
-    identifier: stash-kubectl-plugin
+    identifier: stash-cli
     name: Stash kubectl Plugin
     parent: cli
     weight: 10
