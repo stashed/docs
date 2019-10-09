@@ -4,7 +4,7 @@ description: An guide on how to uninstall Elasticsearch addon for Stash
 menu:
   product_stash_{{ .version }}:
     identifier: stash-elasticsearch-uninstall
-    name: Unstall
+    name: Uninstall
     parent: stash-elasticsearch-setup
     weight: 20
 product_name: stash
@@ -12,7 +12,7 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Unstall Elasticsearch addon for Stash
+# Uninstall Elasticsearch addon for Stash
 
 In order to uninstall Elasticsearch addon, follow the instruction given below.
 
