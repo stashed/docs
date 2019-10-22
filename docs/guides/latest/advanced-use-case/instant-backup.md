@@ -241,7 +241,9 @@ metadata:
   name: deployment-backupsession
   namespace: demo
 spec:
-  backupConfiguration:
+  invoker:
+    apiGroup: stash.appscode.com
+    kind: BackupConfiguration
     name: deployment-backup
 ```
 
@@ -249,7 +251,7 @@ spec:
   ```
   stash.appscode.com/backup-configuration: <BackupConfiguration name>
   ```
-- `spec.backupConfiguration.name` indicates the name of the `BackupConfiguration` object whose target will be backed up instantly in this `BackupSession`.
+- `spec.invoker` section indicates the `BackupConfiguration` object whose target will be backed up instantly for this `BackupSession`.
 
 Let's create the `BackupSession` object that we have have shown above,
 
@@ -268,8 +270,8 @@ Run the following command to watch `BackupSession` phase,
 $ watch -n 3 kubectl get backupsession -n demo
 Every 3.0s: kubectl get backupsession -n demo                               suaas-appscode: Wed Jul 10 17:18:52 2019
 
-NAME                       BACKUPCONFIGURATION   PHASE       AGE
-deployment-backupsession   deployment-backup     Succeeded   21s
+NAME                       INVOKER-TYPE          INVOKER-NAME        PHASE       AGE
+deployment-backupsession   BackupConfiguration   deployment-backup   Succeeded   21s
 ```
 
 We can see from the above output that the instant backup session has succeeded. Now, we are going to verify that the backed up data has been stored in the backend.

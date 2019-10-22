@@ -479,8 +479,9 @@ Now, wait for the next backup schedule. Run the following command to watch `Back
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-1
 
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-1  workstation: Thu Aug  1 20:35:43 2019
-NAME                                    BACKUPCONFIGURATION            PHASE       AGE
-postgres-sample-postgres-1-1564670101   postgres-sample-postgres-1     Succeeded   42s
+
+NAME                                    INVOKER-TYPE          INVOKER-NAME                 PHASE       AGE
+postgres-sample-postgres-1-1564670101   BackupConfiguration   postgres-sample-postgres-1   Succeeded   42s
 ```
 
 > Note: Backup CronJob creates `BackupSession` crd with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
@@ -576,10 +577,10 @@ Now, wait for the next backup schedule. Run the following command to watch `Back
 
 ```console
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-2
-
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-2  workstation: Thu Aug  1 20:55:40 2019
-NAME                                    BACKUPCONFIGURATION            PHASE       AGE
-postgres-sample-postgres-2-1564671303   postgres-sample-postgres-2     Succeeded   37s
+
+NAME                                    INVOKER-TYPE          INVOKER-NAME                 PHASE       AGE
+postgres-sample-postgres-2-1564671303   BackupConfiguration   postgres-sample-postgres-2   Succeeded   37s
 ```
 
 **Verify Backup:**

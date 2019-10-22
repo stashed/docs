@@ -231,9 +231,8 @@ Wait for the next schedule for backup. Run the following command to watch `Backu
 $ watch -n 1 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo                      suaas-appscode: Tue Jun 18 18:35:41 2019
 
-NAME                                     BACKUPCONFIGURATION           PHASE       AGE
-pvc-volume-snapshot-1563186667           pvc-volume-snapshot           Running     32s
-pvc-volume-snapshot-1563186667           pvc-volume-snapshot           Succeeded   1m32s
+NAME                             INVOKER-TYPE          INVOKER-NAME          PHASE       AGE
+pvc-volume-snapshot-1563186667   BackupConfiguration   pvc-volume-snapshot   Succeeded   1m32s
 ```
 
 We can see above that the backup session has succeeded. Now, we are going to verify that the `VolumeSnapshot` has been created and the snapshots has been stored in the respective backend.
