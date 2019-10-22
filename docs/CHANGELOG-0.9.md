@@ -24,9 +24,11 @@ Stash `v0.9.0-rc.2` comes with some bug fixes and improvements since `v0.9.0-rc.
 
 ## Significant Changes
 
-- **Retention Policy for VolumeSnapshot:** We have implemented retention policy for VolumeSnapshot. Now, your old VolumeSnapshots will automatically cleaned according to retention policy. Ref: [stashed/stash#926](https://github.com/stashed/stash/pull/926).
+- **Retention Policy for VolumeSnapshot:** We have implemented retention policy for VolumeSnapshot. Now, your old VolumeSnapshots will be automatically garbage collected according to retention policy. Ref: [stashed/stash#926](https://github.com/stashed/stash/pull/926).
 
 - **Fix Argument Passing:** We have fixed argument passing to database backup/restore commands. Ref: [stashed/mongodb#5](https://github.com/stashed/mongodb/pull/5), [stashed/postgres#17](https://github.com/stashed/postgres/pull/17), [stashed/elasticsearch#8](https://github.com/stashed/elasticsearch/pull/8), [stashed/mysql#9](https://github.com/stashed/mysql/pull/9).
+
+- **BackupSession API Revision:** Now a `BackupSession` can be triggered via `spec.invoker` instead of `spec.backupconfiguration` field. This api change is done in preparation for upcoming `BackupBatch` crd support. Ref: [stashed/stash#890](https://github.com/stashed/stash/pull/890), [stashed/stash#931](https://github.com/stashed/stash/pull/931), [stashed/docs#44](https://github.com/stashed/docs/pull/44).
 
 ## Issue Fixed
 
