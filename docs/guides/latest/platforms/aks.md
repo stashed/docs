@@ -389,8 +389,8 @@ Wait for the next schedule for backup. Run the following command to watch `Backu
 $ watch -n 2 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo     suaas-appscode: Mon Jun 24 10:23:08 2019
 
-NAME                           BACKUPCONFIGURATION   PHASE       AGE
-deployment-backup-1561350125   deployment-backup     Succeeded   63s
+NAME                           INVOKER-TYPE          INVOKER-NAME        PHASE       AGE
+deployment-backup-1561350125   BackupConfiguration   deployment-backup   Succeeded   63s
 ```
 
 We can see from the above output that the backup session has succeeded. Now, we are going to verify whether the backed up data has been stored in the backend.
@@ -402,7 +402,7 @@ Once a backup is complete, Stash will update the respective `Repository` crd to 
 ```console
 $ kubectl get repository -n demo
 NAME         INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-azure-repo   true        8 B   1                2s                       1m10s
+azure-repo   true        8 B    1                2s                       1m10s
 ```
 
 Now, if we navigate to the Azure blob container, we are going to see backed up data has been stored in `<storage account name>/source/data` directory as specified by `spec.backend.azure.prefix` field of `Repository` crd.
@@ -628,10 +628,10 @@ Now, wait for the restore process to complete. You can watch the `RestoreSession
 
 ```console
 $ watch -n 2 kubectl get restoresession -n demo
-Every 3.0s: kubectl get restore --all-namespaces                 suaas-appscode: Thu Jul 18 12:02:10 2019
+Every 3.0s: kubectl get restore -n demo        suaas-appscode: Thu Jul 18 12:02:10 2019
 
-NAMESPACE   NAME                 REPOSITORY-NAME   PHASE       AGE
-demo        deployment-restore   azure-repo        Succeeded   1m
+NAME                 REPOSITORY-NAME   PHASE       AGE
+deployment-restore   azure-repo        Succeeded   1m
 ```
 
 So, we can see from the output of the above command that the restore process has succeeded.

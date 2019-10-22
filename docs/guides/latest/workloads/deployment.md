@@ -242,7 +242,6 @@ NAME                          READY   STATUS        RESTARTS   AGE
 stash-demo-856896bd95-4gfbh   2/2     Running       0          12s
 stash-demo-856896bd95-njr8x   2/2     Running       0          17s
 stash-demo-856896bd95-ttbq4   2/2     Running       0          15s
-
 ```
 
 Look at the pod. It now has 2 containers. If you view the resource definition of this pod, you will see that there is a container named `stash` which is running `run-backup` command.
@@ -360,8 +359,8 @@ Wait for the next schedule for backup. Run the following command to watch `Backu
 $ watch -n 2 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo     suaas-appscode: Mon Jun 24 10:23:08 2019
 
-NAME                           BACKUPCONFIGURATION   PHASE       AGE
-deployment-backup-1561350125   deployment-backup     Succeeded   63s
+NAME                           INVOKER-TYPE          INVOKER-NAME        PHASE       AGE
+deployment-backup-1561350125   BackupConfiguration   deployment-backup   Succeeded   63s
 ```
 
 We can see from the above output that the backup session has succeeded. Now, we are going to verify whether the backed up data has been stored in the backend.

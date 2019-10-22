@@ -4,7 +4,9 @@ metadata:
   name: deployment-stash-demo-1564743309
   namespace: demo
 spec:
-  backupConfiguration:
+  invoker:
+    apiGroup: stash.appscode.com
+    kind: BackupConfiguration
     name: deployment-stash-demo
 status:
   totalHosts: 1

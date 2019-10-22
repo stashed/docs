@@ -287,9 +287,8 @@ Now, wait for the next backup schedule. Run the following command to watch `Back
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=deployment-stash-demo
 
 Every 1.0s: kubectl get backupsession -n demo                                   workstation: Wed Jun 26 12:20:31 2019
-NAME                               BACKUPCONFIGURATION     PHASE       AGE
-deployment-stash-demo-1561530008   deployment-stash-demo   Running     24s
-deployment-stash-demo-1561530008   deployment-stash-demo   Succeeded   61s
+NAME                               INVOKER-TYPE          INVOKER-NAME            PHASE       AGE
+deployment-stash-demo-1561530008   BackupConfiguration   deployment-stash-demo   Succeeded   61s
 ```
 
 >Note: Respective CronJob creates `BackupSession` crd with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
@@ -498,9 +497,8 @@ Now, wait for the next backup schedule. Watch the `BackupSession` of the BackupC
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=statefulset-sts-demo
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-...  workstation: Wed Jun 26 13:01:22 2019
 
-NAME                              BACKUPCONFIGURATION    PHASE     AGE
-statefulset-sts-demo-1561532403   statefulset-sts-demo   Running   79s
-statefulset-sts-demo-1561532403   statefulset-sts-demo   Succeeded   2m21s
+NAME                              INVOKER-TYPE          INVOKER-NAME           PHASE       AGE
+statefulset-sts-demo-1561532403   BackupConfiguration   statefulset-sts-demo   Succeeded   2m21s
 ```
 
 **Verify Backup:**
@@ -680,9 +678,8 @@ $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-conf
 
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-...  workstation: Wed Jun 26 13:30:14 2019
 
-NAME                            BACKUPCONFIGURATION   PHASE     AGE
-daemonset-dmn-demo-1561534208   daemonset-dmn-demo    Running   6s
-daemonset-dmn-demo-1561534208   daemonset-dmn-demo    Succeeded   45s
+NAME                            INVOKER-TYPE          INVOKER-NAME         PHASE       AGE
+daemonset-dmn-demo-1561534208   BackupConfiguration   daemonset-dmn-demo   Succeeded   45s
 ```
 
 **Verify Backup:**

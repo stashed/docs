@@ -84,7 +84,6 @@ spec:
   - --backup-session=${BACKUP_SESSION:=}
   - --restore-session=${RESTORE_SESSION:=}
   - --output-dir=${outputDir:=}
-  - --enable-status-subresource=${ENABLE_STATUS_SUBRESOURCE:=false}
 ```
 
 Here, we are going to describe the various sections of a `Function` crd.
