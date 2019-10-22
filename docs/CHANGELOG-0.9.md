@@ -16,6 +16,158 @@ aliases:
 ---
 # Change Log
 
+## [v0.9.0-rc.2](https://github.com/stashed/stash/tree/v0.9.0-rc.2)
+
+[Full Changelog](https://github.com/stashed/stash/compare/v0.9.0-rc.1...v0.9.0-rc.2)
+
+Stash `v0.9.0-rc.2` comes with some bug fixes and improvements since `v0.9.0-rc.1` release. Please, try it and give us your valuable feedback. To install, please follow the guide [here](https://appscode.com/products/stash/v0.9.0-rc.2/setup/install/).
+
+## Significant Changes
+
+- **Retention Policy for VolumeSnapshot:** We have implemented retention policy for VolumeSnapshot. Now, your old VolumeSnapshots will be automatically garbage collected according to retention policy. Ref: [stashed/stash#926](https://github.com/stashed/stash/pull/926).
+
+- **Fix Argument Passing:** We have fixed argument passing to database backup/restore commands. Ref: [stashed/mongodb#5](https://github.com/stashed/mongodb/pull/5), [stashed/postgres#17](https://github.com/stashed/postgres/pull/17), [stashed/elasticsearch#8](https://github.com/stashed/elasticsearch/pull/8), [stashed/mysql#9](https://github.com/stashed/mysql/pull/9).
+
+- **BackupSession API Revision:** Now a `BackupSession` can be triggered via `spec.invoker` instead of `spec.backupConfiguration` field. This breaking api change is done in preparation for upcoming `BackupBatch` crd support. Ref: [stashed/stash#890](https://github.com/stashed/stash/pull/890), [stashed/stash#931](https://github.com/stashed/stash/pull/931), [stashed/docs#44](https://github.com/stashed/docs/pull/44).
+
+## Issue Fixed
+
+- Implement retention policy for VolumeSnapshot [#808](https://github.com/stashed/stash/issues/808)
+- Support elasticsearch backups [#894](https://github.com/stashed/stash/issues/)
+- Chart "stash-postgres" not found in appscode index [#898](https://github.com/stashed/stash/issues/894)
+- Support mysql backups [#892](https://github.com/stashed/stash/issues/892)
+- Support mongodb backups [#893](https://github.com/stashed/stash/issues/893)
+- RestoreSession stuck running [#895](https://github.com/stashed/stash/issues/895)
+- Stash restore job fails [#914](https://github.com/stashed/stash/issues/914)
+
+## Pull Request Merged
+
+**[stashed/stash](https://github.com/stashed/stash):**
+
+- Add release checklist issue template [#934](https://github.com/stashed/stash/pull/934)
+- Volume e2e test github action [#933](https://github.com/stashed/stash/pull/933)
+- Fix BackupSession additional print column [#932](https://github.com/stashed/stash/pull/932)
+- Remove spec.backupConfiguration from BackupSession [#931](https://github.com/stashed/stash/pull/931)
+- Update e2e tests to run on GitHub actions [#917](https://github.com/stashed/stash/pull/917)
+- Enable make ci [#928](https://github.com/stashed/stash/pull/928)
+- Don't restart workload on backup pause+Use ImagePullPolicy: "Always" for Function-Task model [#929](https://github.com/stashed/stash/pull/929)
+- Add status.observedGeneration [#927](https://github.com/stashed/stash/pull/927)
+- Implement RetentionPolicy for VolumeSnapshot [#926](https://github.com/stashed/stash/pull/926)
+- Verify generated files are up to date [#925](https://github.com/stashed/stash/pull/925)
+- Update and rename go.yml to ci.yml [#922](https://github.com/stashed/stash/pull/922)
+- Add probe and BackupBatch api [#890](https://github.com/stashed/stash/pull/890)
+- Use core package from k8s.io/api repo [#921](https://github.com/stashed/stash/pull/921)
+
+**[stashed/docs](https://github.com/stashed/docs):**
+
+- Use `spec.invoker` instead of `spec.backupConfiguration` in BackupSession [stashed/docs#44](https://github.com/stashed/docs/pull/44)
+
+**[stashed/installer](https://github.com/stashed/installer):**
+
+- Prepare for release v0.9.0-rc.2  [stashed/installer#16](https://github.com/stashed/installer/pull/16)
+- Remove --enable-status-subresource flag [stashed/installer#15](https://github.com/stashed/installer/pull/15)
+- Add delete permission to VS ClusterRole [stashed/installer#13](https://github.com/stashed/installer/pull/13)
+- Ignore error while delete resources from uninstaller script [stashed/installer#14](https://github.com/stashed/installer/pull/14)
+
+**[stashed/catalog](https://github.com/stashed/catalog):**
+
+- Fix catalog installer (when helm is not installed) [stashed/catalog#10](https://github.com/stashed/catalog/pull/10)
+
+**[stashed/postgres](https://github.com/stashed/postgres):**
+
+- Fix BackupSession's Print Columns [stashed/postgres#20](https://github.com/stashed/postgres/pull/20)
+- Enable make ci [stashed/postgres#19](https://github.com/stashed/postgres/pull/19)
+- Remove `--enable-status-subresource` flag  [stashed/postgres#18](https://github.com/stashed/postgres/pull/18)
+- Fix arguments passing [stashed/postgres#17](https://github.com/stashed/postgres/pull/17)
+
+**[stashed/mongodb](https://github.com/stashed/mongodb):**
+
+- Fix BackupSession's Print Columns [stashed/mongodb#9](https://github.com/stashed/mongodb/pull/9)
+- Enable make ci [stashed/mongodb#8](https://github.com/stashed/mongodb/pull/8)
+- Remove `--enable-status-subresource` flag [stashed/mongodb#7](https://github.com/stashed/mongodb/pull/7)
+- Update totalHosts from backup/restore process [stashed/mongodb#6](https://github.com/stashed/mongodb/pull/6)
+- Fix argument passing [stashed/mongodb#5](https://github.com/stashed/mongodb/pull/5)
+
+**[stashed/mysql](https://github.com/stashed/mysql):**
+
+- Fix BackupSession's Print Columns [stashed/mysql#12](https://github.com/stashed/mysql/pull/12)
+- Enable make ci [stashed/mysql#11](https://github.com/stashed/mysql/pull/11)
+- Remove `--enable-status-subresource` flag  [stashed/mysql#10](https://github.com/stashed/mysql/pull/10)
+- Fix argument passing [stashed/mysql#9](https://github.com/stashed/mysql/pull/9)
+
+**[stashed/elasticsearch](https://github.com/stashed/elasticsearch):**
+
+- Fix BackupSession's Print Columns [stashed/elasticsearch#11](https://github.com/stashed/elasticsearch/pull/11)
+- Enable make ci [stashed/elasticsearch#10](https://github.com/stashed/elasticsearch/pull/10)
+- Remove --enable-status-subresource flag [stashed/elasticsearch#9](https://github.com/stashed/elasticsearch/pull/9)
+- Fix argument passing [stashed/elasticsearch#8](https://github.com/stashed/elasticsearch/pull/8)
+
+## [v0.9.0-rc.1](https://github.com/stashed/stash/tree/v0.9.0-rc.1)
+
+[Full Changelog](https://github.com/stashed/stash/compare/v0.9.0-rc.0...v0.9.0-rc.1)
+
+Stash `v0.9.0-rc.1` comes with documentation and respective charts for addons to backup databases. It also comes with some bug fixes since `v0.9.0-rc.0` release. We have also introduced a `kubectl` plugin for Stash in this release. Please, try it and give us your valuable feedback.  To install, please follow the guide [here](https://appscode.com/products/stash/v0.9.0-rc.1/setup/install/).
+
+## Significant Changes
+
+- **Addon Support:** Stash addons enable users to extend it's functionality to backup/restore any type of custom workloads. This release includes respective documentations and charts for `PostgreSQL`, `MySQL`, `MongoDB`, and `Elasticsearch` databases. This enables Stash to backup various [KubeDB](https://kubedb.com/) supported databases. You can also write your own addon to backup your custom target. We will include a guide on how to build addon for Stash in a future release.
+
+- **Stash `kubectl` Plugin (Alpha):** We have introduced an experimental Stash `kubectl` plugin. This will help you to unlock repository, trigger instant backup and copy various Stash resources between namespace and more.
+
+- **Introduce BackupHistoryLimit:** Now, you can configure how many `BackupSession` and associate resources (Job, PVC etc) to keep for each backup target. By default, Stash will keep only the history of last backup for debugging purpose. You can configure it using `spec.backupHistoryLimit` field of `BackupConfiguration`.
+
+- **Introduce InterimVolumeTemplate:** We have introduced a new field called `InterimVolumeTemplate` that can be used to pass a PVC template for storing temporary backup/restore data before uploading to backup or injecting into target. For more details, please visit [here](https://appscode.com/products/stash/v0.9.0-rc.1/concepts/crds/backupconfiguration/).
+
+- **Allow `subPath` in Auto-Backup Annotation:** Now, you can provide `subPath` in auto-backup annotation. For more details, please check [here](https://appscode.com/products/stash/v0.9.0-rc.1/guides/latest/auto-backup/workload/).
+
+- **Use Kubebuilder to Generate CRDs:** We have moved to [kubernetes-sigs/kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) for generating CRDs for Stash.
+
+## Issues Fixed
+
+- subPath stash autobackup annotation [#868](https://github.com/stashed/stash/issues/868)
+- GKE Alpha cluster need to run as "fsGroup: 65535" [#873](https://github.com/stashed/stash/issues/873)
+- Can't evaluate field version in AppBinding [#876](https://github.com/stashed/stash/issues/876)
+- Neither --kubeconfig nor --master was specified [#878](https://github.com/stashed/stash/issues/878)
+- Prometheus metrics missing source of the backup [#869](https://github.com/stashed/stash/issues/869)
+- Waiting until stash apiservice is available on GKE with private nodes [#875](https://github.com/stashed/stash/issues/875)
+- nice` and `ionice` is missing in distroless image [#882](https://github.com/stashed/stash/issues/882)
+- BackupBlueprint not creating Repository or BackupConfiguration [#877](https://github.com/stashed/stash/issues/877)
+- mysql stash backup error: unexpected end of JSON input [#880](https://github.com/stashed/stash/issues/880)
+- How do I override the folder name stash recovers from [#861](https://github.com/stashed/stash/issues/861)
+- Cannot pull image stashed/stash-mysql:8.0.14 [#879](https://github.com/stashed/stash/issues/879)
+- Nil pointer check is missing in metric handling [#881](https://github.com/stashed/stash/issues/881)
+- [0.9.0-rc.0] Cannot list snapshots [#901](https://github.com/stashed/stash/issues/901)
+- Support interim data volume in BackupConfiguration [#906](https://github.com/stashed/stash/issues/906)
+- Stash not backing up all files [#899](https://github.com/stashed/stash/issues/899)
+- [feature] clean up objects [#867](https://github.com/stashed/stash/issues/867)
+- Stash addon doc organization [#856](https://github.com/stashed/stash/issues/856)
+- Generate swagger.json for v1beta1 [#896](https://github.com/stashed/stash/issues/896)
+- Stash restore job fails [#914](https://github.com/stashed/stash/issues/914)
+- RestoreSession stuck running [#895](https://github.com/stashed/stash/issues/895)
+- Support mongodb backups [#893](https://github.com/stashed/stash/issues/893)
+- Support mysql backups [#892](https://github.com/stashed/stash/issues/892)
+
+## Pull Request Merged
+
+- Bring back dependency to github.com/golang/protobuf@v1.2.0 [#918](https://github.com/stashed/stash/pull/918)
+- Run e2e tests using GitHub actions [#909](https://github.com/stashed/stash/pull/909)
+- Generate swagger.json for v1beta1 [#916](https://github.com/stashed/stash/pull/916)
+- Add release pipeline [#915](https://github.com/stashed/stash/pull/915)
+- Fix Restore PVC using Task Function method [#897](https://github.com/stashed/stash/pull/897)
+- Fix VolumeSnapshot Issues [#912](https://github.com/stashed/stash/pull/912)
+- Add Kubebuilder annotations [#911](https://github.com/stashed/stash/pull/911)
+- Use kubebuilder to generate crd yamls [#843](https://github.com/stashed/stash/pull/843)
+- Introduce InterimVolumeTemplate and BackupHistoryLimit field. [#907](https://github.com/stashed/stash/pull/907)
+- Make RetentionPolicy required in v1beta1 api [#905](https://github.com/stashed/stash/pull/905)
+- Enable GitHub actions [#903](https://github.com/stashed/stash/pull/903)
+- Fix snapshot listing for local backend [#902](https://github.com/stashed/stash/pull/902)
+- Improve Error Handling + Code refactor [#891](https://github.com/stashed/stash/pull/891)
+- Add `NICE` and `IONICE` into distroless image [#883](https://github.com/stashed/stash/pull/883)
+- Improve metrics handling + make update status uniform [#872](https://github.com/stashed/stash/pull/872)
+- Use default fsGroup: 65535 [#874](https://github.com/stashed/stash/pull/874)
+- Add DumpEnv func to Restic Config file [#870](https://github.com/stashed/stash/pull/870)
+- Allow to specify subPath in auto-backup annotation + use default mounts and target paths for PVC [#871](https://github.com/stashed/stash/pull/871)
+
 ## [v0.9.0-rc.0](https://github.com/stashed/stash/tree/v0.9.0-rc.0)
 
 [Full Changelog](https://github.com/stashed/stash/compare/0.8.3...v0.9.0-rc.0)
