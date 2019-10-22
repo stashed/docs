@@ -36,7 +36,9 @@ metadata:
   name: deployment-stash-demo-1564743309
   namespace: demo
 spec:
-  backupConfiguration:
+  invoker:
+    apiGroup: stash.appscode.com
+    kind: BackupConfiguration
     name: deployment-stash-demo
 status:
   totalHosts: 1
@@ -91,9 +93,9 @@ Here, we are going to describe the various sections of a `BackupSession` object.
 
 A `BackupSession` object has the following fields in the `spec` section:
 
-#### spec.backupConfiguration
+#### spec.invoker
 
-`spec.backupConfiguration.name` indicates the name of the `BackupConfiguration` object whose target will be backed up instantly in this `BackupSession`.
+`spec.invoker` specifies the `apiGroup`, `kind`, and `name` of the respective object which is responsible for invoking this backup session.
 
 ### BackupSession `Status`
 

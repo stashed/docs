@@ -250,8 +250,8 @@ Now, wait for the next backup schedule. You can watch for `BackupSession` crd us
 $ watch -n 3 kubectl get backupconfiguration -n demo
 Every 3.0s: kubectl get backupconfiguration -n demo                  suaas-appscode: Mon Jul  8 18:20:47 2019
 
-NAMESPACE   NAME                           BACKUPCONFIGURATION   PHASE       AGE
-demo        deployment-backup-1562588351   deployment-backup     Succeeded   96s
+NAME                           INVOKER-TYPE          INVOKER-NAME        PHASE       AGE
+deployment-backup-1562588351   BackupConfiguration   deployment-backup   Succeeded   96s
 ```
 
 We can see from the above output that the backup session has succeeded. This indicates that the volumes of the Deployment have been backed up in the backend successfully.
@@ -658,8 +658,8 @@ Now, wait for the next backup schedule. You can watch for `BackupSession` crd us
 $ watch -n 3 kubectl get backupsession -n demo
 Every 3.0s: kubectl get backupsession -n demo                suaas-appscode: Tue Jul  9 17:09:43 2019
 
-NAME                   BACKUPCONFIGURATION   PHASE       AGE
-ss-backup-1562670004   ss-backup             Succeeded   9m39s
+NAME                   INVOKER-TYPE          INVOKER-NAME   PHASE       AGE
+ss-backup-1562670004   BackupConfiguration   ss-backup      Succeeded   9m39s
 ```
 
 We can see from the above output that the backup session has succeeded. This indicates that the volumes of the Deployment have been backed up in the backend successfully.

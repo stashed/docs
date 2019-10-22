@@ -326,8 +326,8 @@ Wait for the next schedule for backup. Run the following command to watch `Backu
 $ watch -n 3 kubectl get backupsession -n demo
 Every 3.0s: kubectl get backupsession -n demo                suaas-appscode: Wed Jun 26 16:05:26 2019
 
-NAME                    BACKUPCONFIGURATION   PHASE        AGE
-dmn-backup-1561543509   dmn-backup            Succeeded    2m20s
+NAME                    INVOKER-TYPE          INVOKER-NAME   PHASE       AGE
+dmn-backup-1561543509   BackupConfiguration   dmn-backup     Succeeded   2m20s
 ```
 
 We can see from the above output that the backup session has succeeded. Now, we are going to verify whether the backed up data has been stored in the backend.

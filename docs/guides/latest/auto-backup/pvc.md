@@ -456,8 +456,9 @@ Now, wait for the next backup schedule. Run the following command to watch `Back
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=persistentvolumeclaim-nfs-pvc
 
 Every 1.0s: kubectl get backupsession -n demo ... workstation: Thu Jul 18 15:18:42 2019
-NAME                                       BACKUPCONFIGURATION             PHASE       AGE
-persistentvolumeclaim-nfs-pvc-1563441309   persistentvolumeclaim-nfs-pvc   Succeeded   3m33s
+
+NAME                                       INVOKER-TYPE          INVOKER-NAME                    PHASE       AGE
+persistentvolumeclaim-nfs-pvc-1563441309   BackupConfiguration   persistentvolumeclaim-nfs-pvc   Succeeded   3m33s
 ```
 
 >Note: Respective CronJob creates `BackupSession` crd with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.

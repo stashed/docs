@@ -238,8 +238,8 @@ Wait for the next schedule for backup. Run the following command to watch `Backu
 $ watch -n 1 kubectl get backupssession -n demo
 Every 3.0s: kubectl get backupssession -n demo                      suaas-appscode: Thu Aug  1 17:43:57 2019
 
-NAMESPACE   NAME                      BACKUPCONFIGURATION   PHASE       AGE
-demo        pause-backup-1564659789   pause-backup          Succeeded   49s
+NAME                      INVOKER-TYPE          INVOKER-NAME   PHASE       AGE
+pause-backup-1564659789   BackupConfiguration   pause-backup   Succeeded   49s
 ```
 
 We can see from the above output that the backup session has succeeded. This indicates that the volumes of the Deployment have been backed up in the backend successfully.
@@ -323,7 +323,9 @@ metadata:
   name: instant-backupsession
   namespace: demo
 spec:
-  backupConfiguration:
+  invoker:
+    apiGroup: stash.appscode.com
+    kind: BackupConfiguration
     name: pause-backup
 ```
 
@@ -340,8 +342,8 @@ Run the following command to watch the BackupSession phase,
 $ watch -n 1 kubectl get backupsession -n demo instant-backupsession
 Every 1.0s: kubectl get backupsession -n demo instant-backupsession  suaas-appscode: Fri Aug  2 11:56:24 2019
 
-NAME                    BACKUPCONFIGURATION   PHASE     AGE
-instant-backupsession   pause-backup          Skipped   3m22s
+NAME                    INVOKER-TYPE          INVOKER-NAME   PHASE     AGE
+instant-backupsession   BackupConfiguration   pause-backup   Skipped   3m22s
 ```
 
 Notice the `PHASE` column. It is showing that the `BackupSession` has been skipped.
@@ -364,8 +366,10 @@ Metadata:
   Self Link:           /apis/stash.appscode.com/v1beta1/namespaces/demo/backupsessions/instant-backupsession
   UID:                 6a44adab-e44e-4020-9c23-7545e3b3f13b
 Spec:
-  Backup Configuration:
-    Name:  pause-backup
+  Invoker:
+      API Group:  stash.appscode.com
+      Kind:       BackupConfiguration
+      Name:       pause-backup
 Status:
   Phase:  Skipped
 Events:
