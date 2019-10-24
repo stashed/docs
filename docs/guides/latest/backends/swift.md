@@ -18,6 +18,8 @@ Stash supports [OpenStack Swift](https://www.swiftstack.com/product/open-source/
 
 In order to use OpenStack Swift as backend, you have to create a `Secret` and a `Repository` object pointing to the desired Swift container.
 
+>If the Swift container does not exist yet, Stash will automatically create it during the first backup.
+
 #### Create Storage Secret
 
 Stash supports Swift's Keystone v1, v2, v3 authentication as well as token-based authentication.
