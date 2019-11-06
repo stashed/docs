@@ -134,4 +134,4 @@ You can browse your backend storage bucket to verify that the backed up data has
 
 - Learn how to create `Repository` crd for different backends from [here](/docs/guides/latest/backends/overview.md).
 - Learn how Stash backup workloads data from [here](/docs/guides/latest/workloads/overview.md).
-- Learn how Stash backup databases from [here](/docs/guides/latest/databases/overview.md).
+- Learn how Stash backup databases from [here](/docs/guides/latest/addons/overview.md).

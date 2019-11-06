@@ -25,7 +25,7 @@ Guides show how to perform different operations with Stash. We have divided guid
 
 - **Volumes :** Volumes section describes how to backup and restore stand-alone Kubernetes volumes using Stash. Learn how to backup Kubernetes volumes using Stash from [here](/docs/guides/latest/volumes/overview.md).
 
-- **Databases :** Databases section describes how to backup and restore databases using Stash. Check how database backup works in Stash from [here](/docs/guides/latest/databases/overview.md).
+- **Databases :** Databases section describes how to backup and restore databases using Stash. Check how database backup works in Stash from [here](/docs/guides/latest/addons/overview.md).
 
 - **Auto Backup :** This section describes how you can write blueprint for backup process to backup resources using some annotations. Start learning to write backup blueprint from [here](/docs/guides/latest/auto-backup/overview.md).
 
