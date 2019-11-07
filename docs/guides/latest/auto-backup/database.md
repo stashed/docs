@@ -241,7 +241,7 @@ Here, we can see `AppBinding` `sample-postgres-2` has been created for our secon
 
 ## Backup
 
-Now, we are going to add auto-backup specific annotation to the `AppBinding` of our desired database. Stash watches for `AppBinding` crd. Once it finds an `AppBinding` with auto-backup annotation, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupBlueprint`. Then, rest of the backup process will proceed as normal database backup as described [here](/docs/guides/latest/databases/overview.md).
+Now, we are going to add auto-backup specific annotation to the `AppBinding` of our desired database. Stash watches for `AppBinding` crd. Once it finds an `AppBinding` with auto-backup annotation, it will create a `Repository` and a `BackupConfiguration` crd according to respective `BackupBlueprint`. Then, rest of the backup process will proceed as normal database backup as described [here](/docs/guides/latest/addons/overview.md).
 
 ### Backup First PostgreSQL Sample
 

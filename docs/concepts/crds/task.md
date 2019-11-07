@@ -60,7 +60,7 @@ A `Task` object has the following fields in the `spec` section:
 
 #### spec.steps
 
-`spec.steps` section specifies a list of functions and their parameters in the order they should be executed. You can also templatize this section using the [variables](/docs/concepts/crds/functions.md#stash-provided-variables) that Stash can resolve itself. Stash will resolve all the variables and create a pod definition with a container specification for each `Function` specified in `steps` section.
+`spec.steps` section specifies a list of functions and their parameters in the order they should be executed. You can also templatize this section using the [variables](/docs/concepts/crds/function.md#stash-provided-variables) that Stash can resolve itself. Stash will resolve all the variables and create a pod definition with a container specification for each `Function` specified in `steps` section.
 
 Each `step` consists of the following fields:
 
@@ -91,5 +91,5 @@ You might be wondering why we have introduced `Function` and `Task` crd. We have
 
 ## Next Steps
 
-- Learn how Stash backup databases using `Function-Task` model from [here](/docs/guides/latest/databases/overview.md).
+- Learn how Stash backup databases using `Function-Task` model from [here](/docs/guides/latest/addons/overview.md).
 - Learn how Stash backup stand-alone PVC using `Function-Task` model from [here](/docs/guides/latest/volumes/overview.md).
