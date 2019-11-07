@@ -122,8 +122,6 @@ You can find the full working demo in [examples folder](/docs/examples/workloads
  - `--workload-kind` flag specifies the kind of workload (Deployment/Replicaset/RepliationController/DaemonSet/StatefulSet).
  - `--workload-name` flag specifies the name of workload where sidecar pod is added.
 
-To learn about the meaning of various flags, please visit [here](/docs/reference/stash_backup.md).
-
 ## Next Steps
 
 - Learn how to use Stash to backup a Kubernetes deployment [here](/docs/guides/v1alpha1/backup.md).
