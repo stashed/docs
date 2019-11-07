@@ -165,7 +165,7 @@ repositories.stash.appscode.com      5s
 restics.stash.appscode.com           5s
 ```
 
-Now, you are ready to [take your first backup](/docs/guides/README.md) using Stash.
+Now, you are ready to [take your first backup](/docs/guides/latest/README.md) using Stash.
 
 
 ## Configuring RBAC
