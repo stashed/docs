@@ -22,7 +22,7 @@ spec:
         runAsGroup: 2000
   tempDir:
     medium: "Memory"
-    size:  "1Gi"
+    sizeLimit: "1Gi"
     disableCache: false
   retentionPolicy:
     name: 'keep-last-5'

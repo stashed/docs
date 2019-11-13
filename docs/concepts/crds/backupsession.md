@@ -52,7 +52,7 @@ status:
     - name: 79b223e2
       path: /source/data-1
       processingTime: "0:04"
-      size: 41 B
+      totalSize: 41 B
       uploaded: 693 B
       fileStats:
         modifiedFiles: 0
@@ -62,7 +62,7 @@ status:
     - name: ab6fef46
       path: /source/data-2
       processingTime: "0:03"
-      size: 41 B
+      totalSize: 41 B
       uploaded: 693 B
       fileStats:
         modifiedFiles: 0
@@ -125,7 +125,7 @@ Each stats entry consists of the following fields:
 - **snapshots:** Stash creates one snapshot for each targeted file paths specified in `spec.target.paths` field of `BackupConfiguration` object. The `snapshots` field holds statistics of each of these individual snapshots. Each snapshot statistics has the following fields:
   - **name:** `name` indicates the name of the snapshot.
   - **path:** `path` indicates the file path that was backed up in this snapshot.
-  - **size:** `size` indicates the size of data to backup from this path.
+  - **totalSize:** `totalSize` indicates the size of data to backup from this path.
   - **uploaded:** `uploaded` indicates the size of data that was uploaded to the backend for this snapshot. This could be much smaller than `size` if some data was already uploaded in the backend in previous backup sessions.
   - **processingTime:** `processingTime` indicates the time taken to process the data of the target path.
   - **fileStats:** `fileStats` field show statics of files that were backed up in this snapshot.

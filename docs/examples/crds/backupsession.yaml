@@ -20,7 +20,7 @@ status:
     - name: 79b223e2
       path: /source/data-1
       processingTime: "0:04"
-      size: 41 B
+      totalSize: 41 B
       uploaded: 693 B
       fileStats:
         modifiedFiles: 0
@@ -30,7 +30,7 @@ status:
     - name: ab6fef46
       path: /source/data-2
       processingTime: "0:03"
-      size: 41 B
+      totalSize: 41 B
       uploaded: 693 B
       fileStats:
         modifiedFiles: 0
