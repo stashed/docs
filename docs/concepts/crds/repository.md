@@ -44,7 +44,7 @@ status:
   firstBackupTime: "2019-04-15T06:08:16Z"
   integrity: true
   lastBackupTime: "2019-04-15T06:14:15Z"
-  size: 2.567 KiB
+  totalSize: 2.567 KiB
   snapshotCount: 5
   snapshotsRemovedOnLastCleanup: 1
 ```
