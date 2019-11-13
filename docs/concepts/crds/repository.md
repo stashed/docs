@@ -77,8 +77,8 @@ Stash operator updates `.status` of a Repository crd every time a backup operati
 - **status.integrity**
 Stash checks the integrity of backed up files after each backup. `status.integrity` shows the result of the integrity check.
 
-- **status.size**
-`status.size` shows the total size of a repository after last backup.
+- **status.totalSize**
+`status.totalSize` shows the total size of a repository after last backup.
 
 - **status.snapshotCount**
 `status.SnapshotCount` shows the number of snapshots stored in the Repository.
