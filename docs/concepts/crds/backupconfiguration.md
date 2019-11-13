@@ -73,7 +73,7 @@ spec:
       serviceAccountName: my-backup-svc
   tempDir:
     medium: "Memory"
-    size:  "2Gi"
+    sizeLimit: "2Gi"
     disableCache: false
   retentionPolicy:
     name: 'keep-last-5'
