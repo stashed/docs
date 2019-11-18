@@ -21,7 +21,10 @@ Stash operator can be installed via a script or as a Helm chart.
     <a class="nav-link active" id="script-tab" data-toggle="tab" href="#script" role="tab" aria-controls="script" aria-selected="true">Script</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="helm-tab" data-toggle="tab" href="#helm" role="tab" aria-controls="helm" aria-selected="false">Helm</a>
+    <a class="nav-link" id="helm2-tab" data-toggle="tab" href="#helm2" role="tab" aria-controls="helm2" aria-selected="false">Helm 2</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="helm3-tab" data-toggle="tab" href="#helm3" role="tab" aria-controls="helm3" aria-selected="false">Helm 3</a>
   </li>
 </ul>
 <div class="tab-content" id="installerTabContent">
@@ -112,9 +115,9 @@ $ curl -fsSL https://github.com/stashed/installer/raw/{{< param "info.version" >
 Stash {{< param "info.version" >}} or later releases can use status sub resource for CustomResourceDefintions. This is enabled by default for Kubernetes 1.11.0 or later releases. To disable this feature, pass the `--enable-status-subresource=false` flag.
 
 </div>
-<div class="tab-pane fade" id="helm" role="tabpanel" aria-labelledby="helm-tab">
+<div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
 
-## Using Helm
+## Using Helm 2
 Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
 
 ```console
@@ -125,6 +128,24 @@ NAME            CHART VERSION APP VERSION DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
 $ helm install appscode/stash --name stash-operator --version {{< param "info.version" >}} --namespace kube-system
+```
+
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash).
+
+</div>
+<div class="tab-pane fade" id="helm3" role="tabpanel" aria-labelledby="helm3-tab">
+
+## Using Helm 3
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add appscode https://charts.appscode.com/stable/
+$ helm repo update
+$ helm search repo appscode/stash
+NAME            CHART VERSION APP VERSION DESCRIPTION
+appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+
+$ helm install stash-operator appscode/stash --version {{< param "info.version" >}} --namespace kube-system
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash).
