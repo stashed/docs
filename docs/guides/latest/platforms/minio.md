@@ -18,7 +18,7 @@ Minio is an open-source object storage server compatible with [AWS S3](https://a
 
 ## Before You Begin
 
-- At first, you need to have a Kubernetes cluster. If you don't already have a cluster, you can create one by using [Minikube](https://github.com/kubernetes/minikube).
+- At first, you need to have a Kubernetes cluster. If you don't already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
 
