@@ -347,5 +347,5 @@ To uninstall Stash follow this [guide](/docs/setup/uninstall.md).
 ## Next Steps
 
 - Learn how monitoring in Stash works from [here](/docs/guides/v1alpha1/monitoring/overview.md).
-- Learn how to monitor Stash using CoreOS Prometheus operator from [here](/docs/guides/v1alpha1/monitoring/coreos.md).
+- Learn how to monitor Stash using Prometheus operator from [here](/docs/guides/v1alpha1/monitoring/coreos.md).
 - Learn how to use Grafana dashboard to visualize monitoring data from [here](/docs/guides/v1alpha1/monitoring/grafana.md).

@@ -171,4 +171,4 @@ $ curl -fsSL https://github.com/stashed/installer/raw/{{< param "info.version" >
 ## Next Steps
 
 - Learn how to monitor Stash using built-in Prometheus from [here](/docs/guides/latest/monitoring/builtin.md).
-- Learn how to monitor Stash using CoreOS Prometheus operator from [here](/docs/guides/latest/monitoring/coreos.md).
+- Learn how to monitor Stash using Prometheus operator from [here](/docs/guides/latest/monitoring/coreos.md).

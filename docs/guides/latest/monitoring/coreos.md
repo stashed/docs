@@ -1,6 +1,6 @@
 ---
 title: CoreOS Prometheus Operator | Stash
-description: Monitor Stash using CoreOS Prometheus operator
+description: Monitor Stash using Prometheus operator
 menu:
   product_stash_{{ .version }}:
     identifier: monitoring-coreos-operator
@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Monitoring Using CoreOS Prometheus Operator
 
-CoreOS [prometheus-operator](https://github.com/coreos/prometheus-operator) provides simple and Kubernetes native way to deploy and configure Prometheus server. This tutorial will show you how to use CoreOS Prometheus operator for monitoring Stash.
+CoreOS [prometheus-operator](https://github.com/coreos/prometheus-operator) provides simple and Kubernetes native way to deploy and configure Prometheus server. This tutorial will show you how to use Prometheus operator for monitoring Stash.
 
 ## Before You Begin
 
