@@ -5,7 +5,7 @@ menu:
     identifier: backupconfiguration-overview
     name: BackupConfiguration
     parent: crds
-    weight: 15
+    weight: 10
 product_name: stash
 menu_name: product_stash_{{ .version }}
 section_menu_id: concepts

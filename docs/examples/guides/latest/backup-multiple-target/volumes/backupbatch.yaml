@@ -1,0 +1,49 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupBatch
+metadata:
+  name: volume-backup-batch
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo
+  schedule: "*/5 * * * *"
+  backupConfigurationTemplates:
+  - spec:
+      task:
+        name: pvc-backup
+      target:
+        ref:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          name: demo-pvc
+  - spec:
+      task:
+        name: pvc-backup
+      target:
+        ref:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          name: config-pvc
+  - spec:
+      target:
+        ref:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: stash-demo
+        volumeMounts:
+          - name: source-data
+            mountPath: /source/data
+        paths:
+          - /source/data
+#  -  spec:
+#       task:
+#         name: postgres-backup-11.2
+#       target:
+#         ref:
+#           apiVersion: appcatalog.appscode.com/v1alpha1
+#           kind: AppBinding
+#           name: sample-postgres
+  retentionPolicy:
+    name: 'keep-last-5'
+    keepLast: 5
+    prune: true

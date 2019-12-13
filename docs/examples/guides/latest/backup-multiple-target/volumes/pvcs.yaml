@@ -1,0 +1,59 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: demo-pod
+  namespace: demo
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c","echo 'hello from pod' > /sample/data/hello.txt && sleep 3000"]
+    volumeMounts:
+    - name: my-volume
+      mountPath: /sample/data
+  volumes:
+  - name: my-volume
+    persistentVolumeClaim:
+      claimName: demo-pvc
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: demo-pvc
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: config-pod
+  namespace: demo
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["/bin/sh", "-c","echo 'hello from pod' > /sample/data/hello.txt && sleep 3000"]
+      volumeMounts:
+        - name: my-volume
+          mountPath: /sample/data
+  volumes:
+    - name: my-volume
+      persistentVolumeClaim:
+        claimName: config-pvc
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: config-pvc
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
