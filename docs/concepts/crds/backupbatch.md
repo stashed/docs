@@ -60,17 +60,6 @@ spec:
         mountPath: /source/data
       paths:
       - /source/data
-  - spec:
-      target:
-        ref:
-          apiVersion: apps/v1
-          kind: StatefulSet
-          name: stash-demo
-        volumeMounts:
-        - name: source-data
-          mountPath: /source/data
-        paths:
-        - /source/data
   retentionPolicy:
     name: 'keep-last-5'
     keepLast: 5
@@ -186,6 +175,12 @@ A `BackupBatch` object has the following fields in the `spec` section.
 | `keepTags`    | array   | --keep-tag <tag>             | Keep all snapshots which have all tags specified by this option (can be specified multiple times). |
 | `prune`       | bool    | --prune                      | If set `true`, Stash will cleanup unreferenced data from the backend.                              |
 | `dryRun`      | bool    | --dry-run                    | Stash will not remove anything but print which snapshots would be removed.                         |
+
+### BackupBatch `Status`
+
+A `BackupBatch` object has only a `observedGeneration` field in the `status` section.
+
+- **observedGeneration :** The most recent generation observed by the `BackupBatch` controller.
 
 ## Next Steps
 

@@ -205,6 +205,12 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 | `prune`       | bool    | --prune                      | If set `true`, Stash will cleanup unreferenced data from the backend.                              |
 | `dryRun`      | bool    | --dry-run                    | Stash will not remove anything but print which snapshots would be removed.                         |
 
+### BackupConfiguration `Status`
+
+A `BackupConfiguration` object has only a `observedGeneration` field in the `status` section.
+
+- **observedGeneration :** The most recent generation observed by the `BackupConfiguration` controller.
+
 ## Next Steps
 
 - Learn how to configure `BackupConfiguration` to backup workloads data from [here](/docs/guides/latest/workloads/overview.md).
