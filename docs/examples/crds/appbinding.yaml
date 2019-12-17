@@ -22,11 +22,4 @@ spec:
       port: 5432
       query: sslmode=disable
       scheme: postgresql
-  secretTransforms:
-  - renameKey:
-      from: POSTGRES_USER
-      to: username
-  - renameKey:
-      from: POSTGRES_PASSWORD
-      to: password
   version: "10.2"
