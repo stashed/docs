@@ -2,13 +2,13 @@
 title: File Ownership | Stash
 description: Handling Restored File Ownership in Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: file-ownership-stash
     name: File Ownership
     parent: advance-use-case
     weight: 150
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

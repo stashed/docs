@@ -2,13 +2,13 @@
 title: Backup Volumes | Stash
 description: Backup Volumes using Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: backup-stash
     name: Backup Volumes
     parent: v1alpha1-guides
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

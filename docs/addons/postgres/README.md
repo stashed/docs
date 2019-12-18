@@ -2,17 +2,17 @@
 title: PostgreSQL Addon Overview | Stash
 description: PostgreSQL Addon Overview | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-postgres-readme
     name: Readme
     parent: stash-postgres
     weight: -1
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
-url: /products/stash/{{ .version }}/addons/postgres/
+url: /docs/{{ .version }}/addons/postgres/
 aliases:
-  - /products/stash/{{ .version }}/addons/postgres/README/
+  - /docs/{{ .version }}/addons/postgres/README/
 ---
 
 # Stash PostgreSQL Addon

@@ -1,13 +1,13 @@
 ---
 title: Restic Overview
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: restic-overview
     name: Restic
     parent: v1alpha1-crds
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: concepts
 ---
 

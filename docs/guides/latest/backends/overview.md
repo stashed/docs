@@ -2,13 +2,13 @@
 title: Backend Overview | Stash
 description: An overview of the backends used by Stash to store backed up data.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: backend-overview
     name: What is Backend?
     parent: backend
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

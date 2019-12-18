@@ -2,17 +2,17 @@
 title: MongoDB Addon Overview | Stash
 description: MongoDB Addon Overview | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-mongodb-readme
     name: Readme
     parent: stash-mongodb
     weight: -1
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
-url: /products/stash/{{ .version }}/addons/mongodb/
+url: /docs/{{ .version }}/addons/mongodb/
 aliases:
-  - /products/stash/{{ .version }}/addons/mongodb/README/
+  - /docs/{{ .version }}/addons/mongodb/README/
 ---
 
 # Stash MongoDB Addon

@@ -2,17 +2,17 @@
 title: MySQL Addon Overview | Stash
 description: MySQL Addon Overview | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-mysql-readme
     name: Readme
     parent: stash-mysql
     weight: -1
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
-url: /products/stash/{{ .version }}/addons/mysql/
+url: /docs/{{ .version }}/addons/mysql/
 aliases:
-  - /products/stash/{{ .version }}/addons/mysql/README/
+  - /docs/{{ .version }}/addons/mysql/README/
 ---
 
 # Stash MySQL Addon

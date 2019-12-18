@@ -1,13 +1,13 @@
 ---
 title: Snapshot Overview
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: snapshot-overview
     name: Snapshot
     parent: crds
     weight: 50
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: concepts
 ---
 > New to Stash? Please start [here](/docs/concepts/README.md).

@@ -2,17 +2,17 @@
 title: Elasticsearch Addon Overview | Stash
 description: Elasticsearch Addon Overview | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-elasticsearch-readme
     name: Readme
     parent: stash-elasticsearch
     weight: -1
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
-url: /products/stash/{{ .version }}/addons/elasticsearch/
+url: /docs/{{ .version }}/addons/elasticsearch/
 aliases:
-  - /products/stash/{{ .version }}/addons/elasticsearch/README/
+  - /docs/{{ .version }}/addons/elasticsearch/README/
 ---
 
 # Stash Elasticsearch Addon

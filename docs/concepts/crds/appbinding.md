@@ -1,13 +1,13 @@
 ---
 title: AppBinding Overview
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: appbinding-overview
     name: AppBinding
     parent: crds
     weight: 45
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: concepts
 ---
 

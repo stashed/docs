@@ -1,7 +1,7 @@
 ---
 title: Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash
     name: Stash
     parent: operator
@@ -9,10 +9,10 @@ menu:
 
 product_name: stash
 section_menu_id: reference
-menu_name: product_stash_{{ .version }}
-url: /products/stash/{{ .version }}/reference/operator/
+menu_name: docs_{{ .version }}
+url: /docs/{{ .version }}/reference/operator/
 aliases:
-  - /products/stash/{{ .version }}/reference/operator/operator/
+  - /docs/{{ .version }}/reference/operator/operator/
 
 ---
 ## stash

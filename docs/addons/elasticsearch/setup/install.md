@@ -2,13 +2,13 @@
 title: Install Elasticsearch Addon | Stash
 description: An guide on how to install Elasticsearch addon for Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-elasticsearch-install
     name: Install
     parent: stash-elasticsearch-setup
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 

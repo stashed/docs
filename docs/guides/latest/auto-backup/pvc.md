@@ -2,13 +2,13 @@
 title: Auto Backup PVC | Stash
 description: An step by step guide on how to configure automatic backup for PVCs.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: auto-backup-pvc
     name: Auto Backup for PVCs
     parent: auto-backup
     weight: 30
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

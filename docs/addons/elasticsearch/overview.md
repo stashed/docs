@@ -2,13 +2,13 @@
 title: Elasticsearch Backup Overview | Stash
 description: How Elasticsearch Backup Works in Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-elasticsearch-overview
     name: How does it works?
     parent: stash-elasticsearch
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 

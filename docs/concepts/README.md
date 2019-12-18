@@ -1,17 +1,17 @@
 ---
 title: Concepts | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: concepts-readme
     name: README
     parent: concepts
     weight: -1
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: concepts
-url: /products/stash/{{ .version }}/concepts/
+url: /docs/{{ .version }}/concepts/
 aliases:
-  - /products/stash/{{ .version }}/concepts/README/
+  - /docs/{{ .version }}/concepts/README/
 ---
 
 # Concepts

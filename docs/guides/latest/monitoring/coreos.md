@@ -2,13 +2,13 @@
 title: CoreOS Prometheus Operator | Stash
 description: Monitor Stash using Prometheus operator
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: monitoring-coreos-operator
     name: Prometheus Operator
     parent: monitoring
     weight: 30
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

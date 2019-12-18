@@ -2,13 +2,13 @@
 title: Uninstall MySQL Addon | Stash
 description: An guide on how to uninstall MySQL addon for Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-mysql-uninstall
     name: Uninstall
     parent: stash-mysql-setup
     weight: 20
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 

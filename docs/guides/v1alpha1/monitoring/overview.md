@@ -2,13 +2,13 @@
 title: Monitoring Overview | Stash
 description: A general overview of monitoring Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: v1alpha1-monitoring-overview
     name: Overview
     parent: v1alpha1-monitoring
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

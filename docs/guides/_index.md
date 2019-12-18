@@ -1,10 +1,10 @@
 ---
 title: Guides | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: guides
     name: Guides
     weight: 40
     pre: dropdown
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 ---

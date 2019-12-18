@@ -2,17 +2,17 @@
 title: Support | Stash
 description: Support
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: support-stash
     name: Support
     parent: welcome
     weight: 1020
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: welcome
-url: /products/stash/{{ .version }}/welcome/support/
+url: /docs/{{ .version }}/welcome/support/
 aliases:
-  - /products/stash/{{ .version }}/support/
+  - /docs/{{ .version }}/support/
 ---
 # Support
 

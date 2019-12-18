@@ -2,17 +2,17 @@
 title: Contributing | Stash
 description: Contributing
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: contributing-stash
     name: Contributing
     parent: welcome
     weight: 1000
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: welcome
-url: /products/stash/{{ .version }}/welcome/contributing/
+url: /docs/{{ .version }}/welcome/contributing/
 aliases:
-  - /products/stash/{{ .version }}/CONTRIBUTING/
+  - /docs/{{ .version }}/CONTRIBUTING/
 ---
 
 # Contribution Guidelines
