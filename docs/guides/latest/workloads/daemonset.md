@@ -2,13 +2,13 @@
 title: Backup and Restore Volumes of a DaemonSet | Stash
 description: A step by step guide showing how to backup and restore volumes of a DaemonSet.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: workload-daemonset
     name: Backup & Restore Volumes of a DaemonSet
     parent: workload
     weight: 40
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

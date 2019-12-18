@@ -2,13 +2,13 @@
 title: PostgreSQL Backup & Restore Overview | Stash
 description: How PostgreSQL Backup & Restore Works in Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-postgres-overview
     name: How does it works?
     parent: stash-postgres
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 

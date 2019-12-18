@@ -2,13 +2,13 @@
 title: Stash Architecture
 description: Stash Architecture
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: architecture-concepts
     name: Architecture
     parent: what-is-stash
     weight: 20
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: concepts
 ---
 

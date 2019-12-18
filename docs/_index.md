@@ -2,9 +2,9 @@
 title: Docs | Stash
 description: Stash Docs
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: welcome
     name: Welcome
     weight: 10
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 ---

@@ -2,13 +2,13 @@
 title: Snapshot Stand-alone PVC | Stash
 description: An step by step guide showing how to snapshot a stand-alone PVC
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: volume-snapshot-pvc
     name: Snapshot Stand-alone PVC
     parent: volume-snapshot
     weight: 40
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

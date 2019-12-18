@@ -2,13 +2,13 @@
 title: Install
 description: Stash Install
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: install-stash
     name: Install
     parent: setup
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: setup
 ---
 

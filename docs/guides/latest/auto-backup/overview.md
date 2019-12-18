@@ -2,13 +2,13 @@
 title: Auto Backup Overview | Stash
 description: An overview on how auto backup works in Stash.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: auto-backup-overview
     name: What is Auto Backup?
     parent: auto-backup
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

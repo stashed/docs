@@ -2,17 +2,17 @@
 title: Table of Contents | Setup
 description: Table of Contents | Setup
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: setup-readme
     name: Readme
     parent: setup
     weight: -1
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: setup
-url: /products/stash/{{ .version }}/setup/
+url: /docs/{{ .version }}/setup/
 aliases:
-  - /products/stash/{{ .version }}/setup/README/
+  - /docs/{{ .version }}/setup/README/
 ---
 # Setup
 

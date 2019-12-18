@@ -1,13 +1,13 @@
 ---
 title: Recover
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-recover
     name: Recover
     parent: operator
 product_name: stash
 section_menu_id: reference
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 ---
 ## stash recover
 

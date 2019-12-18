@@ -2,13 +2,13 @@
 title: Clone Data Volumes | Stash
 description: An step by step guide on how to clone data volumes using Stash.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: advance-use-case-clone-pvc
     name: Clone Data Volumes
     parent: advance-use-case
     weight: 30
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

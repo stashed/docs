@@ -2,13 +2,13 @@
 title: Offline Backup | Stash
 description: Offline Backup using Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: offline-stash
     name: Offline Backup
     parent: v1alpha1-guides
     weight: 15
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

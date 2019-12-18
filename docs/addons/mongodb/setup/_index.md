@@ -1,11 +1,11 @@
 ---
 title: Setup MongoDB Addon | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-mongodb-setup
     name: Setup
     parent: stash-mongodb
     weight: 20
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 ---
 

@@ -2,13 +2,13 @@
 title: Backup and Restore Volumes of a Deployment | Stash
 description: A step by step guide showing how to backup and restore volumes of a Deployment.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: workload-deployment
     name: Backup & Restore Volumes of a Deployment
     parent: workload
     weight: 20
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

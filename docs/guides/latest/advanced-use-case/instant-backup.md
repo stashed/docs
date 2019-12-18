@@ -2,13 +2,13 @@
 title: Instant Backup | Stash
 description: An step by step guide on how to take instant backup using Stash.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: advance-use-case-instant-backup
     name: Instant Backup
     parent: advance-use-case
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

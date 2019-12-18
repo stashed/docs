@@ -2,17 +2,17 @@
 title: Changelog | Stash
 description: Changelog
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: changelog-stash-0.9
     name: Changelog-0.9
     parent: welcome
     weight: 90
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: welcome
-url: /products/stash/{{ .version }}/welcome/changelog-0.9/
+url: /docs/{{ .version }}/welcome/changelog-0.9/
 aliases:
-  - /products/stash/{{ .version }}/CHANGELOG-0.9/
+  - /docs/{{ .version }}/CHANGELOG-0.9/
 ---
 # Change Log
 
@@ -20,7 +20,7 @@ aliases:
 
 [Full Changelog](https://github.com/stashed/stash/compare/v0.9.0-rc.1...v0.9.0-rc.2)
 
-Stash `v0.9.0-rc.2` comes with some bug fixes and improvements since `v0.9.0-rc.1` release. Please, try it and give us your valuable feedback. To install, please follow the guide [here](https://appscode.com/products/stash/v0.9.0-rc.2/setup/install/).
+Stash `v0.9.0-rc.2` comes with some bug fixes and improvements since `v0.9.0-rc.1` release. Please, try it and give us your valuable feedback. To install, please follow the guide [here](https://stash.run/docs/v0.9.0-rc.2/setup/install/).
 
 ## Significant Changes
 
@@ -106,7 +106,7 @@ Stash `v0.9.0-rc.2` comes with some bug fixes and improvements since `v0.9.0-rc.
 
 [Full Changelog](https://github.com/stashed/stash/compare/v0.9.0-rc.0...v0.9.0-rc.1)
 
-Stash `v0.9.0-rc.1` comes with documentation and respective charts for addons to backup databases. It also comes with some bug fixes since `v0.9.0-rc.0` release. We have also introduced a `kubectl` plugin for Stash in this release. Please, try it and give us your valuable feedback.  To install, please follow the guide [here](https://appscode.com/products/stash/v0.9.0-rc.1/setup/install/).
+Stash `v0.9.0-rc.1` comes with documentation and respective charts for addons to backup databases. It also comes with some bug fixes since `v0.9.0-rc.0` release. We have also introduced a `kubectl` plugin for Stash in this release. Please, try it and give us your valuable feedback.  To install, please follow the guide [here](https://stash.run/docs/v0.9.0-rc.1/setup/install/).
 
 ## Significant Changes
 
@@ -116,9 +116,9 @@ Stash `v0.9.0-rc.1` comes with documentation and respective charts for addons to
 
 - **Introduce BackupHistoryLimit:** Now, you can configure how many `BackupSession` and associate resources (Job, PVC etc) to keep for each backup target. By default, Stash will keep only the history of last backup for debugging purpose. You can configure it using `spec.backupHistoryLimit` field of `BackupConfiguration`.
 
-- **Introduce InterimVolumeTemplate:** We have introduced a new field called `InterimVolumeTemplate` that can be used to pass a PVC template for storing temporary backup/restore data before uploading to backup or injecting into target. For more details, please visit [here](https://appscode.com/products/stash/v0.9.0-rc.1/concepts/crds/backupconfiguration/).
+- **Introduce InterimVolumeTemplate:** We have introduced a new field called `InterimVolumeTemplate` that can be used to pass a PVC template for storing temporary backup/restore data before uploading to backup or injecting into target. For more details, please visit [here](https://stash.run/docs/v0.9.0-rc.1/concepts/crds/backupconfiguration/).
 
-- **Allow `subPath` in Auto-Backup Annotation:** Now, you can provide `subPath` in auto-backup annotation. For more details, please check [here](https://appscode.com/products/stash/v0.9.0-rc.1/guides/latest/auto-backup/workload/).
+- **Allow `subPath` in Auto-Backup Annotation:** Now, you can provide `subPath` in auto-backup annotation. For more details, please check [here](https://stash.run/docs/v0.9.0-rc.1/guides/latest/auto-backup/workload/).
 
 - **Use Kubebuilder to Generate CRDs:** We have moved to [kubernetes-sigs/kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) for generating CRDs for Stash.
 

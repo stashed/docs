@@ -2,9 +2,9 @@
 title: Concepts
 description: Stash Concepts
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: concepts
     name: Concepts
     weight: 20
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 ---

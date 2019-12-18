@@ -2,13 +2,13 @@
 title: Upgrade | Stash
 description: Stash Upgrade
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: upgrade-stash
     name: Upgrade
     parent: setup
     weight: 15
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: setup
 ---
 

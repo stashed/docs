@@ -1,10 +1,10 @@
 ---
 title: Stash Elasticsearch Addon
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-elasticsearch
     name: Elasticsearch
     parent: stash-addons
     weight: 20
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 ---

@@ -1,10 +1,10 @@
 ---
 title: Platforms | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: v1alpha1-platforms
     name: Platforms
     parent: v1alpha1-guides
     weight: 35
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 ---

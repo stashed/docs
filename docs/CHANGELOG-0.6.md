@@ -2,17 +2,17 @@
 title: Changelog | Stash
 description: Changelog
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: changelog-stash-0.6
     name: Changelog-0.6
     parent: welcome
     weight: 60
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: welcome
-url: /products/stash/{{ .version }}/welcome/changelog-0.6/
+url: /docs/{{ .version }}/welcome/changelog-0.6/
 aliases:
-  - /products/stash/{{ .version }}/CHANGELOG-0.6/
+  - /docs/{{ .version }}/CHANGELOG-0.6/
 ---
 # Change Log
 

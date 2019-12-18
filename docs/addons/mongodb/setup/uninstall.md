@@ -2,13 +2,13 @@
 title: Uninstall MongoDB Addon | Stash
 description: An guide on how to uninstall MongoDB addon for Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-mongodb-uninstall
     name: Uninstall
     parent: stash-mongodb-setup
     weight: 20
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
