@@ -42,7 +42,7 @@ Following parameters are available for `Local` backend.
 
 |      Parameter       |    Type    |                                              Description                                               |
 | -------------------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| `local.mountPath`    | `Required` | Path where this volume will be mounted inside the sidecar container. Example: `/safe/data`.            |
+| `local.mountPath`    | `Required` | Path where this volume will be mounted inside the sidecar container. Example: `/safe/data`. <br> <strong>We have put `stash` binary  in the root directory. Hence, you can not use `/stash` or `/stash/*` as `local.mountPath` </strong>
 | `local.subPath`      | `Optional` | Sub-path inside the referenced volume where the backed up snapshot will be stored instead of its root. |
 | `local.VolumeSource` | `Required` | Any Kubernetes volume. Can be specified inlined. Example: `hostPath`.                                  |
 
