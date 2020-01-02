@@ -146,10 +146,11 @@ You can enable monitoring through some flags while installing or upgrading or up
 
 You have to provides these flags while installing or upgrading or updating Stash. Here, are examples for both script and Helm installation process are given which enable monitoring with `prometheus.io/coreos-operator` Prometheuse server for `backup`, `restore` and `operator` metrics.
 
-**Helm:**
+**Helm 3:**
 
 ```console
-$ helm install appscode/stash --name stash-operator --version {{< param "info.version" >}} --namespace kube-system \
+$ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
+  --namespace kube-system \
   --set monitoring.agent=prometheus.io/coreos-operator \
   --set monitoring.backup=true \
   --set monitoring.operator=true \
@@ -157,15 +158,29 @@ $ helm install appscode/stash --name stash-operator --version {{< param "info.ve
   --set monitoring.serviceMonitor.labels.k8s-app=prometheus
 ```
 
-**Script:**
+**Helm 2:**
 
 ```console
-$ curl -fsSL https://github.com/stashed/installer/raw/{{< param "info.version" >}}/deploy/stash.sh  | bash -s -- \
-  --monitoring-agent=prometheus.io/coreos-operator \
-  --monitoring-backup=true \
-  --monitoring-operator=true \
-  --prometheus-namespace=monitoring \
-  --servicemonitor-label=k8s-app=prometheus
+$ helm install appscode/stash --name stash-operator --version {{< param "info.version" >}} \
+  --namespace kube-system \
+  --set monitoring.agent=prometheus.io/coreos-operator \
+  --set monitoring.backup=true \
+  --set monitoring.operator=true \
+  --set monitoring.prometheus.namespace=monitoring \
+  --set monitoring.serviceMonitor.labels.k8s-app=prometheus
+```
+
+**YAML (with Helm 3):**
+
+```console
+$ helm template stash-operator appscode/stash --version {{< param "info.version" >}} \
+  --namespace kube-system \
+  --no-hooks \
+  --set monitoring.agent=prometheus.io/coreos-operator \
+  --set monitoring.backup=true \
+  --set monitoring.operator=true \
+  --set monitoring.prometheus.namespace=monitoring \
+  --set monitoring.serviceMonitor.labels.k8s-app=prometheus | kubectl apply -f -
 ```
 
 ## Next Steps
