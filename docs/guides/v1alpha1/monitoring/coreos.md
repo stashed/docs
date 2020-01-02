@@ -33,15 +33,16 @@ CoreOS [prometheus-operator](https://github.com/coreos/prometheus-operator) prov
 
 Enable Prometheus monitoring using `prometheus.io/coreos-operator` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/v1alpha1/monitoring/overview.md#how-to-enable-monitoring).
 
-Here, we are going to enable monitoring for both `backup & recovery` and `operator` metrics.
+Here, we are going to enable monitoring for both `backup & recovery` and `operator` metrics using Helm 3.
 
 ```console
-$ curl -fsSL https://github.com/stashed/installer/raw/{{< param "info.version" >}}/deploy/stash.sh | bash -s -- \
-  --monitoring-agent=prometheus.io/coreos-operator \
-  --monitoring-backup=true \
-  --monitoring-operator=true \
-  --prometheus-namespace=monitoring \
-  --servicemonitor-label=k8s-app=prometheus
+$ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
+  --namespace kube-system \
+  --set monitoring.agent=prometheus.io/coreos-operator \
+  --set monitoring.backup=true \
+  --set monitoring.operator=true \
+  --set monitoring.prometheus.namespace=monitoring \
+  --set monitoring.serviceMonitor.labels.k8s-app=prometheus
 ```
 
 This will create a `ServiceMonitor` crd with name `stash-servicemonitor` in monitoring namespace for monitoring endpoints of `stash-operator` service. This ServiceMonitor will have label `k8s-app: prometheus` provided by `--servicemonitor-label` flag. This label will be used by Prometheus crd to select this ServiceMonitor.
