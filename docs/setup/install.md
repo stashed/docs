@@ -37,7 +37,7 @@ Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://gi
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash
+$ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION APP VERSION DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
@@ -58,7 +58,7 @@ Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://gi
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search appscode/stash
+$ helm search appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION APP VERSION DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
@@ -79,7 +79,7 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and deplo
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash
+$ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION APP VERSION DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
