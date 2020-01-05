@@ -1,20 +1,20 @@
 ---
-title: Multiple Target Backup Overview | Stash
-description: An overview on how backup multiple target data in Stash.
+title: Batch Backup Overview | Stash
+description: An overview on how batch backup in Stash.
 menu:
   product_stash_{{ .version }}:
-    identifier: backup-overview
-    name: How multiple target backup works?
-    parent: backup-multiple-target
+    identifier: batch-backup-overview
+    name: How batch backup works?
+    parent: batch-backup
     weight: 10
 product_name: stash
 menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-# Backup Multiple Target using Stash
+# Batch Backup using Stash
 
-If you want to take backup multiple targets (workloads, databases, PVCs, etc.) simultaneously, You can do it by using `BackupBatch` crd in stash. Stash gives you multiple target backup support simultaneously. This guide will show you how Stash backs up multiple targets data.
+If you want to take batch backup of multiple targets (workloads, databases, PVCs, etc.) simultaneously, You can do it by using `BackupBatch` crd in stash. Stash gives you multiple targets backup support simultaneously. This guide will show you how Stash backs up multiple targets' data.
 
 ## Before You Begin
 
@@ -28,7 +28,7 @@ If you want to take backup multiple targets (workloads, databases, PVCs, etc.) s
 The following diagram shows how Stash takes backup of multiple targets(workload, PVC, database). Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/backup-multiple-target/backupbatch_overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/batch-backup/backupbatch_overview.svg">
 <figcaption align="center">Fig: Backup process of multiple targets(workload, PVC, database) in Stash</figcaption>
 </figure>
 
@@ -64,5 +64,4 @@ Job Model :
 
 ## Next Steps
 
-1. See a step by step guide to backup volumes of Workloads [here](/docs/guides/latest/backup-multiple-target/workloads.md).
-2. See a step by step guide to backup volumes of workloads and PVC [here](/docs/guides/latest/backup-multiple-target/volumes.md).
+1. See a step by step guide to backup StatefulSet application data [here](/docs/guides/latest/batch-backup/batch-backup.md)

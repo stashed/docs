@@ -17,7 +17,7 @@ section_menu_id: concepts
 
 ## What is BackupSession
 
-A `BackupSession` is a Kubernetes `CustomResourceDefinition`(CRD) which represents a backup run of the respective target referenced by a `BackupConfiguration`/`BackupBatch` in a Kubernetes native way.
+A `BackupSession` is a Kubernetes `CustomResourceDefinition`(CRD) which represents a backup run of the respective target(s) referenced by a `BackupConfiguration`/`BackupBatch` in a Kubernetes native way.
 
 Stash operator creates a Kubernetes `CronJob` according to the schedule defined in a `BackupConfiguration`/`BackupBatch`. On each backup schedule, this `CronJob` creates a `BackupSession` object. It points to the respective `BackupConfiguration`/`BackupBatch`. The controller that runs inside backup sidecar (in case of backup via jobs, it is stash operator itself) watches this `BackupSession` object and start taking backup instantly.
 
@@ -92,7 +92,7 @@ Here, we are going to describe the various sections of a `BackupSession` object.
 
 `metadata.labels` holds respective `BackupConfiguration`/`BackupBatch` kind and name as a label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`/`BackupBatch`.
 
->If you create `BackupSession` manually to trigger a backup instantly, make sure that you have added  `app:stash`, `stash.appscode.com/invoker-type: <BackupConfiguration/BackupBatch kind>` and `stash.appscode.com/invoker-name: <BackupConfiguration/BackupBatch name>` label to your `BackupSession`. Otherwise, it will not trigger backup for workloads (those resources that are backed up using sidecar).
+>If you create `BackupSession` manually to trigger a backup instantly, make sure that you have added `stash.appscode.com/invoker-type: <BackupConfiguration/BackupBatch kind>` and `stash.appscode.com/invoker-name: <BackupConfiguration/BackupBatch name>` label to your `BackupSession`. Otherwise, it will not trigger backup for workloads (those resources that are backed up using sidecar).
 
 ### BackupSession `Spec`
 
@@ -108,22 +108,22 @@ A `BackupSession` object has the following fields in the `spec` section:
 
 #### status.phase
 
-`status.phase` indicates the overall phase of the backup process for this BackupSession. `status.phase` will be `Succeeded` only if the phase of all target are `Succeeded`. If any of the target fail to complete its backup, `status.phase` will be `Failed`.
+`status.phase` indicates the overall phase of the backup process for this BackupSession. `status.phase` will be `Succeeded` only if the phase of all targets are `Succeeded`. If any of the target fail to complete its backup, `status.phase` will be `Failed`.
 
 #### status.sessionDuration
 
-`status.sessionDuration` indicates the total time taken to complete backup of all target in this session.
+`status.sessionDuration` indicates the total time taken to complete backup of all targets in this session.
 
 #### status.targets
 
-`status.targets` field indicates the list of all target status for backup runs. This field consists of the following sub-fields:
+`status.targets` field contains an array of the status of the individual target for a backup run. Each target's status field consists of the following sub-fields:
 
-- **totalHosts :** Not every pod or replica of the target is subject of backup. Thus, we refer those entities that are subject of backup as a host. `totalHosts` specifies the total number of hosts for target that will be backed up for this BackupSession. For more details on how many hosts will be backed up for which types of workload, please visit [here](#hosts-of-a-backup-process).
+- **totalHosts :** Not every pod or replica of a target is subject of backup. Thus, we refer those entities that are subject of backup as a host. `totalHosts` specifies the total number of hosts of the target that will be backed up for this BackupSession. For more details on how many hosts will be backed up for which types of workload, please visit [here](#hosts-of-a-backup-process).
 
-- **ref :** `ref` indicates the target whose data have been backed up.
-- **phase :** `phase` indicates the phase of the target. `phase` will be `Succeeded` only if the phase of all hosts are `Succeeded`. If any of the hosts fail to complete its backup, `phase` will be `Failed`.
+- **ref :** `ref` refers to the target whose backup stats has been presented by this array entry.
+- **phase :** `phase` indicates the backup phase of the target. `phase` will be `Succeeded` only if the phase of all hosts are `Succeeded`. If any of the hosts fail to complete its backup, `phase` will be `Failed`.
 
-- **stats :** `stats` section is an array of backup statistics about individual hosts. Each host adds its statistics in this array after completing its backup process.
+- **stats :** `stats` section is an array of backup statistics about individual hosts of the target. Each host adds its statistics in this array after completing its backup process.
 Each stats entry consists of the following fields:
 
   - **hostname:** `hostname` indicates the name of the host.
@@ -140,7 +140,7 @@ Each stats entry consists of the following fields:
     - **newFiles:** `newFiles` shows the number of new files that were backed up in this snapshot.
     - **modifiedFiles:** `modifiedFiles` shows the number of files that were modified since last backup of this directory.
     - **unmodifiedFiles:** `unmodifiedFiles` shows the number of files that haven't changed since the last backup of this path.
-    - **error:** `error` shows the reason for failure if the backup process failed for this host.
+    - **error:** `error` shows the reason of failure if the backup process failed for this host.
 
 ### Hosts of a backup process
 

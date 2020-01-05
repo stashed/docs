@@ -17,9 +17,9 @@ section_menu_id: concepts
 
 ## What is BackupBatch
 
-A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which specifies backupConfigurationTemplates that holds multiple backup target and also specifies parameters(schedule, retention policy etc.) and a `Repository` object that holds snapshot storage information in a Kubernetes native way.
+A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which specifies members that hold multiple backup targets and also specifies parameters(schedule, retention policy etc.) and a `Repository` object that holds snapshot storage information in a Kubernetes native way.
 
-You have to create a `BackupBatch` object for backup of the multiple target. A backup target can be a workload, database or a PV/PVC.
+You have to create a `BackupBatch` object for backup of the multiple targets. A backup target can be a workload, database or a PV/PVC.
 
 ## BackupBatch CRD Specification
 
@@ -37,29 +37,24 @@ spec:
   repository:
     name: gcs-repo
   schedule: "*/5 * * * *"
-  backupConfigurationTemplates:
-  - spec:
-      target:
-        ref:
-          apiVersion: apps/v1
-          kind: Deployment
-          name: stash-demo
-        volumeMounts:
-        - name: source-data
-          mountPath: /source/data
-        paths:
-        - /source/data
-  - spec:
-      target:
-        ref:
-          apiVersion: apps/v1
-          kind: DaemonSet
-          name: stash-demo
+  members:
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: stash-demo
       volumeMounts:
       - name: source-data
         mountPath: /source/data
       paths:
       - /source/data
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: DaemonSet
+        name: stash-demo
+    task:
+      name: pvc-backup
   retentionPolicy:
     name: 'keep-last-5'
     keepLast: 5
@@ -81,26 +76,26 @@ A `BackupBatch` object has the following fields in the `spec` section.
 | `Restic`            | Used to backup workload data, persistent volumes data and databases. It uses [restic](https://restic.net) to backup the target.                                                                                          |
 | `VolumeSnapshotter` | Used to take snapshot of PersistentVolumeClaims of a targeted workload. It leverages Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) crd and CSI driver to snapshot the PVCs. |
 
-#### spec.backupConfigurationTemplates
+#### spec.members
 
-`spec.backupConfigurationTemplates` field specifies a list of target to backup. This field consists of the following sub-fields:
+`spec.members` field specifies a list of targets to backup. This field consists of the following sub-fields:
 
-- **spec.target.ref :** `spec.target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
+- **target.ref :** `target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
 
-- **spec.target.paths :** `spec.target.paths` specifies list of file paths to backup.
+- **target.paths :** `target.paths` specifies list of file paths to backup.
 
-- **spec.target.volumeMounts :** `spec.target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target file paths. Stash will mount these volumes inside a sidecar container or a backup job.
+- **target.volumeMounts :** `target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target file paths. Stash will mount these volumes inside a sidecar container or a backup job.
 
-- **spec.target.snapshotClassName :** `spec.target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `driver` is set to `VolumeSnapshotter`.
+- **target.snapshotClassName :** `target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `driver` is set to `VolumeSnapshotter`.
 
-- **spec.task :** `spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target.
+- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target.
 
   - **name :** `name` indicates the name of the `Task` to use for this backup process.
   - **params :** `params` is an array of custom parameters to use to configure the task.
 
-  > `spec.task` section is not required for backing up workload data (i.e. Deployment, DaemonSet, StatefulSet etc.). However, it is necessary for backing up databases and stand-alone PVCs.
-- **spec.runtimeSettings :** `spec.runtimeSettings` allows to configure runtime environment for the backup sidecar or job. You can specify runtime settings at both pod level and container level.
- 
+  > `task` section is not required for backing up workload data (i.e. Deployment, DaemonSet, StatefulSet etc.). However, it is necessary for backing up databases and stand-alone PVCs.
+- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment in target for the backup sidecar or job. You can specify runtime settings at both pod level and container level.
+
   - **container :** `container` is used to configure the backup sidecar/job at container level. You can configure the following container level parameters:
 
       |       Field       |                                                                                                           Usage                                                                                                            |
@@ -133,15 +128,19 @@ A `BackupBatch` object has the following fields in the `spec` section.
     | `runtimeClassName`             | RuntimeClass is used for selecting the container runtime configuration. For more details, please visit [here](https://kubernetes.io/docs/concepts/containers/runtime-class/)                                                             |
     | `enableServiceLinks`           | EnableServiceLinks indicates whether information about services should be injected into pod's environment variables.  |
 
-- **spec.tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `spec.tempDir` section. You can also disable `caching` using this field. The following fields are configurable in `spec.tempDir` section:
+- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. The following fields are configurable in `tempDir` section:
 
   - **medium :** Specifies the type of storage medium should back this directory.
   - **sizeLimit :** Maximum limit of storage for this volume.
   - **disableCaching :** Disable caching while backup. This may negatively impact backup performance. This is set to `false` by default.
 
-- **spec.interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `spec.interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [spec.backupHistoryLimit](#specbackuphistorylimit).
+- **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit).
 
-  >Note that the usage of this field is different than `spec.tempDir` which is used for caching purpose. Stash has introduced this field because the `emptyDir` volume that is used for `spec.tempDir` does not play nice with large databases( i.e. 100Gi database). Also, it provides debugging capability as Stash keeps it until it hits the limit specified in `spec.backupHistoryLimit`.
+  >Note that the usage of this field is different than `tempDir` which is used for caching purpose. Stash has introduced this field because the `emptyDir` volume that is used for `tempDir` does not play nice with large databases( i.e. 100Gi database). Also, it provides debugging capability as Stash keeps it until it hits the limit specified in `backupHistoryLimit`.
+
+#### spec.runtimeSettings
+
+`spec.runtimeSettings` allows to configure runtime environment for the backup sidecar or job. The details can be found [here](backupconfiguration.md)
 
 #### spec.repository
 

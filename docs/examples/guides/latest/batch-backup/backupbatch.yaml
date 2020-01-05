@@ -1,0 +1,34 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupBatch
+metadata:
+  name: deploy-backup-batch
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo
+  schedule: "*/5 * * * *"
+  members:
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: wordpress-mysql
+      volumeMounts:
+      - name: mysql-persistent-storage
+        mountPath: /var/lib/mysql
+      paths:
+      - /var/lib/mysql
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: wordpress
+      volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      paths:
+        - /var/www/html
+  retentionPolicy:
+    name: 'keep-last-10'
+    keepLast: 10
+    prune: true
