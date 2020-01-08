@@ -12,56 +12,43 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-# Batch Backup using Stash
+# How Batch Backup Works in Stash
 
-If you want to take batch backup of multiple targets (workloads, databases, PVCs, etc.) simultaneously, You can do it by using `BackupBatch` crd in stash. Stash gives you multiple targets backup support simultaneously. This guide will show you how Stash backs up multiple targets' data.
+Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
 
-## Before You Begin
-
-- You should be familiar with the following `Stash` concepts:
-  - [BackupBatch](/docs/concepts/crds/backupbatch.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related workloads under a single configuration.
 
 ## How Backup Process Works
 
-The following diagram shows how Stash takes backup of multiple targets(workload, PVC, database). Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash takes backup of multiple co-related components in a single application. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/batch-backup/backupbatch_overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/batch-backup/batchbackup_overview.svg">
 <figcaption align="center">Fig: Backup process of multiple targets(workload, PVC, database) in Stash</figcaption>
 </figure>
 
 The backup process consists of the following steps:
 
-- At first, a user creates a Secret. This secret holds the credentials to access the backend where the backed up data will be stored.(1)
+1. At first, a user creates a Secret. This secret holds the credentials to access the backend where the backed up data will be stored.
 
-- Then, she creates a `Repository` crd which represents the original repository in the backend.(2)
+2. Then, she creates a `Repository` crd which represents the original repository in the backend.
 
-- Then, she creates a `BackupBatch` crd which specifies multiple target (workload, volume and database). It also specifies the `Repository` object that holds the backend information where the backed up data will be stored.(3)
+3. Then, she creates a `BackupBatch` crd which specifies multiple targets(workload, volume,and database). It also specifies the `Repository` object that holds the backend information where the backed up data will be stored.
 
-- Stash operator watches for `BackupBatch` objects.(4)
+4. Stash operator watches for `BackupBatch` objects.
 
-- When it finds a `BackupBatch` object, it finds the targeted workloads and injects a sidecar named `stash` into the workloads.(5)
+5. When it finds a `BackupBatch` object, it checks if there is any workload as a target. If there any, it injects a sidecar named `stash` into the workloads.
 
-- It also creates a `CronJob` to trigger backups periodically.(6)
+6. It also creates a `CronJob` to trigger backups periodically.
 
-- The`CronJob` triggers backup on each scheduled slot by creating a `BackupSession` crd.(7)
+7. The`CronJob` triggers backup on each scheduled slot by creating a `BackupSession` crd.
   
-- The operator(8a) and The `stash` sidecar(8b) inside the workload watches for `BackupSession` crd.
+8. The BackupSession controller (inside sidecar for sidecar model or inside the operator itself for job model) watches for `BackupSession` crd.
 
-When They finds a `BackupSession` crd, two models(sidecar and job) initiates backup process independently and simultaneously.
-
-Sidecar Model :
-
-- The sidecar takes backup of the targeted file paths. Once the backup process is completed, the `sidecar` sends Prometheus metrics to the Pushgateway running inside the `stash-operator` pod. It also updates respective `BackupSession` and `Repository` status to reflect the backup process.(10)
-
-Job Model :
-
-- The operator resolves the respective `Task` and `Function` and prepares a backup Job definition. Then, it mounts the targeted volume(database and PVC) into the Job and creates it.(9a,9b)
-
-- The Job takes backup of the targeted volume. Finally, when backup is completed, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.(10a,10b)
+9. When it finds a `BackupSession` it starts the backup process immediately(for job model a job is created for taking backup) for the individual targets.
+  
+10. The individual targets complete their backup process independently and update their respective fields in `BackupSession` status.
 
 ## Next Steps
 
-1. See a step by step guide to backup StatefulSet application data [here](/docs/guides/latest/batch-backup/batch-backup.md)
+- See a step by step guide to backup application with multiple co-related components [here](/docs/guides/latest/batch-backup/batch-backup.md)

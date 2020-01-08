@@ -11,7 +11,6 @@ spec:
   selector:
     app: wordpress
     tier: mysql
-  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -33,25 +32,22 @@ spec:
         app: wordpress
         tier: mysql
     spec:
-      initContainers:
-      - image: busybox
-        name: busybox
-        command:
-        - rm
-        - -rf
-        - /var/lib/mysql/lost+found
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
       containers:
-      - image: mysql:5.7
+      - image: mysql:8.0.14
         name: mysql
+        args:
+        - --default-authentication-plugin=mysql_native_password
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-pass
               key: password
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: username
         ports:
         - containerPort: 3306
           name: mysql
@@ -59,7 +55,7 @@ spec:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
         - name: config-volume
-          mountPath: /etc/mysql/
+          mountPath: /etc/mysql/conf.d
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
@@ -79,4 +75,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 1Gi

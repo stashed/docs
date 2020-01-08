@@ -11,13 +11,10 @@ spec:
   - target:
       ref:
         apiVersion: apps/v1
-        kind: Deployment
-        name: wordpress-mysql
-      volumeMounts:
-      - name: mysql-persistent-storage
-        mountPath: /var/lib/mysql
-      paths:
-      - /var/lib/mysql
+        kind: AppBinding
+        name: sample-mysql
+    task:
+      name: mysql-backup-8.0.14
   - target:
       ref:
         apiVersion: apps/v1

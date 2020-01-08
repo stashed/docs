@@ -27,53 +27,79 @@ You can also create a `BackupSession` object manually to trigger backup instantl
 
 Like any official Kubernetes resource, a `BackupSession` has `TypeMeta`, `ObjectMeta` and `Spec` , `Status` sections.
 
-A sample `BackupSession` created for backing up the volumes of a Deployment is shown below,
+A sample `BackupSession` created for backing up a WordPress Application and it's components' is shown below,
 
 ```yaml
-API Version:  stash.appscode.com/v1beta1
-Kind:         BackupSession
-Metadata:
-  Creation Timestamp:  2019-12-13T12:25:05Z
-  Generation:          1
-  Owner References:
-    API Version:           stash.appscode.com/v1beta1
-    Block Owner Deletion:  false
-    Kind:                  BackupBatch
-    Name:                  volume-backup-batch
-    UID:                   9fd9841b-c2ce-4312-945c-fb47a5bf805d
-  Resource Version:        63077
-  Self Link:               /apis/stash.appscode.com/v1beta1/namespaces/demo/backupsessions/volume-backup-batch-1576239905
-  UID:                     8a03d6ca-275b-4693-a7d1-f457f56592c1
-Spec:
-  Invoker:
-    API Group:  stash.appscode.com
-    Kind:       BackupBatch
-    Name:       volume-backup-batch
-Status:
-  Phase:             Succeeded
-  Session Duration:  39.313883994s
-  Targets:
-    Phase:  Succeeded
-    Ref:
-      Kind:  Deployment
-      Name:  stash-demo
-    Stats:
-      Duration:  27.211265624s
-      Hostname:  host-0
-      Phase:     Succeeded
-      Snapshots:
-        File Stats:
-          Modified Files:    0
-          New Files:         0
-          Total Files:       1
-          Unmodified Files:  1
-        Name:                16af9d65
-        Path:                /source/data
-        Processing Time:     0:02
-        Total Size:          12 B
-        Uploaded:            0 B
-    Total Hosts:             1
-    Phase:                   Succeeded
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupSession
+metadata:
+  creationTimestamp: "2020-01-08T04:39:36Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/component: stash-backup
+    app.kubernetes.io/managed-by: stash.appscode.com
+    stash.appscode.com/invoker-name: deploy-backup-batch
+    stash.appscode.com/invoker-type: BackupBatch
+  name: deploy-backup-batch-1578458376
+  namespace: demo
+  ownerReferences:
+  - apiVersion: stash.appscode.com/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: BackupBatch
+    name: deploy-backup-batch
+    uid: f5b9a1ce-238f-432a-86ac-287e2a85ef26
+  resourceVersion: "7332"
+  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/demo/backupsessions/deploy-backup-batch-1578458376
+  uid: 4bc5607b-04cd-4aeb-8f61-7dd21483ebb4
+spec:
+  invoker:
+    apiGroup: stash.appscode.com
+    kind: BackupBatch
+    name: deploy-backup-batch
+status:
+  phase: Succeeded
+  sessionDuration: 2m6.273902333s
+  targets:
+  - phase: Succeeded
+    ref:
+      kind: AppBinding
+      name: sample-mysql
+    stats:
+    - duration: 28.449428155s
+      hostname: host-0
+      phase: Succeeded
+      snapshots:
+      - fileStats:
+          modifiedFiles: 0
+          newFiles: 1
+          totalFiles: 1
+          unmodifiedFiles: 0
+        name: 597602f9
+        path: dumpfile.sql
+        processingTime: "0:04"
+        uploaded: 3.407 MiB
+    totalHosts: 1
+  - phase: Succeeded
+    ref:
+      kind: Deployment
+      name: wordpress
+    stats:
+    - duration: 50.781377951s
+      hostname: host-0
+      phase: Succeeded
+      snapshots:
+      - fileStats:
+          modifiedFiles: 0
+          newFiles: 1932
+          totalFiles: 1932
+          unmodifiedFiles: 0
+        name: ce1c2487
+        path: /var/www/html
+        processingTime: "0:24"
+        totalSize: 42.702 MiB
+        uploaded: 42.645 MiB
+    totalHosts: 1
 ```
 
 Here, we are going to describe the various sections of a `BackupSession` object.

@@ -1,0 +1,15 @@
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: sample-mysql
+  namespace: demo
+spec:
+  type: mysql
+  version: 8.0.14
+  clientConfig:
+    service:
+      name: wordpress-mysql
+      port: 3306
+      scheme: mysql
+  secret:
+    name: mysql-pass

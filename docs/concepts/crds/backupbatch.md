@@ -17,15 +17,15 @@ section_menu_id: concepts
 
 ## What is BackupBatch
 
-A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which specifies members that hold multiple backup targets and also specifies parameters(schedule, retention policy etc.) and a `Repository` object that holds snapshot storage information in a Kubernetes native way.
+Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
 
-You have to create a `BackupBatch` object for backup of the multiple targets. A backup target can be a workload, database or a PV/PVC.
+A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related components(workload,database etc.) under a single configuration.
 
 ## BackupBatch CRD Specification
 
 Like any official Kubernetes resource, a `BackupBatch` has `TypeMeta`, `ObjectMeta`, `Spec` and `Status` sections.
 
-A sample `BackupBatch` object to backup volumes of workloads is shown below:
+A sample `BackupBatch` object to backup multiple co-related workloads is shown below:
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -36,28 +36,28 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  schedule: "*/5 * * * *"
+  schedule: "*/3 * * * *"
   members:
   - target:
       ref:
         apiVersion: apps/v1
-        kind: Deployment
-        name: stash-demo
-      volumeMounts:
-      - name: source-data
-        mountPath: /source/data
-      paths:
-      - /source/data
+        kind: AppBinding
+        name: sample-mysql
+    task:
+      name: mysql-backup-8.0.14
   - target:
       ref:
         apiVersion: apps/v1
-        kind: DaemonSet
-        name: stash-demo
-    task:
-      name: pvc-backup
+        kind: Deployment
+        name: wordpress
+      volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      paths:
+        - /var/www/html
   retentionPolicy:
-    name: 'keep-last-5'
-    keepLast: 5
+    name: 'keep-last-10'
+    keepLast: 10
     prune: true
 ```
 
@@ -69,16 +69,11 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 #### spec.driver
 
-`spec.driver` indicates the mechanism used to backup a target. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`.
-
-|       Driver        |                                                                                                          Usage                                                                                                           |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `Restic`            | Used to backup workload data, persistent volumes data and databases. It uses [restic](https://restic.net) to backup the target.                                                                                          |
-| `VolumeSnapshotter` | Used to take snapshot of PersistentVolumeClaims of a targeted workload. It leverages Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) crd and CSI driver to snapshot the PVCs. |
+`spec.driver` indicates the mechanism used to backup. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.driver).
 
 #### spec.members
 
-`spec.members` field specifies a list of targets to backup. This field consists of the following sub-fields:
+`spec.members` field specifies a list of targets to backup. Each member consist of the following fields:
 
 - **target.ref :** `target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
 
@@ -88,59 +83,17 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 - **target.snapshotClassName :** `target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `driver` is set to `VolumeSnapshotter`.
 
-- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target.
+- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.task).
 
-  - **name :** `name` indicates the name of the `Task` to use for this backup process.
-  - **params :** `params` is an array of custom parameters to use to configure the task.
+- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment for the backup sidecar or job. You can specify runtime settings at both pod level and container level. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.runtimeSettings).
 
-  > `task` section is not required for backing up workload data (i.e. Deployment, DaemonSet, StatefulSet etc.). However, it is necessary for backing up databases and stand-alone PVCs.
-- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment in target for the backup sidecar or job. You can specify runtime settings at both pod level and container level.
+- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.tempDir).
 
-  - **container :** `container` is used to configure the backup sidecar/job at container level. You can configure the following container level parameters:
-
-      |       Field       |                                                                                                           Usage                                                                                                            |
-      | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-      | `resources`       | Compute resources required by the sidecar container or backup job. To learn how to manage resources for containers, please visit [here](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/). |
-      | `livenessProbe`   | Periodic probe of backup sidecar/job container's liveness. Container will be restarted if the probe fails.                                                                                                                 |
-      | `readinessProbe`  | Periodic probe of backup sidecar/job container's readiness. Container will be removed from service endpoints if the probe fails.                                                                                           |
-      | `lifecycle`       | Actions that the management system should take in response to container lifecycle events.                                                                                                                                  |
-      | `securityContext` | Security options that backup sidecar/job's container should run with. For more details, please visit [here](https://kubernetes.io/docs/concepts/policy/security-context/).                                                 |
-      | `nice`            | Set CPU scheduling priority for backup process. For more details about `nice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#nice).                                                         |
-      | `ionice`          | Set I/O scheduling class and priority for backup process. For more details about `ionice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#ionice).                                           |
-      | `env`             | A list of the environment variables to set in the sidecar container or backup job's container.                                                                                                                         |
-      | `envFrom`         | This allows to set environment variables to the container that will be created for this function from a Secret or ConfigMap.    |
-  - **pod :** `pod` is used to configure backup job in pod level. You can configure the following pod level parameters:
-  
-    |             Field              |                                                                                                                  Usage                                                                                                                   |
-    | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-    | `serviceAccountName`           | Name of the `ServiceAccount` to use for the backup job. Stash sidecar will use the same `ServiceAccount` as the target workload.                                                                                                                      |
-    | `nodeSelector`                 | Selector which must be true for backup job pod to fit on a node.                                                                                                                                                                         |
-    | `automountServiceAccountToken` | Indicates whether a service account token should be automatically mounted into the backup pod.                                                                                                                                           |
-    | `nodeName`                     | `nodeName` is used to request to schedule backup job's pod onto a specific node.                                                                                                                                                           |
-    | `securityContext`              | Security options that backup job's pod should run with. For more details, please visit [here](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).                                                               |
-    | `imagePullSecrets`             | A list of secret names in the same namespace that will be used to pull image from private Docker registry. For more details, please visit [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/). |
-    | `affinity`                     | Affinity and anti-affinity to schedule backup job's pod on a desired node. For more details, please visit [here](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).                       |
-    | `schedulerName`                | Name of the scheduler that should dispatch the backup job.                                                                                                                                                                               |
-    | `tolerations`                  | Taints and Tolerations to ensure that backup job's pod is not scheduled in inappropriate nodes. For more details about `toleration`, please visit [here](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/).       |
-    | `priorityClassName`            | Indicates the backup job pod's priority class. For more details, please visit [here](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/).                                                                        |
-    | `priority`                     | Indicates the backup job pod's priority value.                                                                                                                                                                                           |
-    | `readinessGates`               | Specifies additional conditions to be evaluated for Pod readiness. For more details, please visit [here](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-readiness-gate).                                          |
-    | `runtimeClassName`             | RuntimeClass is used for selecting the container runtime configuration. For more details, please visit [here](https://kubernetes.io/docs/concepts/containers/runtime-class/)                                                             |
-    | `enableServiceLinks`           | EnableServiceLinks indicates whether information about services should be injected into pod's environment variables.  |
-
-- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. The following fields are configurable in `tempDir` section:
-
-  - **medium :** Specifies the type of storage medium should back this directory.
-  - **sizeLimit :** Maximum limit of storage for this volume.
-  - **disableCaching :** Disable caching while backup. This may negatively impact backup performance. This is set to `false` by default.
-
-- **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit).
-
-  >Note that the usage of this field is different than `tempDir` which is used for caching purpose. Stash has introduced this field because the `emptyDir` volume that is used for `tempDir` does not play nice with large databases( i.e. 100Gi database). Also, it provides debugging capability as Stash keeps it until it hits the limit specified in `backupHistoryLimit`.
+- **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit). For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.interimVolumeTemplate).
 
 #### spec.runtimeSettings
 
-`spec.runtimeSettings` allows to configure runtime environment for the backup sidecar or job. The details can be found [here](backupconfiguration.md)
+`spec.runtimeSettings` This runtime settings is applicable for CronJob(used to create `BackupSession`) only. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.runtimeSettings).
 
 #### spec.repository
 
@@ -160,20 +113,7 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 #### spec.retentionPolicy
 
-`spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. Following options are available to configure retention policy:
-
-|    Policy     |  Value  | `restic` forget command flag |                                            Description                                             |
-| ------------- | ------- | ---------------------------- | -------------------------------------------------------------------------------------------------- |
-| `name`        | string  |                              | Name of retention policy. You can provide any name.                                                |
-| `keepLast`    | integer | --keep-last n                | Never delete the **n** last (most recent) snapshots.                                               |
-| `keepHourly`  | integer | --keep-hourly n              | For the last **n** hours in which a snapshot was made, keep only the last snapshot for each hour.  |
-| `keepDaily`   | integer | --keep-daily n               | For the last **n** days which have one or more snapshots, only keep the last one for that day.     |
-| `keepWeekly`  | integer | --keep-weekly n              | For the last **n** weeks which have one or more snapshots, only keep the last one for that week.   |
-| `keepMonthly` | integer | --keep-monthly n             | For the last **n** months which have one or more snapshots, only keep the last one for that month. |
-| `keepYearly`  | integer | --keep-yearly n              | For the last **n** years which have one or more snapshots, only keep the last one for that year.   |
-| `keepTags`    | array   | --keep-tag <tag>             | Keep all snapshots which have all tags specified by this option (can be specified multiple times). |
-| `prune`       | bool    | --prune                      | If set `true`, Stash will cleanup unreferenced data from the backend.                              |
-| `dryRun`      | bool    | --dry-run                    | Stash will not remove anything but print which snapshots would be removed.                         |
+`spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.retentionPolicy).
 
 ### BackupBatch `Status`
 
@@ -183,4 +123,4 @@ A `BackupBatch` object has only a `observedGeneration` field in the `status` sec
 
 ## Next Steps
 
-- Learn how to configure `BackupBatch` to backup data from [here](/docs/guides/latest/backup-multiple-target/overview.md).
+- Learn how to configure `BackupBatch` to backup data from [here](/docs/guides/latest/batch-backup/overview.md).
