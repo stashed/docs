@@ -25,7 +25,7 @@ A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you co
 
 Like any official Kubernetes resource, a `BackupBatch` has `TypeMeta`, `ObjectMeta`, `Spec` and `Status` sections.
 
-A sample `BackupBatch` object to backup multiple co-related workloads is shown below:
+A sample `BackupBatch` object to backup multiple co-related components is shown below:
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -69,7 +69,7 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 #### spec.driver
 
-`spec.driver` indicates the mechanism used to backup. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.driver).
+`spec.driver` indicates the mechanism used to backup. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specdriver).
 
 #### spec.members
 
@@ -83,17 +83,17 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 - **target.snapshotClassName :** `target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `driver` is set to `VolumeSnapshotter`.
 
-- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.task).
+- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectask).
 
-- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment for the backup sidecar or job. You can specify runtime settings at both pod level and container level. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.runtimeSettings).
+- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment for the backup sidecar or job. You can specify runtime settings at both pod level and container level. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specruntimesettings).
 
-- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.tempDir).
+- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectempdir).
 
-- **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit). For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.interimVolumeTemplate).
+- **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit). For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specinterimvolumetemplate).
 
 #### spec.runtimeSettings
 
-`spec.runtimeSettings` This runtime settings is applicable for CronJob(used to create `BackupSession`) only. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.runtimeSettings).
+`spec.runtimeSettings` This runtime settings is applicable for CronJob(used to create `BackupSession`) only. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specruntimesettings).
 
 #### spec.repository
 
@@ -109,11 +109,11 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 #### spec.paused
 
-`spec.paused` can be used as `enable/disable` switch for backup. If it is set `true`, Stash will not take any backup of the target specified by this BackupConfiguration.
+`spec.paused` can be used as `enable/disable` switch for backup. If it is set `true`, Stash will not take any backup of the target specified by this BackupBatch.
 
 #### spec.retentionPolicy
 
-`spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spec.retentionPolicy).
+`spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specretentionpolicy).
 
 ### BackupBatch `Status`
 

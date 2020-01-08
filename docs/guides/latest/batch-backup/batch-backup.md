@@ -20,7 +20,7 @@ This section will demonstrate how to use Stash to take backup of an application 
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 - Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
-- Install MySQL addon for Stash following the steps [here](https://stash.run/docs/v0.9.0-rc.2/addons/mysql/guides/8.0.14/mysql/)
+- Install MySQL addon for Stash following the steps [here](https://stash.run/docs/v0.9.0-rc.2/addons/mysql/guides/8.0.14/mysql/).
 - If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](https://stash.run/docs/v0.9.0-rc.2/addons/mysql/overview/).
 
 - You should be familiar with the following `Stash` concepts:
@@ -42,11 +42,11 @@ namespace/demo created
 
 ## Deploy Application
 
-Now we are going to deploy a WordPress site with a MySQL database and generate some sample data in it. MySQL and WordPress each use a PersistentVolume to store data. Then, we are going to backup this application's data and database into a GCS bucket.
+At first, we are going to deploy a WordPress site with a MySQL database and generate some sample data in it. MySQL and WordPress each use a PersistentVolume to store data. Then, we are going to backup this application's data and database into a GCS bucket.
 
-**Create Secret for MySQL database and WordPress application :**
+**Create database Secret :**
 
-At first, we are going to create a secret to secure the data for WordPress and MySQL Deployment.
+Now, we are going to create a secret to secure the data for MySQL Deployment.
 
 Let's create a secret called `mysql-pass` ,
 
@@ -59,7 +59,7 @@ secret/mysql-pass created
 
 ### Deploy Database
 
-Below is the YAML of a sample MySQL Deployment that we are going to create for this tutorial:
+Below are the YAML of a sample MySQL Deployment with PVC and a Service that we are going to create for this tutorial:
 
 ```yaml
 apiVersion: v1
@@ -183,7 +183,7 @@ wordpress-mysql   ClusterIP   None         <none>        3306/TCP   39m
 
 ### Deploy WordPress
 
-Now we are going to deploy a WordPress site. This site will use the MySQL database through the service `wordpress-mysql` as deployed earlier. Below is the YAML of a sample WordPress Deployment that we are going to create for this tutorial:
+Now, we are going to deploy a WordPress site. This site will use the MySQL database through the service `wordpress-mysql` as deployed earlier. Below are the YAML of a sample WordPress Deployment with PVC and a Service that we are going to create for this tutorial:
 
 ```yaml
 apiVersion: v1
@@ -290,11 +290,74 @@ NAME        TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
 wordpress   LoadBalancer   10.104.176.125   <pending>     80:32555/TCP   20m
 ```
 
-Now, you can access your application from outside of the cluster by using `http://<Cluster Node IP Address>:<port>` URL or any way. Let's create some sample data using this WordPress application and then backup the data into GCS Bucket.
+**Insert Sample Data into database :**
+
+Now, you can access your application from outside of the cluster by using `http://<Cluster Node IP Address>:<service nodePort>` URL or any way. If you access the application by entering the URL into your browser, you should see that the WordPress set up page similar to the following screenshot:
+
+<figure align="center">
+  <img alt="WordPress application home page" src="/docs/images/guides/latest/batch-backup/wordpress-site.png">
+  <figcaption align="center">Fig: WordPress application home page</figcaption>
+</figure>
+
+Now, you can insert sample data by using the WordPress application.
+
+If you insert some sample data by using the WordPress application then you can verify it by using `exec` into the database pod with MySQL database `Secret` credentials,
+
+```console
+$ kubectl exec -it -n demo wordpress-mysql-58b865dfd7-dt6t8 -- mysql --user=root --password=mysqlpass
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 31
+Server version: 8.0.14 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| wordpress          |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> SHOW TABLES IN wordpress;
++-----------------------+
+| Tables_in_wordpress   |
++-----------------------+
+| wp_commentmeta        |
+| wp_comments           |
+| wp_links              |
+| wp_options            |
+| wp_postmeta           |
+| wp_posts              |
+| wp_term_relationships |
+| wp_term_taxonomy      |
+| wp_termmeta           |
+| wp_terms              |
+| wp_usermeta           |
+| wp_users              |
++-----------------------+
+12 rows in set (0.00 sec)
+
+mysql> exit
+Bye
+```
+
+If you do the above procedure, you will see that `wordpress` database and related tables have been created.
 
 ### Backup Application
 
-Our application is ready to use. Now, we are going to backup the WordPress and MySQL database into GCS bucket.
+Now, we are going to backup the WordPress and MySQL database into GCS bucket.
 
 #### Create AppBinding
 
@@ -323,6 +386,7 @@ spec:
 Here,
 
 - `.spec.clientConfig.service.name` specifies the name of the Service that connects to the MySQL database.
+- `.spec.clientConfig.service.port` specifies the port where the target database is running.
 - `.spec.secret` specifies the name of the Secret that holds the necessary credentials to access the database.
 - `spec.type` specifies the MySQL app that this AppBinding is pointing to.
 
@@ -332,8 +396,6 @@ Create the above AppBinding,
 $ kubectl apply -f ./docs/examples/guides/latest/batch-backup/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-mysql created
 ```
-
-Now, we are ready to backup the database and WordPress applications' data.
 
 #### Prepare Backend
 
@@ -385,7 +447,7 @@ Now, we are ready to backup our sample data into this backend.
 
 #### Backup
 
-We have to create a `BackupBatch` crd targeting the respective MySQL database and WordPress Deployment that we have deployed. Stash will inject a sidecar container into WordPress Deployment and create job for MySQL database to take a periodic backup of the application's data.
+We have to create a `BackupBatch` crd targeting the respective MySQL database and WordPress Deployment that we have deployed. Stash will inject a sidecar container into WordPress Deployment and create job for MySQL database to take a periodic backup of the applications' data.
 
 **Create BackupBatch:**
 
@@ -473,7 +535,7 @@ We can see from the above output that the backupSession has succeeded.
 If you describe the `deploy-backup-batch-1578458376` BackupSession crd, you will see in the status section of the `BackupSession` that all the target specified in the `BackupBatch` have succeeded.
 
 ```console
-kubectl describe backupsession -n demo deploy-backup-batch-1578458376
+$ kubectl describe backupsession -n demo deploy-backup-batch-1578458376
 ```
 
 ```yaml

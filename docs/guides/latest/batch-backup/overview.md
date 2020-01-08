@@ -12,24 +12,24 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-# How Batch Backup Works in Stash
+# Batch Backup Overview
 
 Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
 
-A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related workloads under a single configuration.
+Stash 0.9.0+ supports taking backup multiple co-related components using a single configuration known as [BackupBatch](/docs/concepts/crds/backupbatch.md). This guide will give you an overview how batch backup works in Stash.
 
 ## How Backup Process Works
 
 The following diagram shows how Stash takes backup of multiple co-related components in a single application. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/guides/latest/batch-backup/batchbackup_overview.svg">
-<figcaption align="center">Fig: Backup process of multiple targets(workload, PVC, database) in Stash</figcaption>
+  <img alt="Stash Batch Backup Flow" src="/docs/images/guides/latest/batch-backup/batchbackup_overview.svg">
+<figcaption align="center">Fig: batch backup flow in Stash</figcaption>
 </figure>
 
 The backup process consists of the following steps:
 
-1. At first, a user creates a Secret. This secret holds the credentials to access the backend where the backed up data will be stored.
+1. At first, a user creates a backend Secret. This secret holds the credentials to access the backend where the backed up data will be stored.
 
 2. Then, she creates a `Repository` crd which represents the original repository in the backend.
 
@@ -51,4 +51,4 @@ The backup process consists of the following steps:
 
 ## Next Steps
 
-- See a step by step guide to backup application with multiple co-related components [here](/docs/guides/latest/batch-backup/batch-backup.md)
+- See a step by step guide to backup application with multiple co-related components [here](/docs/guides/latest/batch-backup/batch-backup.md).
