@@ -24,12 +24,14 @@ stash create-vs [flags]
 ### Options
 
 ```
-      --backupsession.name string   Set BackupSession Name
-  -h, --help                        help for create-vs
-      --kubeconfig string           Path to kubeconfig file with authorization information (the master location is set by the master flag).
-      --master string               The address of the Kubernetes API server (overrides any value in kubeconfig)
-      --metrics-enabled             Specify whether to export Prometheus metrics
-      --pushgateway-url string      Pushgateway URL where the metrics will be pushed
+      --backupsession string     Name of the respective BackupSession object
+  -h, --help                     help for create-vs
+      --kubeconfig string        Path to kubeconfig file with authorization information (the master location is set by the master flag).
+      --master string            The address of the Kubernetes API server (overrides any value in kubeconfig)
+      --metrics-enabled          Specify whether to export Prometheus metrics (default true)
+      --pushgateway-url string   Pushgateway URL where the metrics will be pushed
+      --target-kind string       Kind of the Target
+      --target-name string       Name of the Target
 ```
 
 ### Options inherited from parent commands
@@ -38,7 +40,6 @@ stash create-vs [flags]
       --alsologtostderr                  log to standard error as well as files
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
       --enable-analytics                 Send analytical events to Google Analytics (default true)
-      --enable-status-subresource        If true, uses sub resource for crds.
       --log-flush-frequency duration     Maximum number of seconds between log flushes (default 5s)
       --log_backtrace_at traceLocation   when logging hits line file:N, emit a stack trace (default :0)
       --log_dir string                   If non-empty, write log files in this directory

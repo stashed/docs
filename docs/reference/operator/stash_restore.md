@@ -33,7 +33,7 @@ stash restore [flags]
       --metrics-enabled             Specify whether to export Prometheus metrics
       --pushgateway-url string      Pushgateway URL where the metrics will be pushed
       --restore-model string        Specify whether using job or init-container to restore (default init-container) (default "init-container")
-      --restore-session string      Name of the RestoreSession CRD.
+      --restoresession string       Name of the respective RestoreSession object.
       --secret-dir string           Directory where storage secret has been mounted
 ```
 
@@ -43,7 +43,6 @@ stash restore [flags]
       --alsologtostderr                  log to standard error as well as files
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
       --enable-analytics                 Send analytical events to Google Analytics (default true)
-      --enable-status-subresource        If true, uses sub resource for crds.
       --log-flush-frequency duration     Maximum number of seconds between log flushes (default 5s)
       --log_backtrace_at traceLocation   when logging hits line file:N, emit a stack trace (default :0)
       --log_dir string                   If non-empty, write log files in this directory
