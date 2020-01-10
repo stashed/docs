@@ -24,11 +24,11 @@ stash create-backupsession [flags]
 ### Options
 
 ```
-      --backupsession.name string        Set BackupSession Name
-      --backupsession.namespace string   Set BackupSession Namespace (default "default")
-  -h, --help                             help for create-backupsession
-      --kubeconfig string                Path to kubeconfig file with authorization information (the master location is set by the master flag).
-      --master string                    The address of the Kubernetes API server (overrides any value in kubeconfig)
+  -h, --help                  help for create-backupsession
+      --invoker-name string   Name of the invoker
+      --invoker-type string   Type of the backup invoker
+      --kubeconfig string     Path to kubeconfig file with authorization information (the master location is set by the master flag).
+      --master string         The address of the Kubernetes API server (overrides any value in kubeconfig)
 ```
 
 ### Options inherited from parent commands
@@ -37,7 +37,6 @@ stash create-backupsession [flags]
       --alsologtostderr                  log to standard error as well as files
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
       --enable-analytics                 Send analytical events to Google Analytics (default true)
-      --enable-status-subresource        If true, uses sub resource for crds.
       --log-flush-frequency duration     Maximum number of seconds between log flushes (default 5s)
       --log_backtrace_at traceLocation   when logging hits line file:N, emit a stack trace (default :0)
       --log_dir string                   If non-empty, write log files in this directory

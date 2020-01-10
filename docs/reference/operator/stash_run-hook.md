@@ -1,43 +1,45 @@
 ---
-title: Update-Status
+title: Run-Hook
 menu:
   docs_{{ .version }}:
-    identifier: stash-update-status
-    name: Update-Status
+    identifier: stash-run-hook
+    name: Run-Hook
     parent: operator
 product_name: stash
 section_menu_id: reference
 menu_name: docs_{{ .version }}
 ---
-## stash update-status
+## stash run-hook
 
-Update status of Repository, Backup/Restore Session
+Execute Backup or Restore Hooks
 
 ### Synopsis
 
-Update status of Repository, Backup/Restore Session
+Execute Backup or Restore Hooks
 
 ```
-stash update-status [flags]
+stash run-hook [flags]
 ```
 
 ### Options
 
 ```
-      --backupsession string             Name of the Backup Session
-  -h, --help                             help for update-status
+      --backupsession string             Name of the respective BackupSession object
+  -h, --help                             help for run-hook
+      --hook-type string                 Type of hook to execute
+      --hostname string                  Name of the host that is being backed up or restored (default "host-0")
+      --invoker-name string              Name of the respective backup invoker
+      --invoker-type string              Type of the backup invoker
       --kubeconfig string                Path to kubeconfig file with authorization information (the master location is set by the master flag).
       --master string                    The address of the Kubernetes API server (overrides any value in kubeconfig)
       --metrics-enabled                  Specify whether to export Prometheus metrics
       --metrics-labels strings           Labels to apply in exported metrics
       --metrics-pushgateway-url string   Pushgateway URL where the metrics will be pushed
-      --namespace string                 Namespace of Backup/Restore Session (default "default")
       --output-dir string                Directory where output.json file will be written (keep empty if you don't need to write output in file)
       --prom-job-name string             Metrics job name (default "stash-prom-metrics")
-      --repository string                Name of the Repository
-      --restoresession string            Name of the Restore Session
-      --target-kind string               Kind of the target
-      --target-name string               Name of the target
+      --restoresession string            Name of the respective RestoreSession
+      --target-kind string               Kind of the Target
+      --target-name string               Name of the Target
 ```
 
 ### Options inherited from parent commands

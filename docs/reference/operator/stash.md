@@ -29,7 +29,6 @@ Stash is a Kubernetes operator for restic. For more information, visit here: htt
       --alsologtostderr                  log to standard error as well as files
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
       --enable-analytics                 Send analytical events to Google Analytics (default true)
-      --enable-status-subresource        If true, uses sub resource for crds.
   -h, --help                             help for stash
       --log-flush-frequency duration     Maximum number of seconds between log flushes (default 5s)
       --log_backtrace_at traceLocation   when logging hits line file:N, emit a stack trace (default :0)
@@ -55,7 +54,8 @@ Stash is a Kubernetes operator for restic. For more information, visit here: htt
 * [stash restore-pvc](/docs/reference/operator/stash_restore-pvc.md)	 - Takes a restore of Persistent Volume Claim
 * [stash restore-vs](/docs/reference/operator/stash_restore-vs.md)	 - Restore PVC from VolumeSnapshot
 * [stash run](/docs/reference/operator/stash_run.md)	 - Launch Stash Controller
-* [stash run-backup](/docs/reference/operator/stash_run-backup.md)	 - Take backup of workload directories
+* [stash run-backup](/docs/reference/operator/stash_run-backup.md)	 - Take backup of workload paths
+* [stash run-hook](/docs/reference/operator/stash_run-hook.md)	 - Execute Backup or Restore Hooks
 * [stash scaledown](/docs/reference/operator/stash_scaledown.md)	 - Scale down workload
 * [stash snapshots](/docs/reference/operator/stash_snapshots.md)	 - Get snapshots of restic repo
 * [stash update-status](/docs/reference/operator/stash_update-status.md)	 - Update status of Repository, Backup/Restore Session
