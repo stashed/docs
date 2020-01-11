@@ -12,7 +12,7 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-# Backup application with multiple co-related components using batch backup
+# Backup application with multiple co-related components using BackupBatch
 
 This section will demonstrate how to use Stash to take backup of an application with multiple co-related components. Here, we are going to take backup of [WordPress with MySQL database](https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/).
 
@@ -53,7 +53,7 @@ Let's create a secret called `mysql-pass` ,
 ```console
 $ kubectl create secret  -n demo generic mysql-pass \
       --from-literal=username=root \
-      --from-literal=password=mysqlpass 
+      --from-literal=password=mysqlpass
 secret/mysql-pass created
 ```
 

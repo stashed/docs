@@ -19,7 +19,7 @@ section_menu_id: concepts
 
 Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
 
-A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related components(workload,database etc.) under a single configuration.
+A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related components(workload, database etc.) under a single configuration.
 
 ## BackupBatch CRD Specification
 
@@ -73,7 +73,7 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 #### spec.members
 
-`spec.members` field specifies a list of targets to backup. Each member consist of the following fields:
+`spec.members` field specifies a list of targets to backup. Each member consists of the following fields:
 
 - **target.ref :** `target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
 

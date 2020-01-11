@@ -33,7 +33,7 @@ The backup process consists of the following steps:
 
 2. Then, she creates a `Repository` crd which represents the original repository in the backend.
 
-3. Then, she creates a `BackupBatch` crd which specifies multiple targets(workload, volume,and database). It also specifies the `Repository` object that holds the backend information where the backed up data will be stored.
+3. Then, she creates a `BackupBatch` crd which specifies multiple targets(workload, volume, and database). It also specifies the `Repository` object that holds the backend information where the backed up data will be stored.
 
 4. Stash operator watches for `BackupBatch` objects.
 
@@ -42,11 +42,11 @@ The backup process consists of the following steps:
 6. It also creates a `CronJob` to trigger backups periodically.
 
 7. The`CronJob` triggers backup on each scheduled slot by creating a `BackupSession` crd.
-  
+
 8. The BackupSession controller (inside sidecar for sidecar model or inside the operator itself for job model) watches for `BackupSession` crd.
 
 9. When it finds a `BackupSession` it starts the backup process immediately(for job model a job is created for taking backup) for the individual targets.
-  
+
 10. The individual targets complete their backup process independently and update their respective fields in `BackupSession` status.
 
 ## Next Steps

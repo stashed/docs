@@ -19,9 +19,9 @@ section_menu_id: concepts
 
 A `BackupSession` is a Kubernetes `CustomResourceDefinition`(CRD) which represents a backup run of the respective target(s) referenced by a `BackupConfiguration`/`BackupBatch` in a Kubernetes native way.
 
-Stash operator creates a Kubernetes `CronJob` according to the schedule defined in a `BackupConfiguration`/`BackupBatch`. On each backup schedule, this `CronJob` creates a `BackupSession` object. It points to the respective `BackupConfiguration`/`BackupBatch`. The controller that runs inside backup sidecar (in case of backup via jobs, it is stash operator itself) watches this `BackupSession` object and start taking backup instantly.
+Stash operator creates a Kubernetes `CronJob` according to the schedule defined in a `BackupConfiguration`/`BackupBatch`. On each backup schedule, this `CronJob` creates a `BackupSession` object. It points to the respective `BackupConfiguration`/`BackupBatch`. The controller that runs inside backup sidecar (in case of backup via jobs, it is stash operator itself) watches this `BackupSession` object and starts taking backup instantly.
 
-You can also create a `BackupSession` object manually to trigger backup instantly.
+You can also create a `BackupSession` object manually to trigger backup at any time.
 
 ## BackupSession CRD Specification
 
