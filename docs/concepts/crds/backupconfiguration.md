@@ -5,7 +5,7 @@ menu:
     identifier: backupconfiguration-overview
     name: BackupConfiguration
     parent: crds
-    weight: 15
+    weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: concepts
@@ -204,6 +204,12 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 | `keepTags`    | array   | --keep-tag <tag>             | Keep all snapshots which have all tags specified by this option (can be specified multiple times). |
 | `prune`       | bool    | --prune                      | If set `true`, Stash will cleanup unreferenced data from the backend.                              |
 | `dryRun`      | bool    | --dry-run                    | Stash will not remove anything but print which snapshots would be removed.                         |
+
+### BackupConfiguration `Status`
+
+A `BackupConfiguration` object has only a `observedGeneration` field in the `status` section.
+
+- **observedGeneration :** The most recent generation observed by the `BackupConfiguration` controller.
 
 ## Next Steps
 

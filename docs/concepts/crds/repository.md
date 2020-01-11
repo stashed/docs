@@ -5,7 +5,7 @@ menu:
     identifier: repository-overview
     name: Repository
     parent: crds
-    weight: 10
+    weight: 5
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: concepts
