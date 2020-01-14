@@ -1,9 +1,9 @@
 ---
-title: Backup Hooks | Stash
+title: Backup & Restore Hooks | Stash
 menu:
   docs_{{ .version }}:
-    identifier: backup-hooks
-    name: Backup Hooks
+    identifier: backup-and-restore-hooks
+    name: Backup & Restore Hooks
     parent: hooks
     weight: 20
 product_name: stash
@@ -11,7 +11,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Backup Hooks
+# Backup & Restore Hooks
 
 ## Before You Begin
 
@@ -41,7 +41,6 @@ namespace/demo created
 
 **Deploy Database:**
 
-
 **Verify AppBinding:**
 
 **Insert Sample Data:**
@@ -52,8 +51,12 @@ namespace/demo created
 
 **Create Repository:**
 
-## Backup with PreBackup Hook
+## PreBackup Hook
 
-## Backup with PostBackup Hook
+## PostBackup Hook
+
+## PreRestore Hook
+
+## PostRestore Hook
 
 ## Cleanup

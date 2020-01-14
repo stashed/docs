@@ -23,21 +23,21 @@ We can categorize Stash backup and restore hooks based on the action they perfor
 
 Based on the action of a hook, we can categorize them into four different categories. These are the followings:
 
-- **HTTPGetAction :** Executes an HTTP GET request before/after the backup/restore process. The hook is considered successful if the return code is between `200` and `400`.
+- **HTTPGet :** Executes an HTTP GET request before/after the backup/restore process. The hook is considered successful if the return code is between `200` and `400`.
 
-- **HTTPPostAction :** Executes an HTTP POST request before/after the backup/restore process. Like `HTTPGetAction`, the hook is considered successful if the return code is between `200` and `400`.
+- **HTTPPost :** Executes an HTTP POST request before/after the backup/restore process. Like `HTTPGet`, the hook is considered successful if the return code is between `200` and `400`.
 
-- **TCPSocketAction :** Performs a TCP check against the provided URL on a specific port before/after the backup/restore process. The hook is considered successful if the targeted port is open.
+- **TCPSocket :** Performs a TCP check against the provided URL on a specific port before/after the backup/restore process. The hook is considered successful if the targeted port is open.
 
-- **ExecAction :** Executes command inside a targeted container before/after the backup/restore process. The hook is considered successful if the command executes with exit code 0.
+- **Exec :** Executes command inside a targeted container before/after the backup/restore process. The hook is considered successful if the command executes with exit code 0.
 
 ### Based on Execution Order
 
 Based on the execution order, we can categorize the hooks into two different categories. These are the followings:
 
-- **Pre-Task Hook :** Pre task hooks are executed before the backup or restore process. `PreBackup` and `PreRestore` are pre task hook.
+- **Pre-Task Hook :** Pre task hooks are executed before the backup or restore process. `preBackup` and `preRestore` are pre task hook.
 
-- **Post-Task Hook :** Post task hooks are executed after the backup or restore process. `PostBackup` and `PostRestore` are post-task hook.
+- **Post-Task Hook :** Post task hooks are executed after the backup or restore process. `postBackup` and `postRestore` are post-task hook.
 
 However, there is one more types of hooks for [BackupBatch](/docs/concepts/crds/backupbatch.md) object. We can call them **Global Hook**. They get executed before any other individual target's hook gets executed (for pre-task hook) or after all the individual target's hooks has executed (for post-task hook).
 
@@ -56,7 +56,7 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
 <figcaption align="center">Fig: Hook Execution flow in sidecar model</figcaption>
 </figure>
 
-**Job Model :** In Job model, `HTTPGetAction`, `HTTPPostAction` and `TCPSocketAction` are executed by the backup/restore job. However, the `ExecAction` is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` does not have the respective `Service` name specified, it is not possible for Stash to execute the `ExecAction` hook.
+**Job Model :** In Job model, `httpGet`, `httpPost` and `tcpSocket` are executed by the backup/restore job. However, the `exec` is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` does not have the respective `Service` name specified, it is not possible for Stash to execute the `exec` hook.
 
 The hook execution flow in job model is shown in the following diagram:
 
