@@ -99,6 +99,12 @@ Stash uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts
 
   A `BackupBlueprint` enables users to provide a blueprint for `Repository` and `BackupConfiguration` object. Then, s/he just needs to add some annotations to the workload s/he wants to backup. Stash will automatically create respective `Repository` and `BackupConfiguration` according to the blueprint. In this way, users can create a single blueprint for all similar types of workloads and backup them only by applying some annotations on them. In Stash parlance, we call this process **Auto Backup**. For more details about `BackupBlueprint`, please visit [here](/docs/concepts/crds/backupblueprint.md).
 
+- **BackupBatch**
+
+  Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
+
+  A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related components(workload, database etc.) under a single configuration. For more details, please visit [here](/docs/concepts/crds/backupbatch.md).
+
 - **AppBinding**
 
   An `AppBinding` holds necessary information to connect with a database. For more details about `AppBinding`, please visit [here](/docs/concepts/crds/appbinding.md).

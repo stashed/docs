@@ -52,6 +52,21 @@ spec:
     volumeMounts:
     - name: source-data
       mountPath: /source/data
+  hooks:
+    preBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PreBackup hook demo"
+      containerName: my-app-container
+    postBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PostBackup hook demo"
+      containerName: my-app-container
   runtimeSettings:
     container:
       resources:
@@ -132,6 +147,15 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 #### spec.paused
 
 `spec.paused` can be used as `enable/disable` switch for backup. If it is set `true`, Stash will not take any backup of the target specified by this BackupConfiguration.
+
+#### spec.hooks
+
+`spec.hooks` allows performing some actions before and after the backup process. You can send HTTP requests to a remote server via `httpGet` and `httpPost` hooks. You can check whether a TCP socket is open using `tcpSocket` hook. You can also execute some commands into your application pod using `exec` hook.
+
+- **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed before the backup process.
+- **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed after the backup process.
+
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
 
 #### spec.runtimeSettings
 

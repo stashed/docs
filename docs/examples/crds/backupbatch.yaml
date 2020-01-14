@@ -1,0 +1,46 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupBatch
+metadata:
+  name: deploy-backup-batch
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo
+  schedule: "*/3 * * * *"
+  members:
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: AppBinding
+        name: sample-mysql
+    task:
+      name: mysql-backup-8.0.14
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: wordpress
+      volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      paths:
+        - /var/www/html
+  hooks:
+    preBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PreBackup hook demo"
+      containerName: my-database-container
+    postBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PostBackup hook demo"
+      containerName: my-database-container
+  retentionPolicy:
+    name: 'keep-last-10'
+    keepLast: 10
+    prune: true
