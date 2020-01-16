@@ -1,7 +1,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: post-backup-hook-demo
+  name: backup-hook-demo
   namespace: demo
 spec:
   schedule: "*/5 * * * *"
@@ -10,12 +10,19 @@ spec:
   repository:
     name: gcs-repo
   hooks:
-    postBackup:
+    preBackup:
       exec:
         command:
           - /bin/sh
           - -c
           - mysql -u root --password=$MYSQL_ROOT_PASSWORD -e "SET GLOBAL super_read_only = ON;"
+      containerName: mysql
+    postBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - mysql -u root --password=$MYSQL_ROOT_PASSWORD -e "SET GLOBAL super_read_only = OFF;"
       containerName: mysql
   target:
     ref:

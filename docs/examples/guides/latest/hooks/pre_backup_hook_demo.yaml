@@ -1,7 +1,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: pre-backup-hook-demo
+  name: backup-hook-demo
   namespace: demo
 spec:
   schedule: "*/5 * * * *"

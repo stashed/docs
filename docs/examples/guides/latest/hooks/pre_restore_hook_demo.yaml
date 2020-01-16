@@ -3,17 +3,23 @@ kind: RestoreSession
 metadata:
   name: pre-restore-hook-demo
   namespace: demo
-  labels:
-    kubedb.com/kind: MySQL # this label is mandatory if you are using KubeDB to deploy the database.
 spec:
   task:
     name: mysql-restore-8.0.14
   repository:
     name: gcs-repo
+  hooks:
+    preRestore:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - mysql -u root --password=$MYSQL_ROOT_PASSWORD -e "DROP DATABASE companyRecord;"
+      containerName: mysql
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: restored-mysql
+      name: sample-mysql
   rules:
     - snapshots: [latest]
