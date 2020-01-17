@@ -13,10 +13,19 @@ section_menu_id: guides
 
 # Configuring Different Types of Hooks
 
-
 ## HTTPGet
 
 **Structure :**
+
+```yaml
+preBackup:
+  httpGet:
+    path: /demo
+    host: my-service.mynamespace.svc
+    port: 8080
+    scheme: HTTP
+    httpHeaders:  
+```
 
 **Examples :**
 

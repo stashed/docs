@@ -1,0 +1,20 @@
+apiVersion: kubedb.com/v1alpha1
+kind: MySQL
+metadata:
+  name: wordpress-mysql
+  namespace: demo
+spec:
+  version: "8.0.14"
+  replicas: 1
+  storageType: Durable
+  storage:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+  podTemplate:
+    spec:
+      args:
+      - --default-authentication-plugin=mysql_native_password
+  terminationPolicy: WipeOut
