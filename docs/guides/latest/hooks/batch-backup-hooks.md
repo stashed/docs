@@ -75,6 +75,9 @@ wordpress-deployment-586f94487c-nm8p5   1/1     Running   0          2m26s
 
 ### Configure a Slack Incoming Webhook
 
+URL: https://api.slack.com/
+
+
 ### Create Storage Secret
 
 ```console
@@ -121,11 +124,37 @@ stash-backup-wordprss-backup   */5 * * * *   False     0        <none>          
 ### Wait for BackupSession
 
 ```console
+$ kubectl get backupsession -n demo -w
+NAME                          INVOKER-TYPE   INVOKER-NAME       PHASE       AGE
+wordpress-backup-1579526291   BackupBatch    wordpress-backup   Succeeded   2m30s
+wordpress-backup-1579526461   BackupBatch    wordpress-backup               0s
+wordpress-backup-1579526461   BackupBatch    wordpress-backup               0s
+wordpress-backup-1579526461   BackupBatch    wordpress-backup               0s
+wordpress-backup-1579526461   BackupBatch    wordpress-backup   Running     0s
+wordpress-backup-1579526461   BackupBatch    wordpress-backup   Running     24s
+wordpress-backup-1579526461   BackupBatch    wordpress-backup   Running     37s
+wordpress-backup-1579526461   BackupBatch    wordpress-backup   Succeeded   38s
+
 ```
 
 ### Verify Backup
+
+```console
+kubectl get repository -n demo gcs-repo
+NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
+gcs-repo   true               5                72s                      18m
+
+```
 
 ### Verify Backup Hooks Executed
 
 ## Cleanup
 
+```console
+kubectl -n demo delete backupbatch wordpress-backup
+kubectl -n demo delete repository gcs-repo
+kubectl -n demo delete secret gcs-secret
+
+kubectl -n demo delete deployment wordpress-deployment
+kubectl -n demo delete mysql wordpress-mysql
+```

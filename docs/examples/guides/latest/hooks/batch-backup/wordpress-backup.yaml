@@ -28,7 +28,8 @@ spec:
   hooks:
     preBackup:
       httpPost:
-        host: https://hooks.slack.com/services/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
+        host: hooks.slack.com
+        path: /services/TXXXXX/BXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXX
         port: 443
         scheme: HTTPS
         httpHeaders:
@@ -43,14 +44,15 @@ spec:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "Backup started for *wordpres-backup*.\n *Targets:*\n- deployment/wordpress\n- mysql/wordpress-mysql"
+                      "text": "Backup started for *wordpres-backup*.\n *Targets:*\n- deployment/wordpress-deployment\n- mysql/wordpress-mysql"
                     }
                   }
                 ]
               }'
     postBackup:
       httpPost:
-        host: https://hooks.slack.com/services/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
+        host: hooks.slack.com
+        path: /services/TXXXXX/BXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXX
         port: 443
         scheme: HTTPS
         httpHeaders:
