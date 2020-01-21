@@ -99,7 +99,7 @@ spec:
 Let's create the deployment we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/eks/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -173,7 +173,7 @@ type: Opaque
 Now, we are going to create `Restic` crd to take backup `/source/data` directory of `stash-demo` deployment. This will create a repository in the S3 bucket specified in `s3.bucket` field and start taking periodic backup of `/source/data` directory.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/eks/restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/restic.yaml
 restic.stash.appscode.com/s3-restic created
 ```
 
@@ -324,7 +324,7 @@ gp2 (default)   kubernetes.io/aws-ebs   6h
 Now, let's create a `PersistentVolumeClaim` where our recovered data will be stored.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/eks/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
 
@@ -362,7 +362,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-d86e
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/eks/recovery.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/recovery.yaml
 recovery.stash.appscode.com/s3-recovery created
 ```
 
@@ -466,7 +466,7 @@ spec:
 Let's create the deployment,
 
 ```console
-$  kubectl apply -f ./docs/examples/platforms/eks/recovered-deployment.yaml
+$  kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
 

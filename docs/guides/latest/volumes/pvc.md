@@ -96,7 +96,7 @@ Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label.
 Let's create the PV we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumes/pv.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pv.yaml
 persistentvolume/nfs-pv created
 ```
 
@@ -129,7 +129,7 @@ Also, notice the `spec.selector` section. We have specified `app: nfs-demo` labe
 Let's create the PVC we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumes/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pvc.yaml
 persistentvolumeclaim/nfs-pvc created
 ```
 
@@ -175,7 +175,7 @@ Here, we have mounted `pod-1/data` directory of the `nfs-pvc` into `/sample/data
 Let's deploy the pod we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumes/pod-1.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pod-1.yaml
 pod/demo-pod-1 created
 ```
 
@@ -214,7 +214,7 @@ Now, we have mounted `pod-2/data` directory of the `nfs-pvc` into `/sample/data`
 Let's create the pod we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumes/pod-2.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pod-2.yaml
 pod/demo-pod-2 created
 ```
 
@@ -269,7 +269,7 @@ spec:
 Let's create the `Repository` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumes/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -310,7 +310,7 @@ Here,
 Let's create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumes/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/nfs-pvc-backup created
 ```
 
@@ -446,7 +446,7 @@ spec:
 Let's create the `RestoreSession` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumes/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/restoresession.yaml
 restoresession.stash.appscode.com/nfs-pvc-restore created
 ```
 

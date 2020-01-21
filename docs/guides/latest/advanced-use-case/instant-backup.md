@@ -97,7 +97,7 @@ The above Deployment will automatically create a `data.txt` file in `/source/dat
 Let’s create the Deployment and PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/deployment.yaml
 persistentvolumeclaim/source-data created
 deployment.apps/stash-demo created
 ```
@@ -155,7 +155,7 @@ spec:
 Let’s create the `Repository` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -196,7 +196,7 @@ spec:
 Let’s create the `BackupConfiguration` object that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -256,7 +256,7 @@ spec:
 Let's create the `BackupSession` object that we have have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/instant-backup/backupsession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/backupsession.yaml
 backupsession.stash.appscode.com/deployment-backupsession created
 ```
 

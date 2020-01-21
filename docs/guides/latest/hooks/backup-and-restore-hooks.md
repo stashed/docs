@@ -72,7 +72,7 @@ spec:
 Let's create the above `MySQL` CR,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/sample-mysql.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/sample-mysql.yaml
 mysql.kubedb.com/sample-mysql created
 ```
 
@@ -269,7 +269,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -321,7 +321,7 @@ spec:
 Let's create the above `BackupConfiguration`,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/pre_backup_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/pre_backup_hook_demo.yaml
 backupconfiguration.stash.appscode.com/backup-hook-demo created
 ```
 
@@ -440,7 +440,7 @@ spec:
 Let's apply the update,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/post_backup_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/post_backup_hook_demo.yaml
 backupconfiguration.stash.appscode.com/backup-hook-demo configured
 ```
 
@@ -565,7 +565,7 @@ spec:
 Let's create the above `RestoreSession`,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/pre_restore_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/pre_restore_hook_demo.yaml
 restoresession.stash.appscode.com/pre-restore-hook-demo created
 ```
 
@@ -663,7 +663,7 @@ spec:
 Let's create the above `RestoreSession`,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/post_restore_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/post_restore_hook_demo.yaml
 restoresession.stash.appscode.com/post-restore-hook-demo created
 ```
 

@@ -145,7 +145,7 @@ spec:
 Create the above MySQL Deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/batch-backup/mysql.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/mysql.yaml
 service/wordpress-mysql created
 deployment.apps/wordpress-mysql created
 persistentvolumeclaim/mysql-pv-claim created
@@ -266,7 +266,7 @@ spec:
 Create the above WordPress Deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/batch-backup/wordpress.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/wordpress.yaml
 service/wordpress created
 deployment.apps/wordpress created
 persistentvolumeclaim/wp-pv-claim created
@@ -393,7 +393,7 @@ Here,
 Create the above AppBinding,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/batch-backup/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-mysql created
 ```
 
@@ -439,7 +439,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/batch-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -499,7 +499,7 @@ Here,
 Let's create the `BackupBatch` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/batch-backup/backupbatch.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/backupbatch.yaml
 backupbatch.stash.appscode.com/deploy-backup-batch created
 ```
 

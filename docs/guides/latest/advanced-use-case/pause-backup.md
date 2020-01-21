@@ -97,7 +97,7 @@ The above Deployment will automatically create a `data.txt` file in `/source/dat
 Let's create the Deployment and PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/deployment.yaml
 persistentvolumeclaim/source-pvc created
 deployment.apps/stash-demo created
 ```
@@ -157,7 +157,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -198,7 +198,7 @@ spec:
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/pause-backup created
 ```
 
@@ -332,7 +332,7 @@ spec:
 Let's create the `BackupSession` we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/advanced-use-case/pause-backup/backupsession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/backupsession.yaml
 backupsession.stash.appscode.com/instant-backupsession created
 ```
 

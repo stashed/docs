@@ -87,7 +87,7 @@ Note that we have used some variables (format: `${<variable name>}`) in `backend
 Let's create the `BackupBlueprint` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/backupblueprint.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/workload/backupblueprint.yaml
 backupblueprint.stash.appscode.com/workload-backup-blueprint created
 ```
 
@@ -189,7 +189,7 @@ Notice the `metadata.annotations` field. We have specified the automatic backup 
 Let's create the above Deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/workload/deployment.yaml
 configmap/stash-sample-data-1 created
 configmap/stash-sample-data-2 created
 deployment.apps/stash-demo created
@@ -398,7 +398,7 @@ Notice the `metadata.annotations` field. We have specified automatic backup spec
 Let's create the StatefulSet we have created above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/workload/statefulset.yaml
 service/headless created
 statefulset.apps/sts-demo created
 ```
@@ -581,7 +581,7 @@ Notice the `metadata.annotations` field. We have specified automatic backup spec
 Let's create the DaemonSet we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/workload/daemonset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/workload/daemonset.yaml
 configmap/my-daemon-config created
 daemonset.apps/dmn-demo created
 ```

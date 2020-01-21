@@ -99,7 +99,7 @@ spec:
 Let's create the deployment we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/minio/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -177,7 +177,7 @@ type: Opaque
 Now, we are going to create `Restic` crd to take backup `/source/data` directory of `stash-demo` deployment. This will create a repository in the Minio bucket specified by `s3.bucket` field and start taking periodic backup of `/source/data` directory.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/minio/restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/restic.yaml
 restic.stash.appscode.com/minio-restic created
 ```
 
@@ -296,7 +296,7 @@ standard (default)   k8s.io/minikube-hostpath   8h
 Now, let's create a `PersistentVolumeClaim` where our recovered data will be stored.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/minio/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
 
@@ -334,7 +334,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-3d3b
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/minio/recovery.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/recovery.yaml
 recovery.stash.appscode.com/minio-recovery created
 ```
 
@@ -419,7 +419,7 @@ spec:
 Let's create the deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/minio/recovered-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
 

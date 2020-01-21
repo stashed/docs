@@ -45,7 +45,7 @@ volumeBindingMode: Immediate
 Let's create the `StorageClass` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/storageclass.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/storageclass.yaml
 storageclass.storage.k8s.io/standard created
 ```
 
@@ -69,7 +69,7 @@ Here,
 Let's create the `volumeSnapshotClass` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/default-volumesnapshotclass.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/default-volumesnapshotclass.yaml
 volumesnapshotclass.snapshot.storage.k8s.io/default-snapshot-class created
 ```
 
@@ -233,7 +233,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/statefulset/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/statefulset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/statefulset-volume-snapshot created
 ```
 
@@ -577,7 +577,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/statefulset/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/statefulset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/statefulset-volume-snapshot created
 ```
 

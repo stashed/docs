@@ -104,7 +104,7 @@ spec:
 Now, create the Restic we have configured above for `gcs` backend,
 
 ```console
-$ kubectl apply -f ./docs/examples/backends/gcs/gcs-restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/gcs/gcs-restic.yaml
 restic "gcs-restic" created
 ```
 

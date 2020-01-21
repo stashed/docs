@@ -66,7 +66,7 @@ spec:
 Let's create the PVC we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/deployment/pvc.yaml
 persistentvolumeclaim/stash-sample-data created
 ```
 
@@ -114,7 +114,7 @@ spec:
 Let's create the Deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/deployment/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -177,7 +177,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/deployment/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -228,7 +228,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/deployment/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -467,7 +467,7 @@ spec:
 Let's create the Deployment and PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/recovered_deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/deployment/recovered_deployment.yaml
 persistentvolumeclaim/demo-pvc created
 deployment.apps/stash-recovered created
 ```
@@ -510,7 +510,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/deployment/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/deployment/restoresession.yaml
 restoresession.stash.appscode.com/deployment-restore created
 ```
 

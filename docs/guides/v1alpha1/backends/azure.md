@@ -104,7 +104,7 @@ spec:
 Now, create the Restic we have configured above for `azure` backend,
 
 ```console
-$ kubectl apply -f ./docs/examples/backends/azure/azure-restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/azure/azure-restic.yaml
 restic "azure-restic" created
 ```
 

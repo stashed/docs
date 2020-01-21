@@ -47,7 +47,7 @@ The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-clas
 Let's create the `StorageClass` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/storageclass.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/storageclass.yaml
 storageclass.storage.k8s.io/standard created
 ```
 
@@ -71,7 +71,7 @@ Here,
 Let's create the `volumeSnapshotClass` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/default-volumesnapshotclass.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/default-volumesnapshotclass.yaml
 volumesnapshotclass.snapshot.storage.k8s.io/default-snapshot-class created
 ```
 
@@ -125,7 +125,7 @@ spec:
 Create the PVCs we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/pvcs.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/pvcs.yaml
 persistentvolumeclaim/source-data created
 persistentvolumeclaim/source-config created
 ```
@@ -179,7 +179,7 @@ spec:
 Let's create the deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -240,7 +240,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployments-volume-snapshot created
 ```
 
@@ -495,7 +495,7 @@ spec:
 Let's create the deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/volumesnapshot/deployment/restored-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/restored-deployment.yaml
 deployment.apps/restore-demo created
 ```
 

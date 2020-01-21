@@ -82,7 +82,7 @@ spec:
 Let's create the above database,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/batch-backup/wordpress-mysql.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/wordpress-mysql.yaml
 mysql.kubedb.com/wordpress-mysql created
 ```
 
@@ -187,7 +187,7 @@ spec:
 Let's create the above resources,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/batch-backup/wordpress-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/wordpress-deployment.yaml
 
 persistentvolumeclaim/wordpress-pvc created
 deployment.apps/wordpress-deployment created
@@ -245,7 +245,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/batch-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -392,7 +392,7 @@ You can customize the `body` section of `httpPost` hook to change the visual rep
 Let's create the above `BackupBatch` object,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/hooks/batch-backup/wordpress-backup.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/wordpress-backup.yaml
 backupbatch.stash.appscode.com/wordpress-backup created
 ```
 

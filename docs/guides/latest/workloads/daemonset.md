@@ -84,7 +84,7 @@ spec:
 Let's create the DaemonSet we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/daemonset/daemon.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/daemonset/daemon.yaml
 daemonset.apps/stash-demo created
 ```
 
@@ -145,7 +145,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/daemonset/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/daemonset/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -196,7 +196,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/daemonset/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/daemonset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/dmn-backup created
 ```
 
@@ -420,7 +420,7 @@ spec:
 Let's create the DaemonSet we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/daemonset/recovered_daemon.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/workloads/daemonset/recovered_daemon.yaml
 daemonset.apps/stash-recovered configured
 ```
 
@@ -462,7 +462,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/daemonset/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/workloads/daemonset/restoresession.yaml
 restoresession.stash.appscode.com/dmn-restore created
 ```
 
