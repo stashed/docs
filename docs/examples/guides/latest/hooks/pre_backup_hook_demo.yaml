@@ -16,7 +16,7 @@ spec:
           - /bin/sh
           - -c
           - mysql -u root --password=$MYSQL_ROOT_PASSWORD -e "SET GLOBAL super_read_only = ON;"
-      containerName: mysql
+      containerName: mysql # KubeDB uses "mysql" name for MySQL database container. If you haven't used KubeDB, change this according to your setup.
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
