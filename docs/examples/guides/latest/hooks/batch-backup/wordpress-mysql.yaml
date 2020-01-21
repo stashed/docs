@@ -16,5 +16,5 @@ spec:
   podTemplate:
     spec:
       args:
-      - --default-authentication-plugin=mysql_native_password
+      - --default-authentication-plugin=mysql_native_password # without this flag the wordpress will not connect with newer version of MySQL
   terminationPolicy: WipeOut
