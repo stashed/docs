@@ -3,7 +3,7 @@ title: Batch Backup | Stash
 description: A step by step guide showing how to backup application with multiple co-related components.
 menu:
   product_stash_{{ .version }}:
-    identifier: batch-backup
+    identifier: batch-backup-guide
     name: Backup application with multiple co-related components
     parent: batch-backup
     weight: 20
