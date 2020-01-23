@@ -77,7 +77,7 @@ Now, we are going to discuss what will happen when a hook fails or backup/restor
 - **Pre-Task Hook Failed:** If a pre-task hook fails to execute, the rest of the backup/restore process will be skipped and the respective `BackupSession`/`RestoreSession` will be marked as `Failed`. You may see the following things happen in addition to skipping the backup process:
   - **Backup Sidecar:** If the pre-task hook fails in the backup sidecar, the sidecar will just log the failure and continue watching for `BackupSession` for the next backup.
   - **Restore Init-Container:** If the pre-task hook fails in restore init-container, the container will crash. Hence, your workload will be stuck in the initialization phase.
-  - **Backup or Restore Job:** If the pre-task hook fails in backup or restore job, the container will fail. Hence, the job will never go to the completed stage. You may see the job to create multiple pods to retry.
+  - **Backup or Restore Job:** If the pre-task hook fails in backup or restore job, the container will fail. Hence, the job will never go to the completed stage. You may see the job creating multiple pods to retry.
 
 - **Backup/Restore Process Failed:** The post-task hook will be executed even if the backup/restore process failed. This is to cover the scenario where you have paused your application in a pre-task hook and want to resume it in a post-task hook.
 

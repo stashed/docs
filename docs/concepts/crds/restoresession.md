@@ -89,7 +89,7 @@ spec:
     pod:
       imagePullSecrets:
       - name: my-private-registry-secret
-      serviceAccountName: my-backup-svc
+      serviceAccountName: my-restore-svc
   tempDir:
     disableCache: false
     medium: Memory
