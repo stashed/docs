@@ -19,13 +19,13 @@ In this guide, we are going to discuss how to configure different types of hooks
 
 `httpGet` hook allows sending an HTTP GET request to an HTTP server before and after the backup/restore process. The following configurable fields are available for `httpGet` hook.
 
-| Field         | Type       | Usage                                                                                                                                                                                                                                                                                    |
-| ------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `host`        | `Optional` | Specify the name of the host where the GET request will be sent.  If you don't specify this field, Stash will use the hook executor Pod IP as host.                                                                                                                                      |
-| `port`        | `Required` | Specify the port where the HTTP server is listening. You can specify a numeric port or the name of the port in case of the HTTP server is running in the same pod where the hook will be executed. If you specify the port name, you must specify the `containerName` field of the hook. |
-| `path`        | `Required` | Specify the path to access on the HTTP server.                                                                                                                                                                                                                                           |
-| `scheme`      | `Required` | Specify the scheme to use to connect with the host.                                                                                                                                                                                                                                      |
-| `httpHeaders` | `Optional` | Specify a list of custom headers to set in the request.                                                                                                                                                                                                                                  |
+| Field         | Field Type | Data Type             | Usage                                                                                                                                                                                                                                                                                    |
+| ------------- | ---------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`        | `Optional` | `String`              | Specify the name of the host where the GET request will be sent.  If you don't specify this field, Stash will use the hook executor Pod IP as host.                                                                                                                                      |
+| `port`        | `Required` | `Integer` or `String` | Specify the port where the HTTP server is listening. You can specify a numeric port or the name of the port in case of the HTTP server is running in the same pod where the hook will be executed. If you specify the port name, you must specify the `containerName` field of the hook. |
+| `path`        | `Required` | `String`              | Specify the path to access on the HTTP server.                                                                                                                                                                                                                                           |
+| `scheme`      | `Required` | `String`              | Specify the scheme to use to connect with the host.                                                                                                                                                                                                                                      |
+| `httpHeaders` | `Optional` | Array of Objects      | Specify a list of custom headers to set in the request.                                                                                                                                                                                                                                  |
 
 **Examples:**
 
@@ -69,15 +69,15 @@ preBackup:
 
 `httpPost` hook allows sending an HTTP POST request to an HTTP server before and after the backup/restore process. The following configurable fields are available for `httpPost` hook.
 
-| Field         | Type       | Usage                                                                                                                                                                                                                                                                             |
-| ------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `host`        | `Optional` | Specify the name of the host where the POST request will be sent. If you don't specify this field, Stash will use the hook executor Pod IP as host.                                                                                                                               |
-| `port`        | `Required` | Specify the port where the HTTP server is listening. You can specify a numeric port or the name of the port if your HTTP server is running in the same pod where the hook will be executed. If you specify the port name, you must specify the `containerName` field of the hook. |
-| `path`        | `Required` | Specify the path to access on the HTTP server.                                                                                                                                                                                                                                    |
-| `scheme`      | `Required` | Specify the scheme to use to connect with the host.                                                                                                                                                                                                                               |
-| `httpHeaders` | `Optional` | Specify a list of custom headers to set in the request.                                                                                                                                                                                                                           |
-| `body`        | `Optional` | Specify the data to send in the request body.                                                                                                                                                                                                                                     |
-| `form`        | `Optional` | Specify the data to send as URL encoded form with the request.                                                                                                                                                                                                                    |
+| Field         | Field Type | Data Type             | Usage                                                                                                                                                                                                                                                                             |
+| ------------- | ---------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`        | `Optional` | `String`              | Specify the name of the host where the POST request will be sent. If you don't specify this field, Stash will use the hook executor Pod IP as host.                                                                                                                               |
+| `port`        | `Required` | `Integer` or `String` | Specify the port where the HTTP server is listening. You can specify a numeric port or the name of the port if your HTTP server is running in the same pod where the hook will be executed. If you specify the port name, you must specify the `containerName` field of the hook. |
+| `path`        | `Required` | `String`              | Specify the path to access on the HTTP server.                                                                                                                                                                                                                                    |
+| `scheme`      | `Required` | `String`              | Specify the scheme to use to connect with the host.                                                                                                                                                                                                                               |
+| `httpHeaders` | `Optional` | Array of Objects      | Specify a list of custom headers to set in the request.                                                                                                                                                                                                                           |
+| `body`        | `Optional` | `String`              | Specify the data to send in the request body.                                                                                                                                                                                                                                     |
+| `form`        | `Optional` | Array of Objects      | Specify the data to send as URL encoded form with the request.                                                                                                                                                                                                                    |
 
 **Examples:**
 
@@ -119,10 +119,10 @@ preBackup:
 
 `tcpSocket` hook allows running a check against a TCP port to verify whether it is open or not. The following configurable fields are available for `tcpSocket` hook.
 
-| Field  | Type       | Usage                                                                                                                                                                                                                                                |
-| ------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `host` | `Optional` | Specify the name of the host where the server is running. If you don't specify this field, Stash will use the hook executor Pod IP as host.                                                                                                          |
-| `port` | `Required` | Specify the port to check. You can specify a numeric port or the name of the port when your server is running in the same pod where the hook will be executed. If you specify the port name, you must specify the `containerName` field of the hook. |
+| Field  | Field Type | Data Type             | Usage                                                                                                                                                                                                                                                |
+| ------ | ---------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host` | `Optional` | `String`              | Specify the name of the host where the server is running. If you don't specify this field, Stash will use the hook executor Pod IP as host.                                                                                                          |
+| `port` | `Required` | `Integer` or `String` | Specify the port to check. You can specify a numeric port or the name of the port when your server is running in the same pod where the hook will be executed. If you specify the port name, you must specify the `containerName` field of the hook. |
 
 **Examples:**
 
@@ -148,9 +148,9 @@ preBackup:
 
 `exec` hook allows running commands inside a container before or after the backup/restore process. The following configurable fields are available for `exec` hook.
 
-| Field     | Type       | Usage                                  |
-| --------- | ---------- | -------------------------------------- |
-| `command` | `Required` | Specify a list of commands to execute. |
+| Field     | Field Type | Data Type        | Usage                                  |
+| --------- | ---------- | ---------------- | -------------------------------------- |
+| `command` | `Required` | Array of Strings | Specify a list of commands to execute. |
 
 > If you don't specify `containerName` for `exec` hook, the command will be executed into the 0th container of the respective pod.
 

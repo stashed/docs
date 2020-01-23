@@ -17,6 +17,8 @@ Stash 0.9.0+ supports taking backup of multiple co-related stateful workloads us
 
 Here, we are going to demonstrate how to send a notification to a Slack channel before and after the backup of a WordPress application. WordPress application consists of two different workloads. One is for WordPress itself and another for a MySQL database.
 
+> Note that, this is an advanced concept. If you haven't tried the normal backup restore processes yet, we will recommend to try them first.
+
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).

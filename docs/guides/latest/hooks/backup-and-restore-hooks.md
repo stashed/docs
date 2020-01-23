@@ -17,6 +17,8 @@ Stash hooks let you perform some actions before and after the backup or restore 
 
 Here, we are going to demonstrate how you can perform different actions before and after backup and restore a MySQL database. Some of the examples might not reflect the real-world use cases but it serves the sole purpose of demonstrating what is possible.
 
+> Note that, this is an advanced concept. If you haven't tried the normal backup restore processes yet, we will recommend to try them first.
+
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
@@ -510,21 +512,30 @@ stash-backup-backup-hook-demo   */5 * * * *   True      0        5m13s          
 
 **Simulate Disaster Scenario:**
 
-Now, let's simulate a disaster scenario. Here, we are going to delete all the data from the `employee` table.
+Now, let's simulate a disaster scenario. Here, we are going to delete the `companyRecord` database before restoring so that we can verify that the data has been restored from backup.
 
 ```console
-$ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "DELETE FROM companyRecord.employee;"
+$ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "DROP DATABASE companyRecord;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
-Verify that the data has been removed,
+Verify that the database has been deleted,
 
 ```console
-$ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SELECT * FROM companyRecord.employee;"
+$ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SHOW DATABASES;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| postBackupHookTest |
+| sys                |
++--------------------+
 ```
 
-So, we can see from the above output that all the rows have been removed from the `employee` table.
+So, we can see from the above output that the database `companyRecord` has been deleted from the MySQL server.
 
 ### PreRestore Hook
 
