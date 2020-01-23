@@ -40,9 +40,10 @@ A `Function` is fundamentally a container specification and `Task` specifies the
 
 The following addons are available for Stash:
 
-| Addons                                                | Usage                                    | Available Versions                                                                                                             |
-| ----------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [PostgreSQL](/docs/addons/postgres/README.md)         | Backup & Restore PostgreSQL databases    | `9.6`, `10.2`, `10.6`, `11.1`, `11.2`                                                                                          |
-| [Elasticsearch](/docs/addons/elasticsearch/README.md) | Backup & Restore Elasticsearch databases | `5.6`, `5.6.4`, `6.2`, `6.2.4`, `6.3`, `6.3.0`, `6.4`, `6.4.0`, `6.5`, `6.5.3`, `6.8`, `6.8.0`, `7.2`, `7.2.0`, `7.3`, `7.3.2` |
-| [MySQL](/docs/addons/mysql/README.md)                 | Backup & Restore MySQL databases         | `5.7.25`, `8.0.3`, `8.0.14`                                                                                                    |
-| [MongoDB](/docs/addons/mongodb/README.md)             | Backup & Restore MongoDB databases       | `3.4`, `3.4.17`, `3.4.22`, `3.6`, `3.6.8`, `3.6.13`, `4.0`, `4.0.3`, `4.0.5`, `4.0.11`, `4.1`, `4.1.4`, `4.1.7`, `4.1.13`      |
+| Addons                                                  | Usage                                     | Available Versions                                                                                                             |
+| ------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [PostgreSQL](/docs/addons/postgres/README.md)           | Backup & Restore PostgreSQL databases     | `9.6`, `10.2`, `10.6`, `11.1`, `11.2`                                                                                          |
+| [Elasticsearch](/docs/addons/elasticsearch/README.md)   | Backup & Restore Elasticsearch databases  | `5.6`, `5.6.4`, `6.2`, `6.2.4`, `6.3`, `6.3.0`, `6.4`, `6.4.0`, `6.5`, `6.5.3`, `6.8`, `6.8.0`, `7.2`, `7.2.0`, `7.3`, `7.3.2` |
+| [MySQL](/docs/addons/mysql/README.md)                   | Backup & Restore MySQL databases          | `5.7.25`, `8.0.3`, `8.0.14`                                                                                                    |
+| [MongoDB](/docs/addons/mongodb/README.md)               | Backup & Restore MongoDB databases        | `3.4`, `3.4.17`, `3.4.22`, `3.6`, `3.6.8`, `3.6.13`, `4.0`, `4.0.3`, `4.0.5`, `4.0.11`, `4.1`, `4.1.4`, `4.1.7`, `4.1.13`      |
+| [Percona XtraDB](/docs/addons/percona-xtradb/README.md) | Backup & Restore Percona XtraDB databases | `5.7`                                                                                                                          |
