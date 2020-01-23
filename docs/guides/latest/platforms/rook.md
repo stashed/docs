@@ -79,7 +79,7 @@ spec:
 Let's create the PVC we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/platforms/rook/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/rook/pvc.yaml
 persistentvolumeclaim/source-pvc created
 ```
 
@@ -131,7 +131,7 @@ spec:
 Let's create the Deployment we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/platforms/rook/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/rook/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -214,7 +214,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/platforms/rook/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/rook/repository.yaml
 repository.stash.appscode.com/rook-repo created
 ```
 
@@ -264,7 +264,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/platforms/rook/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/rook/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -527,7 +527,7 @@ spec:
 Let's create the Deployment and PVC we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/platforms/rook/recovered_deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/rook/recovered_deployment.yaml
 persistentvolumeclaim/restore-pvc created
 deployment.apps/stash-recovered created
 ```
@@ -570,7 +570,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/platforms/rook/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/rook/restoresession.yaml
 restoresession.stash.appscode.com/deployment-restore created
 ```
 

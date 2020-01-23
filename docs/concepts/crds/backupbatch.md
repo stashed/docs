@@ -55,6 +55,21 @@ spec:
           mountPath: /var/www/html
       paths:
         - /var/www/html
+  hooks:
+    preBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PreBackup hook demo"
+      containerName: my-database-container
+    postBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PostBackup hook demo"
+      containerName: my-database-container
   retentionPolicy:
     name: 'keep-last-10'
     keepLast: 10
@@ -90,6 +105,15 @@ A `BackupBatch` object has the following fields in the `spec` section.
 - **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectempdir).
 
 - **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit). For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specinterimvolumetemplate).
+
+#### spec.hooks
+
+`spec.hooks` allows performing some global actions before and after the backup process of the members. You can send HTTP requests to a remote server via `httpGet` or `httpPost`. You can check whether a TCP port is open using `tcpSocket` hooks. You can also execute some commands using `exec` hook.
+
+- **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed on each backup session before taking backup of the members.
+- **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed on each backup session after taking backup of the members.
+
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
 
 #### spec.runtimeSettings
 

@@ -100,7 +100,7 @@ Note that we have used some variables (format: `${<variable name>}`) in `spec.ba
 Let's create the `BackupBlueprint` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/database/backupblueprint.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/database/backupblueprint.yaml
 backupblueprint.stash.appscode.com/postgres-backup-blueprint created
 ```
 
@@ -148,7 +148,7 @@ spec:
 Let's create the `Postgres` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/database/sample-postgres-1.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/database/sample-postgres-1.yaml
 postgres.kubedb.com/sample-postgres-1 created
 ```
 
@@ -224,7 +224,7 @@ spec:
 Let's create the `Postgres` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/database/sample-postgres-2.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/database/sample-postgres-2.yaml
 postgres.kubedb.com/sample-postgres-2 created
 ```
 

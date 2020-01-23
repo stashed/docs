@@ -91,7 +91,7 @@ standard (default)   k8s.io/minikube-hostpath   8h
 Now, let's create a `PersistentVolumeClaim` where our recovered data will be stored.
 
 ```console
-$ kubectl apply -f ./docs/examples/recovery/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
 
@@ -158,7 +158,7 @@ Here,
 Let's create the Recovery crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/recovery/recovery.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/recovery.yaml
 recovery.stash.appscode.com/local-recovery created
 ```
 
@@ -223,7 +223,7 @@ spec:
 Let's create the deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/recovery/recovered-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -292,7 +292,7 @@ spec:
 Now, create a `Recovery` crd shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/recovery/recovery-specific-snapshot.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/recovery-specific-snapshot.yaml
 recovery.stash.appscode.com/local-recovery-specific-snapshot created
 ```
 

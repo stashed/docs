@@ -22,6 +22,21 @@ spec:
     volumeMounts:
     - name: source-data
       mountPath: /source/data
+  hooks:
+    preBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PreBackup hook demo"
+      containerName: my-app-container
+    postBackup:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PostBackup hook demo"
+      containerName: my-app-container
   runtimeSettings:
     container:
       resources:

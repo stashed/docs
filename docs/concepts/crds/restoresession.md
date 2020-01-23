@@ -38,7 +38,7 @@ spec:
   repository:
     name: local-repo
   # task:
-  #   name: workload-restore # task field is not required for workload data restore but it is necessary for database restore.
+  #   name: workload-restore # task field is not required for workload data backup but it is necessary for database backup.
   target:
     ref:
       apiVersion: apps/v1
@@ -56,6 +56,21 @@ spec:
     sourceHost: "" # no source host indicates that the host is pod itself
     paths:
     - /source/data
+  hooks:
+    preRestore:
+      exec:
+        command:
+        - /bin/sh
+        - -c
+        - echo "Sample PreRestore hook demo"
+      containerName: my-app-container
+    postRestore:
+      exec:
+        command:
+        - /bin/sh
+        - -c
+        - echo "Sample PostRestore hook demo"
+      containerName: my-app-container
   runtimeSettings:
     container:
       resources:
@@ -161,6 +176,15 @@ Restore rules comply with the following conditions:
 - Stash restore only one file path in a single snapshot. So, if you specify `snapshots` field in a rule, you can't specify `paths` field as it may cause restore failure if a file path wasn't backed up in the snapshot specified in the `snapshots` field.
 - If no rule matches for a host, no data will be restored on that host.
 - The order of the rules does not have any effect on the restore process.
+
+#### spec.hooks
+
+`spec.hooks` allows performing some actions before and after the restore process. You can send HTTP requests to a remote server via `httpGet` or `httpPost` hooks. You can check whether a TCP socket is open using `tcpSocket` hook. You can also execute some commands into your application pod using `exec` hook.
+
+- **spec.hooks.preRestore:** `spec.hooks.preRestore` hooks are executed before the restore process.
+- **spec.hooks.postRestore:** `spec.hooks.postRestore` hooks are executed after the restore process.
+
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
 
 #### spec.runtimeSettings
 

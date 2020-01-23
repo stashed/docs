@@ -1,0 +1,75 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupBatch
+metadata:
+  name: wordpress-backup
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo
+  schedule: "*/3 * * * *"
+  members:
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: AppBinding
+        name: wordpress-mysql
+    task:
+      name: mysql-backup-8.0.14
+  - target:
+      ref:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: wordpress-deployment
+      volumeMounts:
+        - name: web
+          mountPath: /var/www/html
+      paths:
+        - /var/www/html
+  hooks:
+    preBackup:
+      httpPost:
+        host: hooks.slack.com
+        path: /services/TXXXXX/BXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXX
+        port: 443
+        scheme: HTTPS
+        httpHeaders:
+          - name: Content-Type
+            value: application/json
+        body: '{
+                "blocks": [
+                  {
+                    "type": "divider"
+                  },
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "Backup started for *wordpres-backup*.\n *Targets:*\n- deployment/wordpress-deployment\n- mysql/wordpress-mysql"
+                    }
+                  }
+                ]
+              }'
+    postBackup:
+      httpPost:
+        host: hooks.slack.com
+        path: /services/TXXXXX/BXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXX
+        port: 443
+        scheme: HTTPS
+        httpHeaders:
+          - name: Content-Type
+            value: application/json
+        body: '{
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "Backup has been completed for *wordpres-backup*."
+                    }
+                  }
+                ]
+              }'
+  retentionPolicy:
+    name: 'keep-last-5'
+    keepLast: 5
+    prune: true

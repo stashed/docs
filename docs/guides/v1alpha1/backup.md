@@ -115,7 +115,7 @@ spec:
 Let's create the deployment we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/backup/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -226,7 +226,7 @@ Here,
 Let's create the `Restic` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/backup/restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/restic.yaml
 restic.stash.appscode.com/local-restic created
 ```
 

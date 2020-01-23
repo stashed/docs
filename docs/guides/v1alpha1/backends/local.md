@@ -98,7 +98,7 @@ spec:
 Now, create the `Restic` we have configured above for `local` backend,
 
 ```console
-$ kubectl apply -f ./docs/examples/backends/local/local-restic-hostPath.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/local/local-restic-hostPath.yaml
 restic "local-restic" created
 ```
 
@@ -139,7 +139,7 @@ spec:
 Now, create the `Restic` we have configured above for `local` backend,
 
 ```console
-$ kubectl apply -f ./docs/examples/backends/local/local-restic-nfs.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/local/local-restic-nfs.yaml
 restic "local-restic" created
 ```
 

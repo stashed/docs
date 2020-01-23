@@ -99,7 +99,7 @@ spec:
 Let's create the deployment we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/gke/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -173,7 +173,7 @@ type: Opaque
 Now, we can create `Restic` crd. This will create a repository in the GCS bucket specified in `gcs.bucket` field and start taking periodic backup of `/source/data` directory.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/gke/restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/restic.yaml
 restic.stash.appscode.com/gcs-restic created
 ```
 
@@ -279,7 +279,7 @@ In order to perform recovery, we need `Repository` crd `deployment.stah-demo` an
 Now, we are going to recover the backed up data into GCE Persistent Disk. At first, create a GCE disk named `stash-recovered` from [Google cloud console](https://console.cloud.google.com/compute/disks). Then create `Recovery` crd,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/gke/recovery-gcePD.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/recovery-gcePD.yaml
 recovery.stash.appscode.com/gcs-recovery created
 ```
 
@@ -366,7 +366,7 @@ spec:
 Let's create the deployment,
 
 ```console
-$  kubectl apply -f ./docs/examples/platforms/gke/restored-deployment-gcePD.yaml
+$  kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/restored-deployment-gcePD.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -408,7 +408,7 @@ deployment.apps/stash-demo deleted
 Now, create a `PersistentVolumeClaim` where our recovered data will be stored.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/gke/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
 
@@ -446,7 +446,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-57be
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/gke/recovery-pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/recovery-pvc.yaml
 recovery.stash.appscode.com/gcs-recovery created
 ```
 
@@ -525,7 +525,7 @@ spec:
 Let's create the deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/gke/restored-deployment-pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/restored-deployment-pvc.yaml
 deployment.apps/stash-demo created
 ```
 

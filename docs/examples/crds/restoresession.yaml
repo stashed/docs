@@ -26,6 +26,21 @@ spec:
     sourceHost: "" # no source host indicates that the host is pod itself
     paths:
     - /source/data
+  hooks:
+    preRestore:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PreRestore hook demo"
+      containerName: my-app-container
+    postRestore:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - echo "Sample PostRestore hook demo"
+      containerName: my-app-container
   runtimeSettings:
     container:
       resources:

@@ -119,7 +119,7 @@ Note that we have used some variables (format: `${<variable name>}`) in `backend
 Let's create the `BackupBlueprint` that we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/backupblueprint.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/backupblueprint.yaml
 backupblueprint.stash.appscode.com/pvc-backup-blueprint created
 ```
 
@@ -167,7 +167,7 @@ Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label.
 Let's create the PV we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/nfs_pv.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/nfs_pv.yaml
 persistentvolume/nfs-pv created
 ```
 
@@ -200,7 +200,7 @@ Also, notice the `spec.selector` section. We have specified `app: nfs-demo` labe
 Let's create the PVC we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/nfs_pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/nfs_pvc.yaml
 persistentvolumeclaim/nfs-pvc created
 ```
 
@@ -246,7 +246,7 @@ Here, we have mounted `pod-1/data` directory of the `nfs-pvc` into `/sample/data
 Let's deploy the pod we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/pod-1.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/pod-1.yaml
 pod/demo-pod-1 created
 ```
 
@@ -285,7 +285,7 @@ Now, we have mounted `pod-2/data` directory of the `nfs-pvc` into `/sample/data`
 Let's create the pod we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/auto-backup/pvc/pod-2.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/pod-2.yaml
 pod/demo-pod-2 created
 ```
 

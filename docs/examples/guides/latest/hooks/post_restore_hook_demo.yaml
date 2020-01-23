@@ -1,0 +1,25 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: post-restore-hook-demo
+  namespace: demo
+spec:
+  task:
+    name: mysql-restore-8.0.14
+  repository:
+    name: gcs-repo
+  hooks:
+    postRestore:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - mysql -u root --password=$MYSQL_ROOT_PASSWORD -e "RENAME TABLE companyRecord.employee TO companyRecord.salaryRecord;"
+      containerName: mysql
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-mysql
+  rules:
+    - snapshots: [latest]

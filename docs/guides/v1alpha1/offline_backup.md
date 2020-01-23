@@ -123,7 +123,7 @@ spec:
 Let's create the deployment we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/backup/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -226,7 +226,7 @@ Here, we have set `spec.type: offline`. This tell Stash to take backup in offlin
 Let's create the `Restic` we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/backup/restic_offline.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/restic_offline.yaml
 restic.stash.appscode.com/offline-restic created
 ```
 

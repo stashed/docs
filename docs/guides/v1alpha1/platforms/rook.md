@@ -99,7 +99,7 @@ spec:
 Let's create the deployment we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/rook/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/rook/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -173,7 +173,7 @@ type: Opaque
 Now, we are going to create `Restic` crd to take backup `/source/data` directory of `stash-demo` deployment. This will create a repository in the Rook bucket specified by `s3.bucket` field and start taking periodic backup of `/source/data` directory.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/rook/restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/rook/restic.yaml
 restic.stash.appscode.com/rook-restic created
 ```
 
@@ -282,7 +282,7 @@ Here, `rook-ceph-block` storage class is responsible for provisioning the PVC fr
 Let's create a `PersistentVolumeClaim` with `rook-ceph-block` storage class where our recovered data will be stored.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/rook/rook-pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/rook/rook-pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
 
@@ -321,7 +321,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-dd07
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/rook/recovery.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/rook/recovery.yaml
 recovery.stash.appscode.com/rook-recovery created
 ```
 
@@ -406,7 +406,7 @@ spec:
 Let's create the deployment,
 
 ```console
-$ kubectl apply -f ./docs/examples/platforms/rook/recovered-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/rook/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
 

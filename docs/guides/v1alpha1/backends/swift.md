@@ -132,7 +132,7 @@ spec:
 Now, create the Restic we have configured above for `swift` backend,
 
 ```console
-$ kubectl apply -f ./docs/examples/backends/swift/swift-restic.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/swift/swift-restic.yaml
 restic "swift-restic" created
 ```
 

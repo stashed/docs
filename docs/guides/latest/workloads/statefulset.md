@@ -107,7 +107,7 @@ spec:
 Let's create the StatefulSet we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/statefulset/statefulset.yaml
 service/headless created
 statefulset.apps/stash-demo created
 ```
@@ -177,7 +177,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/statefulset/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -228,7 +228,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/statefulset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -484,7 +484,7 @@ spec:
 Let's create the StatefulSet we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/recovered_statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/statefulset/recovered_statefulset.yaml
 service/re-headless created
 statefulset.apps/stash-recovered created
 ```
@@ -527,7 +527,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/workloads/statefulset/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/workloads/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
@@ -741,7 +741,7 @@ spec:
 Let's create the StatefulSet we have shown above.
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/adv_statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/statefulset/adv_statefulset.yaml
 service/adv-headless created
 statefulset.apps/stash-recovered-adv created
 ```
@@ -790,7 +790,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```console
-$ kubectl apply -f ./docs/examples/guides/latest/workloads/statefulset/adv_restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/statefulset/adv_restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
