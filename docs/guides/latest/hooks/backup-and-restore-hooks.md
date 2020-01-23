@@ -667,7 +667,7 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 restoresession.stash.appscode.com/post-restore-hook-demo created
 ```
 
-**Wait for Restore to Complete:**
+**Wait for Restore process to Complete:**
 
 Now, wait for the restore process to complete,
 

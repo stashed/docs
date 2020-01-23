@@ -13,7 +13,7 @@ section_menu_id: guides
 
 # Stash Backup and Restore Hooks
 
-Stash `v0.9.0+` supports executing hook  before and after backup or restore process. This guide will give you an overview of what kind of hooks you can execute, how the hooks get executed, and how the hooks behave in different scenarios.
+Stash `v0.9.0+` supports executing custom commands before and after backup or restore process. This is called `hook` in Stash. This guide will give you an overview of what kind of hooks you can execute, how the hooks get executed, and how the hooks behave in different scenarios.
 
 ## Types of Hooks
 
@@ -31,21 +31,21 @@ Based on the action of a hook, we can categorize them into four different catego
 
 - **Exec:** Executes commands inside a targeted container before/after the backup/restore process. The hook is considered successful if the command executes with exit code 0.
 
-### Based on Execution Order
+### Execution Phases
 
-Based on the execution order, we can categorize the hooks into two different categories. These are the followings:
+Based on the execution order, we can categorize the hooks into two different phases. These are the followings:
 
-- **Pre-Task Hook:** Pre task hooks are executed before the backup or restore process. `preBackup` and `preRestore` are the pre-task hook.
+- **Pre-Task Hook:** Pre task hooks are executed before the backup or restore process. `preBackup` and `preRestore` are the pre-task hooks.
 
-- **Post-Task Hook:** Post task hooks are executed after the backup or restore process. `postBackup` and `postRestore` are the post-task hook.
+- **Post-Task Hook:** Post task hooks are executed after the backup or restore process. `postBackup` and `postRestore` are the post-task hooks.
 
-However, there is one more types of hooks for [BackupBatch](/docs/concepts/crds/backupbatch.md) object. We can call them **Global Hooks**. They get executed before any other individual target's hooks get executed (for the pre-task hooks) or after all the individual target's hooks has executed (for the post-task hooks).
+However, there is one more type of hooks for [BackupBatch](/docs/concepts/crds/backupbatch.md) object. We call them **Global Hooks**. They get executed before any other individual target's hooks get executed (for the pre-task hooks) or after all the individual target's hooks has executed (for the post-task hooks).
 
 ## Who Executes the Hooks
 
 You might be familiar that Stash uses two different models to take backup of the target based on their type. For Kubernetes workloads (i.e. Deployment, DaemonSet, StatefulSet etc.), Stash injects a sidecar into the workload that takes backup. However, for databases and standalone PVC backup, Stash creates a job for the task. The hooks are executed differently for these two different models.
 
-Furthermore, we have introduced [BackupBatch](/docs/concepts/crds/backupbatch.md) which allows to specify multiple target simultaneously. The individual targets may follow the sidecar model or the job model. The `BackupBatch` object allows specifying a global hook for all the targets as well as some local hooks for the individual target. This type of hooks also requires to be handled differently.
+Furthermore, we have introduced [BackupBatch](/docs/concepts/crds/backupbatch.md) which allows to specify multiple target simultaneously. The individual targets may follow the sidecar model or the job model. The `BackupBatch` object allows specifying a global hook for all the targets as well as some local hooks for individual targets. This type of hooks also handled differently.
 
 Here, we are going to discuss how Stash executes the hooks in different scenarios.
 
@@ -56,7 +56,7 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
   <figcaption align="center">Fig: Hook Execution flow in sidecar model</figcaption>
   </figure>
 
-- **Job Model:** In Job model, `httpGet`, `httpPost` and `tcpSocket` are executed by the backup/restore job. However, the `exec` hook is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` does not have the respective `Service` name specified, it is not possible for Stash to execute the `exec` hook. The hook execution flow in job model is shown in the following diagram:
+- **Job Model:** In Job model, `httpGet`, `httpPost` and `tcpSocket` are executed by the backup/restore job. However, the `exec` hook is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` points to an external URL, it is not possible for Stash to execute the `exec` hook. The hook execution flow in job model is shown in the following diagram:
 
   <figure align="center">
     <img alt="Hook Execution flow in job model" src="/docs/images/guides/latest/hooks/job-model.svg">
@@ -74,7 +74,7 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
 
 Now, we are going to discuss what will happen when a hook fails or backup/restore process fails.
 
-- **Pre-Task Hook Failed:** If a pre-task hook fails to execute, the rest of the backup/restore process will be skipped and the respective `BackupSession`/`RestoreSession` will be marked as `Failed`. You may see following the things to happen in addition to skipping the backup process:
+- **Pre-Task Hook Failed:** If a pre-task hook fails to execute, the rest of the backup/restore process will be skipped and the respective `BackupSession`/`RestoreSession` will be marked as `Failed`. You may see the following things happen in addition to skipping the backup process:
   - **Backup Sidecar:** If the pre-task hook fails in the backup sidecar, the sidecar will just log the failure and continue watching for `BackupSession` for the next backup.
   - **Restore Init-Container:** If the pre-task hook fails in restore init-container, the container will crash. Hence, your workload will be stuck in the initialization phase.
   - **Backup or Restore Job:** If the pre-task hook fails in backup or restore job, the container will fail. Hence, the job will never go to the completed stage. You may see the job to create multiple pods to retry.

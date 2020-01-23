@@ -101,9 +101,9 @@ Stash uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts
 
 - **BackupBatch**
 
-  Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
+  Sometimes, a single stateful component may not meet the requirements of your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
 
-  A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related components(workload, database etc.) under a single configuration. For more details, please visit [here](/docs/concepts/crds/backupbatch.md).
+  A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which lets you configure backup for multiple co-related stateful components(workload, database etc.) under a single configuration. For more details, please visit [here](/docs/concepts/crds/backupbatch.md).
 
 - **AppBinding**
 

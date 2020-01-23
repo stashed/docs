@@ -60,16 +60,16 @@ spec:
     preRestore:
       exec:
         command:
-          - /bin/sh
-          - -c
-          - echo "Sample PreRestore hook demo"
+        - /bin/sh
+        - -c
+        - echo "Sample PreRestore hook demo"
       containerName: my-app-container
     postRestore:
       exec:
         command:
-          - /bin/sh
-          - -c
-          - echo "Sample PostRestore hook demo"
+        - /bin/sh
+        - -c
+        - echo "Sample PostRestore hook demo"
       containerName: my-app-container
   runtimeSettings:
     container:
@@ -179,7 +179,7 @@ Restore rules comply with the following conditions:
 
 #### spec.hooks
 
-`spec.hooks` allows performing some actions before and after the restore process. You can send HTTP requests to a remote server via `httpGet` and `httpPost` hooks. You can check whether a TCP socket is open using `tcpSocket` hook. You can also execute some commands into your application pod using `exec` hook.
+`spec.hooks` allows performing some actions before and after the restore process. You can send HTTP requests to a remote server via `httpGet` or `httpPost` hooks. You can check whether a TCP socket is open using `tcpSocket` hook. You can also execute some commands into your application pod using `exec` hook.
 
 - **spec.hooks.preRestore:** `spec.hooks.preRestore` hooks are executed before the restore process.
 - **spec.hooks.postRestore:** `spec.hooks.postRestore` hooks are executed after the restore process.

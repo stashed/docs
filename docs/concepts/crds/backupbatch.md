@@ -108,7 +108,7 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 #### spec.hooks
 
-`spec.hooks` allows performing some global actions before and after the backup process of the members. You can send HTTP requests to a remote server via `httpGet`, `httpPost`. You can check whether a TCP port is open using `tcpSocket` hooks. You can also execute some commands using `exec` hook.
+`spec.hooks` allows performing some global actions before and after the backup process of the members. You can send HTTP requests to a remote server via `httpGet` or `httpPost`. You can check whether a TCP port is open using `tcpSocket` hooks. You can also execute some commands using `exec` hook.
 
 - **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed on each backup session before taking backup of the members.
 - **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed on each backup session after taking backup of the members.

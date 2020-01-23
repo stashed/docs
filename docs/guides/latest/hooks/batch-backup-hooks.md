@@ -13,7 +13,7 @@ section_menu_id: guides
 
 # Hooks in Batch Backup
 
-Stash 0.9.0+ supports taking backup of multiple co-related resources using a single configuration named `BackupBatch`. Combining with backup hooks, this can be very powerful. For example, you can prepare your application stack before backup to ensure backup integrity or you can send a notification to a webhook (i.e. in a Slack channel via slack incoming webhook) before or after the backup of all the resources of your application stack.
+Stash 0.9.0+ supports taking backup of multiple co-related stateful workloads using a single configuration named `BackupBatch`. Combining with backup hooks, this can be very powerful. For example, you can prepare your application stack before backup to ensure backup integrity or you can send a notification to a webhook (i.e. in a Slack channel via slack incoming webhook) before or after the backup of all the resources of your application stack.
 
 Here, we are going to demonstrate how to send a notification to a Slack channel before and after the backup of a WordPress application. WordPress application consists of two different workloads. One is for WordPress itself and another for a MySQL database.
 
