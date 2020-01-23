@@ -20,16 +20,41 @@ You can install the addon either as a helm chart or you can create only the YAML
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="script-tab" data-toggle="tab" href="#script" role="tab" aria-controls="script" aria-selected="true">Script</a>
+    <a class="nav-link active" id="helm3-tab" data-toggle="tab" href="#helm3" role="tab" aria-controls="helm3" aria-selected="true">Helm 3 (Recommended)</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="helm-tab" data-toggle="tab" href="#helm" role="tab" aria-controls="helm" aria-selected="false">Helm</a>
+    <a class="nav-link" id="helm2-tab" data-toggle="tab" href="#helm2" role="tab" aria-controls="helm2" aria-selected="false">Helm 2</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="script-tab" data-toggle="tab" href="#script" role="tab" aria-controls="script" aria-selected="false">YAML</a>
   </li>
 </ul>
 <div class="tab-content" id="installerTabContent">
-  <div class="tab-pane fade show active" id="script" role="tabpanel" aria-labelledby="script-tab">
+  <div class="tab-pane fade show active" id="helm3" role="tabpanel" aria-labelledby="helm3-tab">
 
-## Install only YAMLs
+## Using Helm 3
+
+Run the following script to install `stash-elasticsearch` addon as a Helm chart using Helm 3.
+
+```console
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-elasticsearch
+```
+
+</div>
+<div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
+
+## Using Helm 2
+
+Run the following script to install `stash-elasticsearch` addon as a Helm chart using Helm 2.
+
+```console
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm2.sh | bash -s -- --catalog=stash-elasticsearch
+```
+
+</div>
+<div class="tab-pane fade" id="script" role="tabpanel" aria-labelledby="script-tab">
+
+## Using YAML
 
 Run the following script to install `stash-elasticsearch` addon as Kubernetes YAMLs.
 
@@ -37,16 +62,7 @@ Run the following script to install `stash-elasticsearch` addon as Kubernetes YA
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/script.sh | bash -s -- --catalog=stash-elasticsearch
 ```
 
-</div>
-<div class="tab-pane fade" id="helm" role="tabpanel" aria-labelledby="helm-tab">
-
-## Install as chart release
-
-Run the following script to install `stash-elasticsearch` addon as a Helm chart.
-
-```console
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch
-```
+>The above script uses Helm 3 for rendering the charts to generate the YAMLs.
 
 </div>
 </div>
@@ -107,7 +123,7 @@ Now, Stash is ready to backup Elasticsearch databases.
 In order to install `Function` and `Task` only for a specific Elasticsearch version, use `--version` flag to specify the desired database version.
 
 ```console
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/chart.sh | bash -s -- --catalog=stash-elasticsearch --version=6.5
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-elasticsearch --version=6.5
 ```
 
 The flowing flags are available for customizing Elasticsearch addon installation:
