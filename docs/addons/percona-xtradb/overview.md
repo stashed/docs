@@ -18,11 +18,13 @@ Stash 0.9.0+ supports backup and restore operation of many databases. This guide
 
 ## How Backup Works
 
-The following diagram shows how Stash takes backup of a Percona XtraDB database. Open the image in a new tab to see the enlarged version.
+### Backup Percona XtraDB Cluster
+
+The following diagram shows how Stash takes from Percona XtraDB Cluster backup. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Percona XtraDB Backup Overview" src="/docs/images/addons/percona-xtradb/backup_overview.svg">
-  <figcaption align="center">Fig: Percona XtraDB Backup Overview</figcaption>
+  <img alt="Percona XtraDB Cluster Backup Overview" src="/docs/images/addons/percona-xtradb/backup_overview.svg">
+  <figcaption align="center">Fig: Percona XtraDB Cluster Backup Overview</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -47,17 +49,19 @@ The backup process consists of the following steps:
 
 10. The backup Job reads necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-11. Then, the Job dumps the targeted database and uploads the output to the backend. Stash pipes the output of dump command to uploading process. Hence, backup Job does not require a large volume to hold the entire dump output.
+11. Then, the Job runs the backup procedure to take the backup of the targeted database and uploads the output to the backend. During backup procedure, the Job takes a full snapshot of the data directory (`/var/lib/mysql`). Stash pipes the output of the backup procedure to the uploading process. Hence, backup Job does not require a large volume to hold the entire backed up data.
 
 12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
 ## How Restore Process Works
 
-The following diagram shows how Stash restores backed up data into a Percona XtraDB database. Open the image in a new tab to see the enlarged version.
+### Restore Percona XtraDB Cluster
+
+The following diagram shows how Stash restores backed up data into a Percona XtraDB cluster. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/addons/percona-xtradb/restore_overview.svg">
-  <figcaption align="center">Fig: Percona XtraDB Restore Process Overview</figcaption>
+  <img alt="Percona XtraDB Cluster Restore Overview" src="/docs/images/addons/percona-xtradb/restore_overview.svg">
+  <figcaption align="center">Fig: Percona XtraDB Cluster Restore Process Overview</figcaption>
 </figure>
 
 The restore process consists of the following steps:
@@ -66,13 +70,13 @@ The restore process consists of the following steps:
 
 2. Stash operator watches for `RestoreSession` object.
 
-3. Once it finds a `RestoreSession` object, it resolves the respective `Task` and `Function` and prepares a Job definition to restore.
+3. Once it finds a `RestoreSession` object, it resolves the respective `Task` and `Function` and prepares a number (equal to the value of `.spec.target.replicas` of `RestoreSession` object) of Job definitions to restore. Each of these Job requires a PVC to store the data (full data directory `/var/lib/mysql`) from the backend.
 
-4. Then, it creates the Job to restore the target.
+4. Then, it creates these Jobs and corresponding PVCs to restore the target.
 
-5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
+5. These Jobs read necessary information to connect with the database from respective `AppBinding` crd. They also read backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up data from the backend and injects into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
+6. Then, each job downloads the backed up data from the backend and injects into the associated PVC.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 
