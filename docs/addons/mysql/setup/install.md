@@ -60,6 +60,8 @@ $ kubectl get functions.stash.appscode.com
 NAME                    AGE
 mysql-backup-8.0.14     20s
 mysql-backup-5.7        20s
+mysql-restore-8.0.14    20s
+mysql-restore-5.7       20s
 pvc-backup              7h6m
 pvc-restore             7h6m
 update-status           7h6m
@@ -72,6 +74,8 @@ $ kubectl get tasks.stash.appscode.com
 NAME                    AGE
 mysql-backup-8.0.14     2m7s
 mysql-backup-5.7        2m7s
+mysql-restore-8.0.14    2m7s
+mysql-restore-5.7       2m7s
 pvc-backup              7h7m
 pvc-restore             7h7m
 ```
