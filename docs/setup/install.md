@@ -32,7 +32,7 @@ Stash operator can be installed via a script or as a Helm chart.
 
 ## Using Helm 3
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
@@ -41,7 +41,7 @@ $ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION APP VERSION DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm install stash-operator appscode/stash \
+$ helm install stash appscode/stash \
   --version {{< param "info.version" >}} \
   --namespace kube-system
 ```
@@ -53,7 +53,7 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 
 ## Using Helm 2
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
@@ -62,7 +62,7 @@ $ helm search appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION APP VERSION DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm install appscode/stash --name stash-operator \
+$ helm install appscode/stash --name stash \
   --version {{< param "info.version" >}} \
   --namespace kube-system
 ```
@@ -83,7 +83,7 @@ $ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION APP VERSION DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm template stash-operator appscode/stash \
+$ helm template stash appscode/stash \
   --version {{< param "info.version" >}} \
   --namespace kube-system \
   --no-hooks | kubectl apply -f -

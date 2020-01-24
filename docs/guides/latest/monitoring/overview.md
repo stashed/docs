@@ -149,7 +149,7 @@ You have to provides these flags while installing or upgrading or updating Stash
 **Helm 3:**
 
 ```console
-$ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
+$ helm install stash appscode/stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/coreos-operator \
   --set monitoring.backup=true \
@@ -161,7 +161,7 @@ $ helm install stash-operator appscode/stash --version {{< param "info.version" 
 **Helm 2:**
 
 ```console
-$ helm install appscode/stash --name stash-operator --version {{< param "info.version" >}} \
+$ helm install appscode/stash --name stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/coreos-operator \
   --set monitoring.backup=true \
