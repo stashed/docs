@@ -32,7 +32,7 @@ Stash operator can be installed via a script or as a Helm chart.
 
 ## Using Helm 3
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-operator`:
 
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
@@ -53,7 +53,7 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 
 ## Using Helm 2
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `my-release`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-operator`:
 
 ```console
 $ helm repo add appscode https://charts.appscode.com/stable/
