@@ -39,6 +39,8 @@ Stash supports backup and restore of the following MongoDB versions:
 - [4.1.4](/docs/addons/mongodb/guides/4.1.4/mongodb.md)
 - [4.1.7](/docs/addons/mongodb/guides/4.1.7/mongodb.md)
 - [4.1.13](/docs/addons/mongodb/guides/4.1.13/mongodb.md)
+- [4.2](/docs/addons/mongodb/guides/4.2/mongodb.md)
+- [4.2.3](/docs/addons/mongodb/guides/4.2.3/mongodb.md)
 
 >Version **M.M** actually represents the latest patch of **M.M.P** series. For example, version **4.1** actually represents **4.1.13** as it is the latest supported patch of **4.1** series. Now, if **4.1.14** is released then **4.1** will represents **4.1.14**.
 
