@@ -60,3 +60,19 @@ $ helm template stash-operator appscode/stash --namespace kube-system | kubectl 
 
 </div>
 </div>
+
+# Remove Custom Resource Definitions
+
+```console
+kubectl delete crd appbindings.appcatalog.appscode.com
+kubectl delete crd backupbatches.stash.appscode.com
+kubectl delete crd backupblueprints.stash.appscode.com
+kubectl delete crd backupconfigurations.stash.appscode.com
+kubectl delete crd backupsessions.stash.appscode.com
+kubectl delete crd functions.stash.appscode.com
+kubectl delete crd recoveries.stash.appscode.com
+kubectl delete crd repositories.stash.appscode.com
+kubectl delete crd restics.stash.appscode.com
+kubectl delete crd restoresessions.stash.appscode.com
+kubectl delete crd tasks.stash.appscode.com
+```
