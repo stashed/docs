@@ -132,5 +132,4 @@ You can find the full working demo in [examples folder](/docs/examples/workloads
 - See the list of supported backends and how to configure them [here](/docs/guides/v1alpha1/backends/overview.md).
 - Thinking about monitoring your backup operations? Stash works [out-of-the-box with Prometheus](/docs/guides/v1alpha1/monitoring/overview.md).
 - Learn about how to configure [RBAC roles](/docs/guides/v1alpha1/rbac.md).
-- Wondering what features are coming next? Please visit [here](/docs/roadmap.md).
 - Want to hack on Stash? Check our [contribution guidelines](/docs/CONTRIBUTING.md).
