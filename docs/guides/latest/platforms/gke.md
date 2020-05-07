@@ -401,7 +401,7 @@ deployment-backup   */1 * * * *   False     0        13s             2m42s
 
 **Wait for BackupSession:**
 
-The `deployment-backup` CronJob will trigger a backup on each schedule by creating a `backupsession` crd. The sidecar container will watch for the `BackupSession` crd. When it finds one, it will take backup immediately.
+The `deployment-backup` CronJob will trigger a backup on each schedule by creating a `BackupSession` crd. The sidecar container will watch for the `BackupSession` crd. When it finds one, it will take backup immediately.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 

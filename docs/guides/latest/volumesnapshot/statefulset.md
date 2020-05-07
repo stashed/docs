@@ -251,7 +251,7 @@ statefulset-volume-snapshot   */1 * * * *   False     0        <none>          1
 
 **Wait for BackupSession :**
 
-The `statefulset-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `backupsession` crd.
+The `statefulset-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackupSession` crd.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
@@ -595,7 +595,7 @@ statefulset-volume-snapshot   */1 * * * *   False     0        <none>          1
 
 **Wait for BackupSession :**
 
-The `statefulset-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `backupsession` crd.
+The `statefulset-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackupSession` crd.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
