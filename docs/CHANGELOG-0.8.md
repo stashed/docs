@@ -74,7 +74,7 @@ aliases:
 **Merged pull requests:**
 
 - Prepare docs for 0.8.1 release [\#629](https://github.com/appscode/stash/pull/629) ([tamalsaha](https://github.com/tamalsaha))
-- Add missing validator for respository resource in chart [\#628](https://github.com/appscode/stash/pull/628) ([tamalsaha](https://github.com/tamalsaha))
+- Add missing validator for repository resource in chart [\#628](https://github.com/appscode/stash/pull/628) ([tamalsaha](https://github.com/tamalsaha))
 
 ## [0.8.0](https://github.com/appscode/stash/tree/0.8.0) (2018-12-08)
 [Full Changelog](https://github.com/appscode/stash/compare/0.7.0...0.8.0)
