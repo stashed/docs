@@ -34,6 +34,7 @@ stash backup-pvc [flags]
       --output-dir string             Directory where output.json file will be written (keep empty if you don't need to write output in file)
       --path string                   Directory inside the bucket where backed up data will be stored
       --provider string               Backend provider (i.e. gcs, s3, azure etc)
+      --region string                 Region for s3/s3 compatible backend
       --retention-dry-run             Specify whether to test retention policy without deleting actual data
       --retention-keep-daily int      Specify value for retention strategy
       --retention-keep-hourly int     Specify value for retention strategy
