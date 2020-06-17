@@ -33,6 +33,7 @@ stash restore-pvc [flags]
       --output-dir string       Directory where output.json file will be written (keep empty if you don't need to write output in file)
       --path string             Directory inside the bucket where backed up data has been stored
       --provider string         Backend provider (i.e. gcs, s3, azure etc)
+      --region string           Region for s3/s3 compatible backend
       --restore-paths strings   List of paths to restore
       --scratch-dir string      Temporary directory (default "/tmp")
       --secret-dir string       Directory where storage secret has been mounted
