@@ -44,7 +44,7 @@ spec:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "Backup started for *wordpres-backup*.\n *Targets:*\n- deployment/wordpress-deployment\n- mysql/wordpress-mysql"
+                      "text": "Backup started for *wordpress-backup*.\n *Targets:*\n- deployment/wordpress-deployment\n- mysql/wordpress-mysql"
                     }
                   }
                 ]
@@ -64,7 +64,7 @@ spec:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "Backup has been completed for *wordpres-backup*."
+                      "text": "Backup has been completed for *wordpress-backup*."
                     }
                   }
                 ]

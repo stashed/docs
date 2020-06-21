@@ -136,7 +136,7 @@ $ kubectl create secret generic -n demo gcs-secret \
 secret/gcs-secret created
 ```
 
-Now, create a `Respository` using this secret. Below is the YAML of `Repository` crd we are going to create,
+Now, create a `Repository` using this secret. Below is the YAML of `Repository` crd we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1

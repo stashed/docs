@@ -42,7 +42,7 @@ You will see all snapshots taken by Stash at `/snapshot` directory of this repos
 
 ## Next Steps
 
-- Learn how to configure `Kuberntes Volume` as backend from [here](/docs/guides/latest/backends/local.md).
+- Learn how to configure `Kubernetes Volume` as backend from [here](/docs/guides/latest/backends/local.md).
 - Learn how to configure `AWS S3/Minio/Rook` backend from [here](/docs/guides/latest/backends/s3.md).
 - Learn how to configure `Google Cloud Storage (GCS)` backend from [here](/docs/guides/latest/backends/gcs.md).
 - Learn how to configure `Microsoft Azure Storage` backend from [here](/docs/guides/latest/backends/azure.md).

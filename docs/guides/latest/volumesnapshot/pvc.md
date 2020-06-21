@@ -223,7 +223,7 @@ pvc-volume-snapshot           */1 * * * *   False     0        39s             2
 
 **Wait for BackupSession :**
 
-The `pvc-volume-snapshot` CronJob will trigger a backup on each scheduled time slot by creating a `BackpSession` crd.
+The `pvc-volume-snapshot` CronJob will trigger a backup on each scheduled time slot by creating a `BackupSession` crd.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 

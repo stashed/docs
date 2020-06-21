@@ -194,7 +194,7 @@ type: Opaque
 
 **Create Repository:**
 
-Now, let's create a `Respository` with the information of our desired Ceph storage bucket. Below is the YAML of `Repository` crd we are going to create,
+Now, let's create a `Repository` with the information of our desired Ceph storage bucket. Below is the YAML of `Repository` crd we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
@@ -414,7 +414,7 @@ deployment-backup   */1 * * * *   False     0        13s             1m50s
 
 **Wait for BackupSession:**
 
-The `deployment-backup` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd. The sidecar container will watch for the `BackupSession` crd. When it finds one, it will take backup immediately.
+The `deployment-backup` CronJob will trigger a backup on each schedule by creating a `BackupSession` crd. The sidecar container will watch for the `BackupSession` crd. When it finds one, it will take backup immediately.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 

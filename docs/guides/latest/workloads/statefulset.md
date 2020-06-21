@@ -363,7 +363,7 @@ ss-backup          */1 * * * *            3m41s
 
 **Wait for BackupSession:**
 
-The `ss-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackpSession` crd. The sidecar container watches for the `BackupSession` crd. When it finds one, it will take backup immediately.
+The `ss-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` crd. The sidecar container watches for the `BackupSession` crd. When it finds one, it will take backup immediately.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 

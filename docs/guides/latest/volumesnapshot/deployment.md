@@ -258,7 +258,7 @@ deployments-volume-snapshot   */1 * * * *   False     0        39s             2
 
 **Wait for BackupSession :**
 
-The `deployments-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd.
+The `deployments-volume-snapshot` CronJob will trigger a backup on each schedule by creating a `BackupSession` crd.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
