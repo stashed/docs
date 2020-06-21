@@ -318,7 +318,7 @@ dmn-backup          */1 * * * *            3m
 
 **Wait for BackupSession:**
 
-The `dmn-backup` CronJob will trigger a backup on each schedule by creating a `BackpSession` crd. The sidecar container watches for the `BackupSession` crd. When it finds one, it will take backup immediately.
+The `dmn-backup` CronJob will trigger a backup on each schedule by creating a `BackupSession` crd. The sidecar container watches for the `BackupSession` crd. When it finds one, it will take backup immediately.
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 

@@ -588,7 +588,7 @@ metadata:
   namespace: demo
   labels:
     app: stash-demo
-  # This annotations indicates that data shoul be recovered on each restart of the workload
+  # This annotations indicates that data should be recovered on each restart of the workload
   annotations:
     stash.appscode.com/restorepolicy: "OnRestart"
     stash.appscode.com/repository: "demo-backup-repo"

@@ -228,7 +228,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, crete a `Respository` using this secret. Below is the YAML of `Repository` CR we are going to create,
+Now, create a `Repository` using this secret. Below is the YAML of `Repository` CR we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
@@ -356,7 +356,7 @@ spec:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "Backup started for *wordpres-backup*.\n *Targets:*\n- deployment/wordpress-deployment\n- mysql/wordpress-mysql"
+                      "text": "Backup started for *wordpress-backup*.\n *Targets:*\n- deployment/wordpress-deployment\n- mysql/wordpress-mysql"
                     }
                   }
                 ]
@@ -376,7 +376,7 @@ spec:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "Backup has been completed for *wordpres-backup*."
+                      "text": "Backup has been completed for *wordpress-backup*."
                     }
                   }
                 ]
