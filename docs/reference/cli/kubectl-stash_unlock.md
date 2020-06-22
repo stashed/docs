@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Unlock
+title: Unlock
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-unlock
-    name: Kubectl-Stash Unlock
+    name: Unlock
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

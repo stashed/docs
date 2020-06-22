@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Create
+title: Create
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-create
-    name: Kubectl-Stash Create
+    name: Create
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

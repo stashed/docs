@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Cp Backupconfig
+title: Cp Backupconfig
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-cp-backupconfig
-    name: Kubectl-Stash Cp Backupconfig
+    name: Cp Backupconfig
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

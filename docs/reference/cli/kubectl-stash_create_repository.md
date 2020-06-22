@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Create Repository
+title: Create Repository
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-create-repository
-    name: Kubectl-Stash Create Repository
+    name: Create Repository
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

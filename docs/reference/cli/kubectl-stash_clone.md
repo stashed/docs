@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Clone
+title: Clone
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-clone
-    name: Kubectl-Stash Clone
+    name: Clone
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

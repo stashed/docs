@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Delete Snapshot
+title: Delete Snapshot
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-delete-snapshot
-    name: Kubectl-Stash Delete Snapshot
+    name: Delete Snapshot
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

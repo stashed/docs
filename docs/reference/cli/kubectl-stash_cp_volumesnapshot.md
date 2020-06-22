@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Cp Volumesnapshot
+title: Cp Volumesnapshot
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-cp-volumesnapshot
-    name: Kubectl-Stash Cp Volumesnapshot
+    name: Cp Volumesnapshot
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

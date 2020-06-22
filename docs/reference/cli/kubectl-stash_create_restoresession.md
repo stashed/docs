@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Create Restoresession
+title: Create Restoresession
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-create-restoresession
-    name: Kubectl-Stash Create Restoresession
+    name: Create Restoresession
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
