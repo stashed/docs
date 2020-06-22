@@ -4,10 +4,9 @@ menu:
   docs_{{ .version }}:
     identifier: stash-update-status
     name: Update-Status
-    parent: operator
-product_name: stash
-section_menu_id: reference
+    parent: reference-operator
 menu_name: docs_{{ .version }}
+section_menu_id: reference
 ---
 ## stash update-status
 

@@ -4,10 +4,9 @@ menu:
   docs_{{ .version }}:
     identifier: stash-create-vs
     name: Create-Vs
-    parent: operator
-product_name: stash
-section_menu_id: reference
+    parent: reference-operator
 menu_name: docs_{{ .version }}
+section_menu_id: reference
 ---
 ## stash create-vs
 
