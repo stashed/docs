@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Download
+title: Download
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-download
-    name: Kubectl-Stash Download
+    name: Download
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

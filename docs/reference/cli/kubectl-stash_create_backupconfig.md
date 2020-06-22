@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Create Backupconfig
+title: Create Backupconfig
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-create-backupconfig
-    name: Kubectl-Stash Create Backupconfig
+    name: Create Backupconfig
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

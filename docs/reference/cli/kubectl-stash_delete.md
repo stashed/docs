@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Delete
+title: Delete
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-delete
-    name: Kubectl-Stash Delete
+    name: Delete
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

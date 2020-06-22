@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Version
+title: Version
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-version
-    name: Kubectl-Stash Version
+    name: Version
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

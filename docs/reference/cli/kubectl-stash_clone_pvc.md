@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Clone Pvc
+title: Clone Pvc
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-clone-pvc
-    name: Kubectl-Stash Clone Pvc
+    name: Clone Pvc
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

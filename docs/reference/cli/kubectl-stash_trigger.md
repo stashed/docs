@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Trigger
+title: Trigger
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-trigger
-    name: Kubectl-Stash Trigger
+    name: Trigger
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference

@@ -1,9 +1,9 @@
 ---
-title: Kubectl-Stash Cp
+title: Cp
 menu:
   docs_{{ .version }}:
     identifier: kubectl-stash-cp
-    name: Kubectl-Stash Cp
+    name: Cp
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
