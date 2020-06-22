@@ -4,16 +4,14 @@ menu:
   docs_{{ .version }}:
     identifier: stash
     name: Stash
-    parent: operator
+    parent: reference-operator
     weight: 0
 
-product_name: stash
-section_menu_id: reference
 menu_name: docs_{{ .version }}
+section_menu_id: reference
 url: /docs/{{ .version }}/reference/operator/
 aliases:
-  - /docs/{{ .version }}/reference/operator/operator/
-
+- /docs/{{ .version }}/reference/operator/stash/
 ---
 ## stash
 

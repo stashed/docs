@@ -4,10 +4,9 @@ menu:
   docs_{{ .version }}:
     identifier: stash-restore-pvc
     name: Restore-Pvc
-    parent: operator
-product_name: stash
-section_menu_id: reference
+    parent: reference-operator
 menu_name: docs_{{ .version }}
+section_menu_id: reference
 ---
 ## stash restore-pvc
 
