@@ -14,7 +14,7 @@ section_menu_id: concepts
 
 # Stash Architecture
 
-Stash is a Kubernetes operator for [restic](https://restic.net/). At the heart of Stash, it is a Kubernetes [controller](https://book.kubebuilder.io/basics/what_is_a_controller.html). It uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) to specify targets and behaviors of backup and restore process in a Kubernetes native way. A simplified architecture of Stash is shown below:
+Stash is a Kubernetes operator for [restic](https://restic.net/). At the heart of Stash, it is a Kubernetes [controller](https://book.kubebuilder.io/cronjob-tutorial/controller-overview.html). It uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) to specify targets and behaviors of backup and restore process in a Kubernetes native way. A simplified architecture of Stash is shown below:
 
 <figure align="center">
   <img alt="Stash Architecture" src="/docs/images/concepts/stash_architecture.svg">
