@@ -71,44 +71,24 @@ When a user creates a [RestoreSession](#restoresession) object, Stash injects an
 
 Stash uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) to specify targets and behaviors of backup and restore process in a Kubernetes native way. This section will give you a brief overview of the custom resources used by Stash.
 
-- **Repository**
+- **Repository:** A `Repository` specifies the backend storage system where the backed up data will be stored. A user has to create `Repository` object for each backup target. Only one target can be backed up into one `Repository`. For details about `Repository`, please visit [here](/docs/concepts/crds/repository.md).
 
-  A `Repository` specifies the backend storage system where the backed up data will be stored. A user has to create `Repository` object for each backup target. Only one target can be backed up into one `Repository`. For details about `Repository`, please visit [here](/docs/concepts/crds/repository.md).
+- **BackupConfiguration:** A `BackupConfiguration` specifies the backup target, behaviors (schedule, retention policy etc.), `Repository` object that holds backend information etc. A user has to create one `BackupConfiguration` object for each backup target. When a user creates a `BackupConfiguration`, Stash creates a CronJob for it and injects backup sidecar to the target if it is a workload (i.e. Deployment, DaemonSet, StatefulSet etc.). For more details about `BackupConfiguration`, please visit [here](/docs/concepts/crds/backupconfiguration.md).
 
-- **BackupConfiguration**
+- **BackupSession:** A `BackupSession` object represents a backup run of a target. It is created by respective CronJob at each scheduled time slot. It refers to a `BackupConfiguration` object for necessary configuration. Controller that runs inside backup sidecar (in case of backup via job, it is stash operator itself) will watch this `BackupSession` object and start taking the backup instantly. A user can also create a `BackupSession` object manually to trigger instant backups. For more details about `BackupSession`s, please visit [here](/docs/concepts/crds/backupsession.md).
 
-  A `BackupConfiguration` specifies the backup target, behaviors (schedule, retention policy etc.), `Repository` object that holds backend information etc. A user has to create one `BackupConfiguration` object for each backup target. When a user creates a `BackupConfiguration`, Stash creates a CronJob for it and injects backup sidecar to the target if it is a workload (i.e. Deployment, DaemonSet, StatefulSet etc.). For more details about `BackupConfiguration`, please visit [here](/docs/concepts/crds/backupconfiguration.md).
+- **RestoreSession:** A `RestoreSession` specifies what to restore and the source of data. A user has to create a `RestoreSession` object when s/he wants to restore a target. When s/he creates a `RestoreSession`, Stash injects an `init-container` into the target workload (launches a job if the target is not a workload) to restore. For more details about `RestoreSession`, please visit [here](/docs/concepts/crds/restoresession.md).
 
-- **BackupSession**
+- **Function:** A `Function` is a template for a container that performs only a specific action.  For example, `pg-backup` function only dumps and uploads the dumped file into the backend, whereas `update-status` function updates the status of the respective `BackupSession` and `Repository` and sends Prometheus metrics to `pushgateway` based on the output of another function. For more details about `Function`, please visit [here](/docs/concepts/crds/function.md).
 
-  A `BackupSession` object represents a backup run of a target. It is created by respective CronJob at each scheduled time slot. It refers to a `BackupConfiguration` object for necessary configuration. Controller that runs inside backup sidecar (in case of backup via job, it is stash operator itself) will watch this `BackupSession` object and start taking the backup instantly. A user can also create a `BackupSession` object manually to trigger instant backups. For more details about `BackupSession`s, please visit [here](/docs/concepts/crds/backupsession.md).
+- **Task:** A complete backup or restore process may consist of several steps. For example, in order to backup a PostgreSQL database we first need to dump the database, upload the dumped file to backend and then we need to update `Repository` and `BackupSession` status and send Prometheus metrics. We represent such individual steps via `Function` objects. An entire backup or restore process needs an ordered execution of one or more functions. A `Task` specifies an ordered collection of functions along with their parameters. `Function` and `Task` enables users to extend or customize the backup/restore process. For more details about `Task`, please visit [here](/docs/concepts/crds/task.md).
 
-- **RestoreSession**
+- **BackupBlueprint:** A `BackupBlueprint` enables users to provide a blueprint for `Repository` and `BackupConfiguration` object. Then, s/he just needs to add some annotations to the workload s/he wants to backup. Stash will automatically create respective `Repository` and `BackupConfiguration` according to the blueprint. In this way, users can create a single blueprint for all similar types of workloads and backup them only by applying some annotations on them. In Stash parlance, we call this process **Auto Backup**. For more details about `BackupBlueprint`, please visit [here](/docs/concepts/crds/backupblueprint.md).
 
-  A `RestoreSession` specifies what to restore and the source of data. A user has to create a `RestoreSession` object when s/he wants to restore a target. When s/he creates a `RestoreSession`, Stash injects an `init-container` into the target workload (launches a job if the target is not a workload) to restore. For more details about `RestoreSession`, please visit [here](/docs/concepts/crds/restoresession.md).
+- **BackupBatch:** Sometimes, a single stateful component may not meet the requirements of your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application. A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which lets you configure backup for multiple co-related stateful components(workload, database etc.) under a single configuration. For more details, please visit [here](/docs/concepts/crds/backupbatch.md).
 
-- **Function**
+- **RestoreBatch:** A `RestoreBatch` allows restore of multiple co-related targets that were backed up using a `BackupBatch` under a single configuration. For more details, please visit [here](/docs/concepts/crds/restorebatch.md).
 
-  A `Function` is a template for a container that performs only a specific action.  For example, `pg-backup` function only dumps and uploads the dumped file into the backend, whereas `update-status` function updates the status of the respective `BackupSession` and `Repository` and sends Prometheus metrics to `pushgateway` based on the output of another function. For more details about `Function`, please visit [here](/docs/concepts/crds/function.md).
+- **AppBinding:** An `AppBinding` holds necessary information to connect with a database. For more details about `AppBinding`, please visit [here](/docs/concepts/crds/appbinding.md).
 
-- **Task**
-
-  A complete backup or restore process may consist of several steps. For example, in order to backup a PostgreSQL database we first need to dump the database, upload the dumped file to backend and then we need to update `Repository` and `BackupSession` status and send Prometheus metrics. We represent such individual steps via `Function` objects. An entire backup or restore process needs an ordered execution of one or more functions. A `Task` specifies an ordered collection of functions along with their parameters. `Function` and `Task` enables users to extend or customize the backup/restore process. For more details about `Task`, please visit [here](/docs/concepts/crds/task.md).
-
-- **BackupBlueprint**
-
-  A `BackupBlueprint` enables users to provide a blueprint for `Repository` and `BackupConfiguration` object. Then, s/he just needs to add some annotations to the workload s/he wants to backup. Stash will automatically create respective `Repository` and `BackupConfiguration` according to the blueprint. In this way, users can create a single blueprint for all similar types of workloads and backup them only by applying some annotations on them. In Stash parlance, we call this process **Auto Backup**. For more details about `BackupBlueprint`, please visit [here](/docs/concepts/crds/backupblueprint.md).
-
-- **BackupBatch**
-
-  Sometimes, a single stateful component may not meet the requirements of your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
-
-  A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which lets you configure backup for multiple co-related stateful components(workload, database etc.) under a single configuration. For more details, please visit [here](/docs/concepts/crds/backupbatch.md).
-
-- **AppBinding**
-
-  An `AppBinding` holds necessary information to connect with a database. For more details about `AppBinding`, please visit [here](/docs/concepts/crds/appbinding.md).
-
-- **Snapshot**
-
-  A `Snapshot` is a representation of a backup snapshot in a Kubernetes native way. Stash uses Kuberentes Extended API Server for handling `Snapshot`s. For more details about `Snapshot`s, please visit [here](/docs/concepts/crds/snapshot.md).
+- **Snapshot:** A `Snapshot` is a representation of a backup snapshot in a Kubernetes native way. Stash uses Kuberentes Extended API Server for handling `Snapshot`s. For more details about `Snapshot`s, please visit [here](/docs/concepts/crds/snapshot.md).

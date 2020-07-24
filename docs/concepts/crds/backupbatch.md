@@ -39,6 +39,7 @@ spec:
   schedule: "*/3 * * * *"
   members:
   - target:
+      alias: db
       ref:
         apiVersion: apps/v1
         kind: AppBinding
@@ -46,15 +47,20 @@ spec:
     task:
       name: mysql-backup-8.0.14
   - target:
+      alias: app
       ref:
         apiVersion: apps/v1
         kind: Deployment
         name: wordpress
       volumeMounts:
-        - name: wordpress-persistent-storage
-          mountPath: /var/www/html
+      - name: wordpress-persistent-storage
+        mountPath: /var/www/html
       paths:
-        - /var/www/html
+      - /var/www/html
+      exclude:
+      - /var/www/html/my-file.html
+      - /var/www/html/*.json
+  executionOrder: Parallel
   hooks:
     preBackup:
       exec:
@@ -90,11 +96,15 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 `spec.members` field specifies a list of targets to backup. Each member consists of the following fields:
 
+- **target.alias :** For batch backup, Stash backup all the members into a single Repository. So, it is necessary to keep the data of individual member separate from the others. The `target.alias` field is used as an identifier of the backed up data of the individual target. No two members of a `BackupBatch` should have the same `alias`. Otherwise, their data might get corrupted.
+
 - **target.ref :** `target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
 
 - **target.paths :** `target.paths` specifies list of file paths to backup.
 
 - **target.volumeMounts :** `target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target file paths. Stash will mount these volumes inside a sidecar container or a backup job.
+
+- **target.exclude :** Specifies a list of pattern for the files that should be ignored during backup.
 
 - **target.snapshotClassName :** `target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `driver` is set to `VolumeSnapshotter`.
 
@@ -105,6 +115,10 @@ A `BackupBatch` object has the following fields in the `spec` section.
 - **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectempdir).
 
 - **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit). For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specinterimvolumetemplate).
+
+#### spec.executionOrder
+
+`spec.executionOrder` specifies whether Stash should backup the targets sequentially or in parallel. If `spec.executionOrder` is set to `Parallel`, Stash will start backup of all the targets simultaneously. If it is set to `Sequential`, Stash will not start backup of a target until all the previous members has completed their backup process. The default value of this field is `Parallel`.
 
 #### spec.hooks
 
