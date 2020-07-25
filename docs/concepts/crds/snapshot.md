@@ -30,19 +30,20 @@ A sample `Snapshot` object is shown below,
 apiVersion: repositories.stash.appscode.com/v1alpha1
 kind: Snapshot
 metadata:
-  creationTimestamp: "2019-04-25T05:05:06Z"
+  creationTimestamp: "2020-07-25T17:41:31Z"
   labels:
-    repository: local-repo
-  name: local-repo-d421fe22
+    hostname: app
+    repository: minio-repo
+  name: minio-repo-b54ee4a0
   namespace: demo
-  selfLink: /apis/repositories.stash.appscode.com/v1alpha1/namespaces/demo/snapshots/local-repo-d421fe22
-  uid: d421fe22de090511a74b8ab5f1f307f2fa4e0d8e2f624a7481095db828127147
+  uid: b54ee4a0e9c9084696dc976f125c4fd0e6b1a31abfd82cfc857b3bc9e559fa2f
 status:
   gid: 0
-  hostname: host-0
+  hostname: app
   paths:
-  - /source/data
-  tree: bb1d63756e937c001cf48ed062c69a9968978821a328f5ab06873f3b90346da2
+  - /var/lib/html
+  repository: minio-repo
+  tree: 11527d99281bf3725d58cd637d1f3c19ab9d397d6cff1887a1cd1f9c8c5ebb80
   uid: 0
   username: ""
 ```
@@ -65,7 +66,7 @@ Here, we are going to describe the various sections of a `Snapshot` object.
 
 - **metadata.labels**
 
-  A `Snapshot` object holds `Repository` name as a label in `metadata.labels` section. This helps a user to query the snapshots of a particular `Repository`.
+  A `Snapshot` object holds `repository` and `hostname` as a label in `metadata.labels` section. This helps a user to query the snapshots of a particular repository and/or a particular host.
 
 ### Snapshot `Status`
 
@@ -75,10 +76,13 @@ Here, we are going to describe the various sections of a `Snapshot` object.
 `status.gid` indicates the group identifier of the user who took this backup.
 
 - **status.hostname**
-`status.hostname` indicates the name of the **host** whose data was backed up in this snapshot. For `Deployment`,`ReplicaSet` and `ReplicationController` it is **host-0**. For `DaemonSet`, hostname is the respective **node name** where daemon pod is running. For `StatefulSet`, hostname is **host-\<pod ordinal\>** for the respective pods.
+`status.hostname` indicates the host identifier whose data has been backed up in this snapshot. In order to know how this host identifier are generated, please visit [here](/docs/concepts/crds/backupsession.md#hosts-of-a-backup-process).
 
 - **status.paths**
 `status.paths` indicates the paths that have been backed up in this snapshot.
+
+- **status.repository**
+`status.repository` indicates the name of the Repository crd where this Snapshot came from.
 
 - **status.tree**
 `status.tree` indicates `tree` of the restic snapshot. For more details, please visit [here](https://restic.readthedocs.io/en/stable/100_references.html#trees-and-data).
@@ -98,19 +102,25 @@ Here, we are going to describe the various sections of a `Snapshot` object.
 
 ```console
 # List Snapshots of all Repositories in the current namespace
-$ kubectl get snapshot
+$ kubectl get snapshot --request-timeout=300s
 
 # List Snapshots of all Repositories of all namespaces
-$ kubectl get snapshot --all-namespaces
+$ kubectl get snapshot --all-namespaces --request-timeout=300s
 
 # List Snapshots of all Repositories of a particular namespace
-$ kubectl get snapshot -n demo
+$ kubectl get snapshot -n demo --request-timeout=300s
 
 # List Snapshots of a particular Repository
-$ kubectl get snapshot -l repository=local-repo
+$ kubectl get snapshot -l repository=local-repo --request-timeout=300s
 
 # List Snapshots from multiple Repositories
-$ kubectl get snapshot -l 'repository in (local-repo,gcs-repo)'
+$ kubectl get snapshot -l 'repository in (local-repo,gcs-repo)' --request-timeout=300s
+
+# List Snapshots of a particular host
+$ kubectl get snapshot -l hostname=db --request-timeout=300s
+
+# List Snapshots of a particular Repository and particular host
+$ kubectl get snapshot -l repository=local-repo,hostname=db --request-timeout=300s
 ```
 
 **Viewing information of a particular Snapshot:**
@@ -120,27 +130,6 @@ $ kubectl get snapshot [-n <namespace>] <snapshot name> -o yaml
 
 # Example:
 $ kubectl get snapshot -n demo local-repo-02b0ed42 -o yaml
-```
-
-```yaml
-apiVersion: repositories.stash.appscode.com/v1alpha1
-kind: Snapshot
-metadata:
-  creationTimestamp: "2019-04-25T06:01:04Z"
-  labels:
-    repository: local-repo
-  name: local-repo-02b0ed42
-  namespace: demo
-  selfLink: /apis/repositories.stash.appscode.com/v1alpha1/namespaces/demo/snapshots/local-repo-02b0ed42
-  uid: 02b0ed42791d2d13756cb9e2d05db42f514d51e23028f42bcbe3a152978aa499
-status:
-  gid: 0
-  hostname: host-0
-  paths:
-  - /source/data
-  tree: bb1d63756e937c001cf48ed062c69a9968978821a328f5ab06873f3b90346da2
-  uid: 0
-  username: ""
 ```
 
 ## Preconditions for Snapshot

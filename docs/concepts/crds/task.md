@@ -42,8 +42,10 @@ spec:
       value: secret-volume
   - name: update-status
     params:
-    - name: outputDir # specifies where previous step wrote output file. it will read that file and update status of respective resources accordingly.
+    - name: outputDir
       value: /tmp/output
+    - name: secretVolume
+      value: secret-volume
   volumes:
   - name: secret-volume
     secret:

@@ -6,21 +6,29 @@ spec:
   image: stashed/postgres-stash:11.2
   args:
   - backup-pg
+  # setup information
   - --provider=${REPOSITORY_PROVIDER:=}
   - --bucket=${REPOSITORY_BUCKET:=}
   - --endpoint=${REPOSITORY_ENDPOINT:=}
+  - --region=${REPOSITORY_REGION:=}
   - --path=${REPOSITORY_PREFIX:=}
   - --secret-dir=/etc/repository/secret
   - --scratch-dir=/tmp
-  - --hostname=${HOSTNAME:=host-0}
-  - --pg-args=${pgArgs:=}
+  - --enable-cache=${ENABLE_CACHE:=true}
+  - --max-connections=${MAX_CONNECTIONS:=0} # 0 indicates use default connection limit
+  - --hostname=${HOSTNAME:=}
+  - --backup-cmd=${backupCMD:=} # can specify dump command with either pg_dump or pg_dumpall
+  - --pg-args=${args:=} # optional arguments pass to pgdump command
+  - --wait-timeout=${waitTimeout:=}
+  # target information
   - --namespace=${NAMESPACE:=default}
-  - --app-binding=${TARGET_NAME:=}
+  - --appbinding=${TARGET_NAME:=}
+  - --backupsession=${BACKUP_SESSION:=}
+  # cleanup information
   - --retention-keep-last=${RETENTION_KEEP_LAST:=0}
   - --retention-prune=${RETENTION_PRUNE:=false}
+  # output & metric information
   - --output-dir=${outputDir:=}
-  - --enable-cache=${ENABLE_CACHE:=true}
-  - --max-connections=${MAX_CONNECTIONS:=0}
   volumeMounts:
   - name: ${secretVolume}
     mountPath: /etc/repository/secret
@@ -40,11 +48,28 @@ kind: Function
 metadata:
   name: update-status
 spec:
-  image: appscode/stash:0.9.0
+  image: appscode/stash:0.10.0
   args:
   - update-status
+  - --provider=${REPOSITORY_PROVIDER:=}
+  - --bucket=${REPOSITORY_BUCKET:=}
+  - --endpoint=${REPOSITORY_ENDPOINT:=}
+  - --path=${REPOSITORY_PREFIX:=}
+  - --secret-dir=/etc/repository/secret
+  - --scratch-dir=/tmp
+  - --enable-cache=${ENABLE_CACHE:=true}
+  - --max-connections=${MAX_CONNECTIONS:=0}
   - --namespace=${NAMESPACE:=default}
+  - --backupsession=${BACKUP_SESSION:=}
   - --repository=${REPOSITORY_NAME:=}
-  - --backup-session=${BACKUP_SESSION:=}
-  - --restore-session=${RESTORE_SESSION:=}
+  - --invoker-kind=${INVOKER_KIND:=}
+  - --invoker-name=${INVOKER_NAME:=}
+  - --target-kind=${TARGET_KIND:=}
+  - --target-name=${TARGET_NAME:=}
   - --output-dir=${outputDir:=}
+  - --metrics-enabled=true
+  - --metrics-pushgateway-url=http://stash.kube-system.svc:56789
+  - --prom-job-name=${PROMETHEUS_JOB_NAME:=}
+  volumeMounts:
+  - mountPath: /etc/repository/secret
+    name: ${secretVolume}

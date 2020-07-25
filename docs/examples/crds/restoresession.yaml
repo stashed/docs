@@ -84,3 +84,116 @@ status:
   - duration: 833.139795ms
     hostname: host-0
     phase: Succeeded
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  creationTimestamp: "2020-07-25T17:55:56Z"
+  deletionGracePeriodSeconds: 0
+  deletionTimestamp: "2020-07-25T17:58:42Z"
+  finalizers:
+  - stash.appscode.com
+  generation: 2
+  managedFields:
+  - apiVersion: stash.appscode.com/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        .: {}
+        f:driver: {}
+        f:repository:
+          .: {}
+          f:name: {}
+        f:runtimeSettings: {}
+        f:target:
+          .: {}
+          f:alias: {}
+          f:ref:
+            .: {}
+            f:apiVersion: {}
+            f:kind: {}
+            f:name: {}
+          f:rules: {}
+          f:volumeMounts: {}
+        f:task:
+          .: {}
+          f:name: {}
+        f:tempDir: {}
+    manager: e2e.test
+    operation: Update
+    time: "2020-07-25T17:55:56Z"
+  - apiVersion: stash.appscode.com/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:finalizers: {}
+      f:status:
+        .: {}
+        f:conditions: {}
+        f:phase: {}
+        f:sessionDuration: {}
+        f:stats: {}
+        f:totalHosts: {}
+    manager: stash-enterprise
+    operation: Update
+    time: "2020-07-25T17:58:36Z"
+  name: stash-e2e-yb5oiv-x5h2fr
+  namespace: test-stash-3zkwc2
+  resourceVersion: "25881"
+  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/test-stash-3zkwc2/restoresessions/stash-e2e-yb5oiv-x5h2fr
+  uid: 93d1e5b6-efe4-4fb8-8e14-d6f7db2e302c
+spec:
+  driver: Restic
+  repository:
+    name: minio-stash-e2e-yb5oiv-kb4ugy
+  runtimeSettings: {}
+  target:
+    alias: stash-e2e-yb5oiv
+    ref:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: restored-ss-stash-e2e-yb5oiv
+    rules:
+    - paths:
+      - /source/data
+    volumeMounts:
+    - mountPath: /source/data
+      name: restored-volume
+  task:
+    name: ""
+  tempDir: {}
+status:
+  conditions:
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Repository test-stash-3zkwc2/minio-stash-e2e-yb5oiv-kb4ugy exist.
+    reason: RepositoryAvailable
+    status: "True"
+    type: RepositoryFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Backend Secret test-stash-3zkwc2/stash-e2e-yb5oiv-minio-qfwaf7 exist.
+    reason: BackendSecretAvailable
+    status: "True"
+    type: BackendSecretFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Restore target apps/v1 statefulset/restored-ss-stash-e2e-yb5oiv found.
+    reason: TargetAvailable
+    status: "True"
+    type: RestoreTargetFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Successfully injected stash init-container.
+    reason: InitContainerInjectionSucceeded
+    status: "True"
+    type: StashInitContainerInjected
+  phase: Succeeded
+  sessionDuration: 2m40.595857548s
+  stats:
+  - duration: 961.303768ms
+    hostname: stash-e2e-yb5oiv-2
+    phase: Succeeded
+  - duration: 816.424785ms
+    hostname: stash-e2e-yb5oiv-1
+    phase: Succeeded
+  - duration: 956.753168ms
+    hostname: stash-e2e-yb5oiv-0
+    phase: Succeeded
+  totalHosts: 3
