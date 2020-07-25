@@ -13,12 +13,17 @@ spec:
   paused: false
   backupHistoryLimit: 3
   target:
+    alias: app-data
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-demo
     paths:
     - /source/data
+    exclude:
+    - /source/data/not-important.txt
+    - /source/data/*.html
+    - /source/data/tmp/*
     volumeMounts:
     - name: source-data
       mountPath: /source/data

@@ -43,12 +43,17 @@ spec:
   paused: false
   backupHistoryLimit: 3
   target:
+    alias: app-data
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-demo
     paths:
     - /source/data
+    exclude:
+    - /source/data/not-important.txt
+    - /source/data/*.html
+    - /source/data/tmp/*
     volumeMounts:
     - name: source-data
       mountPath: /source/data
@@ -56,16 +61,16 @@ spec:
     preBackup:
       exec:
         command:
-        - /bin/sh
-        - -c
-        - echo "Sample PreBackup hook demo"
+          - /bin/sh
+          - -c
+          - echo "Sample PreBackup hook demo"
       containerName: my-app-container
     postBackup:
       exec:
         command:
-        - /bin/sh
-        - -c
-        - echo "Sample PostBackup hook demo"
+          - /bin/sh
+          - -c
+          - echo "Sample PostBackup hook demo"
       containerName: my-app-container
   runtimeSettings:
     container:
@@ -106,7 +111,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 `spec.driver` indicates the mechanism used to backup a target. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`.
 
-|       Driver        |                                                                                                          Usage                                                                                                           |
+| Driver              | Usage                                                                                                                                                                                                                    |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `Restic`            | Used to backup workload data, persistent volumes data and databases. It uses [restic](https://restic.net) to backup the target.                                                                                          |
 | `VolumeSnapshotter` | Used to take snapshot of PersistentVolumeClaims of a targeted workload. It leverages Kubernetes [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/) crd and CSI driver to snapshot the PVCs. |
@@ -115,9 +120,13 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 `spec.target` field indicates the target for backup runs. This field consists of the following sub-fields:
 
+- **spec.target.alias :** The alias is used as an identifer of the backed up data in the backend. This is particularly useful for `BackupBatch` where multiple targets are backed up into a single repository.
+
 - **spec.target.ref :** `spec.target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
 
 - **spec.target.paths :** `spec.target.paths` specifies list of file paths to backup.
+
+- **spec.target.exclude :** Specifies a list of pattern for the files that should be ignored during backup. Stash will not backup the files that matches these patterns.
 
 - **spec.target.volumeMounts :** `spec.target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target file paths. Stash will mount these volumes inside a sidecar container or a backup job.
 
@@ -165,31 +174,31 @@ For more details on how hooks work in Stash and how to configure different types
 
   `spec.runtimeSettings.container` is used to configure the backup sidecar/job at container level. You can configure the following container level parameters:
 
-|       Field       |                                                                                                           Usage                                                                                                            |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Field             | Usage                                                                                                                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `resources`       | Compute resources required by the sidecar container or backup job. To learn how to manage resources for containers, please visit [here](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/). |
-| `livenessProbe`   | Periodic probe of backup sidecar/job container's liveness. Container will be restarted if the probe fails.                                                                                                                 |
-| `readinessProbe`  | Periodic probe of backup sidecar/job container's readiness. Container will be removed from service endpoints if the probe fails.                                                                                           |
-| `lifecycle`       | Actions that the management system should take in response to container lifecycle events.                                                                                                                                  |
-| `securityContext` | Security options that backup sidecar/job's container should run with. For more details, please visit [here](https://kubernetes.io/docs/concepts/policy/security-context/).                                                 |
-| `nice`            | Set CPU scheduling priority for backup process. For more details about `nice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#nice).                                                         |
-| `ionice`          | Set I/O scheduling class and priority for backup process. For more details about `ionice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#ionice).                                           |
-| `env`             | A list of the environment variables to set in the sidecar container or backup job's container.                                                                                                                         |
-| `envFrom`         | This allows to set environment variables to the container that will be created for this function from a Secret or ConfigMap.                                                                                               |
+| `livenessProbe`   | Periodic probe of backup sidecar/job container's liveness. Container will be restarted if the probe fails.                                                                                                                      |
+| `readinessProbe`  | Periodic probe of backup sidecar/job container's readiness. Container will be removed from service endpoints if the probe fails.                                                                                                |
+| `lifecycle`       | Actions that the management system should take in response to container lifecycle events.                                                                                                                                       |
+| `securityContext` | Security options that backup sidecar/job's container should run with. For more details, please visit [here](https://kubernetes.io/docs/concepts/policy/security-context/).                                                      |
+| `nice`            | Set CPU scheduling priority for backup process. For more details about `nice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#nice).                                                              |
+| `ionice`          | Set I/O scheduling class and priority for backup process. For more details about `ionice`, please visit [here](https://www.askapache.com/optimize/optimize-nice-ionice/#ionice).                                                |
+| `env`             | A list of the environment variables to set in the sidecar container or backup job's container.                                                                                                                                  |
+| `envFrom`         | This allows to set environment variables to the container that will be created for this function from a Secret or ConfigMap.                                                                                                    |
 
 - **spec.runtimeSettings.pod**
 
   `spec.runtimeSettings.pod` is used to configure backup job in pod level. You can configure the following pod level parameters,
 
-|             Field              |                                                                                                                  Usage                                                                                                                   |
+| Field                          | Usage                                                                                                                                                                                                                                    |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `serviceAccountName`           | Name of the `ServiceAccount` to use for the backup job. Stash sidecar will use the same `ServiceAccount` as the target workload.                                                                                                                      |
+| `serviceAccountName`           | Name of the `ServiceAccount` to use for the backup job. Stash sidecar will use the same `ServiceAccount` as the target workload.                                                                                                         |
 | `nodeSelector`                 | Selector which must be true for backup job pod to fit on a node.                                                                                                                                                                         |
 | `automountServiceAccountToken` | Indicates whether a service account token should be automatically mounted into the backup pod.                                                                                                                                           |
-| `nodeName`                     | `nodeName` is used to request to schedule backup job's pod onto a specific node.                                                                                                                                                           |
+| `nodeName`                     | `nodeName` is used to request to schedule backup job's pod onto a specific node.                                                                                                                                                         |
 | `securityContext`              | Security options that backup job's pod should run with. For more details, please visit [here](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).                                                               |
 | `imagePullSecrets`             | A list of secret names in the same namespace that will be used to pull image from private Docker registry. For more details, please visit [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/). |
-| `affinity`                     | Affinity and anti-affinity to schedule backup job's pod on a desired node. For more details, please visit [here](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).                       |
+| `affinity`                     | Affinity and anti-affinity to schedule backup job's pod on a desired node. For more details, please visit [here](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).                         |
 | `schedulerName`                | Name of the scheduler that should dispatch the backup job.                                                                                                                                                                               |
 | `tolerations`                  | Taints and Tolerations to ensure that backup job's pod is not scheduled in inappropriate nodes. For more details about `toleration`, please visit [here](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/).       |
 | `priorityClassName`            | Indicates the backup job pod's priority class. For more details, please visit [here](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/).                                                                        |
@@ -216,7 +225,7 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 
 `spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. Following options are available to configure retention policy:
 
-|    Policy     |  Value  | `restic` forget command flag |                                            Description                                             |
+| Policy        | Value   | `restic` forget command flag | Description                                                                                        |
 | ------------- | ------- | ---------------------------- | -------------------------------------------------------------------------------------------------- |
 | `name`        | string  |                              | Name of retention policy. You can provide any name.                                                |
 | `keepLast`    | integer | --keep-last n                | Never delete the **n** last (most recent) snapshots.                                               |
@@ -231,9 +240,17 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 
 ### BackupConfiguration `Status`
 
-A `BackupConfiguration` object has only a `observedGeneration` field in the `status` section.
+A `BackupConfiguration` object has the following fields in the `status` section.
 
 - **observedGeneration :** The most recent generation observed by the `BackupConfiguration` controller.
+
+- **conditions :** The `spec.conditions` shows current backup setup condition for this BackupConfiguration. The following conditions are set by the Stash operator:
+
+| Condition Type       | Usage                                                                |
+| -------------------- | -------------------------------------------------------------------- |
+| `RepositoryFound`    | Indicates whether the respective Repository object was found or not. |
+| `BackendSecretFound` | Indicates whether the respective backend secret was found or not.    |
+| `CronJobCreated`     | Indicates whether the backup triggering CronJob was created  or not. |
 
 ## Next Steps
 

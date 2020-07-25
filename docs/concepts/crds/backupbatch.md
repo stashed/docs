@@ -104,7 +104,7 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 - **target.volumeMounts :** `target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target file paths. Stash will mount these volumes inside a sidecar container or a backup job.
 
-- **target.exclude :** Specifies a list of pattern for the files that should be ignored during backup.
+- **target.exclude :** Specifies a list of pattern for the files that should be ignored during backup. Stash will not backup the files that matches these patterns.
 
 - **target.snapshotClassName :** `target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `driver` is set to `VolumeSnapshotter`.
 
@@ -155,9 +155,28 @@ For more details on how hooks work in Stash and how to configure different types
 
 ### BackupBatch `Status`
 
-A `BackupBatch` object has only a `observedGeneration` field in the `status` section.
+A `BackupBatch` object has the following fields in the `status` section.
 
 - **observedGeneration :** The most recent generation observed by the `BackupBatch` controller.
+
+- **conditions :** The `spec.conditions` shows current backup setup condition for this BackupBatch. The following conditions are set by the Stash operator:
+
+| Condition Type       | Usage                                                                |
+| -------------------- | -------------------------------------------------------------------- |
+| `RepositoryFound`    | Indicates whether the respective Repository object was found or not. |
+| `BackendSecretFound` | Indicates whether the respective backend secret was found or not.    |
+| `CronJobCreated`     | Indicates whether the backup triggering CronJob was created  or not. |
+
+- **memberConditions :** Shows current backup setup condition of the members of a `BackupBatch`. Each entry has the following two fields:
+  - **target :** Points to the respective target whose condition is shown here.
+  - **conditions:** Shows current backup setup condition of this member.
+
+The following conditions are set for the members of a `BackupBatch`.
+
+| Condition Type         | Usage                                                                                                                                                |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BackupTargetFound`    | Indicates whether the backup target was found  or not.                                                                                               |
+| `StashSidecarInjected` | Indicates whether `stash` sidecar was injected into the targeted workload or not. This condition is set only for the target that uses sidecar model. |
 
 ## Next Steps
 
