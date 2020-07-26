@@ -5,7 +5,7 @@ metadata:
   namespace: demo
 spec:
   repository:
-    name: gcs-repo
+    name: minio-repo
   schedule: "*/3 * * * *"
   members:
   - target:
@@ -13,7 +13,7 @@ spec:
       ref:
         apiVersion: apps/v1
         kind: AppBinding
-        name: sample-mysql
+        name: wordpress-mysql
     task:
       name: mysql-backup-8.0.14
   - target:

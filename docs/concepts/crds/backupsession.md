@@ -130,11 +130,11 @@ Here, we are going to describe the various sections of a `BackupSession` object.
 
 #### metadata.namespace
 
-`metadata.namespace` indicates the name of the `BackupSession`. It is same as the namespace of respective `BackupConfiguration`/`BackupBatch` object.
+`metadata.namespace` indicates the name of the `BackupSession`. It is the same as the namespace of respective `BackupConfiguration`/`BackupBatch` object.
 
 #### metadata.labels
 
-`metadata.labels` holds respective `BackupConfiguration`/`BackupBatch` kind and name as a label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`/`BackupBatch`.
+`metadata.labels` holds respective `BackupConfiguration`/`BackupBatch` kind and name as a label. The stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`/`BackupBatch`.
 
 >If you create `BackupSession` manually to trigger a backup instantly, make sure that you have added `stash.appscode.com/invoker-type: <BackupConfiguration/BackupBatch kind>` and `stash.appscode.com/invoker-name: <BackupConfiguration/BackupBatch name>` label to your `BackupSession`. Otherwise, it will not trigger backup for workloads (those resources that are backed up using sidecar).
 
@@ -152,11 +152,11 @@ A `BackupSession` object has the following fields in the `spec` section:
 
 #### status.phase
 
-`status.phase` indicates the overall phase of the backup process for this BackupSession. `status.phase` will be `Succeeded` only if the phase of all targets are `Succeeded`. If any of the target fail to complete its backup, `status.phase` will be `Failed`.
+`status.phase` indicates the overall phase of the backup process for this BackupSession. `status.phase` will be `Succeeded` only if the phase of all targets is `Succeeded`. If any of the targets fail to complete its backup, `status.phase` will be `Failed`.
 
 #### status.sessionDuration
 
-`status.sessionDuration` indicates the total time taken to complete backup of all targets in this session.
+`status.sessionDuration` indicates the total time taken to complete the backup of all targets in this session.
 
 #### status.conditions
 
@@ -164,8 +164,8 @@ A `BackupSession` object has the following fields in the `spec` section:
 
 | Condition Type                  | Usage                                                                                                                        |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `BackendRepositoryInitialized`  | Indicates that whether backend repository was initialized or not.                                                            |
-| `RetentionPolicyApplied`        | Indicates that whether the retention policies were applied or not.                                                           |
+| `BackendRepositoryInitialized`  | Indicates whether the backend repository was initialized or not.                                                             |
+| `RetentionPolicyApplied`        | Indicates whether the retention policies were applied or not.                                                                |
 | `RepositoryIntegrityVerified`   | Indicates whether the repository integrity check succeeded or not.                                                           |
 | `RepositoryMetricsPushed`       | Indicates whether the Repository metrics for this backup session were pushed or not.                                         |
 | `GlobalPreBackupHookSucceeded`  | Indicates whether the global PreBackupHook was executed successfully or not. Only available during backup using BackupBatch. |
@@ -175,11 +175,11 @@ A `BackupSession` object has the following fields in the `spec` section:
 
 `status.targets` field contains an array of the status of the individual target for a backup run. Each target's status field consists of the following sub-fields:
 
-- **totalHosts :** Not every pod or replica of a target is subject of backup. Thus, we refer those entities that are subject of backup as a host. `totalHosts` specifies the total number of hosts of the target that will be backed up for this BackupSession. For more details on how many hosts will be backed up for which types of workload, please visit [here](#hosts-of-a-backup-process).
+- **totalHosts :** Not every pod or replica of a target is subject to backup. Thus, we refer those entities that are subject to backup as a host. `totalHosts` specifies the total number of hosts of the target that will be backed up for this BackupSession. For more details on how many hosts will be backed up for which types of workload, please visit [here](#hosts-of-a-backup-process).
 
 - **preBackupActions :** Specifies a list of actions that the backup process should execute before taking backup. For example, the backend repository must be initialized by one of the targets before taking backup. Stash automatically assigned which target should execute this action. The `preBackupActions` should not be confused with `preBackup` hook. The hooks are meant to be configured by the users where the `preBackupActions` are meant to be configured by Stash itself.
 
-- **postBackupActions :** Similar to `preBackupActions`, it specifies a list of action that a backup process should execute after taking the backup. For example, when all the targets complete their backup, one target must apply retention policy into the repository. Stash automatically selects which target should execute these `postBackupActions`.
+- **postBackupActions :** Similar to `preBackupActions`, it specifies a list of actions that a backup process should execute after taking the backup. For example, when all the targets complete their backup, one target must apply retention policy into the repository. Stash automatically selects which target should execute these `postBackupActions`.
 
 - **ref :** `ref` refers to the target whose backup stats has been presented by this array entry.
 
@@ -195,44 +195,44 @@ Each stats entry consists of the following fields:
   - **name:** `name` indicates the name of the snapshot.
   - **path:** `path` indicates the file path that was backed up in this snapshot.
   - **totalSize:** `totalSize` indicates the size of data to backup from this path.
-  - **uploaded:** `uploaded` indicates the size of data that was uploaded to the backend for this snapshot. This could be much smaller than `size` if some data was already uploaded in the backend in previous backup sessions.
+  - **uploaded:** `uploaded` indicates the size of the data that was uploaded to the backend for this snapshot. This could be much smaller than `size` if some data was already uploaded in the backend in previous backup sessions.
   - **processingTime:** `processingTime` indicates the time taken to process the data of the target path.
   - **fileStats:** `fileStats` field show statics of files that were backed up in this snapshot.
     - **totalFiles:** `totalFiles` shows the total number of files that were backed up in this snapshot.
     - **newFiles:** `newFiles` shows the number of new files that were backed up in this snapshot.
     - **modifiedFiles:** `modifiedFiles` shows the number of files that were modified since last backup of this directory.
     - **unmodifiedFiles:** `unmodifiedFiles` shows the number of files that haven't changed since the last backup of this path.
-    - **error:** `error` shows the reason of failure if the backup process failed for this host.
+    - **error:** `error` shows the reason for failure if the backup process failed for this host.
 
 ### Hosts of a backup process
 
-Stash uses two different models for backup depending on the target type. It uses **sidecar model** for Kubernetes workloads and **job model** for rest of the targets. In the sidecar model, Stash injects a sidecar inside the targeted workload and the sidecar is responsible for taking backup. In the job model, Stash launches a job to take a backup of the target.
+Stash uses two different models for backup depending on the target type. It uses **sidecar model** for Kubernetes workloads and **job model** for the rest of the targets. In the sidecar model, Stash injects a sidecar inside the targeted workload and the sidecar is responsible for taking backup. In the job model, Stash launches a job to take a backup of the target.
 
-Stash uses an identifier called **host** to separate the backed up data of different subject in the backed. This host identification process depends on the backup model and the target types. The backup strategy and host identification strategy for different types of target is explained below.
+Stash uses an identifier called **host** to separate the backed up data of different subjects in the backed. This host identification process depends on the backup model and the target types. The backup strategy and host identification strategy for different types of the target is explained below.
 
 **Kubernetes Workloads:**
 
-Stash uses sidecar model to backup Kubernetes workloads. However, not every sidecar takes backup. How many sidecars will take backup depends on the type of the workload. We can divide them into the following categories:
+Stash uses the sidecar model to backup Kubernetes workloads. However, not every sidecar takes backup. How many sidecars will take backup depends on the type of the workload. We can divide them into the following categories:
 
-- **Deployment, ReplicaSet and ReplicationController:** For these types of stateless workloads, all the replicas mount the same volumes. So, taking backup from only one replica is enough. In this case, Stash uses leader election to elect the leader pod. Only the sidecar of the leader pod takes backup. The `alias` provided in the BackupConfiguration/BackupBatch is used as host identifier. If the `alias` was not provided, then it defaults to `host-0`. The total number of hosts for these types of workload is 1.
-- **StatefulSet:** Every replica of a StatefulSet mounts different volumes. So, taking a backup from each replica is necessary. In this case, sidecar inside each replica takes backup. Stash identifies **pod-0** as **\<alias>-0**, **pod-1** as **\<alias>-1**, **pod-2** as **\<alias>-2** and so on. If the `alias` was not provided in the BackupConfiguration/BackupBatch, then the host identifiers are generated as `host-0`, `host-1` and `host-2` etc. The total number of hosts for a StatefulSet is the number of replicas.
+- **Deployment, ReplicaSet, and ReplicationController:** For these types of stateless workloads, all the replicas mount the same volumes. So, taking backup from only one replica is enough. In this case, Stash uses a leader election to elect the leader pod. Only the sidecar of the leader pod takes backup. The `alias` provided in the BackupConfiguration/BackupBatch is used as a host identifier. If the `alias` was not provided, then it defaults to `host-0`. The total number of hosts for these types of workload is 1.
+- **StatefulSet:** Every replica of a StatefulSet mount different volumes. So, taking a backup from each replica is necessary. In this case, sidecar inside each replica takes backup. Stash identifies **pod-0** as **\<alias>-0**, **pod-1** as **\<alias>-1**, **pod-2** as **\<alias>-2** and so on. If the `alias` was not provided in the BackupConfiguration/BackupBatch, then the host identifiers are generated as `host-0`, `host-1`, and `host-2` etc. The total number of hosts for a StatefulSet is the number of replicas.
 - **DaemonSet:** Daemon replicas on every node may contain different data. So, taking a backup of each daemon pod is necessary. In this case, sidecar inside each daemon pod takes backup. Stash considers the individual daemon pod as a separate host and the host identifiers are generated as **\<alias>-\<node name>**. The total number of hosts for a DaemonSet is the number of daemon pod running in the cluster.
 
 **Stand-alone PVC:**
 
-Stash uses job model to backup a stand-alone PVC. Stash launches a job to backup the targeted PVC. The `alias` provided in the BackupConfiguration/BackupBatch is used as the host identifer. If the `alias` was not provided, it defaults to `host-0`. The total number of host for a stand-alone PVC backup is 1.
+Stash uses the job model to backup a stand-alone PVC. Stash launches a job to backup the targeted PVC. The `alias` provided in the BackupConfiguration/BackupBatch is used as the host identifier. If the `alias` was not provided, it defaults to `host-0`. The total number of hosts for a stand-alone PVC backup is 1.
 
 **Databases:**
 
-Stash uses job model to backup a database. Stash launches a job to backup the targeted database. In this case, the number of hosts depends on the database type.
+Stash uses the job model to backup a database. Stash launches a job to backup the targeted database. In this case, the number of hosts depends on the database type.
 
-- **Stand-alone database:** For stand-alone database, the backup target is identified by the `alias` and the total number of host is 1.
-- **Replicated cluster:** For replicated clustered database such as MongoDB ReplicaSet, all the replicas contain the same data. In this case, taking a backup of only one replica is enough. This replica is identified by the `alias` and the total number of host is 1.
-- **Sharded cluster:** For sharded database cluster, Stash takes a backup of all shards. Hence, the number of hosts for a sharded database is the number of shards and they are identified as **\<alias>-0**, **\<alias>-1**, **\<alias>-2**, etc. However, the number of hosts may increase based on the database type.
+- **Stand-alone database:** For stand-alone database, the backup target is identified by the `alias` and the total number of hosts is 1.
+- **Replicated cluster:** For replicated clustered databases such as MongoDB ReplicaSet, all the replicas contain the same data. In this case, taking a backup of only one replica is enough. This replica is identified by the `alias` and the total number of hosts is 1.
+- **Sharded cluster:** For the sharded database cluster, Stash takes a backup of all shards. Hence, the number of hosts for a sharded database is the number of shards and they are identified as **\<alias>-0**, **\<alias>-1**, **\<alias>-2**, etc. However, the number of hosts may increase based on the database type.
 
 **VolumeSnapshot:**
 
-Stash uses job model for taking volume snapshots. Each volume is considered as different hosts and they are identified by their name. Hence, the number of total hosts for VolumeSnapshot is the number of targeted volumes. However, since VolumeSnapshot is handled by the respective CSI driver, host identifier does not play any role to separate their data.
+Stash uses the job model for taking volume snapshots. Each volume is considered as different hosts and they are identified by their name. Hence, the number of total hosts for VolumeSnapshot is the number of targeted volumes. However, since VolumeSnapshot is handled by the respective CSI driver, the host identifier does not play any role to separate their data.
 
 ## Next Steps
 

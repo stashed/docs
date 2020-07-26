@@ -1,113 +1,55 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreBatch
 metadata:
-  creationTimestamp: "2020-07-25T17:41:52Z"
-  finalizers:
-  - stash.appscode.com
-  generation: 1
-  managedFields:
-  - apiVersion: stash.appscode.com/v1beta1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:spec:
-        .: {}
-        f:driver: {}
-        f:executionOrder: {}
-        f:members: {}
-        f:repository:
-          .: {}
-          f:name: {}
-    manager: e2e.test
-    operation: Update
-    time: "2020-07-25T17:41:52Z"
-  - apiVersion: stash.appscode.com/v1beta1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:finalizers: {}
-      f:status:
-        .: {}
-        f:conditions: {}
-        f:members: {}
-        f:phase: {}
-        f:sessionDuration: {}
-    manager: stash-enterprise
-    operation: Update
-    time: "2020-07-25T17:42:07Z"
-  name: stash-e2e-agnhco-4ol2kh
-  namespace: test-stash-i7bq6x
-  resourceVersion: "21536"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/test-stash-i7bq6x/restorebatches/stash-e2e-agnhco-4ol2kh
-  uid: 68729409-bf4a-4edf-a8f3-ef4e63121591
+  name: batch-restore
+  namespace: demo
 spec:
   driver: Restic
+  repository:
+    name: minio-repo
   executionOrder: Parallel
   members:
-  - runtimeSettings: {}
-    target:
-      alias: stash-e2e-agnhco-dpl
+  - target:
+      alias: app
       ref:
         apiVersion: apps/v1
         kind: Deployment
-        name: source-dp-stash-e2e-agnhco-4ngew4
+        name: wordpress
       rules:
       - paths:
-        - /source/data
+        - /var/www/html
       volumeMounts:
-      - mountPath: /source/data
-        name: source-volume
-    task:
-      name: ""
-    tempDir: {}
-  - runtimeSettings: {}
-    target:
-      alias: stash-e2e-agnhco-pvc
-      ref:
-        apiVersion: v1
-        kind: PersistentVolumeClaim
-        name: source-pvc-stash-e2e-agnhco
-      rules:
-      - snapshots:
-        - latest
-    task:
-      name: pvc-restore
-    tempDir: {}
-  - runtimeSettings: {}
-    target:
-      alias: stash-e2e-agnhco-db
+      - mountPath: /var/www/html
+        name: wordpress-persistent-storage
+  - target:
+      alias: db
       ref:
         apiVersion: appcatalog.appscode.com/v1alpha1
         kind: AppBinding
-        name: source-mysql-stash-e2e-agnhco
+        name: wordpress-mysql
       rules:
       - snapshots:
         - latest
     task:
       name: mysql-restore-8.0.14
-    tempDir: {}
-  repository:
-    name: minio-stash-e2e-agnhco-ajg3eh
 status:
+  phase: Succeeded
+  sessionDuration: 15.145032437s
   conditions:
   - lastTransitionTime: "2020-07-25T17:41:52Z"
-    message: Repository test-stash-i7bq6x/minio-stash-e2e-agnhco-ajg3eh exist.
+    message: Repository demo/minio-repo exist.
     reason: RepositoryAvailable
     status: "True"
     type: RepositoryFound
   - lastTransitionTime: "2020-07-25T17:41:52Z"
-    message: Backend Secret test-stash-i7bq6x/stash-e2e-agnhco-minio-fl3a53 exist.
+    message: Backend Secret demo/minio-secret exist.
     reason: BackendSecretAvailable
     status: "True"
     type: BackendSecretFound
-  - lastTransitionTime: "2020-07-25T17:41:52Z"
-    message: Successfully created restore job.
-    reason: RestoreJobCreationSucceeded
-    status: "True"
-    type: RestoreJobCreated
   members:
   - conditions:
     - lastTransitionTime: "2020-07-25T17:41:52Z"
-      message: Restore target apps/v1 deployment/source-dp-stash-e2e-agnhco-4ngew4
+      message: Restore target apps/v1 deployment/wordpress
         found.
       reason: TargetAvailable
       status: "True"
@@ -121,45 +63,31 @@ status:
     ref:
       apiVersion: apps/v1
       kind: Deployment
-      name: source-dp-stash-e2e-agnhco-4ngew4
+      name: wordpress
     stats:
     - duration: 822.861322ms
-      hostname: stash-e2e-agnhco-dpl
+      hostname: app
       phase: Succeeded
     totalHosts: 1
   - conditions:
     - lastTransitionTime: "2020-07-25T17:41:52Z"
-      message: Restore target v1 persistentvolumeclaim/source-pvc-stash-e2e-agnhco
+      message: Restore target appcatalog.appscode.com/v1alpha1 appbinding/wordpress-mysql
         found.
       reason: TargetAvailable
       status: "True"
       type: RestoreTargetFound
-    phase: Succeeded
-    ref:
-      apiVersion: v1
-      kind: PersistentVolumeClaim
-      name: source-pvc-stash-e2e-agnhco
-    stats:
-    - duration: 945.948671ms
-      hostname: stash-e2e-agnhco-pvc
-      phase: Succeeded
-    totalHosts: 1
-  - conditions:
     - lastTransitionTime: "2020-07-25T17:41:52Z"
-      message: Restore target appcatalog.appscode.com/v1alpha1 appbinding/source-mysql-stash-e2e-agnhco
-        found.
-      reason: TargetAvailable
+      message: Successfully created restore job.
+      reason: RestoreJobCreationSucceeded
       status: "True"
-      type: RestoreTargetFound
+      type: RestoreJobCreated
     phase: Succeeded
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: source-mysql-stash-e2e-agnhco
+      name: wordpress-mysql
     stats:
     - duration: 4.597812876s
-      hostname: stash-e2e-agnhco-db
+      hostname: db
       phase: Succeeded
     totalHosts: 1
-  phase: Succeeded
-  sessionDuration: 15.145032437s

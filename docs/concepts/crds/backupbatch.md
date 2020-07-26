@@ -17,9 +17,9 @@ section_menu_id: concepts
 
 ## What is BackupBatch
 
-Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
+Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for a database to store its contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
 
-A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which let you configure backup for multiple co-related components(workload, database etc.) under a single configuration.
+A `BackupBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which lets you configure backup for multiple co-related components(workload, database, etc.) under a single configuration.
 
 ## BackupBatch CRD Specification
 
@@ -35,15 +35,16 @@ metadata:
   namespace: demo
 spec:
   repository:
-    name: gcs-repo
+    name: minio-repo
   schedule: "*/3 * * * *"
+  executionOrder: Parallel
   members:
   - target:
       alias: db
       ref:
         apiVersion: apps/v1
         kind: AppBinding
-        name: sample-mysql
+        name: wordpress-mysql
     task:
       name: mysql-backup-8.0.14
   - target:
@@ -60,7 +61,6 @@ spec:
       exclude:
       - /var/www/html/my-file.html
       - /var/www/html/*.json
-  executionOrder: Parallel
   hooks:
     preBackup:
       exec:
@@ -92,47 +92,6 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 `spec.driver` indicates the mechanism used to backup. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specdriver).
 
-#### spec.members
-
-`spec.members` field specifies a list of targets to backup. Each member consists of the following fields:
-
-- **target.alias :** For batch backup, Stash backup all the members into a single Repository. So, it is necessary to keep the data of individual member separate from the others. The `target.alias` field is used as an identifier of the backed up data of the individual target. No two members of a `BackupBatch` should have the same `alias`. Otherwise, their data might get corrupted.
-
-- **target.ref :** `target.ref` refers to the target of backup. You have to specify `apiVersion`, `kind` and `name` of the target. Stash will use this information to inject a sidecar to the target or to create a backup job for it.
-
-- **target.paths :** `target.paths` specifies list of file paths to backup.
-
-- **target.volumeMounts :** `target.volumeMounts` are the list of volumes and their `mountPath`s that contain the target file paths. Stash will mount these volumes inside a sidecar container or a backup job.
-
-- **target.exclude :** Specifies a list of pattern for the files that should be ignored during backup. Stash will not backup the files that matches these patterns.
-
-- **target.snapshotClassName :** `target.snapshotClassName` indicates the [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/) to use for volume snasphotting. Use this field only if `driver` is set to `VolumeSnapshotter`.
-
-- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectask).
-
-- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment for the backup sidecar or job. You can specify runtime settings at both pod level and container level. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specruntimesettings).
-
-- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectempdir).
-
-- **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those  data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit). For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specinterimvolumetemplate).
-
-#### spec.executionOrder
-
-`spec.executionOrder` specifies whether Stash should backup the targets sequentially or in parallel. If `spec.executionOrder` is set to `Parallel`, Stash will start backup of all the targets simultaneously. If it is set to `Sequential`, Stash will not start backup of a target until all the previous members has completed their backup process. The default value of this field is `Parallel`.
-
-#### spec.hooks
-
-`spec.hooks` allows performing some global actions before and after the backup process of the members. You can send HTTP requests to a remote server via `httpGet` or `httpPost`. You can check whether a TCP port is open using `tcpSocket` hooks. You can also execute some commands using `exec` hook.
-
-- **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed on each backup session before taking backup of the members.
-- **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed on each backup session after taking backup of the members.
-
-For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
-
-#### spec.runtimeSettings
-
-`spec.runtimeSettings` This runtime settings is applicable for CronJob(used to create `BackupSession`) only. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specruntimesettings).
-
 #### spec.repository
 
 `spec.repository.name` indicates the `Repository` crd name that holds necessary backend information where the backed up data will be stored.
@@ -141,9 +100,42 @@ For more details on how hooks work in Stash and how to configure different types
 
 `spec.schedule` is a [cron expression](https://en.wikipedia.org/wiki/Cron) that specifies the schedule of backup. Stash creates a Kubernetes [CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/) with this schedule.
 
+#### spec.executionOrder
+
+`spec.executionOrder` specifies whether Stash should backup the targets sequentially or in parallel. If `spec.executionOrder` is set to `Parallel`, Stash will start backup of all the targets simultaneously. If it is set to `Sequential`, Stash will not start backup of a target until all the previous members have completed their backup process. The default value of this field is `Parallel`.
+
+#### spec.members
+
+`spec.members` field specifies a list of targets to backup. Each member consists of the following fields:
+
+- **target :** Each member has a target specification. The target specification of a member is the same as the target specification of a `BackupConfiguration` explained [here](/docs/concepts/crds/backupconfiguration.md#spectarget).
+
+- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectask).
+
+- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment for the backup sidecar or job. You can specify runtime settings at both pod level and container level. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specruntimesettings).
+
+- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster backup performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#spectempdir).
+
+- **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the dumped data to the uploading process. In this case, it has to store the dumped data temporarily before uploading to the backend. `interimVolumeTemplate` specifies a PVC template for holding those data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted according to the [backupHistoryLimit](#specbackuphistorylimit). For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specinterimvolumetemplate).
+
+- **hooks :** Each member has its own hook field which allows you to execute member-specific pre-backup or post-backup hooks. For more details about hooks, please visit [here](/docs/concepts/crds/backupconfiguration.md#spechooks).
+
+#### spec.hooks
+
+`spec.hooks` allows performing some global actions before and after the backup process of the members. You can send HTTP requests to a remote server via `httpGet` or `httpPost`. You can check whether a TCP port is open using `tcpSocket` hooks. You can also execute some commands using `exec` hook.
+
+- **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed on each backup session before taking backup of any of the members.
+- **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed on each backup session after taking backup of all the members.
+
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
+
+#### spec.runtimeSettings
+
+`spec.runtimeSettings` This runtime settings is applicable for CronJob(used to create `BackupSession`) only. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specruntimesettings).
+
 #### spec.backupHistoryLimit
 
-`spec.backupHistoryLimit` specifies the number of `BackupSession` and its associate resources (Job, PVC etc.) to keep for debugging purposes. The default value of this field is 1. Stash will cleanup the old `BackupSession` and it's associate resources after each backup session according to `backupHistoryLimit`.
+`spec.backupHistoryLimit` specifies the number of `BackupSession` and its associate resources (Job, PVC etc.) to keep for debugging purposes. The default value of this field is 1. Stash will clean up the old `BackupSession` and it's associate resources after each backup session according to `backupHistoryLimit`.
 
 #### spec.paused
 
@@ -159,7 +151,7 @@ A `BackupBatch` object has the following fields in the `status` section.
 
 - **observedGeneration :** The most recent generation observed by the `BackupBatch` controller.
 
-- **conditions :** The `spec.conditions` shows current backup setup condition for this BackupBatch. The following conditions are set by the Stash operator:
+- **conditions :** The `status.conditions` shows current backup setup condition for this BackupBatch. The following conditions are set by the Stash operator:
 
 | Condition Type       | Usage                                                                |
 | -------------------- | -------------------------------------------------------------------- |
@@ -169,14 +161,14 @@ A `BackupBatch` object has the following fields in the `status` section.
 
 - **memberConditions :** Shows current backup setup condition of the members of a `BackupBatch`. Each entry has the following two fields:
   - **target :** Points to the respective target whose condition is shown here.
-  - **conditions:** Shows current backup setup condition of this member.
+  - **conditions:** Shows the current backup setup condition of this member.
 
 The following conditions are set for the members of a `BackupBatch`.
 
-| Condition Type         | Usage                                                                                                                                                |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `BackupTargetFound`    | Indicates whether the backup target was found  or not.                                                                                               |
-| `StashSidecarInjected` | Indicates whether `stash` sidecar was injected into the targeted workload or not. This condition is set only for the target that uses sidecar model. |
+| Condition Type         | Usage                                                                                                                                                    |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BackupTargetFound`    | Indicates whether the backup target was found or not.                                                                                                    |
+| `StashSidecarInjected` | Indicates whether `stash` sidecar was injected into the targeted workload or not. This condition is set only for the target that uses the sidecar model. |
 
 ## Next Steps
 
