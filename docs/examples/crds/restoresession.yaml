@@ -6,10 +6,11 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: local-repo
+    name: minio-repo
   # task:
   #   name: workload-restore # task field is not required for workload data backup but it is necessary for database backup.
   target:
+    alias: my-sts
     ref:
       apiVersion: apps/v1
       kind: StatefulSet
@@ -17,15 +18,20 @@ spec:
     volumeMounts:
     - mountPath: /source/data
       name: source-data
-  rules:
-  - targetHosts: ["host-3","host-4"] # "host-3" and "host-4" will have restored data of backed up host "host-1"
-    sourceHost: "host-1" # source host
-    paths:
-    - /source/data
-  - targetHosts: [] # empty host match all hosts
-    sourceHost: "" # no source host indicates that the host is pod itself
-    paths:
-    - /source/data
+    rules:
+    - targetHosts: ["my-sts-3","my-sts-4"] # "pod-3" and "pod-4" will have restored data of backed up host "pod-1"
+      sourceHost: "my-sts-1" # source host
+      paths:
+      - /source/data
+      include:
+      - /source/data/*.json
+    - targetHosts: [] # empty host match all hosts
+      sourceHost: "" # no source host indicates that the host is pod itself
+      paths:
+      - /source/data
+      exclude:
+      - /source/data/tmp.json
+      - /source/data/*.txt
   hooks:
     preRestore:
       exec:
@@ -33,14 +39,14 @@ spec:
           - /bin/sh
           - -c
           - echo "Sample PreRestore hook demo"
-      containerName: my-app-container
+      containerName: stash-init
     postRestore:
       exec:
         command:
           - /bin/sh
           - -c
           - echo "Sample PostRestore hook demo"
-      containerName: my-app-container
+      containerName: stash-init
   runtimeSettings:
     container:
       resources:
@@ -59,7 +65,7 @@ spec:
     pod:
       imagePullSecrets:
       - name: my-private-registry-secret
-      serviceAccountName: my-backup-svc
+      serviceAccountName: my-backup-sa
   tempDir:
     disableCache: false
     medium: Memory
@@ -67,7 +73,28 @@ spec:
 status:
   totalHosts: 5
   phase: Succeeded
-  sessionDuration: 4.148288404s
+  sessionDuration: 2m40.595857548s
+  conditions:
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Repository demo/minio-repo exist.
+    reason: RepositoryAvailable
+    status: "True"
+    type: RepositoryFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Backend Secret demo/minio-secret exist.
+    reason: BackendSecretAvailable
+    status: "True"
+    type: BackendSecretFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Restore target apps/v1 statefulset/recovered-statefulset found.
+    reason: TargetAvailable
+    status: "True"
+    type: RestoreTargetFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Successfully injected stash init-container.
+    reason: InitContainerInjectionSucceeded
+    status: "True"
+    type: StashInitContainerInjected
   stats:
   - duration: 884.431745ms
     hostname: host-1
@@ -84,116 +111,3 @@ status:
   - duration: 833.139795ms
     hostname: host-0
     phase: Succeeded
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  creationTimestamp: "2020-07-25T17:55:56Z"
-  deletionGracePeriodSeconds: 0
-  deletionTimestamp: "2020-07-25T17:58:42Z"
-  finalizers:
-  - stash.appscode.com
-  generation: 2
-  managedFields:
-  - apiVersion: stash.appscode.com/v1beta1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:spec:
-        .: {}
-        f:driver: {}
-        f:repository:
-          .: {}
-          f:name: {}
-        f:runtimeSettings: {}
-        f:target:
-          .: {}
-          f:alias: {}
-          f:ref:
-            .: {}
-            f:apiVersion: {}
-            f:kind: {}
-            f:name: {}
-          f:rules: {}
-          f:volumeMounts: {}
-        f:task:
-          .: {}
-          f:name: {}
-        f:tempDir: {}
-    manager: e2e.test
-    operation: Update
-    time: "2020-07-25T17:55:56Z"
-  - apiVersion: stash.appscode.com/v1beta1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:finalizers: {}
-      f:status:
-        .: {}
-        f:conditions: {}
-        f:phase: {}
-        f:sessionDuration: {}
-        f:stats: {}
-        f:totalHosts: {}
-    manager: stash-enterprise
-    operation: Update
-    time: "2020-07-25T17:58:36Z"
-  name: stash-e2e-yb5oiv-x5h2fr
-  namespace: test-stash-3zkwc2
-  resourceVersion: "25881"
-  selfLink: /apis/stash.appscode.com/v1beta1/namespaces/test-stash-3zkwc2/restoresessions/stash-e2e-yb5oiv-x5h2fr
-  uid: 93d1e5b6-efe4-4fb8-8e14-d6f7db2e302c
-spec:
-  driver: Restic
-  repository:
-    name: minio-stash-e2e-yb5oiv-kb4ugy
-  runtimeSettings: {}
-  target:
-    alias: stash-e2e-yb5oiv
-    ref:
-      apiVersion: apps/v1
-      kind: StatefulSet
-      name: restored-ss-stash-e2e-yb5oiv
-    rules:
-    - paths:
-      - /source/data
-    volumeMounts:
-    - mountPath: /source/data
-      name: restored-volume
-  task:
-    name: ""
-  tempDir: {}
-status:
-  conditions:
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
-    message: Repository test-stash-3zkwc2/minio-stash-e2e-yb5oiv-kb4ugy exist.
-    reason: RepositoryAvailable
-    status: "True"
-    type: RepositoryFound
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
-    message: Backend Secret test-stash-3zkwc2/stash-e2e-yb5oiv-minio-qfwaf7 exist.
-    reason: BackendSecretAvailable
-    status: "True"
-    type: BackendSecretFound
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
-    message: Restore target apps/v1 statefulset/restored-ss-stash-e2e-yb5oiv found.
-    reason: TargetAvailable
-    status: "True"
-    type: RestoreTargetFound
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
-    message: Successfully injected stash init-container.
-    reason: InitContainerInjectionSucceeded
-    status: "True"
-    type: StashInitContainerInjected
-  phase: Succeeded
-  sessionDuration: 2m40.595857548s
-  stats:
-  - duration: 961.303768ms
-    hostname: stash-e2e-yb5oiv-2
-    phase: Succeeded
-  - duration: 816.424785ms
-    hostname: stash-e2e-yb5oiv-1
-    phase: Succeeded
-  - duration: 956.753168ms
-    hostname: stash-e2e-yb5oiv-0
-    phase: Succeeded
-  totalHosts: 3
