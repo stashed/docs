@@ -129,6 +129,8 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 repository/local-repo-with-nfs created
 ```
 
+>For NFS backend, Stash may have to run the network volume accessor deployments in privileged mode to provide Snapshot listing facility. In this case, please configure network volume accessors by following the instruction [here](/docs/setup/install.md#configuring-network-volume-accessor).
+
 ##### GCE PersitentDisk as Backend
 
 Below, the YAML of a sample `Repository` crd that uses a [gcePersistentDisk](https://kubernetes.io/docs/concepts/storage/volumes/#gcepersistentdisk) as a backend.

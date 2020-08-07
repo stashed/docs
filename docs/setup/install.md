@@ -106,6 +106,22 @@ $ kubectl create clusterrolebinding "cluster-admin-$(whoami)" \
 
 In addition, if your GKE cluster is a [private cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters), you will need to either add an additional firewall rule that allows master nodes access port `8443/tcp` on worker nodes, or change the existing rule that allows access to ports `443/tcp` and `10250/tcp` to also allow access to port `8443/tcp`. The procedure to add or modify firewall rules is described in the official GKE documentation for private clusters mentioned before.
 
+### Configuring Network Volume Accessor
+
+For Network Volume (i.e. NFS) as backend, Stash needs an additional deployment in the respective Repository namespace to provide Snapshot listing facility. Stash automatically creates a network volume accessor deployment in a namespace that has at least one Repository with network volume as backend. It automatically removes the deployment from a namespace if there is no more Repository with network volume as backend in that namespace.
+
+You can configure the network volume accessor deployment's cpu, memory, user id, and privileged mode by providing the `netVolAccessor` parameters as below:
+
+```console
+helm install stash-operator appscode/stash \
+  --version {{< param "info.version" >}}   \
+  --namespace kube-system                  \
+  --set netVolAccessor.cpu=100m            \
+  --set netVolAccessor.memory=128Mi        \
+  --set netVolAccessor.runAsUser=0         \
+  --set netVolAccessor.privileged=true     \
+```
+
 ## Verify installation
 
 To check if Stash operator pods have started, run the following command:
