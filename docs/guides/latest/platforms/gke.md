@@ -536,9 +536,6 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  rules:
-  - paths:
-    - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
@@ -547,6 +544,9 @@ spec:
     volumeMounts:
     - name: restore-data
       mountPath: /source/data
+    rules:
+    - paths:
+      - /source/data/
 ```
 
 Here,

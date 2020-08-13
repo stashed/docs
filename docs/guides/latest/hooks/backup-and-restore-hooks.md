@@ -569,8 +569,8 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-mysql
-  rules:
-    - snapshots: [latest]
+    rules:
+      - snapshots: [latest]
 ```
 
 Let's create the above `RestoreSession`,
@@ -667,8 +667,8 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-mysql
-  rules:
-    - snapshots: [latest]
+    rules:
+      - snapshots: [latest]
 ```
 
 Let's create the above `RestoreSession`,

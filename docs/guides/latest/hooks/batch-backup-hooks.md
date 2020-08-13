@@ -321,6 +321,7 @@ spec:
   schedule: "*/3 * * * *"
   members:
   - target:
+      alias: db
       ref:
         apiVersion: apps/v1
         kind: AppBinding
@@ -328,6 +329,7 @@ spec:
     task:
       name: mysql-backup-8.0.14
   - target:
+      alias: app
       ref:
         apiVersion: apps/v1
         kind: Deployment

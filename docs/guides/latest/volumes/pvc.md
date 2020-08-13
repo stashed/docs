@@ -435,13 +435,13 @@ spec:
       apiVersion: v1
       kind: PersistentVolumeClaim
       name: nfs-pvc
-  rules:
-  - snapshots: ["latest"]
+    rules:
+    - snapshots: ["latest"]
 ```
 
 - `spec.task.name` specifies the name of the `Task` object that specifies the `Function` and their order of execution to restore data inside a stand-alone PVC.
 - `spec.target.ref` refers to the targeted PVC where the data will be restored.
-- `spec.rules[*].snapshots` specifies that we want to restore the latest snapshot of the `nfs-pvc`.
+- `spec.target.rules[*].snapshots` specifies that we want to restore the latest snapshot of the `nfs-pvc`.
 
 Let's create the `RestoreSession` object that we have shown above,
 
