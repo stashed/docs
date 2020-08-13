@@ -1,0 +1,18 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: wordpress-db-restore
+  namespace: demo
+spec:
+  task:
+    name: mysql-restore-v2020.07.09-beta.0
+  repository:
+    name: gcs-repo
+  target:
+    alias: db
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: wordpress-db
+    rules:
+    - snapshots: [latest]

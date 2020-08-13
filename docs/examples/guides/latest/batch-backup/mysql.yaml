@@ -1,36 +1,33 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordpress-mysql
+  name: wordpress-db
   namespace: demo
   labels:
-    app: wordpress
+    app: wordpress-db
 spec:
   ports:
-    - port: 3306
+  - port: 3306
   selector:
-    app: wordpress
-    tier: mysql
+    app: wordpress-db
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wordpress-mysql
+  name: wordpress-db
   namespace: demo
   labels:
-    app: wordpress
+    app: wordpress-db
 spec:
   selector:
     matchLabels:
-      app: wordpress
-      tier: mysql
+      app: wordpress-db
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: wordpress
-        tier: mysql
+        app: wordpress-db
     spec:
       containers:
       - image: mysql:8.0.14
@@ -52,27 +49,27 @@ spec:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: mysql-persistent-storage
+        - name: storage
           mountPath: /var/lib/mysql
         - name: config-volume
           mountPath: /etc/mysql/conf.d
       volumes:
-      - name: mysql-persistent-storage
+      - name: storage
         persistentVolumeClaim:
-          claimName: mysql-pv-claim
+          claimName: mysql-pvc
       - name: config-volume
         emptyDir: {}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim
+  name: mysql-pvc
   namespace: demo
   labels:
-    app: wordpress
+    app: wordpress-db
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi

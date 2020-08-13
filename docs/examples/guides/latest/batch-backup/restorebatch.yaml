@@ -1,13 +1,13 @@
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupBatch
+kind: RestoreBatch
 metadata:
-  name: wordpress-backup
+  name: wordpress-restore
   namespace: demo
 spec:
+  driver: Restic
   repository:
     name: gcs-repo
-  schedule: "*/5 * * * *"
-  executionOrder: Parallel
+  executionOrder: Sequential
   members:
   - target:
       alias: db
@@ -15,20 +15,19 @@ spec:
         apiVersion: appcatalog.appscode.com/v1alpha1
         kind: AppBinding
         name: wordpress-db
+      rules:
+      - snapshots: [latest]
     task:
-      name: mysql-backup-v2020.07.09-beta.0
+      name: mysql-restore-v2020.07.09-beta.0
   - target:
       alias: app
       ref:
         apiVersion: apps/v1
         kind: Deployment
         name: wordpress-app
+      rules:
+      - paths:
+        - /var/www/html
       volumeMounts:
       - name: storage
         mountPath: /var/www/html
-      paths:
-      - /var/www/html
-  retentionPolicy:
-    name: 'keep-last-10'
-    keepLast: 10
-    prune: true
