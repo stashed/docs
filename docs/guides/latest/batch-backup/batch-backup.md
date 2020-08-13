@@ -12,6 +12,8 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
+{{< notice type="warning" message="Batch backup is an enterprise feature. You must install Stash Enterprise operator to use batch backup." >}}
+
 # Backup & Restore a WordPress Site Using Batch Backup
 
 This tutorial will demonstrate how to use Stash to take backup of an application with multiple co-related components. Here, we are going to take backup of a [WordPress Site](https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/).

@@ -10,7 +10,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: concepts
 ---
 
-> New to Stash? Please start [here](/docs/concepts/README.md).
+{{< notice type="warning" message="RestoreBatch is an enterprise feature. You must install Stash Enterprise operator to use RestoreBatch." >}}
 
 # RestoreBatch
 

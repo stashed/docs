@@ -12,6 +12,8 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
+{{< notice type="warning" message="Batch backup is an enterprise feature. You must install Stash Enterprise operator to use batch backup." >}}
+
 # Batch Backup and Restore Overview
 
 Sometimes, an application may consist of multiple co-related components. For example, to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for the database. Now, it is sensible to want to backup or restore both of the deployments using a single configuration as they are parts of the same application.
