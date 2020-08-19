@@ -108,15 +108,29 @@ Now, automatic backup is configured for PostgreSQL database. We just have to add
 
 > Note: `BackupBlueprint` is a non-namespaced crd. So, you can use a `BackupBlueprint` to backup targets in multiple namespaces. However, Storage Secret is a namespaced object. So, you have to manually create the secret in each namespace where you have a target for backup. Please give us your feedback on how to improve the ux of this aspect of Stash on [GitHub](https://github.com/stashed/stash/issues/842).
 
-**Required Annotation for Auto-Backup Database:**
+**Available Auto-Backup Annotations for Database:**
 
-You have to add the following annotation to the `AppBinding` crd of the targeted database to enable backup for it:
+You have to add the auto-backup annotations to the `AppBinding` CR of the targeted database. If you are using KubeDB, you can add these annotations to the respective database CR. KubeDB will pass the annotations into the respective `AppBinding`.
+
+The following auto-backup annotations are available for databases:
+
+- **BackupBlueprint Name:** You have to specify the `BackupBlueprint` name that holds the template for `Repository` and `BackupConfiguration` in the following annotation:
 
 ```yaml
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
-This annotation specifies the name of the `BackupBlueprint` object where a blueprint for `Repository` and `BackupConfiguration` has been defined.
+- **Schedule:** You can specify a schedule to backup for this target through this annotation. If you don't specify this annotation, schedule from the `BackupBlueprint` will be used.
+
+```yaml
+ stash.appscode.com/schedule: <Cron Expression>
+```
+
+- **Task Parameters:** You can also pass some parameters to the respective backup Task through this annotation. Use comma (`,`) to separate multiple parameters.
+
+```yaml
+stash.appscode.com/params: "key1=value1,key2=value2"
+```
 
 ## Prepare Databases
 

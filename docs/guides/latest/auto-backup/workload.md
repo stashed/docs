@@ -93,27 +93,33 @@ backupblueprint.stash.appscode.com/workload-backup-blueprint created
 
 Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just have to add some annotations to the targeted workload to enable periodic backup.
 
-**Required Annotations for Workloads:**
+**Available Auto-Backup Annotations for Workloads:**
 
-You have to add the following 3 annotations to a targeted workload to enable backup for it:
+You have to add the auto-backup annotations to the workload that you want to backup. The following auto-backup annotations are available for a workload:
 
-1. Name of the `BackupBlueprint` object where a blueprint for `Repository` and `BackupConfiguration` has been defined.
+- **BackupBlueprint Name:** You have to specify the `BackupBlueprint` name that holds the template for `Repository` and `BackupConfiguration` in the following annotation:
 
-    ```yaml
-    stash.appscode.com/backup-blueprint: <BackupBlueprint name>
-    ```
+```yaml
+stash.appscode.com/backup-blueprint: <BackupBlueprint name>
+```
 
-2. List of paths that will be backed up. Use comma (`,`) to separate multiple file paths. For example, `"/my/target/dir-1,/my/target/dir-2"`.
+- **Schedule:** You can specify a schedule to backup for this target through this annotation. If you don't specify this annotation, schedule from the `BackupBlueprint` will be used.
 
-    ```yaml
-    stash.appscode.com/target-paths: "<paths to backup>"
-    ```
+```yaml
+ stash.appscode.com/schedule: <Cron Expression>
+```
 
-3. List of Volumes and their MountPath and SubPath where the target file paths are located. Use `"<volumenName>:<mountPath>:<subPath>"` format to specify the volumes. The `:<subPath>` part is optional. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1:sub/path-1,vol-2:/mount/path-2"`.
+- **Target Paths:** You have to specify a list of paths that you want to backup through this annotation. Use comma (`,`) to separate multiple file paths. For example, `"/my/target/dir-1,/my/target/dir-2"`.
 
-    ```yaml
-    stash.appscode.com/volume-mounts: "<volume>:<mountPath>:<subPath (optional)>"
-    ```
+```yaml
+stash.appscode.com/target-paths: "<paths to backup>"
+```
+
+- **Volume Mounts:** You have to also specify a list of Volumes and their MountPath and SubPath where the targeted paths are located. Use `"<volumenName>:<mountPath>:<subPath>"` format to specify the volumes. The `:<subPath>` part is optional. Use comma (`,`) to specify multiple volumes and mount path. For example, `"vol-1:/mount/path-1:sub/path-1,vol-2:/mount/path-2"`.
+
+```yaml
+stash.appscode.com/volume-mounts: "<volume>:<mountPath>:<subPath (optional)>"
+```
 
 ## Backup Deployment
 
@@ -151,6 +157,7 @@ metadata:
     stash.appscode.com/backup-blueprint: workload-backup-blueprint
     stash.appscode.com/target-paths: "/source/data-1,/source/data-2"
     stash.appscode.com/volume-mounts: "source-data-1:/source/data-1,source-data-2:/source/data-2"
+    stash.appscode.com/schedule: "*/15 * * * *"
 spec:
   replicas: 3
   selector:
@@ -234,8 +241,8 @@ Verify that the `BackupConfiguration` has been created by the following command,
 
 ```console
 $ kubectl get backupconfiguration -n demo
-NAME                    TASK   SCHEDULE      PAUSED   AGE
-deployment-stash-demo          */5 * * * *            19s
+NAME                    TASK   SCHEDULE       PAUSED   AGE
+deployment-stash-demo          */15 * * * *            19s
 ```
 
 Let's check the YAML of this `BackupConfiguration`,
@@ -259,7 +266,7 @@ spec:
     name: keep-last-5
     prune: true
   runtimeSettings: {}
-  schedule: '*/5 * * * *'
+  schedule: '*/15 * * * *'
   target:
     paths:
     - /source/data-1
