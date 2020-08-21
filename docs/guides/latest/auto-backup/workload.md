@@ -12,6 +12,8 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
+{{< notice type="warning" message="Auto-Backup is an enterprise feature. You must install Stash Enterprise operator to use auto-backup." >}}
+
 # Auto Backup for Workloads
 
 This tutorial will show you how to configure automatic backup for Kubernetes workloads. Here, we are going to show a demo on how we can backup Deployments, StatefulSets, and DaemonSets using a common blueprint.
