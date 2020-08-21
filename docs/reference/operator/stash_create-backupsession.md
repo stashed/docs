@@ -24,8 +24,8 @@ stash create-backupsession [flags]
 
 ```
   -h, --help                  help for create-backupsession
+      --invoker-kind string   Type of the backup invoker
       --invoker-name string   Name of the invoker
-      --invoker-type string   Type of the backup invoker
       --kubeconfig string     Path to kubeconfig file with authorization information (the master location is set by the master flag).
       --master string         The address of the Kubernetes API server (overrides any value in kubeconfig)
 ```

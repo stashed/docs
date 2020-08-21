@@ -26,8 +26,8 @@ stash run-backup [flags]
       --enable-cache             Specify whether to enable caching for restic (default true)
   -h, --help                     help for run-backup
       --host string              Name of the host that will be backed up
+      --invoker-kind string      Kind of the backup invoker
       --invoker-name string      Name of the respective backup invoker
-      --invoker-type string      Type of the backup invoker
       --kubeconfig string        Path to kubeconfig file with authorization information (the master location is set by the master flag).
       --master string            The address of the Kubernetes API server (overrides any value in kubeconfig)
       --max-connections int      Specify maximum concurrent connections for GCS, Azure and B2 backend

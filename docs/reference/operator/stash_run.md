@@ -75,8 +75,11 @@ stash run [flags]
       --enable-validating-webhook                               If true, enables validating webhooks for KubeDB CRDs.
   -h, --help                                                    help for run
       --http2-max-streams-per-connection int                    The limit that the server gives to clients for the maximum number of streams in an HTTP/2 connection. Zero means to use golang's default. (default 1000)
+      --image string                                            Image for sidecar, init-container, check-job and recovery-job (default "stash")
+      --image-pull-secrets strings                              List of image pull secrets for pulling image from private registries
       --image-tag string                                        Image tag for sidecar, init-container, check-job and recovery-job
       --kubeconfig string                                       kubeconfig file pointing at the 'core' kubernetes server.
+      --license-file string                                     Path to license file
       --profiling                                               Enable profiling via web interface host:port/debug/pprof/ (default true)
       --qps float                                               The maximum QPS to the master from this client (default 100)
       --requestheader-allowed-names strings                     List of client certificate common names to allow to provide usernames in headers specified by --requestheader-username-headers. If empty, any client certificate validated by the authorities in --requestheader-client-ca-file is allowed.

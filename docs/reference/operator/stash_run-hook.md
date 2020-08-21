@@ -27,8 +27,8 @@ stash run-hook [flags]
   -h, --help                             help for run-hook
       --hook-type string                 Type of hook to execute
       --hostname string                  Name of the host that is being backed up or restored (default "host-0")
+      --invoker-kind string              Type of the backup invoker
       --invoker-name string              Name of the respective backup invoker
-      --invoker-type string              Type of the backup invoker
       --kubeconfig string                Path to kubeconfig file with authorization information (the master location is set by the master flag).
       --master string                    The address of the Kubernetes API server (overrides any value in kubeconfig)
       --metrics-enabled                  Specify whether to export Prometheus metrics
@@ -36,7 +36,6 @@ stash run-hook [flags]
       --metrics-pushgateway-url string   Pushgateway URL where the metrics will be pushed
       --output-dir string                Directory where output.json file will be written (keep empty if you don't need to write output in file)
       --prom-job-name string             Metrics job name (default "stash-prom-metrics")
-      --restoresession string            Name of the respective RestoreSession
       --target-kind string               Kind of the Target
       --target-name string               Name of the Target
 ```

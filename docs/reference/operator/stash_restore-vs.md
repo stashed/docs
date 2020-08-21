@@ -24,11 +24,14 @@ stash restore-vs [flags]
 
 ```
   -h, --help                     help for restore-vs
+      --invoker-kind string      Kind of the restore invoker
+      --invoker-name string      Name of the respective restore invoker
       --kubeconfig string        Path to kubeconfig file with authorization information (the master location is set by the master flag).
       --master string            The address of the Kubernetes API server (overrides any value in kubeconfig)
       --metrics-enabled          Specify whether to export Prometheus metrics (default true)
       --pushgateway-url string   Pushgateway URL where the metrics will be pushed
-      --restoresession string    Name of the respective RestoreSession object
+      --target-kind string       Kind of the Target
+      --target-name string       Name of the Target
 ```
 
 ### Options inherited from parent commands
