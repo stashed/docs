@@ -1,16 +1,17 @@
 ---
-title: Uninstall
-description: Stash Uninstall
+title: Uninstall Stash Community Version
+description: Uninstallation guide for Stash community version
 menu:
   docs_{{ .version }}:
-    identifier: uninstall-stash
-    name: Uninstall
-    parent: setup
-    weight: 20
+    identifier: uninstall-stash-community
+    name: Community Version
+    parent: uninstallation-guide
+    weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: setup
 ---
+
 
 # Uninstall Stash
 
