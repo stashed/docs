@@ -1,11 +1,11 @@
 ---
-title: Installation Guide | Stash
-description: Stash Installation Guide
+title: Uninstallation Guide | Stash
+description: Stash Unistallation Guide
 menu:
   docs_{{ .version }}:
-    identifier: installation-guide
-    name: Install
+    identifier: uninstallation-guide
+    name: Uninstall
     parent: setup
-    weight: 10
+    weight: 20
 menu_name: docs_{{ .version }}
 ---
