@@ -601,7 +601,7 @@ stash-backup-wordpress-backup   */5 * * * *   True      0        12h            
 
 ### Batch Restore
 
-In this section, we are going to simulate a disaster scenario where we will damage both database and the wordpress deployment's data. Then, we will restore them from the backup.
+In this section, we are going to simulate a disaster scenario where we will damage both the database and the wordpress deployment's data. Then, we will restore them from the backup.
 
 **Simulate Disaster:**
 

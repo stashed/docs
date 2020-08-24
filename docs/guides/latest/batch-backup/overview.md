@@ -47,7 +47,7 @@ The backup process consists of the following steps:
 
 8. The BackupSession controller (inside sidecar for sidecar model or inside the operator itself for job model) watches for `BackupSession` crd.
 
-9. When it finds a `BackupSession` it starts the backup process immediately(for job model a job is created for taking backup) for the individual targets. Stash operator controls the restore order if the `executionOrder` is set to `Sequential`.
+9. When it finds a `BackupSession` it starts the backup process immediately(for job model a job is created for taking backup) for the individual targets. Stash operator enforces the backup order if the `executionOrder` is set to `Sequential`.
 
 10. The individual targets complete their backup process independently and update their respective fields in `BackupSession` status.
 
@@ -65,7 +65,7 @@ The batch restore process consists of the following steps:
 1. At first, the user creates a `RestoreBatch` CR specifying the targets and the respective Repository where the backed up data has been stored.
 2. The Stash operator watches for the `RestoreBatch` CR.
 3. When the Stash operator finds a `RestoreBatch` CR, it injects an init-container into the target that follows the sidecar model and creates a restore job for the targets that follow the job model.
-4. The restore init-container/job restore their respective data. Stash operator controls the restore order if the `executionOrder` is set to `Sequential`.
+4. The restore init-container/job restore their respective data. Stash operator enforces the restore order if the `executionOrder` is set to `Sequential`.
 
 ## Next Steps
 

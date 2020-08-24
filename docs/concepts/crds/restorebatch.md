@@ -16,7 +16,7 @@ section_menu_id: concepts
 
 ## What is RestoreBatch
 
-A `RestoreBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which allows you to restore multiple co-related components(workload, database, etc.) together that were backed up via a `BackupBatch`.
+A `RestoreBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which allows you to restore multiple co-related components( eg, workloads, databases, etc.) together that were backed up via a `BackupBatch`.
 
 ## RestoreBatch CRD Specification
 
@@ -134,7 +134,7 @@ A `RestoreBatch` object has the following fields in the `spec` section.
 
 #### spec.executionOrder
 
-`spec.executionOrder` specifies whether Stash should restore the targets sequentially or in parallel. If `spec.executionOrder` is set to `Parallel`, Stash will start to restore of all the targets simultaneously. If it is set to `Sequential`, Stash will not start restoring a target until all the previous members have completed their restore process. The default value of this field is `Parallel`.
+`spec.executionOrder` specifies whether Stash should restore the targets sequentially or parallelly. If `spec.executionOrder` is set to `Parallel`, Stash will start to restore of all the targets simultaneously. If it is set to `Sequential`, Stash will not start restoring a target until all the previous members have completed their restore process. The default value of this field is `Parallel`.
 
 #### spec.members
 
@@ -156,8 +156,8 @@ A `RestoreBatch` object has the following fields in the `spec` section.
 
 `spec.hooks` allows performing some global actions before and after the restoration process. You can send HTTP requests to a remote server via `httpGet` or `httpPost`. You can check whether a TCP port is open using `tcpSocket` hooks. You can also execute some commands using `exec` hook.
 
-- **spec.hooks.prerestore:** `spec.hooks.prerestore` hooks are executed before restoring any of the members.
-- **spec.hooks.postrestore:** `spec.hooks.postrestore` hooks are executed after restoring all the members.
+- **spec.hooks.preRestore:** `spec.hooks.preRestore` hooks are executed before restoring any of the members.
+- **spec.hooks.postRestore:** `spec.hooks.postRestore` hooks are executed after restoring all the members.
 
 For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
 

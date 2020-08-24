@@ -102,7 +102,7 @@ A `BackupBatch` object has the following fields in the `spec` section.
 
 #### spec.executionOrder
 
-`spec.executionOrder` specifies whether Stash should backup the targets sequentially or in parallel. If `spec.executionOrder` is set to `Parallel`, Stash will start backup of all the targets simultaneously. If it is set to `Sequential`, Stash will not start backup of a target until all the previous members have completed their backup process. The default value of this field is `Parallel`.
+`spec.executionOrder` specifies whether Stash should backup the targets sequentially or parallelly. If `spec.executionOrder` is set to `Parallel`, Stash will start backup of all the targets simultaneously. If it is set to `Sequential`, Stash will not start backup of a target until all the previous members have completed their backup process. The default value of this field is `Parallel`.
 
 #### spec.members
 

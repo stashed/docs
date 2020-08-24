@@ -108,7 +108,7 @@ In addition, if your GKE cluster is a [private cluster](https://cloud.google.com
 
 ### Configuring Network Volume Accessor
 
-For Network Volume (i.e. NFS) as backend, Stash needs an additional deployment in the respective Repository namespace to provide Snapshot listing facility. Stash automatically creates a network volume accessor deployment in a namespace that has at least one Repository with network volume as backend. It automatically removes the deployment from a namespace if there is no more Repository with network volume as backend in that namespace.
+To use network volumes (i.e. NFS) as a backend, Stash needs an additional deployment in the respective `Repository` namespace to provide Snapshot listing functionality. Stash automatically creates a network volume accessor deployment in a namespace that has at least one Repository with a network volume as backend. It automatically removes the deployment from the namespace if there are no more repositories with network volumes as backend in that namespace.
 
 You can configure the network volume accessor deployment's cpu, memory, user id, and privileged mode by providing the `netVolAccessor` parameters as below:
 
@@ -125,6 +125,7 @@ helm install stash-operator appscode/stash \
 ## Verify installation
 
 To check if Stash operator pods have started, run the following command:
+
 ```console
 $ kubectl get pods --all-namespaces -l app=stash --watch
 
@@ -135,6 +136,7 @@ kube-system   stash-operator-859d6bdb56-m9br5   2/2       Running   2          5
 Once the operator pods are running, you can cancel the above command by typing `Ctrl+C`.
 
 Now, to confirm CRD groups have been registered by the operator, run the following command:
+
 ```console
 $ kubectl get crd -l app=stash
 
@@ -146,8 +148,8 @@ restics.stash.appscode.com           5s
 
 Now, you are ready to [take your first backup](/docs/guides/latest/README.md) using Stash.
 
-
 ## Configuring RBAC
+
 Stash introduces resources, such as, `Restic`, `Repository`, `Recovery` and `Snapshot`. Stash installer will create 2 user facing cluster roles:
 
 | ClusterRole         | Aggregates To | Desription                                                                                            |
@@ -174,7 +176,7 @@ If you prefer to install kubectl Stash cli from source code, you will need to se
 go get github.com/stashed/cli/...
 ```
 
->Please note that this will install kubectl stash cli from master branch which might include breaking and/or undocumented changes.
+> Please note that this will install kubectl stash cli from master branch which might include breaking and/or undocumented changes.
 
 ## Detect Stash version
 
