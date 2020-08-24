@@ -89,6 +89,6 @@ Stash uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts
 
 - **RestoreBatch:** A `RestoreBatch` allows restoring of multiple co-related targets together that were backed up using a `BackupBatch`. For more details, please visit [here](/docs/concepts/crds/restorebatch.md).
 
-- **AppBinding:** An `AppBinding` holds necessary information to connect with a database. For more details about `AppBinding`, please visit [here](/docs/concepts/crds/appbinding.md).
+- **AppBinding:** An `AppBinding` holds necessary information to connect with an application. For more details about `AppBinding`, please visit [here](/docs/concepts/crds/appbinding.md).
 
 - **Snapshot:** A `Snapshot` is a representation of a backup snapshot in a Kubernetes native way. Stash uses Kuberentes Extended API Server for handling `Snapshot`s. For more details about `Snapshot`s, please visit [here](/docs/concepts/crds/snapshot.md).
