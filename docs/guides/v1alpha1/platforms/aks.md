@@ -34,7 +34,7 @@ At first, you need to have a AKS cluster. If you don't already have a cluster, c
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -47,7 +47,7 @@ In order to take backup, we need some sample data. Stash has some sample data in
 
 Let's create a ConfigMap from these sample data,
 
-```console
+```bash
 $ kubectl create configmap -n demo stash-sample-data \
 	--from-literal=LICENSE="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/LICENSE)" \
 	--from-literal=README.md="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/README.md)"
@@ -98,14 +98,14 @@ spec:
 
 Let's create the deployment we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/aks/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for deployment's pod to go in `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-7584fd7748-nl5n8   1/1     Running   0          3m
@@ -113,7 +113,7 @@ stash-demo-7584fd7748-nl5n8   1/1     Running   0          3m
 
 You can check that the `/source/data/` directory of this pod is populated with data from the `stash-sample-data` ConfigMap using this command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-7584fd7748-nl5n8 -- ls -R /source/data
 /source/data:
 LICENSE
@@ -134,7 +134,7 @@ At first, we need to create a storage secret that hold the credentials for the b
 
 Create the storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' >RESTIC_PASSWORD
 $ echo -n '<your-azure-storage-account-name>' > AZURE_ACCOUNT_NAME
 $ echo -n '<your-azure-storage-account-key>' > AZURE_ACCOUNT_KEY
@@ -147,7 +147,7 @@ secret/azure-secret created
 
 Verify that the secret has been created successfully,
 
-```console
+```bash
 $ kubectl get secret -n demo azure-secret -o yaml
 ```
 
@@ -173,7 +173,7 @@ type: Opaque
 
 Now, we are going to create `Restic` crd to take backup `/source/data` directory of `stash-demo` deployment. This will create a repository in the Azure blob container specified in `azure.container` field and start taking periodic backup of `/source/data` directory.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/aks/restic.yaml
 restic.stash.appscode.com/azure-restic created
 ```
@@ -210,7 +210,7 @@ spec:
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` deployment to take periodic backup. Let's check sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-6b8c94cdd7-8jhtn   2/2     Running   1          1h
@@ -222,7 +222,7 @@ Look at the pod. It now has 2 containers. If you view the resource definition of
 
 Stash will create a `Repository` crd with name `deployment.stash-demo` for the respective repository in Azure backend at first backup schedule. To verify, run the following command,
 
-```console
+```bash
 $ kubectl get repository deployment.stash-demo -n demo
 NAME                    BACKUPCOUNT   LASTSUCCESSFULBACKUP   AGE
 deployment.stash-demo   8             13s                    8m
@@ -232,7 +232,7 @@ Here, `BACKUPCOUNT` field indicates number of backup snapshot has taken in this 
 
 `Restic` will take backup of the volume periodically with a 1-minute interval. You can verify that backup snapshots are created successfully by,
 
-```console
+```bash
 $ kubectl get snapshots -n demo -l repository=deployment.stash-demo
 NAME                             AGE
 deployment.stash-demo-52ee5eaa   4m36s
@@ -263,7 +263,7 @@ Now, consider that we have lost our workload as well as data volume. We want to 
 
 At first, let's delete `Restic` crd, `stash-demo` deployment and `stash-sample-data` ConfigMap.
 
-```console
+```bash
 $ kubectl delete deployment -n demo stash-demo
 deployment.extensions "stash-demo" deleted
 
@@ -282,7 +282,7 @@ In order to perform recovery, we need `Repository` crd `deployment.stah-demo` an
 
 Let's create a `PersistentVolumeClaim` where our recovered data will be stored.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/aks/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
@@ -308,7 +308,7 @@ spec:
 
 Check that if cluster has provisioned the requested claim,
 
-```console
+```bash
 $ kubectl get pvc -n demo -l app=stash-demo
 NAME              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 stash-recovered   Bound    pvc-f6bddbf6-e66a-11e8-b68c-a62bf720de95   1Gi        RWO            default        1m
@@ -320,7 +320,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-f6bd
 
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/aks/recovery.yaml
 recovery.stash.appscode.com/azure-recovery created
 ```
@@ -347,7 +347,7 @@ spec:
 
 Wait until `Recovery` job completes its task. To verify that recovery has completed successfully run,
 
-```console
+```bash
 $ kubectl get recovery -n demo azure-recovery
 NAME             REPOSITORYNAMESPACE   REPOSITORYNAME          SNAPSHOT   PHASE       AGE
 azure-recovery   demo                  deployment.stash-demo              Succeeded   3m
@@ -357,7 +357,7 @@ Here, `PHASE` `Succeeded` indicate that our recovery has been completed successf
 
 If you are using Kubernetes version older than v1.11.0 then run following command and check `status.phase` field to see whether the recovery succeeded or failed.
 
-```console
+```bash
 $ kubectl get recovery -n demo azure-recovery -o yaml
 ```
 
@@ -405,7 +405,7 @@ spec:
 
 Let's create the deployment,
 
-```console
+```bash
 $  kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/aks/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
@@ -416,7 +416,7 @@ We have re-deployed `stash-demo` deployment with recovered volume. Now, it is ti
 
 Get the pod of new deployment,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-69994758c9-v7ntg   1/1     Running   0          3m
@@ -424,7 +424,7 @@ stash-demo-69994758c9-v7ntg   1/1     Running   0          3m
 
 Run following command to view data of `/source/data` directory of this pod,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-69994758c9-v7ntg -- ls -R /source/data
 /source/data:
 LICENSE
@@ -440,7 +440,7 @@ So, we can see that the data we had backed up from original deployment are now p
 
 To cleanup the resources created by this tutorial, run following commands:
 
-```console
+```bash
 $ kubectl delete recovery -n demo azure-recovery
 $ kubectl delete secret -n demo azure-secret
 $ kubectl delete deployment -n demo stash-demo

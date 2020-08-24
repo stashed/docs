@@ -22,7 +22,7 @@ CoreOS [prometheus-operator](https://github.com/coreos/prometheus-operator) prov
 
 - To keep Prometheus resources isolated, we are going to use a separate namespace to deploy Prometheus operator and respective resources.
 
-  ```console
+  ```bash
   $ kubectl create ns monitoring
   namespace/monitoring created
   ```
@@ -35,7 +35,7 @@ Enable Prometheus monitoring using `prometheus.io/coreos-operator` agent while i
 
 Here, we are going to enable monitoring for both `backup`, `restore` and `operator` metrics using Helm 3.
 
-```console
+```bash
 $ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/coreos-operator \
@@ -90,7 +90,7 @@ Stash exports operator metrics via TLS secured `api` endpoint. So, Prometheus se
 
 Let's check secret `stash-apiserver-cert` has been created in monitoring namespace.
 
-```console
+```bash
 $ kubectl get secret -n monitoring -l=app=stash
 NAME                   TYPE                DATA   AGE
 stash-apiserver-cert   kubernetes.io/tls   2      31m
@@ -135,7 +135,7 @@ Here, `spec.serviceMonitorSelector` is used to select the `ServiceMonitor` crd t
 
 Let's create the `Prometheus` object we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/monitoring/coreos/prometheus.yaml
 prometheus.monitoring.coreos.com/prometheus created
 ```
@@ -144,7 +144,7 @@ Prometheus operator watches for `Prometheus` crd. Once a `Prometheus` crd is cre
 
 Let's check StatefulSet has been created,
 
-```console
+```bash
 $ kubectl get statefulset -n monitoring
 NAME                    DESIRED   CURRENT   AGE
 prometheus-prometheus   1         1         4m
@@ -152,7 +152,7 @@ prometheus-prometheus   1         1         4m
 
 Check StatefulSet's pod is running,
 
-```console
+```bash
 $ kubectl get pod prometheus-prometheus-0 -n monitoring
 NAME                      READY   STATUS    RESTARTS   AGE
 prometheus-prometheus-0   2/2     Running   0          6m
@@ -164,7 +164,7 @@ Now, we are ready to access Prometheus dashboard.
 
 Prometheus server is running on port `9090`. We are going to use [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) to access Prometheus dashboard. Run following command on a separate terminal,
 
-```console
+```bash
 $ kubectl port-forward -n monitoring prometheus-prometheus-0 9090
 Forwarding from 127.0.0.1:9090 -> 9090
 Forwarding from [::1]:9090 -> 9090
@@ -181,7 +181,7 @@ Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:909
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 # cleanup Prometheus resources
 kubectl delete -n monitoring prometheus prometheus
 kubectl delete -n monitoring secret stash-apiserver-cert

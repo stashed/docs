@@ -32,7 +32,7 @@ To configure storage secret for this backend, following secret keys are needed:
 
 Create storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ mv downloaded-sa-json.key GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -73,7 +73,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/gcs.yaml
 repository/gcs-repo created
 ```

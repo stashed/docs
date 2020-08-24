@@ -29,7 +29,7 @@ This guide will show you how to take an instant backup in Stash.
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -96,7 +96,7 @@ The above Deployment will automatically create a `data.txt` file in `/source/dat
 
 Let’s create the Deployment and PVC we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/deployment.yaml
 persistentvolumeclaim/source-data created
 deployment.apps/stash-demo created
@@ -104,7 +104,7 @@ deployment.apps/stash-demo created
 
 Now, wait for the pod of the Deployment to go into `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-859d96f6bd-fxr7l   1/1     Running   0          81s
@@ -112,7 +112,7 @@ stash-demo-859d96f6bd-fxr7l   1/1     Running   0          81s
 
 Verify that the sample data has been created in `/source/data` directory using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-859d96f6bd-fxr7l -- cat /source/data/data.txt
 sample_data
 ```
@@ -125,7 +125,7 @@ We are going to store our backed up data into a GCS bucket. We have to create a 
 
 Let’s create a secret called `gcs-secret` with access credentials of our desired GCS backend,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -154,7 +154,7 @@ spec:
 
 Let’s create the `Repository` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -195,7 +195,7 @@ spec:
 
 Let’s create the `BackupConfiguration` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
@@ -204,7 +204,7 @@ backupconfiguration.stash.appscode.com/deployment-backup created
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                         READY   STATUS    RESTARTS   AGE
 stash-demo-9bff9fd4f-xvt77   2/2     Running   0          57s
@@ -218,7 +218,7 @@ It will also create a `CronJob` with the schedule specified in `spec.schedule` f
 
 Verify that the `CronJob` has been created using the following command,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE       PAUSED   AGE
 deployment-backup          */40 * * * *            6m41s
@@ -255,7 +255,7 @@ spec:
 
 Let's create the `BackupSession` object that we have have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/instant-backup/backupsession.yaml
 backupsession.stash.appscode.com/deployment-backupsession created
 ```
@@ -266,7 +266,7 @@ If everything goes well, the stash sidecar inside the Deployment will take a bac
 
 Run the following command to watch `BackupSession` phase,
 
-```console
+```bash
 $ watch -n 3 kubectl get backupsession -n demo
 Every 3.0s: kubectl get backupsession -n demo                               suaas-appscode: Wed Jul 10 17:18:52 2019
 
@@ -280,7 +280,7 @@ We can see from the above output that the instant backup session has succeeded. 
 
 Once a backup is complete, Stash will update the respective `Repository` crd to reflect the backup. Check that the repository `gcs-repo` has been updated by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo gcs-repo
 NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        24 B   1                116s                     10m

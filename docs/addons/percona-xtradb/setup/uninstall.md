@@ -34,7 +34,7 @@ In order to uninstall Percona XtraDB addon, follow the instruction given below.
 
 Run the following script to uninstall `stash-percona-xtradb` addon that was installed as a Helm chart using Helm 3.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --uninstall --catalog=stash-percona-xtradb
 ```
 
@@ -45,7 +45,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 Run the following script to uninstall `stash-percona-xtradb` addon that was installed as a Helm chart using Helm 2.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm2.sh | bash -s -- --uninstall --catalog=stash-percona-xtradb
 ```
 
@@ -56,7 +56,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 Run the following script to uninstall `stash-percona-xtradb` addon that was installed as Kubernetes YAMLs.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/script.sh | bash -s -- --uninstall --catalog=stash-percona-xtradb
 ```
 
@@ -67,6 +67,6 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 In order to uninstall Percona XtraDB addon only for a specific database version, use `--version` flag to specify the desired version.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --uninstall --catalog=stash-percona-xtradb --version=5.7
 ```

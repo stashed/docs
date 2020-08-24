@@ -34,7 +34,7 @@ This guide will show you how to backup a stand-alone PersistentVolumeClaim (PVC)
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -47,7 +47,7 @@ Stash uses a `Function-Task` model to backup stand-alone volume. When you instal
 
 Let's verify that Stash has created the necessary `Function` to backup/restore PVC by the following command,
 
-```console
+```bash
 $ kubectl get function
 NAME            AGE
 pvc-backup      117m
@@ -57,7 +57,7 @@ update-status   117m
 
 Also, verify that the necessary `Task` has been created,
 
-```console
+```bash
 $ kubectl get task
 NAME          AGE
 pvc-backup    118m
@@ -95,7 +95,7 @@ Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label.
 
 Let's create the PV we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pv.yaml
 persistentvolume/nfs-pv created
 ```
@@ -128,14 +128,14 @@ Also, notice the `spec.selector` section. We have specified `app: nfs-demo` labe
 
 Let's create the PVC we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pvc.yaml
 persistentvolumeclaim/nfs-pvc created
 ```
 
 Verify that the PVC has bounded with our desired PV,
 
-```console
+```bash
 $ kubectl get pvc -n demo nfs-pvc
 NAME      STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 nfs-pvc   Bound    nfs-pv   1Gi        RWX                           32s
@@ -174,14 +174,14 @@ Here, we have mounted `pod-1/data` directory of the `nfs-pvc` into `/sample/data
 
 Let's deploy the pod we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pod-1.yaml
 pod/demo-pod-1 created
 ```
 
 Verify that the sample data has been generated into `/sample/data/` directory,
 
-```console
+```bash
 $ kubectl exec -n demo demo-pod-1 cat /sample/data/hello.txt
 hello from pod 1.
 ```
@@ -213,14 +213,14 @@ Now, we have mounted `pod-2/data` directory of the `nfs-pvc` into `/sample/data`
 
 Let's create the pod we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/pod-2.yaml
 pod/demo-pod-2 created
 ```
 
 Verify that the sample data has been generated into `/sample/data/` directory,
 
-```console
+```bash
 $ kubectl exec -n demo demo-pod-2 cat /sample/data/hello.txt
 hello from pod 2.
 ```
@@ -235,7 +235,7 @@ Now, we are going to backup the PVC `nfs-pvc` in a GCS bucket using Stash. We ha
 
 Let's create a Secret named `gcs-secret` with access credentials of our desired GCS backend,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded/sa_key_file.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -268,7 +268,7 @@ spec:
 
 Let's create the `Repository` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -309,7 +309,7 @@ Here,
 
 Let's create the `BackupConfiguration` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/nfs-pvc-backup created
 ```
@@ -320,7 +320,7 @@ If everything goes well, Stash will create a CronJob to trigger backup periodica
 
 Verify that Stash has created a CronJob to trigger a periodic backup of the targeted PVC by the following command,
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME             SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 nfs-pvc-backup   */5 * * * *   False     0        <none>          28s
@@ -330,7 +330,7 @@ nfs-pvc-backup   */5 * * * *   False     0        <none>          28s
 
 Now, wait for the next backup schedule. You can watch for `BackupSession` crd using the following command,
 
-```console
+```bash
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=nfs-pvc-backup
 
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-...  workstation: Wed Jul  3 19:53:13 2019
@@ -347,7 +347,7 @@ When backup session is completed, Stash will update the respective `Repository` 
 
 Run the following command to check if a backup snapshot has been stored in the backend,
 
-```console
+```bash
 $ kubectl get repository -n demo gcs-repo
 NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        80 B   1                25s                      49m
@@ -374,14 +374,14 @@ At first, let's stop taking any further backup of the PVC so that no backup is t
 
 Let's pause the `nfs-pvc-backup` BackupConfiguration,
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo nfs-pvc-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/nfs-pvc-backup patched
 ```
 
 Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo nfs-pvc-backup
 NAME             TASK   SCHEDULE      PAUSED   AGE
 nfs-pvc-backup          */1 * * * *   true     20m
@@ -395,7 +395,7 @@ At first, let's simulate a disaster scenario. Let's delete all the files from th
 
 Delete the data of pod `demo-pod-1`:
 
-```console
+```bash
 # delete data
 $ kubectl exec -n demo demo-pod-1 -- sh -c "rm /sample/data/*"
 
@@ -406,7 +406,7 @@ $ kubectl exec -n demo demo-pod-1 ls /sample/data/
 
 Delete the data of pod `demo-pod-2`:
 
-```console
+```bash
 # delete data
 $ kubectl exec -n demo demo-pod-2 -- sh -c "rm /sample/data/*"
 
@@ -445,7 +445,7 @@ spec:
 
 Let's create the `RestoreSession` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumes/restoresession.yaml
 restoresession.stash.appscode.com/nfs-pvc-restore created
 ```
@@ -454,7 +454,7 @@ restoresession.stash.appscode.com/nfs-pvc-restore created
 
 Now, wait for the restore process to complete. You can watch the `RestoreSession` phase using the following command,
 
-```console
+```bash
 $ watch -n 1 kubectl get restoresession -n demo nfs-pvc-restore
 
 Every 1.0s: kubectl get restoresession -n demo nfs-pvc-restore                  workstation: Wed Jul  3 20:10:52 2019
@@ -470,14 +470,14 @@ Let's verify if the deleted files have been restored successfully into the PVC. 
 
 Verify that the data of `demo-pod-1` has been restored:
 
-```console
+```bash
 $ kubectl exec -n demo demo-pod-1 cat /sample/data/hello.txt
 hello from pod 1.
 ```
 
 Verify that the data of `demo-pod-2` has been restored:
 
-```console
+```bash
 $ kubectl exec -n demo demo-pod-2 cat /sample/data/hello.txt
 hello from pod 2.
 ```
@@ -488,7 +488,7 @@ So, we can see from the above output that the files we had deleted in **Simulate
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete backupconfiguration -n demo nfs-pvc-backup
 kubectl delete restoresession -n demo nfs-pvc-restore
 

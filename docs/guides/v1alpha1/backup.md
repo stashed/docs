@@ -34,7 +34,7 @@ At first, you need to have a Kubernetes cluster, and the `kubectl` command-line 
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -63,7 +63,7 @@ In order to take back up, we need some sample data. Stash has some sample data i
 
 Let's create a ConfigMap from these sample data,
 
-```console
+```bash
 $ kubectl create configmap -n demo stash-sample-data \
 	--from-literal=LICENSE="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/LICENSE)" \
 	--from-literal=README.md="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/README.md)"
@@ -114,14 +114,14 @@ spec:
 
 Let's create the deployment we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for deployment's pod to go into `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-7ccd56bf5d-4x27d   1/1     Running   0          21s
@@ -129,7 +129,7 @@ stash-demo-7ccd56bf5d-4x27d   1/1     Running   0          21s
 
 You can check that the `/source/data/` directory of this pod is populated with data from the `stash-sample-data` ConfigMap using this command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-7ccd56bf5d-4x27d -- ls -R /source/data
 /source/data:
 LICENSE
@@ -148,7 +148,7 @@ At first, we need to create a storage secret. To configure this backend, the fol
 
 Create the secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ kubectl create secret generic -n demo local-secret \
     --from-file=./RESTIC_PASSWORD
@@ -157,7 +157,7 @@ secret/local-secret created
 
 Verify that the secret has been created successfully,
 
-```console
+```bash
 $ kubectl get secret -n demo local-secret -o yaml
 ```
 
@@ -225,14 +225,14 @@ Here,
 
 Let's create the `Restic` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/restic.yaml
 restic.stash.appscode.com/local-restic created
 ```
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` deployment to take periodic backup. Let's check that sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-7ffdb5d7fd-5x8l6   2/2     Running   0          37s
@@ -240,7 +240,7 @@ stash-demo-7ffdb5d7fd-5x8l6   2/2     Running   0          37s
 
 Look at the pod. It now has 2 containers. If you view the resource definition of this pod, you will see that there is a container named `stash` which running `backup` command.
 
-```console
+```bash
 $ kubectl get pod -n demo stash-demo-7ffdb5d7fd-5x8l6 -o yaml
 ```
 
@@ -427,7 +427,7 @@ status:
 
 Stash will create a `Repository` crd with name `deployment.stash-demo` for the respective repository in local backend at first backup schedule. To verify, run the following command,
 
-```console
+```bash
 $  kubectl get repository deployment.stash-demo -n demo
 NAME                    BACKUPCOUNT   LASTSUCCESSFULBACKUP   AGE
 deployment.stash-demo   4             23s                    4m
@@ -437,7 +437,7 @@ Here, `BACKUPCOUNT` field indicates the number of backup snapshots has taken in 
 
 `Restic` will take backup of the volume periodically with a 1-minute interval. You can verify that backup snapshots have been created successfully by running the following command:
 
-```console
+```bash
 $ kubectl get snapshots -n demo -l repository=deployment.stash-demo
 NAME                             AGE
 deployment.stash-demo-9a6e6b78   3m18s
@@ -516,7 +516,7 @@ restic.stash.appscode.com/local-restic patched
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 $ kubectl delete -n demo deployment stash-demo
 $ kubectl delete -n demo secret local-secret
 $ kubectl delete -n demo restic local-restic

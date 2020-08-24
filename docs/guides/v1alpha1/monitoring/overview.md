@@ -121,7 +121,7 @@ You have to provides these flags while installing or upgrading or updating Stash
 
 **Helm 3:**
 
-```console
+```bash
 $ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/coreos-operator \
@@ -133,7 +133,7 @@ $ helm install stash-operator appscode/stash --version {{< param "info.version" 
 
 **Helm 2:**
 
-```console
+```bash
 $ helm install appscode/stash --name stash-operator --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/coreos-operator \
@@ -145,7 +145,7 @@ $ helm install appscode/stash --name stash-operator --version {{< param "info.ve
 
 **YAML (with Helm 3):**
 
-```console
+```bash
 $ helm template stash-operator appscode/stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --no-hooks \

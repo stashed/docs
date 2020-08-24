@@ -34,7 +34,7 @@ Stash operator can be installed via a script or as a Helm chart.
 
 Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-operator`:
 
-```console
+```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
 $ helm search repo appscode/stash --version {{< param "info.version" >}}
@@ -55,7 +55,7 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 
 Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-operator`:
 
-```console
+```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
 $ helm search appscode/stash --version {{< param "info.version" >}}
@@ -76,7 +76,7 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 
 If you prefer to not use Helm, you can generate YAMLs from Stash chart and deploy using `kubectl`. Here we are going to show the prodecure using Helm 3.
 
-```console
+```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
 $ helm search repo appscode/stash --version {{< param "info.version" >}}
@@ -98,7 +98,7 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 
 If you are installing Stash on a GKE cluster, you will need cluster admin permissions to install Stash operator. Run the following command to grant admin permision to the cluster.
 
-```console
+```bash
 $ kubectl create clusterrolebinding "cluster-admin-$(whoami)" \
   --clusterrole=cluster-admin \
   --user="$(gcloud config get-value core/account)"
@@ -112,7 +112,7 @@ To use network volumes (i.e. NFS) as a backend, Stash needs an additional deploy
 
 You can configure the network volume accessor deployment's cpu, memory, user id, and privileged mode by providing the `netVolAccessor` parameters as below:
 
-```console
+```bash
 helm install stash-operator appscode/stash \
   --version {{< param "info.version" >}}   \
   --namespace kube-system                  \
@@ -126,7 +126,7 @@ helm install stash-operator appscode/stash \
 
 To check if Stash operator pods have started, run the following command:
 
-```console
+```bash
 $ kubectl get pods --all-namespaces -l app=stash --watch
 
 NAMESPACE     NAME                              READY     STATUS    RESTARTS   AGE
@@ -137,7 +137,7 @@ Once the operator pods are running, you can cancel the above command by typing `
 
 Now, to confirm CRD groups have been registered by the operator, run the following command:
 
-```console
+```bash
 $ kubectl get crd -l app=stash
 
 NAME                                 AGE
@@ -163,7 +163,7 @@ These user facing roles supports [ClusterRole Aggregation](https://kubernetes.io
 
 Stash provides a CLI using kubectl plugin to work with the stash Objects quickly. Download pre-build binaries from [stashed/cli Githhub release]() and put the binary to some directory in your `PATH`. To install linux 64-bit you can run the following commands:
 
-```console
+```bash
 # Linux amd 64-bit
 wget -O kubectl-stash https://github.com/stashed/cli/releases/download/{{< param "info.cli" >}}/kubectl-stash-linux-amd64 \
   && chmod +x kubectl-stash \
@@ -172,7 +172,7 @@ wget -O kubectl-stash https://github.com/stashed/cli/releases/download/{{< param
 
 If you prefer to install kubectl Stash cli from source code, you will need to set up a GO development environment following [these instructions](https://golang.org/doc/code.html). Then, install the CLI using `go get` from source code.
 
-```console
+```bash
 go get github.com/stashed/cli/...
 ```
 
@@ -182,7 +182,7 @@ go get github.com/stashed/cli/...
 
 To detect Stash version, exec into the operator pod and run `stash version` command.
 
-```console
+```bash
 $ POD_NAMESPACE=kube-system
 $ POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app=stash -o jsonpath={.items[0].metadata.name})
 $ kubectl exec -it $POD_NAME -c operator -n $POD_NAMESPACE /stash version

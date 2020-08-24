@@ -56,7 +56,7 @@ The `VolumeSnapshot` process consists of the following steps:
 6. When it finds a `BackupSession` crd, it creates a volume snapshotter `Job` to take snapshot of the targeted volumes.
 
 7. The volume snapshotter `Job` creates `VolumeSnapshot` crd for each PVC of the target and waits for the CSI driver to complete snapshotting. These `VolumeSnasphot` crd names follow the following format:
-```console
+```bash
   <PVC name>-<BackupSession creation timestamp in Unix epoch seconds>
 ```
 

@@ -96,7 +96,7 @@ For token-based authentication, following secret keys are needed:
 
 A sample storage secret creation for keystone v2 authentication is shown below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-auth-url>' > OS_AUTH_URL
 $ echo -n '<your-tenant-id>' > OS_TENANT_ID
@@ -144,7 +144,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/swift.yaml
 repository/swift-repo created
 ```

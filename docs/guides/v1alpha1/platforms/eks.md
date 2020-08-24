@@ -34,7 +34,7 @@ At first, you need to have a EKS cluster. If you don't already have a cluster, c
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -47,7 +47,7 @@ In order to take backup, we need some sample data. Stash has some sample data in
 
 Let's create a ConfigMap from these sample data,
 
-```console
+```bash
 $ kubectl create configmap -n demo stash-sample-data \
 	--from-literal=LICENSE="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/LICENSE)" \
 	--from-literal=README.md="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/README.md)"
@@ -98,14 +98,14 @@ spec:
 
 Let's create the deployment we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for deployment's pod to go in `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                         READY   STATUS    RESTARTS   AGE
 stash-demo-756bf59b5-7tk6q   1/1     Running   0          1m
@@ -113,7 +113,7 @@ stash-demo-756bf59b5-7tk6q   1/1     Running   0          1m
 
 You can check that the `/source/data/` directory of this pod is populated with data from the `stash-sample-data` ConfigMap using this command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-756bf59b5-7tk6q  -- ls -R /source/data
 /source/data:
 LICENSE
@@ -134,7 +134,7 @@ At first, we need to create a storage secret that hold the credentials for the b
 
 Create a the storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-aws-access-key-id-here>' > AWS_ACCESS_KEY_ID
 $ echo -n '<your-aws-secret-access-key-here>' > AWS_SECRET_ACCESS_KEY
@@ -147,7 +147,7 @@ secret/s3-secret created
 
 Verify that the secret has been created successfully,
 
-```console
+```bash
 $ kubectl get secret -n demo s3-secret -o yaml
 ```
 
@@ -172,7 +172,7 @@ type: Opaque
 
 Now, we are going to create `Restic` crd to take backup `/source/data` directory of `stash-demo` deployment. This will create a repository in the S3 bucket specified in `s3.bucket` field and start taking periodic backup of `/source/data` directory.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/restic.yaml
 restic.stash.appscode.com/s3-restic created
 ```
@@ -210,7 +210,7 @@ spec:
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` deployment to take periodic backup. Let's check sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-646c854778-t4d72   2/2     Running   0          1m
@@ -222,7 +222,7 @@ Look at the pod. It now has 2 containers. If you view the resource definition of
 
 Stash will create a `Repository` crd with name `deployment.stash-demo` for the respective repository in S3 backend at first backup schedule. To verify, run the following command,
 
-```console
+```bash
 $  kubectl get repository deployment.stash-demo -n demo
 NAME                    CREATED AT
 deployment.stash-demo   5m
@@ -265,7 +265,7 @@ status:
 
 `Restic` will take backup of the volume periodically with a 1-minute interval. You can verify that backup snapshots are created successfully by,
 
-```console
+```bash
 $ kubectl get snapshots -n demo -l repository=deployment.stash-demo
 NAME                             AGE
 deployment.stash-demo-2e9cc755   4m53s
@@ -296,7 +296,7 @@ Now, consider that we have lost our workload as well as data volume. We want to 
 
 At first, let's delete `Restic` crd, `stash-demo` deployment and `stash-sample-data` ConfigMap.
 
-```console
+```bash
 $ kubectl delete deployment -n demo stash-demo
 deployment.extensions "stash-demo" deleted
 
@@ -323,7 +323,7 @@ gp2 (default)   kubernetes.io/aws-ebs   6h
 
 Now, let's create a `PersistentVolumeClaim` where our recovered data will be stored.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
@@ -349,7 +349,7 @@ spec:
 
 Check that if cluster has provisioned the requested claim,
 
-```console
+```bash
 $ kubectl get pvc -n demo -l app=stash-demo
 NAME              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 stash-recovered   Bound    pvc-d86e3909-e80e-11e8-a7b0-029842a88ece   1Gi        RWO            gp2            18s
@@ -361,7 +361,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-d86e
 
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/recovery.yaml
 recovery.stash.appscode.com/s3-recovery created
 ```
@@ -465,7 +465,7 @@ spec:
 
 Let's create the deployment,
 
-```console
+```bash
 $  kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/eks/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
@@ -476,7 +476,7 @@ We have re-deployed `stash-demo` deployment with recovered volume. Now, it is ti
 
 Get the pod of new deployment,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-6796866bb8-zkhv5   1/1     Running   0          55s
@@ -484,7 +484,7 @@ stash-demo-6796866bb8-zkhv5   1/1     Running   0          55s
 
 Run following command to view data of `/source/data` directory of this pod,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-6796866bb8-zkhv5 -- ls -R /source/data
 /source/data:
 LICENSE
@@ -500,7 +500,7 @@ So, we can see that the data we had backed up from original deployment are now p
 
 To cleanup the resources created by this tutorial, run following commands:
 
-```console
+```bash
 $ kubectl delete recovery -n demo s3-recovery
 $ kubectl delete secret -n demo s3-secret
 $ kubectl delete deployment -n demo stash-demo
