@@ -126,10 +126,12 @@ stash.appscode.com/backup-blueprint: <BackupBlueprint name>
  stash.appscode.com/schedule: <Cron Expression>
 ```
 
-- **Task Parameters:** You can also pass some parameters to the respective backup Task through this annotation. Use comma (`,`) to separate multiple parameters.
+- **Task Parameters:** You can also pass some parameters to the respective backup Task through annotations. Use following format to pass parameters via annotations:
 
 ```yaml
-stash.appscode.com/params: "key1=value1,key2=value2"
+params.stash.appscode.com/key1: value1
+params.stash.appscode.com/key2: value2,value3
+params.stash.appscode.com/key3: ab=123,bc=234
 ```
 
 ## Prepare Databases
