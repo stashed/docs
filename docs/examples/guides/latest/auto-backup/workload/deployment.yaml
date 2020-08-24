@@ -25,6 +25,7 @@ metadata:
     stash.appscode.com/backup-blueprint: workload-backup-blueprint
     stash.appscode.com/target-paths: "/source/data-1,/source/data-2"
     stash.appscode.com/volume-mounts: "source-data-1:/source/data-1,source-data-2:/source/data-2"
+    stash.appscode.com/schedule: "*/15 * * * *"
 spec:
   replicas: 3
   selector:

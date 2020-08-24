@@ -125,15 +125,21 @@ backupblueprint.stash.appscode.com/pvc-backup-blueprint created
 
 Now, automatic backup is configured for PVC. We just have to add some annotations to the targeted PVC to enable backup.
 
-**Required Annotation for Auto-Backup PVC:**
+**Available Auto-Backup Annotations for PVC:**
 
-You have to add the following annotation to a targeted PVC to enable backup for it:
+You have to add the auto-backup annotations to the PVC that you want to backup. The following auto-backup annotations are available for a PVC:
+
+- **BackupBlueprint Name:** You have to specify the `BackupBlueprint` name that holds the template for `Repository` and `BackupConfiguration` in the following annotation:
 
 ```yaml
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
-This annotation specifies the name of the `BackupBlueprint` object where a blueprint for `Repository` and `BackupConfiguration` has been defined.
+- **Schedule:** You can specify a schedule to backup this target through this annotation. If you don't specify this annotation, schedule from the `BackupBlueprint` will be used.
+
+```yaml
+ stash.appscode.com/schedule: <Cron Expression>
+```
 
 ## Prepare PVC
 
@@ -305,8 +311,9 @@ Now, we are going to add auto backup specific annotation to the PVC. Stash watch
 Let's add the auto backup specific annotation to the PVC,
 
 ```console
-$ kubectl annotate pvc nfs-pvc -n demo --overwrite \
-  stash.appscode.com/backup-blueprint=pvc-backup-blueprint
+$ kubectl annotate pvc nfs-pvc -n demo --overwrite           \
+    stash.appscode.com/backup-blueprint=pvc-backup-blueprint \
+    stash.appscode.com/schedule="*/15 * * * *"
 ```
 
 Verify that the annotations has been added successfully,
@@ -325,6 +332,7 @@ metadata:
     pv.kubernetes.io/bind-completed: "yes"
     pv.kubernetes.io/bound-by-controller: "yes"
     stash.appscode.com/backup-blueprint: pvc-backup-blueprint
+    stash.appscode.com/schedule: "*/15 * * * *"
   creationTimestamp: "2019-08-19T09:08:44Z"
   finalizers:
   - kubernetes.io/pvc-protection
@@ -398,8 +406,8 @@ Verify that the `BackupConfiguration` crd has been created by the following comm
 
 ```console
 $ kubectl get backupconfiguration -n demo
-NAME                            TASK         SCHEDULE      PAUSED   AGE
-persistentvolumeclaim-nfs-pvc   pvc-backup   */5 * * * *            119s
+NAME                            TASK         SCHEDULE       PAUSED   AGE
+persistentvolumeclaim-nfs-pvc   pvc-backup   */15 * * * *            119s
 ```
 
 Let's check the YAML of this `BackupConfiguration`,
@@ -435,7 +443,7 @@ spec:
     name: keep-last-5
     prune: true
   runtimeSettings: {}
-  schedule: '*/5 * * * *'
+  schedule: '*/15 * * * *'
   target:
     ref:
       apiVersion: v1
