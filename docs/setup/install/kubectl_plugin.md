@@ -6,7 +6,7 @@ menu:
     identifier: install-stash-kubectl-plugin
     name: Stash kubectl Plugin
     parent: installation-guide
-    weight: 10
+    weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: setup
@@ -14,18 +14,20 @@ section_menu_id: setup
 
 ## Install Stash kubectl Plugin
 
-Stash provides a CLI using kubectl plugin to work with the stash Objects quickly. Download pre-build binaries from [stashed/cli Githhub release]() and put the binary to some directory in your `PATH`. To install linux 64-bit you can run the following commands:
+Stash provides a CLI to use as kubectl plugin quickly manipulating Stash objects. You can download the pre-build binaries from [stashed/cli](https://github.com/stashed/cli/releases) releases and put it into one of your installation directory denoted by `$PATH` variable.
 
-```console
+Here is a simple Linux command to install the latest 64-bit Linux binary directly into your `/usr/local/bin` directory:
+
+```bash
 # Linux amd 64-bit
 wget -O kubectl-stash https://github.com/stashed/cli/releases/download/{{< param "info.cli" >}}/kubectl-stash-linux-amd64 \
   && chmod +x kubectl-stash \
   && sudo mv kubectl-stash /usr/local/bin/
 ```
 
-If you prefer to install kubectl Stash cli from source code, you will need to set up a GO development environment following [these instructions](https://golang.org/doc/code.html). Then, install the CLI using `go get` from source code.
+If you prefer to install kubectl Stash cli from source code, make sure that your go development environment has been setup properly. Then, just run:
 
-```console
+```bash
 go get github.com/stashed/cli/...
 ```
 

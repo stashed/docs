@@ -1,10 +1,10 @@
 ---
-title: Install Stash Community Version
-description: Installation guide for Stash community version
+title: Install Stash Community Edition
+description: Installation guide for Stash community edition
 menu:
   docs_{{ .version }}:
     identifier: install-stash-community
-    name: Community Version
+    name: Community Edition
     parent: installation-guide
     weight: 10
 product_name: stash
@@ -12,13 +12,43 @@ menu_name: docs_{{ .version }}
 section_menu_id: setup
 ---
 
-# Install Stash Community Version
+# Install Stash Community Edition
 
-## Get License
+Stash community edition is open-sourced under [PolyForm-Noncommercial-1.0.0](https://github.com/stashed/stash/blob/master/LICENSE.md) and free to use for any non-commercial purpose. It comes with all the basic backup functionalities. However, it lacks some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. compared to the enterprise version. A full features comparison between Stash community edition and enterprise edition can be found [here](/docs/concepts/what-is-stash/overview.md).
+
+If you are eligible under [PolyForm-Noncommercial-1.0.0](https://github.com/stashed/stash/blob/master/LICENSE.md) license or want to try Stash, you can grab **1 year** free license from [here](https://license-issuer.appscode.com/).
+
+## Get a License
+
+In this section, we are going to show you how you can get a **1 year** free license for Stash community edition. You can get a license for your Kubernetes cluster by going through the following steps:
+
+- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the small form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
+- Provide your name and email address. You can provide your personal or work email address.
+- Then, select `Stash Community Edition` in the product field.
+- Now, provide your cluster ID. You can get your cluster ID easily by running the following command:
+
+```bash
+kubectl get ns kube-system -o=jsonpath='{.metadata.uid}'
+```
+
+- Then, you have to agree with the terms and conditions. We recommend reading it before checking the box.
+- Now, you can submit the form. After you submit the form, the AppsCode License server will send an email to the provided email address with a link to your license file.
+- Navigate to the provided link and save the license into a file. You can save the license file in any format you prefer. Here, we are going to show examples assuming that we have saved the license as `license.txt` file.
+
+Here, is a screenshot of the form that you are going to fill-up.
+
+<figure align="center">
+  <img alt="Stash Backend Overview" src="/docs/images/setup/community_license_form.png">
+  <figcaption align="center">Fig: Stash License Form</figcaption>
+</figure>
+
+You can create a license for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
+
+>Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
 
 ## Install
 
-Stash operator can be installed via a script or as a Helm chart.
+Stash operator can be installed as a Helm chart or simply as Kubernetes manifests.
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">
@@ -36,18 +66,19 @@ Stash operator can be installed via a script or as a Helm chart.
 
 ## Using Helm 3
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-operator`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
 $ helm search repo appscode/stash --version {{< param "info.version" >}}
-NAME            CHART VERSION APP VERSION DESCRIPTION
+NAME            CHART VERSION         APP VERSION         DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm install stash-operator appscode/stash \
-  --version {{< param "info.version" >}} \
-  --namespace kube-system
+$ helm install stash appscode/stash           \
+  --version {{< param "info.version" >}}                \
+  --namespace kube-system                     \
+  --set-file license=/path/to/the/license.txt
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash).
@@ -57,18 +88,19 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 
 ## Using Helm 2
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-operator`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
 $ helm search appscode/stash --version {{< param "info.version" >}}
-NAME            CHART VERSION APP VERSION DESCRIPTION
+NAME            CHART VERSION         APP VERSION         DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm install appscode/stash --name stash-operator \
-  --version {{< param "info.version" >}} \
-  --namespace kube-system
+$ helm install appscode/stash --name stash    \
+  --version {{< param "info.version" >}}                \
+  --namespace kube-system                     \
+  --set-file license=/path/to/the/license.txt
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash).
@@ -84,12 +116,13 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and deplo
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
 $ helm search repo appscode/stash --version {{< param "info.version" >}}
-NAME            CHART VERSION APP VERSION DESCRIPTION
+NAME            CHART VERSION         APP VERSION         DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm template stash-operator appscode/stash \
-  --version {{< param "info.version" >}} \
-  --namespace kube-system \
+$ helm template stash appscode/stash          \
+  --version {{< param "info.version" >}}                \
+  --namespace kube-system                     \
+  --set-file license=/path/to/the/license.txt \
   --no-hooks | kubectl apply -f -
 ```
 
@@ -98,44 +131,33 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 </div>
 </div>
 
-### Configuring Network Volume Accessor
-
-To use network volumes (i.e. NFS) as a backend, Stash needs an additional deployment in the respective `Repository` namespace to provide Snapshot listing functionality. Stash automatically creates a network volume accessor deployment in a namespace that has at least one Repository with a network volume as backend. It automatically removes the deployment from the namespace if there are no more repositories with network volumes as backend in that namespace.
-
-You can configure the network volume accessor deployment's cpu, memory, user id, and privileged mode by providing the `netVolAccessor` parameters as below:
-
-```bash
-helm install stash-operator appscode/stash \
-  --version {{< param "info.version" >}}   \
-  --namespace kube-system                  \
-  --set netVolAccessor.cpu=100m            \
-  --set netVolAccessor.memory=128Mi        \
-  --set netVolAccessor.runAsUser=0         \
-  --set netVolAccessor.privileged=true     \
-```
-
 ## Verify installation
 
 To check if Stash operator pods have started, run the following command:
 
 ```bash
-$ kubectl get pods --all-namespaces -l app=stash --watch
+$ kubectl get pods --all-namespaces -l app.kubernetes.io/name=stash --watch
 
-NAMESPACE     NAME                              READY     STATUS    RESTARTS   AGE
-kube-system   stash-operator-859d6bdb56-m9br5   2/2       Running   2          5s
+NAMESPACE     NAME                     READY     STATUS    RESTARTS   AGE
+kube-system   stash-859d6bdb56-m9br5   2/2       Running   2          5s
 ```
 
-Once the operator pods are running, you can cancel the above command by typing `Ctrl+C`.
+Once the operator pod is running, you can cancel the above command by typing `Ctrl+C`.
 
 Now, to confirm CRD groups have been registered by the operator, run the following command:
 
 ```bash
-$ kubectl get crd -l app=stash
+$ kubectl get crd -l app.kubernetes.io/name=stash
 
-NAME                                 AGE
-recoveries.stash.appscode.com        5s
-repositories.stash.appscode.com      5s
-restics.stash.appscode.com           5s
+NAME                                      CREATED AT
+backupconfigurations.stash.appscode.com   2020-08-24T08:20:54Z
+backupsessions.stash.appscode.com         2020-08-24T08:20:55Z
+functions.stash.appscode.com              2020-08-24T08:20:55Z
+recoveries.stash.appscode.com             2020-08-24T08:20:54Z
+repositories.stash.appscode.com           2020-08-24T08:20:54Z
+restics.stash.appscode.com                2020-08-24T08:20:54Z
+restoresessions.stash.appscode.com        2020-08-24T08:20:55Z
+tasks.stash.appscode.com                  2020-08-24T08:20:55Z
 ```
 
 Now, you are ready to [take your first backup](/docs/guides/latest/README.md) using Stash.
