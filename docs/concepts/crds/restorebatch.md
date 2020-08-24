@@ -16,7 +16,7 @@ section_menu_id: concepts
 
 ## What is RestoreBatch
 
-A `RestoreBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which allows you to restore multiple co-related components(workload, database, etc.) that were backed up via a `BackupBatch` under a single configuration.
+A `RestoreBatch` is a Kubernetes `CustomResourceDefinition`(CRD) which allows you to restore multiple co-related components(workload, database, etc.) together that were backed up via a `BackupBatch`.
 
 ## RestoreBatch CRD Specification
 

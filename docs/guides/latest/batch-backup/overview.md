@@ -18,7 +18,7 @@ section_menu_id: guides
 
 Sometimes, an application may consist of multiple co-related components. For example, to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for the database. Now, it is sensible to want to backup or restore both of the deployments using a single configuration as they are parts of the same application.
 
-Stash 0.9.0+ supports taking backup multiple co-related components using a single configuration known as [BackupBatch](/docs/concepts/crds/backupbatch.md). Stash 0.10.0+ supports restoring multiple co-related components under a single configuration known as [RestoreBatch](/docs/concepts/crds/restorebatch.md) This guide will give you an overview of how batch backup and restore works in Stash.
+Stash 0.9.0+ supports taking backup multiple co-related components using a single configuration known as [BackupBatch](/docs/concepts/crds/backupbatch.md). Stash 0.10.0+ supports restoring multiple co-related components together known as [RestoreBatch](/docs/concepts/crds/restorebatch.md) This guide will give you an overview of how batch backup and restore works in Stash.
 
 ## How Batch Backup Works
 
