@@ -103,7 +103,7 @@ You have to add the auto-backup annotations to the workload that you want to bac
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
-- **Schedule:** You can specify a schedule to backup for this target through this annotation. If you don't specify this annotation, schedule from the `BackupBlueprint` will be used.
+- **Schedule:** You can specify a schedule to backup this target through this annotation. If you don't specify this annotation, schedule from the `BackupBlueprint` will be used.
 
 ```yaml
  stash.appscode.com/schedule: <Cron Expression>
