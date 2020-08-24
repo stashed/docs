@@ -6,10 +6,11 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: local-repo
+    name: minio-repo
   # task:
   #   name: workload-restore # task field is not required for workload data backup but it is necessary for database backup.
   target:
+    alias: my-sts
     ref:
       apiVersion: apps/v1
       kind: StatefulSet
@@ -17,15 +18,20 @@ spec:
     volumeMounts:
     - mountPath: /source/data
       name: source-data
-  rules:
-  - targetHosts: ["host-3","host-4"] # "host-3" and "host-4" will have restored data of backed up host "host-1"
-    sourceHost: "host-1" # source host
-    paths:
-    - /source/data
-  - targetHosts: [] # empty host match all hosts
-    sourceHost: "" # no source host indicates that the host is pod itself
-    paths:
-    - /source/data
+    rules:
+    - targetHosts: ["my-sts-3","my-sts-4"] # "pod-3" and "pod-4" will have restored data of backed up host "pod-1"
+      sourceHost: "my-sts-1" # source host
+      paths:
+      - /source/data
+      include:
+      - /source/data/*.json
+    - targetHosts: [] # empty host match all hosts
+      sourceHost: "" # no source host indicates that the host is pod itself
+      paths:
+      - /source/data
+      exclude:
+      - /source/data/tmp.json
+      - /source/data/*.txt
   hooks:
     preRestore:
       exec:
@@ -33,14 +39,14 @@ spec:
           - /bin/sh
           - -c
           - echo "Sample PreRestore hook demo"
-      containerName: my-app-container
+      containerName: stash-init
     postRestore:
       exec:
         command:
           - /bin/sh
           - -c
           - echo "Sample PostRestore hook demo"
-      containerName: my-app-container
+      containerName: stash-init
   runtimeSettings:
     container:
       resources:
@@ -59,7 +65,7 @@ spec:
     pod:
       imagePullSecrets:
       - name: my-private-registry-secret
-      serviceAccountName: my-backup-svc
+      serviceAccountName: my-backup-sa
   tempDir:
     disableCache: false
     medium: Memory
@@ -67,7 +73,28 @@ spec:
 status:
   totalHosts: 5
   phase: Succeeded
-  sessionDuration: 4.148288404s
+  sessionDuration: 2m40.595857548s
+  conditions:
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Repository demo/minio-repo exist.
+    reason: RepositoryAvailable
+    status: "True"
+    type: RepositoryFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Backend Secret demo/minio-secret exist.
+    reason: BackendSecretAvailable
+    status: "True"
+    type: BackendSecretFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Restore target apps/v1 statefulset/recovered-statefulset found.
+    reason: TargetAvailable
+    status: "True"
+    type: RestoreTargetFound
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
+    message: Successfully injected stash init-container.
+    reason: InitContainerInjectionSucceeded
+    status: "True"
+    type: StashInitContainerInjected
   stats:
   - duration: 884.431745ms
     hostname: host-1

@@ -148,7 +148,7 @@ Let's create a secret called `gcs-secret` with access credentials to our desired
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
@@ -487,9 +487,6 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  rules:
-  - paths:
-    - /source/data/
   target: # target indicates where the recovered data will be stored
     ref:
       apiVersion: apps/v1
@@ -498,6 +495,9 @@ spec:
     volumeMounts:
     - name:  source-data
       mountPath:  /source/data
+    rules:
+    - paths:
+      - /source/data/
 ```
 
 Here,

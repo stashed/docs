@@ -11,6 +11,8 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
+{{< notice type="warning" message="Batch backup is an enterprise feature. You must install Stash Enterprise operator to use batch backup." >}}
+
 # Hooks in Batch Backup
 
 Stash 0.9.0+ supports taking backup of multiple co-related stateful workloads using a single configuration named `BackupBatch`. Combining with backup hooks, this can be very powerful. For example, you can prepare your application stack before backup to ensure backup integrity or you can send a notification to a webhook (i.e. in a Slack channel via slack incoming webhook) before or after the backup of all the resources of your application stack.
@@ -218,7 +220,7 @@ Let's create a secret called `gcs-secret` with access credentials to our desired
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
@@ -321,6 +323,7 @@ spec:
   schedule: "*/3 * * * *"
   members:
   - target:
+      alias: db
       ref:
         apiVersion: apps/v1
         kind: AppBinding
@@ -328,6 +331,7 @@ spec:
     task:
       name: mysql-backup-8.0.14
   - target:
+      alias: app
       ref:
         apiVersion: apps/v1
         kind: Deployment

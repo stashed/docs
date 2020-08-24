@@ -1,39 +1,88 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupSession
 metadata:
-  name: deployment-stash-demo-1564743309
+  creationTimestamp: "2020-07-25T17:41:28Z"
+  labels:
+    app: stash
+    stash.appscode.com/invoker-name: wordpress-backup
+    stash.appscode.com/invoker-type: BackupBatch
+  name: wordpress-backup-1578458376
   namespace: demo
 spec:
   invoker:
     apiGroup: stash.appscode.com
-    kind: BackupConfiguration
-    name: deployment-stash-demo
+    kind: BackupBatch
+    name: wordpress-backup
 status:
-  totalHosts: 1
+  conditions:
+  - lastTransitionTime: "2020-07-25T17:41:31Z"
+    message: Repository exist in the backend.
+    reason: BackendRepositoryFound
+    status: "True"
+    type: BackendRepositoryInitialized
+  - lastTransitionTime: "2020-07-25T17:41:48Z"
+    message: Successfully applied retention policy.
+    reason: SuccessfullyAppliedRetentionPolicy
+    status: "True"
+    type: RetentionPolicyApplied
+  - lastTransitionTime: "2020-07-25T17:41:50Z"
+    message: Repository integrity verification succeeded.
+    reason: SuccessfullyVerifiedRepositoryIntegrity
+    status: "True"
+    type: RepositoryIntegrityVerified
+  - lastTransitionTime: "2020-07-25T17:41:50Z"
+    message: Successfully pushed repository metrics.
+    reason: SuccessfullyPushedRepositoryMetrics
+    status: "True"
+    type: RepositoryMetricsPushed
   phase: Succeeded
-  sessionDuration: 43.044662123s
-  stats:
-  - hostname: host-0
-    phase: Succeeded
-    duration: 43.044662123s
-    snapshots:
-    - name: 79b223e2
-      path: /source/data-1
-      processingTime: "0:04"
-      totalSize: 41 B
-      uploaded: 693 B
-      fileStats:
-        modifiedFiles: 0
-        newFiles: 1
-        totalFiles: 1
-        unmodifiedFiles: 0
-    - name: ab6fef46
-      path: /source/data-2
-      processingTime: "0:03"
-      totalSize: 41 B
-      uploaded: 693 B
-      fileStats:
-        modifiedFiles: 0
-        newFiles: 1
-        totalFiles: 1
-        unmodifiedFiles: 0
+  sessionDuration: 22.575920065s
+  targets:
+  - phase: Succeeded
+    preBackupActions:
+    - InitializeBackendRepository
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: wordpress
+    stats:
+    - duration: 831.018039ms
+      hostname: app
+      phase: Succeeded
+      snapshots:
+      - fileStats:
+          modifiedFiles: 0
+          newFiles: 1
+          totalFiles: 1
+          unmodifiedFiles: 0
+        name: b54ee4a0
+        path: /var/www/html
+        processingTime: "0:00"
+        totalSize: 0 B
+        uploaded: 711 B
+    totalHosts: 1
+  - phase: Succeeded
+    postBackupActions:
+    - ApplyRetentionPolicy
+    - VerifyRepositoryIntegrity
+    - SendRepositoryMetrics
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: wordpress-mysql
+    stats:
+    - duration: 1.147010638s
+      hostname: db
+      phase: Succeeded
+      snapshots:
+      - fileStats:
+          modifiedFiles: 0
+          newFiles: 1
+          totalFiles: 1
+          unmodifiedFiles: 0
+        name: b30beb44
+        path: dumpfile.sql
+        processingTime: "0:00"
+        totalSize: 0 B
+        uploaded: 3.408 MiB
+    totalHosts: 1

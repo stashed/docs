@@ -27,8 +27,10 @@ This concept section is divided into the following modules:
 - Declarative API
   - [Repository](/docs/concepts/crds/repository.md) introduces the concept of `Repository` crd that holds backend information in a Kubernetes native way.
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md) introduces the concept of `BackupConfiguration` crd that is used to configure backup for a target resource in a Kubernetes native way.
-  - [BackupSession](/docs/concepts/crds/backupsession.md) introduces the concept of `BackupSession` crd that represents a backup run of a target resource for the respective `BackupConfiguration` object.
+  - [BackupBatch](/docs/concepts/crds/backupbatch.md) introduces the concept of `BackupBatch` crd that is used to setup backup of multiple co-related targets under single configuration.
+  - [BackupSession](/docs/concepts/crds/backupsession.md) introduces the concept of `BackupSession` crd that represents a backup run of a target resource for the respective `BackupConfiguration` or `BackupBatch` object.
   - [RestoreSession](/docs/concepts/crds/restoresession.md) introduces the concept of `RestoreSession` crd that represents a restore run of a target resource.
+  - [RestoreBatch](/docs/concepts/crds/restorebatch.md) introduces the concept of `RestoreBatch` crd that allows restore of multiple targets that were backed up using `BackupBatch` under single configuration.
   - [Function](/docs/concepts/crds/function.md) introduces the concept of `Function` crd that represents a step of a backup or restore process.
   - [Task](/docs/concepts/crds/task.md) introduces the concept of `Task` crd which specifies an ordered collection of multiple `Function`s and their parameters that make up a complete backup or restore process.
   - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md) introduces the concept of `BackupBlueprint` crd that specifies a blueprint for `Repository` and `BackupConfiguration` object which provides an option to share backup configuration across similar targets.

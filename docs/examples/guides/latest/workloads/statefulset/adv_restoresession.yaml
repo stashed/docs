@@ -15,12 +15,12 @@ spec:
     volumeMounts:
     - mountPath: /source/data
       name: source-data
-  rules:
-  - targetHosts: ["host-3","host-4"]
-    sourceHost: "host-1"
-    paths:
-    - /source/data
-  - targetHosts: []
-    sourceHost: ""
-    paths:
-    - /source/data
+    rules:
+    - targetHosts: ["host-3","host-4"]
+      sourceHost: "host-1"
+      paths:
+      - /source/data
+    - targetHosts: []
+      sourceHost: ""
+      paths:
+      - /source/data

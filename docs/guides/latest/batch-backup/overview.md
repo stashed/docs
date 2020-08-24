@@ -1,10 +1,10 @@
 ---
-title: Batch Backup Overview | Stash
-description: An overview on how batch backup in Stash.
+title: Batch Backup & Restore Overview | Stash
+description: An overview on how batch backup & restore works in Stash.
 menu:
   product_stash_{{ .version }}:
     identifier: batch-backup-overview
-    name: How batch backup works?
+    name: How Batch Backup & Restore works?
     parent: batch-backup
     weight: 10
 product_name: stash
@@ -12,19 +12,21 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-# Batch Backup Overview
+{{< notice type="warning" message="Batch backup is an enterprise feature. You must install Stash Enterprise operator to use batch backup." >}}
 
-Sometimes, a single component may not meet the requirement for your application. For example, in order to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for database to store it's contents. Now, you may want to backup both of the deployment and database under a single configuration as they are parts of a single application.
+# Batch Backup and Restore Overview
 
-Stash 0.9.0+ supports taking backup multiple co-related components using a single configuration known as [BackupBatch](/docs/concepts/crds/backupbatch.md). This guide will give you an overview how batch backup works in Stash.
+Sometimes, an application may consist of multiple co-related components. For example, to deploy a WordPress, you will need a Deployment for the WordPress and another Deployment for the database. Now, it is sensible to want to backup or restore both of the deployments using a single configuration as they are parts of the same application.
 
-## How Backup Process Works
+Stash 0.9.0+ supports taking backup multiple co-related components using a single configuration known as [BackupBatch](/docs/concepts/crds/backupbatch.md). Stash 0.10.0+ supports restoring multiple co-related components together known as [RestoreBatch](/docs/concepts/crds/restorebatch.md) This guide will give you an overview of how batch backup and restore works in Stash.
+
+## How Batch Backup Works
 
 The following diagram shows how Stash takes backup of multiple co-related components in a single application. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Batch Backup Flow" src="/docs/images/guides/latest/batch-backup/batchbackup_overview.svg">
-<figcaption align="center">Fig: batch backup flow in Stash</figcaption>
+  <img alt="Stash Batch Backup Flow" src="/docs/images/guides/latest/batch-backup/batchbackup_overview.svg">
+<figcaption align="center">Fig: Batch backup flow in Stash</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -45,9 +47,25 @@ The backup process consists of the following steps:
 
 8. The BackupSession controller (inside sidecar for sidecar model or inside the operator itself for job model) watches for `BackupSession` crd.
 
-9. When it finds a `BackupSession` it starts the backup process immediately(for job model a job is created for taking backup) for the individual targets.
+9. When it finds a `BackupSession` it starts the backup process immediately(for job model a job is created for taking backup) for the individual targets. Stash operator enforces the backup order if the `executionOrder` is set to `Sequential`.
 
 10. The individual targets complete their backup process independently and update their respective fields in `BackupSession` status.
+
+## How Batch Restore Works
+
+The following diagram shows the batch restore process. Please, open image in new tab to view the enlarged image.
+
+<figure align="center">
+  <img alt="Stash Batch Backup Flow" src="/docs/images/guides/latest/batch-backup/batch-restore.svg">
+<figcaption align="center">Fig: Batch restore flow in Stash</figcaption>
+</figure>
+
+The batch restore process consists of the following steps:
+
+1. At first, the user creates a `RestoreBatch` CR specifying the targets and the respective Repository where the backed up data has been stored.
+2. The Stash operator watches for the `RestoreBatch` CR.
+3. When the Stash operator finds a `RestoreBatch` CR, it injects an init-container into the target that follows the sidecar model and creates a restore job for the targets that follow the job model.
+4. The restore init-container/job restore their respective data. Stash operator enforces the restore order if the `executionOrder` is set to `Sequential`.
 
 ## Next Steps
 

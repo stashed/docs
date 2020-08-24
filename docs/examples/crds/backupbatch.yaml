@@ -5,26 +5,32 @@ metadata:
   namespace: demo
 spec:
   repository:
-    name: gcs-repo
+    name: minio-repo
   schedule: "*/3 * * * *"
   members:
   - target:
+      alias: db
       ref:
         apiVersion: apps/v1
         kind: AppBinding
-        name: sample-mysql
+        name: wordpress-mysql
     task:
       name: mysql-backup-8.0.14
   - target:
+      alias: app
       ref:
         apiVersion: apps/v1
         kind: Deployment
         name: wordpress
       volumeMounts:
-        - name: wordpress-persistent-storage
-          mountPath: /var/www/html
+      - name: wordpress-persistent-storage
+        mountPath: /var/www/html
       paths:
-        - /var/www/html
+      - /var/www/html
+      exclude:
+      - /var/www/html/my-file.html
+      - /var/www/html/*.json
+  executionOrder: Parallel
   hooks:
     preBackup:
       exec:

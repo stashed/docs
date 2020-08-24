@@ -1,0 +1,93 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreBatch
+metadata:
+  name: batch-restore
+  namespace: demo
+spec:
+  driver: Restic
+  repository:
+    name: minio-repo
+  executionOrder: Parallel
+  members:
+  - target:
+      alias: app
+      ref:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: wordpress
+      rules:
+      - paths:
+        - /var/www/html
+      volumeMounts:
+      - mountPath: /var/www/html
+        name: wordpress-persistent-storage
+  - target:
+      alias: db
+      ref:
+        apiVersion: appcatalog.appscode.com/v1alpha1
+        kind: AppBinding
+        name: wordpress-mysql
+      rules:
+      - snapshots:
+        - latest
+    task:
+      name: mysql-restore-8.0.14
+status:
+  phase: Succeeded
+  sessionDuration: 15.145032437s
+  conditions:
+  - lastTransitionTime: "2020-07-25T17:41:52Z"
+    message: Repository demo/minio-repo exist.
+    reason: RepositoryAvailable
+    status: "True"
+    type: RepositoryFound
+  - lastTransitionTime: "2020-07-25T17:41:52Z"
+    message: Backend Secret demo/minio-secret exist.
+    reason: BackendSecretAvailable
+    status: "True"
+    type: BackendSecretFound
+  members:
+  - conditions:
+    - lastTransitionTime: "2020-07-25T17:41:52Z"
+      message: Restore target apps/v1 deployment/wordpress
+        found.
+      reason: TargetAvailable
+      status: "True"
+      type: RestoreTargetFound
+    - lastTransitionTime: "2020-07-25T17:41:52Z"
+      message: Successfully injected stash init-container.
+      reason: InitContainerInjectionSucceeded
+      status: "True"
+      type: StashInitContainerInjected
+    phase: Succeeded
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: wordpress
+    stats:
+    - duration: 822.861322ms
+      hostname: app
+      phase: Succeeded
+    totalHosts: 1
+  - conditions:
+    - lastTransitionTime: "2020-07-25T17:41:52Z"
+      message: Restore target appcatalog.appscode.com/v1alpha1 appbinding/wordpress-mysql
+        found.
+      reason: TargetAvailable
+      status: "True"
+      type: RestoreTargetFound
+    - lastTransitionTime: "2020-07-25T17:41:52Z"
+      message: Successfully created restore job.
+      reason: RestoreJobCreationSucceeded
+      status: "True"
+      type: RestoreJobCreated
+    phase: Succeeded
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: wordpress-mysql
+    stats:
+    - duration: 4.597812876s
+      hostname: db
+      phase: Succeeded
+    totalHosts: 1

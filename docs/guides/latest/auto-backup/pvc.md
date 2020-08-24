@@ -12,6 +12,8 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
+{{< notice type="warning" message="Auto-Backup is an enterprise feature. You must install Stash Enterprise operator to use auto-backup." >}}
+
 # Auto Backup for PVC
 
 This tutorial will show you how to configure automatic backup for PersistentVolumeClaims. Here, we are going to backup a PVC provisioned from an NFS server using auto-backup.

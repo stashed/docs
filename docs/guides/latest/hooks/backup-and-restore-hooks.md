@@ -242,7 +242,7 @@ Let's create a secret called `gcs-secret` with access credentials to our desired
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
@@ -569,8 +569,8 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-mysql
-  rules:
-    - snapshots: [latest]
+    rules:
+      - snapshots: [latest]
 ```
 
 Let's create the above `RestoreSession`,
@@ -667,8 +667,8 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-mysql
-  rules:
-    - snapshots: [latest]
+    rules:
+      - snapshots: [latest]
 ```
 
 Let's create the above `RestoreSession`,

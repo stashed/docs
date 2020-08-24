@@ -6,6 +6,6 @@ metadata:
 spec:
   backend:
     gcs:
-      bucket: appscode-testing
-      prefix: /demo/data
+      bucket: stashed-ci
+      prefix: /wordpress/backup
     storageSecretName: gcs-secret

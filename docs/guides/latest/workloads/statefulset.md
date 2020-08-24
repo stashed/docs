@@ -146,7 +146,7 @@ Let's create a secret called `gcs-secret` with access credentials to our desired
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
@@ -504,9 +504,6 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  rules:
-  - paths:
-    - /source/data
   target:
     ref:
       apiVersion: apps/v1
@@ -515,6 +512,9 @@ spec:
     volumeMounts:
     - name:  source-data
       mountPath:  /source/data
+    rules:
+    - paths:
+      - /source/data
 ```
 
 Here,
@@ -655,7 +655,7 @@ stash-demo-2
 
 ### Customize Restore Process
 
-Generally, Stash restores data in individual replicas from a backup of the respective replica of the original StatefulSet. That means, backed up data of `pod-0` of original StatefulSet will be restored in `pod-0` of new StatefulSet and so on. However, you can customize this behavior through the `spec.rules` section of RestoreSession object. This is particularly helpful when your restored StatefulSet has a different number of replicas than the original StatefulSet. You can control which data will be restored in the additional replicas.
+Generally, Stash restores data in individual replicas from a backup of the respective replica of the original StatefulSet. That means, backed up data of `pod-0` of original StatefulSet will be restored in `pod-0` of new StatefulSet and so on. However, you can customize this behavior through the `spec.target.rules` section of RestoreSession object. This is particularly helpful when your restored StatefulSet has a different number of replicas than the original StatefulSet. You can control which data will be restored in the additional replicas.
 
 **Stop Taking Backup of the Old StatefulSet:**
 
@@ -770,20 +770,20 @@ spec:
     volumeMounts:
     - mountPath: /source/data
       name: source-data
-  rules:
-  - targetHosts: ["host-3","host-4"]
-    sourceHost: "host-1"
-    paths:
-    - /source/data
-  - targetHosts: []
-    sourceHost: ""
-    paths:
-    - /source/data
+    rules:
+    - targetHosts: ["host-3","host-4"]
+      sourceHost: "host-1"
+      paths:
+      - /source/data
+    - targetHosts: []
+      sourceHost: ""
+      paths:
+      - /source/data
 ```
 
 Here,
 
-- `spec.rules`: `spec.rules` specify how Stash should restore data for each host.
+- `spec.target.rules`: `spec.target.rules` specify how Stash should restore data for each host.
   - `targetHosts` the first rule specify that backed up data of `host-1`(old pods of a StatefulSet-1) will be restored into targetHosts `host-3`(new pod-3 of the StatefulSet) and `host-4`(new pod-4 of the StatefulSet) and the second rule specify that data from a similar backup host will be restored on the respective restore host. That means, backed up data of `host-0` will be restored into `host-0`, backed up data of `host-1` will be restored into `host-1` and so on.
   - `sourceHost` specifies the name of the host whose backed up data will be restored.
 
