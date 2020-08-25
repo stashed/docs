@@ -27,11 +27,11 @@ aliases:
 The setup section contains instructions for installing the Stash and its various components in Kubernetes. This section has been divided into the following sub-sections:
 
 - **Install Stash:** Installation instructions for Stash and its various components.
-  - [Community Edition](/docs/setup/install/community.md): Installation instruction for Stash Community Edition.
-  - [Enterprise Edition](/docs/setup/install/enterprise.md): Installation instruction for Stash Enterprise Edition.
-  - [Stash kubectl Plugin](/docs/setup/install/kubectl_plugin.md): Installation instruction for Stash `kubectl` plugin.
+  - [Community Edition](/docs/setup/install/community.md): Installation instructions for Stash Community Edition.
+  - [Enterprise Edition](/docs/setup/install/enterprise.md): Installation instructions for Stash Enterprise Edition.
+  - [Stash kubectl Plugin](/docs/setup/install/kubectl_plugin.md): Installation instructions for Stash `kubectl` plugin.
   - [Troubleshooting](/docs/setup/install/troubleshoting.md): Troubleshooting guide for various installation problems.
-- **Uninstall Stash:** Uninstallation instructions for Stash and its various components..
-  - [Community Edition](/docs/setup/uninstall/community.md): Uninstallation instruction for Stash Community Edition.
-  - [Enterprise Edition](/docs/setup/uninstall/enterprise.md): Uninstallation instruction for Stash Enterprise Edition.
+- **Uninstall Stash:** Uninstallation instructions for Stash and its various components.
+  - [Community Edition](/docs/setup/uninstall/community.md): Uninstallation instructions for Stash Community Edition.
+  - [Enterprise Edition](/docs/setup/uninstall/enterprise.md): Uninstallation instructions for Stash Enterprise Edition.
 - [Upgrading Stash](/docs/setup/upgrade.md): Instruction for updating Stash license and upgrading between various Stash versions.

@@ -1,6 +1,6 @@
 ---
 title: Uninstall Stash Community Edition
-description: Uninstallation guide for Stash community edition
+description: Uninstallation guide for Stash Community edition
 menu:
   docs_{{ .version }}:
     identifier: uninstall-stash-community
@@ -14,7 +14,7 @@ section_menu_id: setup
 
 # Uninstall Stash Community Edition
 
-To uninstall Stash community edition, run the following command:
+To uninstall Stash Community edition, run the following command:
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">

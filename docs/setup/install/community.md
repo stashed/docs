@@ -1,6 +1,6 @@
 ---
 title: Install Stash Community Edition
-description: Installation guide for Stash community edition
+description: Installation guide for Stash Community edition
 menu:
   docs_{{ .version }}:
     identifier: install-stash-community
@@ -14,15 +14,15 @@ section_menu_id: setup
 
 # Install Stash Community Edition
 
-Stash community edition is open-sourced under [PolyForm-Noncommercial-1.0.0](https://github.com/stashed/stash/blob/master/LICENSE.md) and free to use for any non-commercial purpose. It comes with all the basic backup functionalities. However, it lacks some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. compared to the enterprise version. A full features comparison between Stash community edition and enterprise edition can be found [here](/docs/concepts/what-is-stash/overview.md).
+Stash Community edition is available under [PolyForm-Noncommercial-1.0.0](https://github.com/stashed/stash/blob/master/LICENSE.md) and free to use for any non-commercial purpose. It comes with all the basic backup functionalities. However, it lacks some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. compared to the Enterprise edition. A full features comparison between the Stash Community edition and Enterprise edition can be found [here](/docs/concepts/what-is-stash/overview.md).
 
 If you are eligible under [PolyForm-Noncommercial-1.0.0](https://github.com/stashed/stash/blob/master/LICENSE.md) license or want to try Stash, you can grab **1 year** free license from [here](https://license-issuer.appscode.com/).
 
 ## Get a License
 
-In this section, we are going to show you how you can get a **1 year** free license for Stash community edition. You can get a license for your Kubernetes cluster by going through the following steps:
+In this section, we are going to show you how you can get a **1 year** free license for Stash Community edition. You can get a license for your Kubernetes cluster by going through the following steps:
 
-- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the small form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
+- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
 - Provide your name and email address. You can provide your personal or work email address.
 - Then, select `Stash Community Edition` in the product field.
 - Now, provide your cluster ID. You can get your cluster ID easily by running the following command:
@@ -33,18 +33,18 @@ kubectl get ns kube-system -o=jsonpath='{.metadata.uid}'
 
 - Then, you have to agree with the terms and conditions. We recommend reading it before checking the box.
 - Now, you can submit the form. After you submit the form, the AppsCode License server will send an email to the provided email address with a link to your license file.
-- Navigate to the provided link and save the license into a file. You can save the license file in any format you prefer. Here, we are going to show examples assuming that we have saved the license as `license.txt` file.
+- Navigate to the provided link and save the license into a file. Here, we save the license to a `license.txt` file.
 
-Here, is a screenshot of the form that you are going to fill-up.
+Here is a screenshot of the license form.
 
 <figure align="center">
   <img alt="Stash Backend Overview" src="/docs/images/setup/community_license_form.png">
   <figcaption align="center">Fig: Stash License Form</figcaption>
 </figure>
 
-You can create a license for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
+You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
 
->Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
+> Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
 
 ## Install
 

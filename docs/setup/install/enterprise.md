@@ -1,6 +1,6 @@
 ---
 title: Install Stash Enterprise Edition
-description: Installation guide for Stash enterprise edition
+description: Installation guide for Stash Enterprise edition
 menu:
   docs_{{ .version }}::
     identifier: install-stash-enterprise
@@ -14,15 +14,15 @@ section_menu_id: setup
 
 # Install Stash Enterprise Edition
 
-Stash enterprise edition is the closed-sourced version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash community edition as well as some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. A full features comparison between Stash enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview.md).
+Stash Enterprise edition is the closed-sourced version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview.md).
 
 If you are willing to try Stash Enterprise Edition, you can grab a **7 days trial** license from [here](https://license-issuer.appscode.com/).
 
 ## Get a Trial License
 
-In this section, we are going to show you how you can get a **7 days trial** license for Stash enterprise edition. You can get a license for your Kubernetes cluster by going through the following steps:
+In this section, we are going to show you how you can get a **7 days trial** license for Stash Enterprise edition. You can get a license for your Kubernetes cluster by going through the following steps:
 
-- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the small form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
+- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
 - Provide your name and email address. **You must provide your work email address**.
 - Then, select `Stash Enterprise Edition` in the product field.
 - Now, provide your cluster ID. You can get your cluster ID easily by running the following command:
@@ -33,16 +33,16 @@ kubectl get ns kube-system -o=jsonpath='{.metadata.uid}'
 
 - Then, you have to agree with the terms and conditions. We recommend reading it before checking the box.
 - Now, you can submit the form. After you submit the form, the AppsCode License server will send an email to the provided email address with a link to your license file.
-- Navigate to the provided link and save the license into a file. You can save the license file in any format you prefer. Here, we are going to show examples assuming that we have saved the license as `license.txt` file.
+- Navigate to the provided link and save the license into a file. Here, we save the license to a `license.txt` file.
 
-Here, is a screenshot of the form that you are going to fill-up.
+Here is a screenshot of the license form.
 
 <figure align="center">
   <img alt="Stash Backend Overview" src="/docs/images/setup/enterprise_license_form.png">
   <figcaption align="center">Fig: Stash License Form</figcaption>
 </figure>
 
-You can create a license for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
+You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
 
 >Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
 

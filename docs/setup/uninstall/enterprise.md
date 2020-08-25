@@ -1,6 +1,6 @@
 ---
 title: Uninstall Stash Enterprise Edition
-description: Uninstallation guide for Stash enterprise edition
+description: Uninstallation guide for Stash Enterprise edition
 menu:
   docs_{{ .version }}:
     identifier: uninstall-stash-enterprise
@@ -14,7 +14,7 @@ section_menu_id: setup
 
 # Uninstall Stash Enterprise Edition
 
-To uninstall Stash enterprise edition, run the following command:
+To uninstall Stash Enterprise edition, run the following command:
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">

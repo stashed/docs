@@ -14,13 +14,18 @@ section_menu_id: setup
 
 ## Install Stash kubectl Plugin
 
-Stash provides a CLI to use as kubectl plugin quickly manipulating Stash objects. You can download the pre-build binaries from [stashed/cli](https://github.com/stashed/cli/releases) releases and put it into one of your installation directory denoted by `$PATH` variable.
+Stash provides a `kubectl` plugin to interact with Stash resources. You can download the pre-build binaries from [stashed/cli](https://github.com/stashed/cli/releases) releases and put it into one of your installation directory denoted by `$PATH` variable.
 
 Here is a simple Linux command to install the latest 64-bit Linux binary directly into your `/usr/local/bin` directory:
 
 ```bash
 # Linux amd 64-bit
 wget -O kubectl-stash https://github.com/stashed/cli/releases/download/{{< param "info.cli" >}}/kubectl-stash-linux-amd64 \
+  && chmod +x kubectl-stash \
+  && sudo mv kubectl-stash /usr/local/bin/
+
+# Mac OSX 64-bit
+wget -O kubectl-stash https://github.com/stashed/cli/releases/download/{{< param "info.cli" >}}/kubectl-stash-darwin-amd64 \
   && chmod +x kubectl-stash \
   && sudo mv kubectl-stash /usr/local/bin/
 ```

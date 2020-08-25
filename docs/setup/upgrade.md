@@ -14,16 +14,16 @@ section_menu_id: setup
 
 # Upgrading Stash
 
-This guide will show you how to upgrade Stash resources. Here, we are going to show how to update the license and how to upgrade between two Stash versions.
+This guide will show you how to upgrade Stash operator. Here, we are going to show how to update the license and how to upgrade between two Stash versions.
 
-## Upgrading License
+## Updating License
 
-Stash support updating license without requiring any re-installation or restart. Stash creates a Secret named `<helm release name>-license` with the license file. You just need to update the Secret. The changes will propagate automatically to the operator and it will use the new license from the next scheduled validation.
+Stash support updating license without requiring any re-installation or restart. Stash creates a Secret named `<helm release name>-license` with the license file. You just need to update the Secret. The changes will propagate automatically to the operator and it will use the updated license going forward.
 
 Follow the below instructions to update the license:
 
 - Get a new license and save it into a file.
-- Encode the license file content in `base64` format. Make sure that the encoded content is not wrapped. Here, is a simple Linux instruction to encode a file content into `base64` format.
+- Encode the license file content in `base64` format. Make sure that the encoded content is not wrapped. Here is a Linux instruction to encode the license file into `base64` format.
 
 ```bash
 $ cat /path/to/the/license.txt | base64 -w 0
@@ -62,7 +62,7 @@ type: Opaque
 
 ## Upgrading Between Community Edition and Enterprise Edition
 
-Stash uses two different binaries for community edition and enterprise edition. So, it is not possible to upgrade between the community edition and enterprise edition without re-installation. However, it is possible to re-install Stash without losing the existing backup resources.
+Stash uses two different binaries for Community edition and Enterprise edition. So, it is not possible to upgrade between the Community edition and Enterprise edition without re-installation. However, it is possible to re-install Stash without losing the existing backup resources.
 
 Follow the below instructions to re-install Stash:
 
@@ -77,10 +77,10 @@ If you are upgrading Stash to a patch release, please reapply the [installation 
 
 If you are upgrading from `0.9.x` which did not use license verification to new `v2020.x.x`, you have to first uninstall the old version. Then, you have to re-install the new version.
 
-If you are upgrading from `0.9.x` to `v2020.x.x` community edition, you may face the following issues:
+If you are upgrading from `0.9.x` to `v2020.x.x` Community edition, please note that following features are only available in Enterprise edition:
 
 - **Auto-Backup:** Auto-backup is now an enterprise feature. You won't be able to setup any new backup using auto-backup. However, your existing auto-backup resources should keep functioning.
 - **Batch Backup:** Batch backup and restore is also now an enterprise feature. You won't be able to create any new backup using batch-backup. However, your existing backup should continue to work and you would be able to restore the data that were backed up using BatchBackup.
-- **Local Backend:** Local backend now is an enterprise feature. If you are using any Kubernetes volume (i.e. NFS, PVC, HostPath, etc.) as backend, you won't be able to create any new backup using those backends. However, your existing backup that uses sidecar model should keep functioning. You have to use the enterprise edition to restore from the backed up data. If you don't want to purchase Stash enterprise edition and you don't have any trial period available for the enterprise edition, please contact us at support@appscode.com. We will be happy to provide you a way to restore the backed up data.
+- **Local Backend:** Local backend now is an enterprise feature. If you are using any Kubernetes volume (i.e. NFS, PVC, HostPath, etc.) as backend, you won't be able to create any new backup using those backends. However, your existing backup that uses sidecar model should keep functioning. You have to use the Enterprise edition to restore from the backed up data. If you are interested in purchasing Enterprise license, please contact us via sales@appscode.com for further discussion. You can also set up a meeting via our [calendly link](https://calendly.com/appscode/30min).
 
 If you are using any Stash addons, you might need to update the `Task` name in your `BackupConfiguration` to comply with the new naming scheme of the `Function` and `Task`.

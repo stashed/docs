@@ -26,7 +26,7 @@ In addition, if your GKE cluster is a [private cluster](https://cloud.google.com
 
 ## Configuring Network Volume Accessor
 
-For network volume such as NFS, Stash needs to deploy a helper deployment in the same namespace as the Repository that uses the NFS as backend to provide Snapshot listing facility. We call this helper deployment as network volume accessor. You can configure it's resources, user id, privileged permission etc. during installation as below,
+For network volume such as NFS, Stash needs to deploy a helper deployment in the same namespace as the Repository that uses the NFS as backend to provide Snapshot listing facility. We call this helper deployment network volume accessor. You can configure its resources, user id, privileged permission etc. during installation as below,
 
 ```bash
 $ helm install stash-enterprise appscode/stash-enterprise \
@@ -53,9 +53,9 @@ Arch = amd64
 CommitHash = 85b0f16ab1b915633e968aac0ee23f877808ef49
 GitBranch = release-0.5
 GitTag = {{< param "info.version" >}}
-CommitTimestamp = 2017-10-10T05:24:23
+CommitTimestamp = 2020-08-10T05:24:23
 
 $ kubectl exec -it $POD_NAME -c operator -n $POD_NAMESPACE restic version
-restic 0.9.1
+restic 0.9.6
 compiled with go1.9 on linux/amd64
 ```

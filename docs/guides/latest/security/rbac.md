@@ -51,7 +51,7 @@ Here,
 
 ## User facing ClusterRoles
 
-Stash introduces resources, such as, `BackupConfiguration`,`BackupBatch`, `BackupSession`,  `Repository`, `RestoreSession`, `RestoreBatch`, `Function`, and `Task` etc. Stash installer will create 2 user facing cluster roles:
+Stash introduces custom resources, such as, `BackupConfiguration`,`BackupBatch`, `BackupSession`,  `Repository`, `RestoreSession`, `RestoreBatch`, `Function`, and `Task` etc. Stash installer will create 2 user facing cluster roles:
 
 | ClusterRole         | Aggregates To | Desription                                                                                            |
 | ------------------- | ------------- | ----------------------------------------------------------------------------------------------------- |
