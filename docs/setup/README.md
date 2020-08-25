@@ -18,9 +18,9 @@ aliases:
 # Setup
 
 <div style="text-align: center;">
-  <a class="button is-link is-medium is-active has-text-weight-normal" href="/docs/setup/install/community.md" style="background:#00A651; width: 18rem;">Install Community Edition</a>
-  <a class="button is-info is-medium is-active has-text-weight-normal" href="/docs/setup/install/enterprise.md"  style="background:#FC6011; width: 18rem;">Try Enterprise Edition</a>
-  <a style="margin-top: 10px; display: block;" href="/docs/concepts/what-is-stash/overview.md">Compare Editions</a>
+  <a class="button is-link is-medium is-active has-text-weight-normal" href="/docs/latest/setup/install/community/" style="background:#00A651; width: 18rem;">Install Community Edition</a>
+  <a class="button is-info is-medium is-active has-text-weight-normal" href="/docs/latest/setup/install/enterprise/"  style="background:#FC6011; width: 18rem;">Try Enterprise Edition</a>
+  <a style="margin-top: 10px; display: block;" href="/docs/latest/concepts/what-is-stash/overview/">Compare Editions</a>
 </div>
 <br>
 

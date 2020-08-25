@@ -184,11 +184,11 @@ A `RestoreBatch` object has the following fields in the `status` section.
   - **phase :** `phase` shows the restore phase of the member.
   - **conditions:** `conditions` shows the conditions of different steps of restoring this member. Stash set the following conditions for each restore members.
 
-    | Condition Type               | Usage                                                                                                                                    |
-    | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-    | `RestoreTargetFound`         | Indicates whether the restore target was found or not.                                                                                   |
-    | `StashInitContainerInjected` | Indicates whether stash init-container was injected into the targeted workload. This condition is applicable only for the sidecar model. |
-    | `RestoreJobCreated`          | Indicates whether the restore job was created or not. This condition is only applicable in the job model.                                |
+| Condition Type               | Usage                                                                                                                                    |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `RestoreTargetFound`         | Indicates whether the restore target was found or not.                                                                                   |
+| `StashInitContainerInjected` | Indicates whether stash init-container was injected into the targeted workload. This condition is applicable only for the sidecar model. |
+| `RestoreJobCreated`          | Indicates whether the restore job was created or not. This condition is only applicable in the job model.                                |
 
   - **totalHosts :** `totalHosts` field specifies the total number of hosts that will be restored for this member.
   - **stats :** `stats` section is an array of restore statistics of individual hosts. Individual host stats entry consists of the following fields:
