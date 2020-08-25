@@ -34,7 +34,7 @@ At first, you need to have a Kubernetes cluster, and the `kubectl` command-line 
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -47,7 +47,7 @@ In order to take backup, we need some sample data. Stash has some sample data in
 
 Let's create a ConfigMap from these sample data,
 
-```console
+```bash
 $ kubectl create configmap -n demo stash-sample-data \
 	--from-literal=LICENSE="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/LICENSE)" \
 	--from-literal=README.md="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/README.md)"
@@ -98,14 +98,14 @@ spec:
 
 Let's create the deployment we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for deployment's pod to go in `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-7ccd56bf5d-n24vl   1/1     Running   0          16s
@@ -113,7 +113,7 @@ stash-demo-7ccd56bf5d-n24vl   1/1     Running   0          16s
 
 You can check that the `/source/data/` directory of this pod is populated with data from the `stash-sample-data` ConfigMap using this command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-7ccd56bf5d-n24vl -- ls -R /source/data
 /source/data:
 LICENSE
@@ -135,7 +135,7 @@ At first, we need to create a secret for `Restic` crd. To configure this backend
 
 Create the secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-minio-access-key-id-here>' > AWS_ACCESS_KEY_ID
 $ echo -n '<your-minio-secret-access-key-here>' > AWS_SECRET_ACCESS_KEY
@@ -150,7 +150,7 @@ secret/minio-secret created
 
 Verify that the secret has been created successfully,
 
-```console
+```bash
 $ kubectl get secret -n demo minio-secret -o yaml
 ```
 
@@ -176,7 +176,7 @@ type: Opaque
 
 Now, we are going to create `Restic` crd to take backup `/source/data` directory of `stash-demo` deployment. This will create a repository in the Minio bucket specified by `s3.bucket` field and start taking periodic backup of `/source/data` directory.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/restic.yaml
 restic.stash.appscode.com/minio-restic created
 ```
@@ -214,7 +214,7 @@ spec:
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` deployment to take periodic backup. Let's check that sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-57656f6d74-hmc9z   2/2     Running   0          46s
@@ -226,7 +226,7 @@ Look at the pod. It now has 2 containers. If you view the resource definition of
 
 Stash will create a `Repository` crd with name `deployment.stash-demo` for the respective repository in Minio backend at first backup schedule. To verify, run the following command,
 
-```console
+```bash
 $ kubectl get repository deployment.stash-demo -n demo
 NAME                    BACKUPCOUNT   LASTSUCCESSFULBACKUP   AGE
 deployment.stash-demo   1             14s                    1m
@@ -236,7 +236,7 @@ Here, `BACKUPCOUNT` field indicates number of backup snapshot has taken in this 
 
 `Restic` will take backup of the volume periodically with a 1-minute interval. You can verify that backup snapshots has been created successfully by,
 
-```console
+```bash
 $ kubectl get snapshots -n demo -l repository=deployment.stash-demo
 NAME                             AGE
 deployment.stash-demo-c588c67c   4m3s
@@ -268,7 +268,7 @@ Now, consider that we have lost our workload as well as data volume. We want to 
 
 At first, let's delete `Restic` crd, `stash-demo` deployment and `stash-sample-data` ConfigMap.
 
-```console
+```bash
 $ kubectl delete deployment -n demo stash-demo
 deployment.extensions "stash-demo" deleted
 
@@ -287,7 +287,7 @@ In order to perform recovery, we need `Repository` crd `deployment.stah-demo` an
 
 We are going to recover backed up data into a PVC. At first, we need to know available [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) in our cluster.
 
-```console
+```bash
 $ kubectl get storageclass
 NAME                 PROVISIONER                AGE
 standard (default)   k8s.io/minikube-hostpath   8h
@@ -295,7 +295,7 @@ standard (default)   k8s.io/minikube-hostpath   8h
 
 Now, let's create a `PersistentVolumeClaim` where our recovered data will be stored.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
@@ -321,7 +321,7 @@ spec:
 
 Check that if cluster has provisioned the requested claim,
 
-```console
+```bash
 $ kubectl get pvc -n demo -l app=stash-demo
 NAME              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 stash-recovered   Bound    pvc-3d3b6a58-f886-11e8-9a81-0800272171a4   50Mi       RWO            standard       13s
@@ -333,7 +333,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-3d3b
 
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/recovery.yaml
 recovery.stash.appscode.com/minio-recovery created
 ```
@@ -360,7 +360,7 @@ spec:
 
 Wait until `Recovery` job completes its task. To verify that recovery has completed successfully run,
 
-```console
+```bash
 $ kubectl get recovery -n demo minio-recovery
 NAME            REPOSITORYNAMESPACE   REPOSITORYNAME          SNAPSHOT   PHASE       AGE
 minio-recovery   demo                  deployment.stash-demo              Succeeded   26s
@@ -370,7 +370,7 @@ Here, `PHASE` `Succeeded` indicates that our recovery has been completed success
 
 If you are using Kubernetes version older than v1.11.0 then run following command and check `status.phase` field to see whether the recovery succeeded or failed.
 
-```console
+```bash
 $ kubectl get recovery -n demo minio-recovery -o yaml
 ```
 
@@ -418,7 +418,7 @@ spec:
 
 Let's create the deployment,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/minio/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
@@ -429,7 +429,7 @@ We have re-deployed `stash-demo` deployment with recovered volume. Now, it is ti
 
 Get the pod of new deployment,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-69694789df-wq9vc   1/1     Running   0          14s
@@ -437,7 +437,7 @@ stash-demo-69694789df-wq9vc   1/1     Running   0          14s
 
 Run following command to view data of `/source/data` directory of this pod,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-69694789df-wq9vc -- ls -R /source/data
 /source/data:
 LICENSE
@@ -450,7 +450,7 @@ So, we can see that the data we had backed up from original deployment are now p
 
 To cleanup the resources created by this tutorial, run following commands:
 
-```console
+```bash
 $ kubectl delete recovery -n demo minio-recovery
 $ kubectl delete secret -n demo minio-secret
 $ kubectl delete deployment -n demo stash-demo

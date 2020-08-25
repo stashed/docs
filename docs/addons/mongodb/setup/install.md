@@ -36,7 +36,7 @@ You can install the addon either as a helm chart or you can create only the YAML
 
 Run the following script to install `stash-mongodb` addon as a Helm chart using Helm 3.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mongodb
 ```
 
@@ -47,7 +47,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 Run the following script to install `stash-mongodb` addon as a Helm chart using Helm 2.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm2.sh | bash -s -- --catalog=stash-mongodb
 ```
 
@@ -58,7 +58,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 Run the following script to install `stash-mongodb` addon as Kubernetes YAMLs.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/script.sh | bash -s -- --catalog=stash-mongodb
 ```
 
@@ -71,7 +71,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 After installation is completed, this addon will create `mongodb-backup-*` and `mongodb-restore-*` Functions and Tasks for all supported MongoDB versions. To verify, run the following command:
 
-```console
+```bash
 $ kubectl get functions.stash.appscode.com
 NAME                    AGE
 mongodb-backup-4.1      20s
@@ -89,7 +89,7 @@ update-status           7h6m
 
 Also, verify that the `Task` have been created.
 
-```console
+```bash
 $ kubectl get tasks.stash.appscode.com
 NAME                    AGE
 mongodb-backup-4.1      2m7s
@@ -110,7 +110,7 @@ Now, Stash is ready to backup MongoDB databases.
 
 In order to install `Function` and `Task` only for a specific MongoDB version, use `--version` flag to specify the desired database version.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mongodb --version=3.6
 ```
 

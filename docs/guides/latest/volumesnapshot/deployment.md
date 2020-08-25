@@ -46,7 +46,7 @@ The [volumeBindingMode](https://kubernetes.io/docs/concepts/storage/storage-clas
 
 Let's create the `StorageClass` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/storageclass.yaml
 storageclass.storage.k8s.io/standard created
 ```
@@ -70,14 +70,14 @@ Here,
 
 Let's create the `volumeSnapshotClass` crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/default-volumesnapshotclass.yaml
 volumesnapshotclass.snapshot.storage.k8s.io/default-snapshot-class created
 ```
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -124,7 +124,7 @@ spec:
 
 Create the PVCs we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/pvcs.yaml
 persistentvolumeclaim/source-data created
 persistentvolumeclaim/source-config created
@@ -178,14 +178,14 @@ spec:
 
 Let's create the deployment we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for the pod of the Deployment to go into the `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-7fd48dd5b4-xqv5n   1/1     Running   0          2m10s
@@ -193,7 +193,7 @@ stash-demo-7fd48dd5b4-xqv5n   1/1     Running   0          2m10s
 
 Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-7fd48dd5b4-xqv5n -- cat /source/data/data.txt
 sample_data
 $ kubectl exec -n demo stash-demo-7fd48dd5b4-xqv5n -- cat /source/config/config.cfg
@@ -239,7 +239,7 @@ Here,
 
 Let's create the `BackupConfiguration` crd we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployments-volume-snapshot created
 ```
@@ -250,7 +250,7 @@ If everything goes well, Stash will create a `CronJob` to take periodic snapshot
 
 Check that the `CronJob` has been created using the following command,
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                          SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 deployments-volume-snapshot   */1 * * * *   False     0        39s             2m41s
@@ -262,7 +262,7 @@ The `deployments-volume-snapshot` CronJob will trigger a backup on each schedule
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
-```console
+```bash
 $ watch -n 1 kubectl get backupsession -n demo
 Every 1.0s: kubectl get backupsession -n demo                      suaas-appscode: Tue Jun 18 18:35:41 2019
 
@@ -276,13 +276,13 @@ We can see above that the backup session has succeeded. Now, we are going to ver
 
 Once a `BackupSession` crd is created, it creates volume snapshotter `Job`. Then the `Job` creates `VolumeSnapshot` crd for the targeted PVCs.The `VolumeSnapshot` name follows the following pattern:
 
-```console
+```bash
  <PVC name>-<backup session creation timestamp in Unix epoch seconds>
 ```
 
 Check that the `VolumeSnapshot` has been created Successfully.
 
-```console
+```bash
 $ kubectl get volumesnapshot -n demo
 NAME                       AGE
 source-config-1563171247   1m46s
@@ -291,7 +291,7 @@ source-data-1563171247     1m46s
 
 Let's find out the actual snapshot name that will be saved in the Google Cloud by the following command,
 
-```console
+```bash
 kubectl get volumesnapshot source-data-1563171247 -n demo -o yaml
 ```
 
@@ -338,14 +338,14 @@ At first, let's stop taking any further backup of the old Deployment so that no 
 
 Let's pause the `deployments-volume-snapshot` BackupConfiguration,
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo deployments-volume-snapshot --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/deployments-volume-snapshot patched
 ```
 
 Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                          TASK   SCHEDULE      PAUSED   AGE
 deployments-volume-snapshot          */1 * * * *   true     18m
@@ -406,7 +406,7 @@ Here,
 
 Let's create the `RestoreSession` crd we have shown above.
 
-```console
+```bash
 $ kubectl create -f ./docs/examples/guides/latest/volumesnapshot/deployment/restoresession.yaml
 restoresession.stash.appscode.com/restore-pvc created
 ```
@@ -415,7 +415,7 @@ Once, you have created the `RestoreSession` crd, Stash will create a job to rest
 
 Run the following command to watch RestoreSession phase,
 
-```console
+```bash
 $ watch -n 1 kubectl get restore -n demo
 Every 1.0s: kubectl get restore -n demo                      suaas-appscode: Tue Jun 18 18:35:41 2019
 
@@ -432,7 +432,7 @@ Once the restore process is complete, we are going to see that new PVCs with the
 
 Verify that the PVCs have been created by the following command,
 
-```console
+```bash
 $ kubectl get pvc -n demo
 NAME             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 restore-config   Bound    pvc-26758eda-a6ca-11e9-9f3a-42010a800050   1Gi        RWO            standard       30s
@@ -494,14 +494,14 @@ spec:
 
 Let's create the deployment we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/volumesnapshot/deployment/restored-deployment.yaml
 deployment.apps/restore-demo created
 ```
 
 Now, wait for the pod of the Deployment to go into the `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                            READY   STATUS    RESTARTS   AGE
 restore-demo-544db78b8b-tnzb2   1/1     Running   0          34s
@@ -509,7 +509,7 @@ restore-demo-544db78b8b-tnzb2   1/1     Running   0          34s
 
 Verify that the backed up data has been restored in `/restore/data` and `/restore/config` directory using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo restore-demo-544db78b8b-tnzb2 ls /restore/config/config.cfg
 config_data
 $ kubectl exec -n demo restore-demo-544db78b8b-tnzb2 ls /restore/data/data.txt
@@ -520,7 +520,7 @@ sample_data
 
 To clean up the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo deployment stash-demo
 kubectl delete -n demo deployment restore-demo
 kubectl delete -n demo backupconfiguration deployments-volume-snapshot

@@ -30,7 +30,7 @@ This guide will show you how to use Stash to backup and restore volumes of a Dae
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -83,14 +83,14 @@ spec:
 
 Let's create the DaemonSet we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/daemonset/daemon.yaml
 daemonset.apps/stash-demo created
 ```
 
 Now, wait for the pod of the DaemonSet to go into the `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                READY   STATUS    RESTARTS   AGE
 stash-demo-c4nqw    1/1     Running   0          39s
@@ -98,7 +98,7 @@ stash-demo-c4nqw    1/1     Running   0          39s
 
 Verify that the sample data has been created in `/source/data` directory using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-c4nqw -- cat /source/data/data.txt
 sample_data
 ```
@@ -113,7 +113,7 @@ We are going to store our backed up data into a GCS bucket. We have to create a 
 
 Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -144,7 +144,7 @@ spec:
 
 Let's create the Repository we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/daemonset/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -195,7 +195,7 @@ Here,
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/workloads/daemonset/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/dmn-backup created
 ```
@@ -204,7 +204,7 @@ backupconfiguration.stash.appscode.com/dmn-backup created
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` DaemonSet to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                READY   STATUS    RESTARTS   AGE
 stash-demo-6lnbp    2/2     Running   0          10s
@@ -310,7 +310,7 @@ It will also create a `CronJob` with the schedule specified in `spec.schedule` f
 
 Verify that the `CronJob` has been created using the following command,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n  demo
 NAME         TASK   SCHEDULE      PAUSED   AGE
 dmn-backup          */1 * * * *            3m
@@ -322,7 +322,7 @@ The `dmn-backup` CronJob will trigger a backup on each schedule by creating a `B
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
-```console
+```bash
 $ watch -n 3 kubectl get backupsession -n demo
 Every 3.0s: kubectl get backupsession -n demo                suaas-appscode: Wed Jun 26 16:05:26 2019
 
@@ -336,7 +336,7 @@ We can see from the above output that the backup session has succeeded. Now, we 
 
 Once a backup is complete, Stash will update the respective `Repository` crd to reflect the backup. Check that the repository `gcs-repo` has been updated by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo
 NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        0 B    3                47s                      4m
@@ -361,14 +361,14 @@ At first, let's stop taking any further backup of the old DaemonSet so that no b
 
 Let's pause the `dmn-backup` BackupConfiguration,
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo dmn-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/dmn-backup patched
 ```
 
 Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE      PAUSED   AGE
 dmn-backup                 */1 * * * *   true     26m
@@ -419,7 +419,7 @@ spec:
 
 Let's create the DaemonSet we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/workloads/daemonset/recovered_daemon.yaml
 daemonset.apps/stash-recovered configured
 ```
@@ -461,7 +461,7 @@ Here,
 
 Let's create the `RestoreSession` crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/workloads/daemonset/restoresession.yaml
 restoresession.stash.appscode.com/dmn-restore created
 ```
@@ -547,7 +547,7 @@ Notice the `Init-Containers` section. We can see that the init-container `stash-
 
 Run the following command to watch RestoreSession phase,
 
-```console
+```bash
 $ watch -n 3 kubectl get restoresession -n demo
 Every 3.0s: kubectl get restoresession -n demo               suaas-appscode: Wed Jun 26 14:28:29 2019
 
@@ -565,7 +565,7 @@ In this section, we are going to verify that the desired data has been restored 
 
 At first, check if the `stash-recovered` pods of a DaemonSet has gone into `running` state by the following command,
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                    READY   STATUS    RESTARTS   AGE
 stash-recovered-dqlrb   1/1     Running   0          4m4s
@@ -573,7 +573,7 @@ stash-recovered-dqlrb   1/1     Running   0          4m4s
 
 Verify that the backed up data has been restored in `/source/data` directory of the `stash-recovered` pods of a DaemonSet using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-recovered-dqlrb -- cat /source/data/data.txt
 sample_data
 ```
@@ -582,7 +582,7 @@ sample_data
 
 To clean up the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo daemonset stash-demo
 kubectl delete -n demo daemonset stash-recovered
 kubectl delete -n demo backupconfiguration dmn-backup

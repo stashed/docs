@@ -37,7 +37,7 @@ You should be familiar with the following `Stash` concepts:
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -54,7 +54,7 @@ We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store 
 
 At first, let's create a Storage Secret for the GCS backend,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ mv downloaded-sa-json.key GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -101,7 +101,7 @@ Note that we have used some variables (format: `${<variable name>}`) in `spec.ba
 
 Let's create the `BackupBlueprint` that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/database/backupblueprint.yaml
 backupblueprint.stash.appscode.com/postgres-backup-blueprint created
 ```
@@ -165,7 +165,7 @@ spec:
 
 Let's create the `Postgres` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/database/sample-postgres-1.yaml
 postgres.kubedb.com/sample-postgres-1 created
 ```
@@ -174,7 +174,7 @@ KubeDB will deploy a PostgreSQL database according to the above specification an
 
 Verify that an `AppBinding` has been created for this PostgreSQL sample,
 
-```console
+```bash
 $ kubectl get appbinding -n demo
 NAME                AGE
 sample-postgres-1   47s
@@ -182,7 +182,7 @@ sample-postgres-1   47s
 
 If you view the YAML of this `AppBinding`, you will see it holds service and secret information. Stash uses this information to connect with the database.
 
-```console
+```bash
 $ kubectl get appbinding -n demo sample-postgres-1 -o yaml
 ```
 
@@ -241,14 +241,14 @@ spec:
 
 Let's create the `Postgres` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/database/sample-postgres-2.yaml
 postgres.kubedb.com/sample-postgres-2 created
 ```
 
 Verify that an `AppBinding` has been created for this PostgreSQL database,
 
-```console
+```bash
 $ kubectl get appbinding -n demo
 NAME                AGE
 sample-postgres-1   2m49s
@@ -269,14 +269,14 @@ Let's backup our first PostgreSQL sample using auto-backup.
 
 At first, add the auto-backup specific annotation to the AppBinding `sample-postgres-1`,
 
-```console
+```bash
 $ kubectl annotate appbinding sample-postgres-1 -n demo --overwrite \
   stash.appscode.com/backup-blueprint=postgres-backup-blueprint
 ```
 
 Verify that the annotation has been added successfully,
 
-```console
+```bash
 $ kubectl get appbinding -n demo sample-postgres-1 -o yaml
 ```
 
@@ -316,7 +316,7 @@ Now, Stash will create a `Repository` crd and a `BackupConfiguration` crd accord
 
 Verify that the `Repository` has been created successfully by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo
 NAME                         INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 postgres-sample-postgres-1                                                                2m23s
@@ -324,7 +324,7 @@ postgres-sample-postgres-1                                                      
 
 If we view the YAML of this `Repository`, we are going to see that the variables `${TARGET_NAMESPACE}`, `${TARGET_APP_RESOURCE}` and `${TARGET_NAME}` has been replaced by `demo`, `postgres` and `sample-postgres-1` respectively.
 
-```console
+```bash
 $ kubectl get repository -n demo postgres-sample-postgres-1 -o yaml
 ```
 
@@ -353,7 +353,7 @@ spec:
 
 Verify that the `BackupConfiguration` crd has been created by the following command,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                         TASK                   SCHEDULE      PAUSED   AGE
 postgres-sample-postgres-1   postgres-backup-11.2   */5 * * * *            3m39s
@@ -363,7 +363,7 @@ Notice the `TASK` field. It denoting that this backup will be performed using `p
 
 Let's check the YAML of this `BackupConfiguration`,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo postgres-sample-postgres-1 -o yaml
 ```
 
@@ -411,7 +411,7 @@ Notice that the `spec.target.ref` is pointing to the AppBinding `sample-postgres
 
 Now, wait for the next backup schedule. Run the following command to watch `BackupSession` crd:
 
-```console
+```bash
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-1
 
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-1  workstation: Thu Aug  1 20:35:43 2019
@@ -428,7 +428,7 @@ When backup session is completed, Stash will update the respective `Repository` 
 
 Run the following command to check if a snapshot has been sent to the backend,
 
-```console
+```bash
 $ kubectl get repository -n demo postgres-sample-postgres-1
 NAME                         INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 postgres-sample-postgres-1   true        1.324 KiB   1                73s                      6m7s
@@ -449,7 +449,7 @@ Now, lets backup our second PostgreSQL sample using the same `BackupBlueprint` w
 
 Add the auto backup specific annotation to AppBinding `sample-postgres-2`,
 
-```console
+```bash
 $ kubectl annotate appbinding sample-postgres-2 -n demo --overwrite \
   stash.appscode.com/backup-blueprint=postgres-backup-blueprint
 ```
@@ -458,7 +458,7 @@ $ kubectl annotate appbinding sample-postgres-2 -n demo --overwrite \
 
 Verify that the `Repository` has been created successfully by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo
 NAME                         INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 postgres-sample-postgres-1   true        1.324 KiB   1                2m3s                     6m57s
@@ -469,7 +469,7 @@ Here, Repository `postgres-sample-postgres-2` has been created for the second Po
 
 If we view the YAML of this `Repository`, we are going to see that the variables `${TARGET_NAMESPACE}`, `${TARGET_APP_RESOURCE}` and `${TARGET_NAME}` has been replaced by `demo`, `postgres` and `sample-postgres-2` respectively.
 
-```console
+```bash
 $ kubectl get repository -n demo postgres-sample-postgres-2 -o yaml
 ```
 
@@ -498,7 +498,7 @@ spec:
 
 Verify that the `BackupConfiguration` crd has been created by the following command,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                         TASK                   SCHEDULE      PAUSED   AGE
 postgres-sample-postgres-1   postgres-backup-11.2   */5 * * * *            7m52s
@@ -511,7 +511,7 @@ Again, notice the `TASK` field. This time, `${TARGET_APP_VERSION}` has been repl
 
 Now, wait for the next backup schedule. Run the following command to watch `BackupSession` crd:
 
-```console
+```bash
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-2
 Every 1.0s: kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=postgres-sample-postgres-2  workstation: Thu Aug  1 20:55:40 2019
 
@@ -523,7 +523,7 @@ postgres-sample-postgres-2-1564671303   BackupConfiguration   postgres-sample-po
 
 Run the following command to check if a snapshot has been sent to the backend,
 
-```console
+```bash
 $ kubectl get repository -n demo postgres-sample-postgres-2
 NAME                         INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 postgres-sample-postgres-2   true        1.324 KiB   1                52s                      19m
@@ -540,7 +540,7 @@ If we navigate to `stash-backup/demo/postgres/sample-postgres-2` directory of ou
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo pg/sample-postgres-1
 kubectl delete -n demo pg/sample-postgres-2
 

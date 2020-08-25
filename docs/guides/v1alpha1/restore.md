@@ -35,7 +35,7 @@ To proceed with this tutorial, you have to meet following requirements:
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create the namespace if you haven't created yet.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -65,7 +65,7 @@ Now, we are going to recover backed up data from `deployment.stash-demo` Reposit
 
 At first, let's delete `Restic` crd so that it does not lock the repository while are recovering from it. Also, delete `stash-demo` deployment and `stash-sample-data` ConfigMap if you followed our backup guide.
 
-```console
+```bash
 $ kubectl delete deployment -n demo stash-demo
 deployment.extensions "stash-demo" deleted
 
@@ -82,7 +82,7 @@ configmap "stash-sample-data" deleted
 
 We are going to recover backed up data into a PVC. At first, we need to know available [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) in our cluster.
 
-```console
+```bash
 $ kubectl get storageclass
 NAME                 PROVISIONER                AGE
 standard (default)   k8s.io/minikube-hostpath   8h
@@ -90,7 +90,7 @@ standard (default)   k8s.io/minikube-hostpath   8h
 
 Now, let's create a `PersistentVolumeClaim` where our recovered data will be stored.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
@@ -116,7 +116,7 @@ spec:
 
 Check whether cluster has provisioned the requested claim.
 
-```console
+```bash
 $ kubectl get pvc -n demo -l app=stash-demo
 NAME              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 stash-recovered   Bound    pvc-e6ffface-fa01-11e8-8905-0800277ca39d   50Mi       RWO            standard       13s
@@ -157,14 +157,14 @@ Here,
 
 Let's create the Recovery crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/recovery.yaml
 recovery.stash.appscode.com/local-recovery created
 ```
 
 Wait until `Recovery` job completes its task. To verify that recovery has completed successfully run,
 
-```console
+```bash
 $ kubectl get recovery -n demo local-recovery
 NAME             REPOSITORY-NAMESPACE  REPOSITORY-NAME         SNAPSHOT   PHASE       AGE
 local-recovery   demo                  deployment.stash-demo              Succeeded   54s
@@ -174,7 +174,7 @@ Here, `PHASE` `Succeeded` indicates that our recovery has been completed success
 
 If you are using Kubernetes version older than v1.11.0 then run following command and check `status.phase` field to see whether the recovery succeeded or failed.
 
-```console
+```bash
 $ kubectl get recovery -n demo local-recovery -o yaml
 ```
 
@@ -222,7 +222,7 @@ spec:
 
 Let's create the deployment,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/recovered-deployment.yaml
 deployment.apps/stash-demo created
 ```
@@ -233,7 +233,7 @@ We have re-deployed `stash-demo` deployment with recovered volume. Now, it is ti
 
 Get the pod of new deployment,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-69694789df-kvcp5   1/1     Running   0          20s
@@ -241,7 +241,7 @@ stash-demo-69694789df-kvcp5   1/1     Running   0          20s
 
 Run following command to view data of `/source/data` directory of this pod,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-69694789df-kvcp5 -- ls -R /source/data
 /source/data:
 LICENSE
@@ -256,7 +256,7 @@ With the help of [Snapshot](/docs/concepts/crds/snapshot.md) object, Stash allow
 
 First, list the available snapshots,
 
-```console
+```bash
 $ kubectl get snapshots -n demo -l repository=deployment.stash-demo
 NAME                             AGE
 deployment.stash-demo-bd8db133   4m50s
@@ -291,7 +291,7 @@ spec:
 
 Now, create a `Recovery` crd shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/recovery/recovery-specific-snapshot.yaml
 recovery.stash.appscode.com/local-recovery-specific-snapshot created
 ```
@@ -300,7 +300,7 @@ recovery.stash.appscode.com/local-recovery-specific-snapshot created
 
 To cleanup the resources created by this tutorial, run following commands:
 
-```console
+```bash
 $ kubectl delete recovery -n demo local-recovery
 $ kubectl delete recovery -n demo local-recovery-specific-snapshot
 $ kubectl delete secret -n demo local-secret

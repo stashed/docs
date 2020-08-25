@@ -54,13 +54,13 @@ To create a `Repository`, you need to provide a `Repository` name and backend in
 
 **Format:**
 
-```console
+```bash
 kubectl stash create <repository-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash create repository gcs-repo --namespace=demo --secret=gcs-secret --bucket=appscode-qa --prefix=/source/data --provider=gcs
 ```
 
@@ -95,13 +95,13 @@ To create a `BackupConfiguration`, you need to provide `BackupConfiguration` nam
 
 **Format:**
 
-```console
+```bash
 kubectl stash create <backupconfig-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash create backupconfig ss-backup --namespace=demo --repository=gcs-repo --schedule="*/4 * * * *" --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-demo --paths=/source/data --volume-mounts=source-data:/source/data --keep-last=5 --prune=true
 ```
 
@@ -133,13 +133,13 @@ To create a `RestoreSession`, you need to provide a `Repository` name, Target or
 
 **Format:**
 
-```console
+```bash
 kubectl stash create restoresession <restoresession-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash create restoresession ss-restore --namespace=demo --repository=gcs-repo --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-recovered --paths=/source/data --volume-mounts=source-data:/source/data
 ```
 
@@ -158,13 +158,13 @@ To copy a Secret, you need to provide Secret name and destination namespace. You
 
 **Format:**
 
-```console
+```bash
 kubectl stash cp secret <secret-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash cp secret my-secret --namespace=demo --to-namespace=demo1
 ```
 
@@ -184,13 +184,13 @@ You will provide the destination namespace by using flag. The available flags ar
 
 **Format:**
 
-```console
+```bash
 kubectl stash cp repository <repository-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash cp repository my-repo --namespce=demo --to-namespace=demo1
 ```
 
@@ -211,13 +211,13 @@ You will provide the destination namespace by using flags. The available flags a
 
 **Format:**
 
-```console
+```bash
 kubectl stash cp backupconfig <backupconfig-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash cp backupconfig my-backupconfig --namespace=demo --to-namespace=demo1
 ```
 
@@ -232,7 +232,7 @@ To copy a VolumeSnapshot, you need to provide VolumeSnapshot name and destinatio
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash cp volumesnapshot my-vol-snap --namespace=demo --to-namespace=demo1
 ```
 
@@ -261,13 +261,13 @@ You will provide the backend credential by using flags. The available flags are:
 
 **Format:**
 
-```console
+```bash
 kubectl stash clone pvc <pvc-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash clone pvc my-pvc -n demo --to-namespace=demo-1 --secret=<secret> --bucket=<bucket> --prefix=<prefix> --provider=<provider>
 ```
 
@@ -278,13 +278,13 @@ To trigger an instant backup, you need to have a BackupConfiguration in your clu
 
 **Format:**
 
-```console
+```bash
 kubectl stash trigger <backupconfig-name>[flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash trigger my-config --namespace=demo
 ```
 
@@ -295,12 +295,12 @@ To unlock the Repository, you need to provide a Repository name. You can also pr
 
 **Format:**
 
-```console
+```bash
 kubectl stash unlock <repository-name> [flags]
 ```
 
 **Example:**
 
-```console
+```bash
 $ kubectl stash unlock my-repo --namespace=demo
 ```

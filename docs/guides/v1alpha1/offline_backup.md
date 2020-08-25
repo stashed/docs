@@ -33,7 +33,7 @@ At first, you need to have a Kubernetes cluster, and the `kubectl` command-line 
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -69,7 +69,7 @@ In order to take backup, we need some sample data. Stash has some sample data in
 
 Let's create a ConfigMap from these sample data,
 
-```console
+```bash
 $ kubectl create configmap -n demo stash-sample-data \
 	--from-literal=LICENSE="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/LICENSE)" \
 	--from-literal=README.md="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/README.md)"
@@ -122,14 +122,14 @@ spec:
 
 Let's create the deployment we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for deployment's pod to go into `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-7ccd56bf5d-p9p2p   1/1     Running   0          2m29s
@@ -137,7 +137,7 @@ stash-demo-7ccd56bf5d-p9p2p   1/1     Running   0          2m29s
 
 You can check that the `/source/data/` directory of this pod is populated with data from the `stash-sample-data` ConfigMap using this command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-7ccd56bf5d-p9p2p -- ls -R /source/data
 /source/data:
 LICENSE
@@ -156,7 +156,7 @@ At first, we need to create a storage secret. To configure this backend, the fol
 
 Create the secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ kubectl create secret generic -n demo local-secret \
     --from-file=./RESTIC_PASSWORD
@@ -165,7 +165,7 @@ secret/local-secret created
 
 Verify that the secret has been created successfully.
 
-```console
+```bash
 $ kubectl get secret -n demo local-secret -o yaml
 ```
 
@@ -225,7 +225,7 @@ Here, we have set `spec.type: offline`. This tell Stash to take backup in offlin
 
 Let's create the `Restic` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backup/restic_offline.yaml
 restic.stash.appscode.com/offline-restic created
 ```
@@ -234,7 +234,7 @@ If everything goes well, Stash will inject an [init-container](https://kubernete
 
 Let's check that `init-container` has been injected successfully,
 
-```console
+```bash
 $ kubectl get deployment -n demo stash-demo -o yaml
 ```
 
@@ -390,7 +390,7 @@ Notice that `stash-demo` deployment has an `init-container` named `stash` which 
 
 Stash operator also has created a [CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/) with name format `stash-scaledown-cron-{restic-name}`. Verify that the `CronJob` has been created successfully,
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                                  SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 stash-scaledown-cron-offline-restic   @every 5m   False     0        <none>          2m34s
@@ -400,7 +400,7 @@ stash-scaledown-cron-offline-restic   @every 5m   False     0        <none>     
 
 Stash will create a `Repository` crd with name `deployment.stash-demo` for the respective repository during the first backup run. To verify, run the following command,
 
-```console
+```bash
 $  kubectl get repository deployment.stash-demo -n demo
 NAME                    BACKUP-COUNT  LAST-SUCCESSFUL-BACKUP   AGE
 deployment.stash-demo   1             2m                       2m
@@ -412,7 +412,7 @@ Here, `BACKUP-COUNT` field indicates number of backup snapshot has taken in this
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 $ kubectl delete -n demo deployment stash-demo
 $ kubectl delete -n demo secret local-secret
 $ kubectl delete -n demo restic offline-restic

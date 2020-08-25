@@ -22,7 +22,7 @@ At first, you need to have a Kubernetes cluster, and the kubectl command-line to
 
 To keep Prometheus resources isolated, we are going to use a separate namespace to deploy Prometheus server.
 
-```console
+```bash
 $ kubectl create ns monitoring
 namespace/monitoring created
 ```
@@ -31,7 +31,7 @@ namespace/monitoring created
 
 Enable Prometheus monitoring using `prometheus.io/builtin` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/v1alpha1/monitoring/overview.md#how-to-enable-monitoring). Here, we are going to enable monitoring for both `backup & recovery` and `operator` metrics using Helm 3.
 
-```console
+```bash
 $ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/builtin \
@@ -110,7 +110,7 @@ We have deployed Stash in `kube-system` namespace. Stash exports operator metric
 
 Let's check `stash-apiserver-cert` certificate has been created in `monitoring` namespace.
 
-```console
+```bash
 $ kubectl get secret -n monitoring -l=app=stash
 NAME                   TYPE                DATA   AGE
 stash-apiserver-cert   kubernetes.io/tls   2      2m21s
@@ -120,7 +120,7 @@ stash-apiserver-cert   kubernetes.io/tls   2      2m21s
 
 If you are using a RBAC enabled cluster, you have to give necessary RBAC permissions for Prometheus. Let's create necessary RBAC stuffs for Prometheus,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/monitoring/builtin/prom-rbac.yaml
 clusterrole.rbac.authorization.k8s.io/stash-prometheus-server created
 serviceaccount/stash-prometheus-server created
@@ -245,7 +245,7 @@ Also note that, we have provided a bearer-token file through `bearer_token_file`
 
 Let's create the ConfigMap we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/monitoring/builtin/prom-config.yaml
 configmap/stash-prometheus-server-conf created
 ```
@@ -306,7 +306,7 @@ Notice that, we have mounted `stash-apiserver-cert` secret as a volume at `/etc/
 
 Now, let's create the deployment,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/monitoring/builtin/prom-deployment.yaml
 deployment.apps/stash-prometheus-server created
 ```
@@ -315,7 +315,7 @@ deployment.apps/stash-prometheus-server created
 
 Prometheus server is running on port `9090`. We are going to use [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) to access Prometheus dashboard. Run following command on a separate terminal,
 
-```console
+```bash
 $ kubectl port-forward -n monitoring stash-prometheus-server-9ddbf79b6-8l6hk 9090
 Forwarding from 127.0.0.1:9090 -> 9090
 Forwarding from [::1]:9090 -> 9090
@@ -331,7 +331,7 @@ Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:909
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete clusterrole stash-prometheus-server
 kubectl delete clusterrolebinding stash-prometheus-server
 

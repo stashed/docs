@@ -30,7 +30,7 @@ To configure storage secret for this backend, following secret keys are needed:
 
 Create storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-azure-storage-account-name>' > AZURE_ACCOUNT_NAME
 $ echo -n '<your-azure-storage-account-key>' > AZURE_ACCOUNT_KEY
@@ -71,7 +71,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/azure.yaml
 repository/azure-repo created
 ```

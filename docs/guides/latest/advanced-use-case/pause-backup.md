@@ -29,7 +29,7 @@ Stash supports pausing backups without deleting respective `BackupConfiguration`
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -96,7 +96,7 @@ The above Deployment will automatically create a `data.txt` file in `/source/dat
 
 Let's create the Deployment and PVC we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/deployment.yaml
 persistentvolumeclaim/source-pvc created
 deployment.apps/stash-demo created
@@ -104,7 +104,7 @@ deployment.apps/stash-demo created
 
 Now, wait for the pods of the Deployment to go into the `Running` state.
 
-```console
+```bash
 kubectl get pod -n demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-69f9ffbbf7-bww24   1/1     Running   0          100s
@@ -114,7 +114,7 @@ stash-demo-69f9ffbbf7-rsj55   1/1     Running   0          100s
 
 To verify that the sample data has been created in `/source/data` directory, use the following command:
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-69f9ffbbf7-bww24 -- cat /source/data/data.txt
 sample_data
 ```
@@ -127,7 +127,7 @@ We are going to store our backed up data into a [GCS bucket](https://cloud.googl
 
 Let’s create a secret called ` gcs-secret` with access credentials to our desired GCS bucket,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -156,7 +156,7 @@ spec:
 
 Let's create the Repository we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -197,7 +197,7 @@ spec:
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/pause-backup created
 ```
@@ -206,7 +206,7 @@ backupconfiguration.stash.appscode.com/pause-backup created
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-7489fcb7f5-jctj4   2/2     Running   0          117s
@@ -222,7 +222,7 @@ It will also create a `CronJob` with the schedule specified in `spec.schedule` f
 
 Verify that the `CronJob` has been created using the following command,
 
-```console
+```bash
 $ watch -n 1 kubectl get backupconfiguration -n demo
 Every 3.0s: kubectl get backupconfiguration -n demo                      suaas-appscode: Thu Aug  1 17:08:08 2019
 
@@ -234,7 +234,7 @@ demo        pause-backup          */1 * * * *            27s
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
-```console
+```bash
 $ watch -n 1 kubectl get backupssession -n demo
 Every 3.0s: kubectl get backupssession -n demo                      suaas-appscode: Thu Aug  1 17:43:57 2019
 
@@ -255,7 +255,7 @@ When we set `spec.paused: true`, the following things are going to happen:
 
 Let's patch the BackupConfiguration crd `pause-backup` and set `spec.paused: true`,
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo pause-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/pause-backup patched
 ```
@@ -331,14 +331,14 @@ spec:
 
 Let's create the `BackupSession` we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/pause-backup/backupsession.yaml
 backupsession.stash.appscode.com/instant-backupsession created
 ```
 
 Run the following command to watch the BackupSession phase,
 
-```console
+```bash
 $ watch -n 1 kubectl get backupsession -n demo instant-backupsession
 Every 1.0s: kubectl get backupsession -n demo instant-backupsession  suaas-appscode: Fri Aug  2 11:56:24 2019
 
@@ -383,7 +383,7 @@ Events:
 
 You can resume backup by setting `spec.paused: false` in BackupConfiguration crd. and applying the update or you can patch BackupConfiguration using,
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo pause-backup --type="merge" --patch='{"spec": {"paused": false}}'
 backupconfiguration.stash.appscode.com/pause-backup patched
 ```
@@ -392,7 +392,7 @@ backupconfiguration.stash.appscode.com/pause-backup patched
 
 To clean up the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo deployment stash-demo
 kubectl delete -n demo backupconfiguration pause-backup
 kubectl delete -n demo repository gce-repo

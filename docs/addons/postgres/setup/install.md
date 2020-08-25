@@ -36,7 +36,7 @@ You can install the addon either as a helm chart or you can create only the YAML
 
 Run the following script to install `stash-postgres` addon as a Helm chart using Helm 3.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-postgres
 ```
 
@@ -47,7 +47,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 Run the following script to install `stash-postgres` addon as a Helm chart using Helm 2.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm2.sh | bash -s -- --catalog=stash-postgres
 ```
 
@@ -58,7 +58,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 Run the following script to install `stash-postgres` addon as Kubernetes YAMLs.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/script.sh | bash -s -- --catalog=stash-postgres
 ```
 
@@ -71,7 +71,7 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 After installation is completed, this addon will create `postgres-backup-*` and `postgres-restore-*` Functions and Tasks for all supported PostgreSQL versions. To verify, run the following command:
 
-```console
+```bash
 $ kubectl get functions.stash.appscode.com
 NAME                    AGE
 postgres-backup-10.2    20s
@@ -91,7 +91,7 @@ update-status           7h6m
 
 Also, verify that the `Task` have been created.
 
-```console
+```bash
 $ kubectl get tasks.stash.appscode.com
 NAME                    AGE
 postgres-backup-10.2    2m7s
@@ -114,7 +114,7 @@ Now, Stash is ready to backup PostgreSQL databases.
 
 In order to install `Function` and `Task` only for a specific PostgreSQL version, use `--version` flag to specify the desired database version.
 
-```console
+```bash
 curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-postgres --version=11.2
 ```
 

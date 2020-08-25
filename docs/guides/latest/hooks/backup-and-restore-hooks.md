@@ -39,7 +39,7 @@ You should be familiar with the following `Stash` concepts:
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -73,7 +73,7 @@ spec:
 
 Let's create the above `MySQL` CR,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/sample-mysql.yaml
 mysql.kubedb.com/sample-mysql created
 ```
@@ -82,7 +82,7 @@ KubeDB will deploy a MySQL database according to the above specification. It wil
 
 Wait for the database to go into `Running` state,
 
-```console
+```bash
 $ kubectl get mysql -n demo -w
 NAME           VERSION   STATUS    AGE
 sample-mysql   8.0.14    Creating  5s
@@ -93,7 +93,7 @@ sample-mysql   8.0.14    Running   2m7s
 
 Verify that KubeDB has created a Secret for the database.
 
-```console
+```bash
 $ kubectl get secret -n demo -l=kubedb.com/name=sample-mysql
 NAME                TYPE     DATA   AGE
 sample-mysql-auth   Opaque   2      5m7s
@@ -103,7 +103,7 @@ sample-mysql-auth   Opaque   2      5m7s
 
 KubeDB creates an `AppBinding`  CR that holds the necessary information to connect with the database. Verify that the `AppBinding` has been created for the above database:
 
-```console
+```bash
 $ kubectl get appbindings -n demo -l=kubedb.com/name=sample-mysql
 NAME           TYPE               VERSION   AGE
 sample-mysql   kubedb.com/mysql   8.0.14    66s
@@ -111,7 +111,7 @@ sample-mysql   kubedb.com/mysql   8.0.14    66s
 
 If you check the YAML of the `AppBinding`, you will see the connection information and respective Secret reference to access the database is presents in `spec` section.
 
-```console
+```bash
 $ kubectl get appbindings sample-mysql -n demo -o yaml
 ```
 
@@ -151,7 +151,7 @@ Now, let's insert some sample data into the above database. Here, we are going t
 
 At first, let's export the database credentials as environment variables in our current shell so that we can use those variables to access the database instead of typing username and password every time.
 
-```console
+```bash
 # export username from the database secret
 $ export MYSQL_USER=$(kubectl get secret -n demo  sample-mysql-auth -o jsonpath='{.data.username}'| base64 -d)
 
@@ -169,7 +169,7 @@ CWg2hru8b0Yu7dzS
 
 Now, let's identify the database pod,
 
-```console
+```bash
 $ kubectl get pods -n demo --selector="kubedb.com/name=sample-mysql"
 NAME             READY   STATUS    RESTARTS   AGE
 sample-mysql-0   1/1     Running   0          6m50s
@@ -177,7 +177,7 @@ sample-mysql-0   1/1     Running   0          6m50s
 
 Let's `exec` into the database pod and insert sample data,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD
 
 mysql: [Warning] Using a password on the command line interface can be insecure.
@@ -239,7 +239,7 @@ We are going to store our backed up data into a GCS bucket. At first, we need to
 
 Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -270,7 +270,7 @@ spec:
 
 Let's create the `Repository` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -322,7 +322,7 @@ spec:
 
 Let's create the above `BackupConfiguration`,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/pre_backup_hook_demo.yaml
 backupconfiguration.stash.appscode.com/backup-hook-demo created
 ```
@@ -331,7 +331,7 @@ backupconfiguration.stash.appscode.com/backup-hook-demo created
 
 If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of the `BackupConfiguration` CR.
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 stash-backup-backup-hook-demo   */5 * * * *   False     0        <none>          74s
@@ -343,7 +343,7 @@ The `stash-backup-backup-hook-demo` CronJob will trigger a backup on each schedu
 
 Wait for a schedule to appear. Run the following command to watch `BackupSession` CR,
 
-```console
+```bash
 $ kubectl get backupsession -n demo -w
 
 NAME                          INVOKER-TYPE          INVOKER-NAME       PHASE       AGE
@@ -358,7 +358,7 @@ Here, the phase `Succeeded` means that the backup process has been completed suc
 
 Once a backup is completed, Stash will update the respective `Repository` CR to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo gcs-repo
 NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true               1                75s                      55m
@@ -372,7 +372,7 @@ If the `preBackup` hook executes successfully, the database will be marked as re
 
 Let's verify that the database is read-only by trying to execute a write operation,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "CREATE DATABASE read-OnlyTest;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ERROR 1290 (HY000) at line 1: The MySQL server is running with the --super-read-only option so it cannot execute this statement
@@ -381,7 +381,7 @@ command terminated with exit code 1
 
 Here, the error message clearly states the database is now read-only. Let's try to execute a read operation.
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SELECT * FROM companyRecord.employee;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 +----+----------+--------+
@@ -441,7 +441,7 @@ spec:
 
 Let's apply the update,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/post_backup_hook_demo.yaml
 backupconfiguration.stash.appscode.com/backup-hook-demo configured
 ```
@@ -450,7 +450,7 @@ backupconfiguration.stash.appscode.com/backup-hook-demo configured
 
 Now, wait for the next backup slot,
 
-```console
+```bash
 $ kubectl get backupsession -n demo -w
 
 NAME                          INVOKER-TYPE          INVOKER-NAME       PHASE       AGE
@@ -464,14 +464,14 @@ backup-hook-demo-1579179905   BackupConfiguration   backup-hook-demo   Succeeded
 
 If the `postBackup` hook has been executed successfully, the database should be writable again. Let's try to execute a write operation to verify that the database writable,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "CREATE DATABASE postBackupHookTest;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
 Verify the test database has been created successfully,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=CWg2hru8b0Yu7dzS -e "SHOW DATABASES;"
 
 mysql: [Warning] Using a password on the command line interface can be insecure.
@@ -497,14 +497,14 @@ In this section, we are going to demonstrate `preRestore` and `postRestore` hook
 
 At first, let stop the backup so that no new backup happens during the restore process. Let's set `spec.paused` section of `BackupConfiguration` to `true` which will stop taking further scheduled backup.
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo backup-hook-demo --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/backup-hook-demo patched
 ```
 
 It should suspend the respective CronJob which is responsible for triggering backup at a scheduled slot. Let's verify that the CronJob has been suspended.
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 stash-backup-backup-hook-demo   */5 * * * *   True      0        5m13s           29m
@@ -514,14 +514,14 @@ stash-backup-backup-hook-demo   */5 * * * *   True      0        5m13s          
 
 Now, let's simulate a disaster scenario. Here, we are going to delete the `companyRecord` database before restoring so that we can verify that the data has been restored from backup.
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "DROP DATABASE companyRecord;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
 Verify that the database has been deleted,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SHOW DATABASES;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 +--------------------+
@@ -575,7 +575,7 @@ spec:
 
 Let's create the above `RestoreSession`,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/pre_restore_hook_demo.yaml
 restoresession.stash.appscode.com/pre-restore-hook-demo created
 ```
@@ -584,7 +584,7 @@ restoresession.stash.appscode.com/pre-restore-hook-demo created
 
 Now, wait for the restore process to complete,
 
-```console
+```bash
 $ kubectl get restoresession -n demo -w
 NAME                    REPOSITORY   PHASE     AGE
 pre-restore-hook-demo   gcs-repo     Running   10s
@@ -598,7 +598,7 @@ Here, `RestoreSession` phase `Succeeded` means the restore process has been comp
 
 Verify that the data has been restored successfully,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SELECT * FROM companyRecord.employee;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 +----+----------+--------+
@@ -618,14 +618,14 @@ Now, let's consider that you want to perform some migration on the database duri
 
 Let's delete the old database `companyRecord` before restoring so that we can verify that the data has been restored from backup.
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "DROP DATABASE companyRecord;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
 Verify that the database has been deleted,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SHOW DATABASES;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 +--------------------+
@@ -673,7 +673,7 @@ spec:
 
 Let's create the above `RestoreSession`,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/post_restore_hook_demo.yaml
 restoresession.stash.appscode.com/post-restore-hook-demo created
 ```
@@ -682,7 +682,7 @@ restoresession.stash.appscode.com/post-restore-hook-demo created
 
 Now, wait for the restore process to complete,
 
-```console
+```bash
 $ kubectl get restoresession -n demo post-restore-hook-demo -w
 NAME                     REPOSITORY   PHASE     AGE
 post-restore-hook-demo   gcs-repo     Running   12s
@@ -694,7 +694,7 @@ post-restore-hook-demo   gcs-repo     Succeeded   29s
 
 Verify that the `companyRecord` database has been restored and the `employee` table has been renamed to `salaryRecord`.
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SHOW TABLES IN companyRecord;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 +-------------------------+
@@ -706,7 +706,7 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 
 Let's check `salaryRecord` table contains the original data of the `employee` table,
 
-```console
+```bash
 $ kubectl exec -it -n demo sample-mysql-0 -- mysql --user=$MYSQL_USER --password=$MYSQL_PASSWORD -e "SELECT * FROM companyRecord.salaryRecord;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 +----+----------+--------+
@@ -722,7 +722,7 @@ So, we can see that the `postRestore` hook successfully performed migration on t
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo restoresession pre-restore-hook-demo post-restore-hook-demo
 kubectl delete -n demo backupconfiguration backup-hook-demo
 kubectl delete -n demo repository gcs-repo

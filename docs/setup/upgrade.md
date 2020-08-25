@@ -106,7 +106,7 @@ retentionPolicies:
 
 Say, you are running `Stash` operator `0.5.1`.
 
-```console
+```bash
 $ kubectl get pods --all-namespaces -l app=stash
 NAMESPACE     NAME                              READY     STATUS    RESTARTS   AGE
 kube-system   stash-operator-7cdc467c5b-drj2r   2/2       Running   0          2s
@@ -369,6 +369,6 @@ backend:
 
 You can follow the same steps as the above s3 example. To move old repository to new location using [gsutil](https://cloud.google.com/storage/docs/gsutil/commands/mv#renaming-bucket-subdirectories), run:
 
-```console
+```bash
 $ gsutil mv gs://stash-qa/demo gs://stash-qa/demo/deployment/stash-demo
 ```

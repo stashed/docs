@@ -30,7 +30,7 @@ Using Stash you can clone data volumes of a workload into a different namespace 
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -119,7 +119,7 @@ The above Deployment will automatically create `data.txt` and `config.cfg` file 
 
 Let's create the Deployment and PVCs we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/deployment.yaml
 persistentvolumeclaim/source-data created
 persistentvolumeclaim/source-config created
@@ -128,7 +128,7 @@ deployment.apps/stash-demo created
 
 Now, wait for the pod of the Deployment to go into `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-67ccdfbbc7-z97rd   1/1     Running   0          77s
@@ -136,7 +136,7 @@ stash-demo-67ccdfbbc7-z97rd   1/1     Running   0          77s
 
 Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following commands,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/data/data.txt
 sample_data
 $ kubectl exec -n demo stash-demo-67ccdfbbc7-z97rd -- cat /source/config/config.cfg
@@ -152,7 +152,7 @@ We are going to store our backed up data into a GCS bucket. We have to create a 
 Let's create a secret called `gcs-secret` with access credentials of our desired GCS backend,
 
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded/sa_key_file.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -181,7 +181,7 @@ spec:
 
 Let's create the `Repository` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -225,7 +225,7 @@ spec:
 
 Let's create the `BackupConfiguration` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/dep-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
@@ -236,7 +236,7 @@ If everything goes well, Stash will create a `CronJob` to trigger backup periodi
 
 Verify that Stash has created a `CronJob` to trigger a periodic backup of volumes of the Deployment by the following command,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE    PAUSED   AGE
 deployment-backup          * * * * *            36s
@@ -246,7 +246,7 @@ deployment-backup          * * * * *            36s
 
 Now, wait for the next backup schedule. You can watch for `BackupSession` crd using the following command,
 
-```console
+```bash
 $ watch -n 3 kubectl get backupconfiguration -n demo
 Every 3.0s: kubectl get backupconfiguration -n demo                  suaas-appscode: Mon Jul  8 18:20:47 2019
 
@@ -264,14 +264,14 @@ Now, we are going to clone the volumes that we have backed up in the previous se
 
 At first, let's pause the scheduled backup of the old Deployment so that no backup is taken during the restore process. To pause the `deployment-backup` BackupConfiguration, run:
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/deployment-backup patched
 ```
 
 Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE      PAUSED   AGE
 deployment-backup          */1 * * * *   true     26m
@@ -331,7 +331,7 @@ Here,
 
 Let's create the `RestoreSession` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/restoresession.yaml
 restoresession.stash.appscode.com/restore-deployment created
 ```
@@ -342,7 +342,7 @@ Once, you have created the `RestoreSession` crd, Stash will create a job to rest
 
 Run the following command to watch RestoreSession phase,
 
-```console
+```bash
 $ watch -n 3 kubectl get restoresession -n demo
 Every 3.0s: kubectl get restoresession -n demo               suaas-appscode: Mon Jul  8 18:39:58 2019
 
@@ -358,7 +358,7 @@ Once the restore process is complete, we are going to see that new PVCs with the
 
 Verify that the PVCs have been created by the following command,
 
-```console
+```bash
 $ kubectl get pvc -n demo
 NAME             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 restore-config   Bound    pvc-6aab94dc-10b2-4c36-8768-89b20a7a24ed   2Gi        RWO            standard       32s
@@ -414,14 +414,14 @@ spec:
 
 Create the deployment we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/deployment/restore-deployment.yaml
 deployment.apps/restore-demo created
 ```
 
 Now, wait for the pod of the Deployment to go into the `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                                READY   STATUS    RESTARTS   AGE
 restore-demo-85fbcb5dcf-vpbt8       1/1     Running   0          2m50s
@@ -429,7 +429,7 @@ restore-demo-85fbcb5dcf-vpbt8       1/1     Running   0          2m50s
 
 Verify that the backed up data has been restored in `/source/data` and `/source/config` directory using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/data/data.txt
 sample_data
 $ kubectl exec -n demo restore-demo-85fbcb5dcf-vpbt8 -- cat /restore/config/config.cfg
@@ -523,7 +523,7 @@ The above StatefulSet will automatically create `data.txt` and `config.cfg` file
 
 Let's create the Statefulset we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/statefulset.yaml
 service/headless configured
 statefulset.apps/stash-demo created
@@ -531,7 +531,7 @@ statefulset.apps/stash-demo created
 
 Now, wait for the pod of the Statefulset to go into the `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME           READY   STATUS    RESTARTS   AGE
 stash-demo-0   1/1     Running   0          47s
@@ -541,7 +541,7 @@ stash-demo-2   1/1     Running   0          33s
 
 Verify that the sample data has been created in `/source/data` and `/source/config` directory using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-0 -- cat /source/data/data.txt
 stash-demo-0
 $ kubectl exec -n demo stash-demo-0 -- cat /source/config/config.cfg
@@ -560,7 +560,7 @@ stash-demo-2
 
 We are going to store our backed up data into a GCS bucket. Let’s create a secret called `gcs-secret` with access credentials of our desired GCS backend,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded/sa_key_file.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -589,7 +589,7 @@ spec:
 
 Let’s create the Repository object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -633,7 +633,7 @@ spec:
 
 Let’s create the `BackupConfiguration` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/ss-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
@@ -644,7 +644,7 @@ If everything goes well, Stash will create a `CronJob` to trigger backup periodi
 
 Verify that Stash has created a `CronJob` to trigger a periodic backup of the volumes of the Statefulset by the following command,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME        TASK   SCHEDULE      PAUSED   AGE
 ss-backup          * * * * *              2m
@@ -654,7 +654,7 @@ ss-backup          * * * * *              2m
 
 Now, wait for the next backup schedule. You can watch for `BackupSession` crd using the following command,
 
-```console
+```bash
 $ watch -n 3 kubectl get backupsession -n demo
 Every 3.0s: kubectl get backupsession -n demo                suaas-appscode: Tue Jul  9 17:09:43 2019
 
@@ -672,14 +672,14 @@ Now, we are going to restore the volumes that we have backed up in the previous 
 
 At first, let's pause the scheduled backup of the old StatefulSet so that no backup is taken during the restore process. To pause the `ss-backup` BackupConfiguration, run:
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/ss-backup patched
 ```
 
 Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE      PAUSED   AGE
 ss-backup                  */1 * * * *   true     26m
@@ -737,7 +737,7 @@ spec:
 - `spec.target.volumeClaimTemplates:` a list of PVC templates that will be created by Stash to restore the respective backed up data.
   - `metadata.name` is a template for the name of the restored PVC that will be created by Stash. You have to provide this named template to match with your desired StatefulSet's PVC. For example, if you want to deploy a StatefulSet named `stash-demo` with `volumeClaimTemplate` name `my-volume`, your StatefulSet's PVC will be`my-volume-stash-demo-0`, `my-volume-stash-demo-1` and so on. In this case, you have to provide `volumeClaimTemplate` name in RestoreSession in the following format:
 
-    ```console
+    ```bash
     <pvc name>-<statefulset name>-${POD_ORDINAL}
     ```
 
@@ -746,7 +746,7 @@ spec:
 
 Let’s create the `RestoreSession` object that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/restore-statefulset created
 ```
@@ -757,7 +757,7 @@ Once, you have created the `RestoreSession` crd, Stash will create a job to rest
 
 Run the following command to watch `RestoreSession` phase,
 
-```console
+```bash
 $ watch -n 3 kubectl get restoresession -n demo
 Every 3.0s: kubectl get restoresession -n demo               suaas-appscode: Tue Jul  9 18:14:44 2019
 
@@ -771,7 +771,7 @@ So, we can see from the output of the above command that the restore process suc
 
 Once the restore process is complete, verify that new PVCs have been created successfully by the following command,
 
-```console
+```bash
 $ kubectl get pvc -n demo
 NAME                            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 restore-config-restore-demo-0   Bound    pvc-c575f88a-79c9-4d25-9aab-5f9822ced239   2Gi        RWO            standard       19s
@@ -857,7 +857,7 @@ spec:
 
 Create the StatefulSet we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/advanced-use-case/clone-pvc/statefulset/restore-statefulset.yaml
 service/re-headless created
 statefulset.apps/restore-demo created
@@ -865,7 +865,7 @@ statefulset.apps/restore-demo created
 
 Now, wait for the pod of the StatefulSet to go into the `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME             READY   STATUS    RESTARTS   AGE
 restore-demo-0   1/1     Running   0          34s
@@ -875,7 +875,7 @@ restore-demo-2   1/1     Running   0          26s
 
 Verify that the backed up data has been restored in `/restore/data` and `/restore/config` directory using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo restore-demo-0 -- cat /restore/data/data.txt
 stash-demo-0
 $ kubectl exec -n demo restore-demo-0 -- cat /restore/config/config.cfg

@@ -44,7 +44,7 @@ To configure storage secret this backend, following secret keys are needed:
 
 Create storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-auth-url>' > OS_AUTH_URL
 $ echo -n '<your-tenant-id>' > OS_TENANT_ID
@@ -131,7 +131,7 @@ spec:
 
 Now, create the Restic we have configured above for `swift` backend,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/swift/swift-restic.yaml
 restic "swift-restic" created
 ```

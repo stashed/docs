@@ -30,7 +30,7 @@ To configure storage secret for local backend, following secret keys are needed:
 
 Create storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ kubectl create secret generic -n demo local-secret --from-file=./RESTIC_PASSWORD
 secret/local-secret created
@@ -71,7 +71,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/local_hostPath.yaml
 repository/local-repo-with-hostpath created
 ```
@@ -99,7 +99,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/local_pvc.yaml
 repository/local-repo-with-pvc created
 ```
@@ -126,7 +126,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/local_nfs.yaml
 repository/local-repo-with-nfs created
 ```
@@ -155,7 +155,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/local_gcePersistentDisk.yaml
 repository/local-repo-with-gcepersistentdisk created
 ```
@@ -184,7 +184,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/local_awsElasticBlockStore.yaml
 repository/local-repo-with-awsebs created
 ```
@@ -213,7 +213,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/local_azureDisk.yaml
 repository/local-repo-with-azuredisk created
 ```
@@ -240,7 +240,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/local_storageOS.yaml
 repository/local-repo-with-storageos created
 ```
@@ -265,7 +265,7 @@ spec:
 
 Create the `Repository` we have shown above using the following command,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/backends/emptyDir.yaml
 repository/local-repo-with-emptydir created
 ```

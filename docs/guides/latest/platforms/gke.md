@@ -31,7 +31,7 @@ This guide will show you how to use Stash to backup and restore volumes of a Kub
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -40,7 +40,7 @@ namespace/demo created
 
 Stash works with any `StorageClass`. Check available `StorageClass` in your cluster using the following command:
 
-```console
+```bash
 $ kubectl get storageclass -n demo
 NAME                 PROVISIONER                AGE
 standard             kubernetes.io/gce-pd       3m
@@ -79,7 +79,7 @@ spec:
 
 Let's create the PVC we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/gke/pvc.yaml
 persistentvolumeclaim/source-pvc created
 ```
@@ -127,14 +127,14 @@ spec:
 
 Let's create the Deployment we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/gke/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for the pods of the Deployment to go into the `Running` state.
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-798987998b-qz6bt   1/1     Running   0          45s
@@ -142,7 +142,7 @@ stash-demo-798987998b-qz6bt   1/1     Running   0          45s
 
 To verify that the sample data has been created in `/source/data` directory, use the following command:
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-798987998b-qz6bt -- cat /source/data/data.txt
 sample_data
 ```
@@ -157,7 +157,7 @@ We are going to store our backed up data into an [GCS bucket](https://cloud.goog
 
 Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -170,7 +170,7 @@ secret "gcs-secret" created
 
 Verify that the secret has been created successfully,
 
-```console
+```bash
 $ kubectl get secret -n demo gcs-secret -o yaml
 ```
 
@@ -211,7 +211,7 @@ spec:
 
 Let's create the `Repository` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/gke/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -261,7 +261,7 @@ Here,
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/gke/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
@@ -270,7 +270,7 @@ backupconfiguration.stash.appscode.com/deployment-backup created
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                         READY   STATUS    RESTARTS   AGE
 stash-demo-998db88b7-gqnzq   2/2     Running   0          48s
@@ -393,7 +393,7 @@ It will also create a `CronJob` with the schedule specified in `spec.schedule` f
 
 Verify that the `CronJob` has been created using the following command,
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 deployment-backup   */1 * * * *   False     0        13s             2m42s
@@ -405,7 +405,7 @@ The `deployment-backup` CronJob will trigger a backup on each schedule by creati
 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
-```console
+```bash
 $ watch -n 3 kubectl get backupsession -n demo
 Every 3.0s: kubectl get backupsession -n-demo           suaas-appscode: Mon Jul 22 15:01:21 2019
 
@@ -419,7 +419,7 @@ We can see from the above output that the backup session has succeeded. Now, we 
 
 Once a backup is complete, Stash will update the respective `Repository` crd to reflect the backup. Check that the repository `gcs-repo` has been updated by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo
 NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        8 B    1                3s                       1m15s
@@ -444,13 +444,13 @@ At first, let's stop taking any further backup of the old Deployment so that no 
 
 Let's pause the `deployment-backup` BackupConfiguration,
 
-```console
+```bash
 $ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/deployment-backup patched
 ```
 Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE      PAUSED   AGE
 deployment-backup          */1 * * * *   true     26m
@@ -515,7 +515,7 @@ spec:
 
 Let's create the Deployment and PVC we have shown above.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/gke/recovered_deployment.yaml
 persistentvolumeclaim/restore-pvc created
 deployment.apps/stash-recovered created
@@ -559,7 +559,7 @@ Here,
 
 Let's create the `RestoreSession` crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/platforms/gke/restoresession.yaml
 restoresession.stash.appscode.com/deployment-restore created
 ```
@@ -645,7 +645,7 @@ Notice the `Init-Containers` section. We can see that the init-container `stash-
 
 Now, wait for the restore process to complete. You can watch the `RestoreSession` phase using the following command,
 
-```console
+```bash
 $ watch -n 2 kubectl get restoresession -n demo
 Every 3.0s: kubectl get restoresession --all-namespaces                 suaas-appscode: Mon Jul 22 18:17:26 2019
 
@@ -661,7 +661,7 @@ So, we can see from the output of the above command that the restore process has
 
 In this section, we are going to verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
 
-```console
+```bash
 $ kubectl get pod -n demo
 NAME                               READY   STATUS    RESTARTS   AGE
 stash-recovered-7876d7bbbb-w6t8f   1/1     Running   0          4m58s
@@ -669,7 +669,7 @@ stash-recovered-7876d7bbbb-w6t8f   1/1     Running   0          4m58s
 
 Verify that the sample data has been restored in `/restore/data` directory of the `stash-recovered` pod of the Deployment using the following command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-recovered-7876d7bbbb-w6t8f -- cat /restore/data/data.txt
 sample_data
 ```
@@ -678,7 +678,7 @@ sample_data
 
 To clean up the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo deployment stash-demo
 kubectl delete -n demo deployment stash-recovered
 kubectl delete -n demo backupconfiguration deployment-backup

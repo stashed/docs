@@ -36,7 +36,7 @@ This tutorial will demonstrate how to use Stash to take backup of an application
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -53,7 +53,7 @@ We are going to use MySQL as the database for our WordPress site. So, let's depl
 
 Let's create a secret for the MySQL database,
 
-```console
+```bash
 $ kubectl create secret  -n demo generic mysql-pass \
   --from-literal=username=root                      \
   --from-literal=password=mysqlpass
@@ -142,7 +142,7 @@ spec:
 
 Let's create the above MySQL Deployment,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/mysql.yaml
 service/wordpress-db created
 deployment.apps/wordpress-db created
@@ -151,7 +151,7 @@ persistentvolumeclaim/mysql-pvc created
 
 Now, wait for the MySQL pod to go into running state,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=wordpress-db
 NAME                            READY   STATUS    RESTARTS   AGE
 wordpress-db-58657b89b9-kgt76   1/1     Running   0          104s
@@ -159,7 +159,7 @@ wordpress-db-58657b89b9-kgt76   1/1     Running   0          104s
 
 Let's check if the MySQL database is ready to accept connections,
 
-```console
+```bash
 $ kubectl logs -n demo -f wordpress-db-58657b89b9-kgt76
 Initializing database
 ....
@@ -252,7 +252,7 @@ spec:
 
 Let's create the above Deployment,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/wordpress.yaml
 service/wordpress-app created
 deployment.apps/wordpress-app created
@@ -261,7 +261,7 @@ persistentvolumeclaim/wordpress-pvc created
 
 Now, wait for the wordpress pod to go into running state,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=wordpress-app
 NAME                             READY   STATUS    RESTARTS   AGE
 wordpress-app-59b69858f9-48phf   1/1     Running   0          3m40s
@@ -273,7 +273,7 @@ So, we can see that our WordPress site is running. Now, its time to insert some 
 
 At first, lets port-forward the `wordpress-app` Service that we have created with the WordPress deployment.
 
-```console
+```bash
 $ kubectl port-forward -n demo service/wordpress-app 8080:80
 Forwarding from 127.0.0.1:8080 -> 80
 Forwarding from [::1]:8080 -> 80
@@ -295,7 +295,7 @@ Once we have completed the setup, let's create some sample blog posts. Here, I h
 
 When we save the post, WordPress will store it into the database. If we exec into the database pod, we will see the post has been stored there.
 
-```console
+```bash
 $ kubectl exec -it -n demo wordpress-db-58657b89b9-kgt76 -- mysql --user=root --password=mysqlpass
 ...
 mysql> show databases;
@@ -356,7 +356,7 @@ So, we can see that our post has been stored with `stash-batch-backup-test` name
 
 Also, WordPress pod write some files in its `/var/www/html` directory. Let's see whats file has been written there:
 
-```console
+```bash
 $ kubectl exec -it -n demo wordpress-app-59b69858f9-48phf -- ls /var/www/html
 index.php        wp-blog-header.php    wp-cron.php        wp-mail.php
 license.txt      wp-comments-post.php  wp-includes        wp-settings.php
@@ -406,7 +406,7 @@ Here,
 
 Let's create the above AppBinding,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/appbinding.yaml
 appbinding.appcatalog.appscode.com/wordpress-db
 ```
@@ -421,7 +421,7 @@ We are going to store our backed up data into a GCS bucket. We have to create a 
 
 Let's create a Secret called `gcs-secret` with access credentials to our desired GCS bucket,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -452,7 +452,7 @@ spec:
 
 Let's create the Repository we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -518,7 +518,7 @@ Here,
 
 Let's create the `BackupBatch` crd we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/backupbatch.yaml
 backupbatch.stash.appscode.com/wordpress-backup created
 ```
@@ -529,7 +529,7 @@ Stash will also create a `CronJob` with the schedule specified in `spec.schedule
 
 Verify that the CronJob has been created successfully,
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 stash-backup-wordpress-backup   */5 * * * *   False     0        <none>          32s
@@ -539,7 +539,7 @@ stash-backup-wordpress-backup   */5 * * * *   False     0        <none>         
 
 The CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` CR. Let's wait for a `BackupSession` to complete,
 
-```console
+```bash
 $  kubectl get backupsession -n demo -w
 NAME                          INVOKER-TYPE   INVOKER-NAME       PHASE       AGE
 wordpress-backup-1597245602   BackupBatch    wordpress-backup               0s
@@ -555,7 +555,7 @@ When a backup session is completed, Stash will update the respective `Repository
 
 Run the following command to check if a backup snapshot has been stored in the backend,
 
-```console
+```bash
 $ kubectl get repository -n demo gcs-repo
 NAME       INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        183.5Mi     2                3s                       38m
@@ -586,14 +586,14 @@ Here, we are going to see two different restore scenarios:
 
 At first, let stop the backup so that no new backup happens during the restore process. Let's set `spec.paused` section of `BackupBatch` to `true` which will stop taking further scheduled backup.
 
-```console
+```bash
 $ kubectl patch backupbatch -n demo wordpress-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupbatch.stash.appscode.com/wordpress-backup patched
 ```
 
 It should suspend the respective CronJob which is responsible for triggering backup at a scheduled slot. Let's verify that the CronJob has been suspended.
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 stash-backup-wordpress-backup   */5 * * * *   True      0        12h             13h
@@ -607,7 +607,7 @@ In this section, we are going to simulate a disaster scenario where we will dama
 
 At first, let's corrupt the database. Here, we are going to delete the sample post we have created earlier.
 
-```console
+```bash
 $ kubectl exec -it -n demo wordpress-db-58657b89b9-kgt76 -- mysql --user=root --password=mysqlpass
 ....
 mysql> show tables from wordpress;
@@ -696,13 +696,13 @@ So, we can see that the sample post is gone. Only, the `Hello World!` post is no
 
 Now, let's do some damage to our WordPress deployment too. Here, we are going to remove the `wp-content` directory from `/var/www/html` directory of our WordPress pod.
 
-```console
+```bash
 $ kubectl exec -n demo wordpress-app-5b778b446-gtd6d -c wordpress -- rm -r /var/www/html/wp-content
 ```
 
 Verify that the `wp-content` directory has been removed.
 
-```console
+```bash
 $ kubectl exec -n demo wordpress-app-5b778b446-gtd6d -c wordpress  -- ls /var/www/html
 index.php
 license.txt
@@ -780,14 +780,14 @@ Here,
 
 Let's create the above `RestoreBatch` object,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/restorebatch.yaml
 restorebatch.stash.appscode.com/wordpress-restore created
 ```
 
 Now, wait for the `RestoreBatch` phase to go into `Succeeded` state.
 
-```console
+```bash
 $ kubectl get restorebatch -n demo -w
 NAME                REPOSITORY   PHASE     AGE
 wordpress-restore   gcs-repo     Running   7s
@@ -800,7 +800,7 @@ We can see from above that Stash has successfully restored both components. Now,
 
 Let's verify that `sample-batch-backup-test` post that we had deleted from the database has been restored.
 
-```console
+```bash
 $ kubectl exec -n demo wordpress-db-58657b89b9-kgt76 -- mysql --user=root --password=mysqlpass -e "SELECT post_name FROM wordpress.wp_posts;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 post_name
@@ -816,7 +816,7 @@ We can see that the `stash-batch-backup-test` post is now present in the databas
 
 Again, let verify whether the `wp-content` directory that we had removed from the WordPress deployment's pod has been restored or not.
 
-```console
+```bash
 $ kubectl exec -n demo wordpress-app-684b577c89-wpsqs -c wordpress  -- ls /var/www/html
 index.php
 license.txt
@@ -859,13 +859,13 @@ Here, we are going to delete the sample post again from the database and then re
 
 Let's delete the sample post from the database:
 
-```console
+```bash
 $ kubectl exec -n demo wordpress-db-58657b89b9-kgt76 -- mysql --user=root --password=mysqlpass -e "DELETE FROM wordpress.wp_posts WHERE post_name='stash-batch-backup-test';"
 ```
 
 Verify that the sample post has been removed:
 
-```console
+```bash
 $ kubectl exec -n demo wordpress-db-58657b89b9-kgt76 -- mysql --user=root --password=mysqlpass -e "SELECT post_name FROM wordpress.wp_posts;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 post_name
@@ -905,14 +905,14 @@ spec:
 
 Let's create the above `RestoreSession` object,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/batch-backup/restoresession.yaml
 restoresession.stash.appscode.com/wordpress-db-restore created
 ```
 
 Now, wait for the `RestoreSession` phase to go into `Succeeded` state,
 
-```console
+```bash
 $ kubectl get restoresession -n demo -w
 NAME                   REPOSITORY   PHASE     AGE
 wordpress-db-restore   gcs-repo     Running   10s
@@ -925,7 +925,7 @@ So, we can see that Stash has successfully restored the database.
 
 Let's verify whether the sample post has been restored or not,
 
-```console
+```bash
 $ kubectl exec -n demo wordpress-db-58657b89b9-kgt76 -- mysql --user=root --password=mysqlpass -e "SELECT post_name FROM wordpress.wp_posts;"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 post_name
@@ -943,7 +943,7 @@ We can see from the above output that the `stash-batch-backup-test` post has bee
 
 To clean up the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo backupbatch wordpress-backup
 kubectl delete -n demo restorebatch wordpress-restore
 kubectl delete -n demo restoresession wordpress-db-restore

@@ -26,7 +26,7 @@ To configure storage secret for this backend, following secret keys are needed:
 
 Create storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ kubectl create secret generic local-secret --from-file=./RESTIC_PASSWORD
 secret "local-secret" created
@@ -97,7 +97,7 @@ spec:
 
 Now, create the `Restic` we have configured above for `local` backend,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/local/local-restic-hostPath.yaml
 restic "local-restic" created
 ```
@@ -138,7 +138,7 @@ spec:
 
 Now, create the `Restic` we have configured above for `local` backend,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/local/local-restic-nfs.yaml
 restic "local-restic" created
 ```

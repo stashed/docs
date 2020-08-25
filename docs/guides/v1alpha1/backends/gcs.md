@@ -28,7 +28,7 @@ To configure storage secret for this backend, following secret keys are needed:
 
 Create storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ mv downloaded-sa-json.key GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -103,7 +103,7 @@ spec:
 
 Now, create the Restic we have configured above for `gcs` backend,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/backends/gcs/gcs-restic.yaml
 restic "gcs-restic" created
 ```

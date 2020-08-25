@@ -94,7 +94,7 @@ Stash allows users to delete **only `Repository` crd** or **`Repository` crd alo
 
  You can delete only `Repository` crd by,
 
-```console
+```bash
 $ kubectl delete repository <repository-name>
 
 # Example
@@ -116,14 +116,14 @@ Here, is an example of deleting backed up data from GCS backend,
 
 - First, set `wipeOut: true` by patching `Repository` crd.
 
-  ```console
+  ```bash
   $ kubectl patch repository gcs-demo-repo --type="merge" --patch='{"spec": {"wipeOut": true}}'
   repository "gcs-demo-repo" patched
   ```
 
 - Finally, delete `Repository` object. It will delete backed up data from the backend.
 
-  ```console
+  ```bash
   $ kubectl delete repository gcs-demo-repo
   repository "gcs-demo-repo" deleted
   ```

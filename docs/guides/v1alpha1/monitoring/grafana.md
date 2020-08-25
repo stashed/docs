@@ -28,7 +28,7 @@ Grafana provides an elegant graphical user interface to visualize data. You can 
 
 We have to add our Prometheus server `prometheus-prometheus-0` as data source of grafana. We are going to use a `ClusterIP` service to connect Prometheus server with grafana. Let's create a service to select Prometheus server `prometheus-prometheus-0`,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/monitoring/coreos/prometheus-service.yaml
 service/prometheus created
 ```
@@ -112,7 +112,7 @@ Once you have imported the dashboard successfully, you will be greeted with Stas
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n monitoring service prometheus
 ```
 

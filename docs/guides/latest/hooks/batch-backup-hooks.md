@@ -41,7 +41,7 @@ You should be familiar with the following `Stash` concepts:
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -85,7 +85,7 @@ spec:
 
 Let's create the above database,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/wordpress-mysql.yaml
 mysql.kubedb.com/wordpress-mysql created
 ```
@@ -94,7 +94,7 @@ KubeDB will deploy a MySQL database according to the above specification. It wil
 
 Wait for the database to go into `Running` state,
 
-```console
+```bash
 $ kubectl get mysql -n demo -w
 NAME              VERSION   STATUS    AGE
 wordpress-mysql   8.0.14    Creating  17s
@@ -105,7 +105,7 @@ wordpress-mysql   8.0.14    Running   3m10s
 
 Verify that KubeDB has created a Secret for the database.
 
-```console
+```bash
 $ kubectl get secret -n demo -l=kubedb.com/name=wordpress-mysql
 NAME                   TYPE     DATA   AGE
 wordpress-mysql-auth   Opaque   2      4m1s
@@ -115,7 +115,7 @@ wordpress-mysql-auth   Opaque   2      4m1s
 
 KubeDB creates an `AppBinding` CR that holds the necessary information to connect with the database. Verify that the `AppBinding` has been created for the above database:
 
-```console
+```bash
 $ kubectl get appbindings -n demo -l=kubedb.com/name=wordpress-mysql
 NAME              TYPE               VERSION   AGE
 wordpress-mysql   kubedb.com/mysql   8.0.14    2m10s
@@ -190,7 +190,7 @@ spec:
 
 Let's create the above resources,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/wordpress-deployment.yaml
 
 persistentvolumeclaim/wordpress-pvc created
@@ -199,7 +199,7 @@ deployment.apps/wordpress-deployment created
 
 Verify that WordPress pod ready
 
-```console
+```bash
 $ kubectl get pod -n demo -l=app=wordpress,tier=frontend
 NAME                                    READY   STATUS    RESTARTS   AGE
 wordpress-deployment-586f94487c-nm8p5   1/1     Running   0          2m26s
@@ -217,7 +217,7 @@ We are going to store our backed up data into a GCS bucket. At first, we need to
 
 Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -248,7 +248,7 @@ spec:
 
 Let's create the `Repository` we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
@@ -397,7 +397,7 @@ You can customize the `body` section of `httpPost` hook to change the visual rep
 
 Let's create the above `BackupBatch` object,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/hooks/batch-backup/wordpress-backup.yaml
 backupbatch.stash.appscode.com/wordpress-backup created
 ```
@@ -406,7 +406,7 @@ backupbatch.stash.appscode.com/wordpress-backup created
 
 If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of the `BackupBatch` CR.
 
-```console
+```bash
 $ kubectl get cronjob -n demo
 NAME                           SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 stash-backup-wordperss-backup   */3 * * * *   False     0        <none>          27s
@@ -418,7 +418,7 @@ The `stash-backup-wordpress-backup` CronJob will trigger a backup on each schedu
 
 Wait for a schedule to appear. Run the following command to watch `BackupSession` CR,
 
-```console
+```bash
 $ kubectl get backupsession -n demo -w
 NAME                          INVOKER-TYPE   INVOKER-NAME       PHASE       AGE
 wordpress-backup-1579526461   BackupBatch    wordpress-backup   Running     0s
@@ -433,7 +433,7 @@ Here, the phase `Succeeded` means that the backup process has been completed suc
 
 Once a backup is completed, Stash will update the respective `Repository` CR to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo gcs-repo
 NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true               2                72s                      18m
@@ -453,7 +453,7 @@ Now, go to your slack channel. You should see that Stash has sent notification b
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl -n demo delete backupbatch wordpress-backup
 kubectl -n demo delete repository gcs-repo
 kubectl -n demo delete secret gcs-secret

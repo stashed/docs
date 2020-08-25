@@ -100,7 +100,7 @@ Here, we are going to describe the various sections of a `Snapshot` object.
 
 **Listing Snapshots:**
 
-```console
+```bash
 # List Snapshots of all Repositories in the current namespace
 $ kubectl get snapshot --request-timeout=300s
 
@@ -125,7 +125,7 @@ $ kubectl get snapshot -l repository=local-repo,hostname=db --request-timeout=30
 
 **Viewing information of a particular Snapshot:**
 
-```console
+```bash
 $ kubectl get snapshot [-n <namespace>] <snapshot name> -o yaml
 
 # Example:

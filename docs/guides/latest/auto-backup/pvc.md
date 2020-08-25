@@ -33,7 +33,7 @@ This tutorial will show you how to configure automatic backup for PersistentVolu
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -46,7 +46,7 @@ Stash uses a `Function-Task` model to automatically backup PVC. When you install
 
 Let's verify that Stash has created the necessary `Function` to backup/restore PVC by the following command,
 
-```console
+```bash
 $ kubectl get function
 NAME            AGE
 pvc-backup      6h55m
@@ -56,7 +56,7 @@ update-status   6h55m
 
 Also, verify that the necessary `Task` has been created,
 
-```console
+```bash
 $ kubectl get task
 NAME          AGE
 pvc-backup    6h55m
@@ -73,7 +73,7 @@ We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store 
 
 At first, let's create a Storage Secret for the GCS backend,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ mv downloaded-sa-json.key GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -120,7 +120,7 @@ Note that we have used some variables (format: `${<variable name>}`) in `backend
 
 Let's create the `BackupBlueprint` that we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/backupblueprint.yaml
 backupblueprint.stash.appscode.com/pvc-backup-blueprint created
 ```
@@ -174,7 +174,7 @@ Notice the `metadata.labels` section. Here, we have added `app: nfs-demo` label.
 
 Let's create the PV we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/nfs_pv.yaml
 persistentvolume/nfs-pv created
 ```
@@ -207,14 +207,14 @@ Also, notice the `spec.selector` section. We have specified `app: nfs-demo` labe
 
 Let's create the PVC we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/nfs_pvc.yaml
 persistentvolumeclaim/nfs-pvc created
 ```
 
 Verify that the PVC has bounded with our desired PV,
 
-```console
+```bash
 $ kubectl get pvc -n demo nfs-pvc
 NAME      STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 nfs-pvc   Bound    nfs-pv   1Gi        RWX                           61s
@@ -253,14 +253,14 @@ Here, we have mounted `pod-1/data` directory of the `nfs-pvc` into `/sample/data
 
 Let's deploy the pod we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/pod-1.yaml
 pod/demo-pod-1 created
 ```
 
 Verify that the sample data has been generated into `/sample/data/` directory,
 
-```console
+```bash
 $ kubectl exec -n demo demo-pod-1 cat /sample/data/hello.txt
 hello from pod 1.
 ```
@@ -292,14 +292,14 @@ Now, we have mounted `pod-2/data` directory of the `nfs-pvc` into `/sample/data`
 
 Let's create the pod we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/pvc/pod-2.yaml
 pod/demo-pod-2 created
 ```
 
 Verify that the sample data has been generated into `/sample/data/` directory,
 
-```console
+```bash
 $ kubectl exec -n demo demo-pod-2 cat /sample/data/hello.txt
 hello from pod 2.
 ```
@@ -312,7 +312,7 @@ Now, we are going to add auto backup specific annotation to the PVC. Stash watch
 
 Let's add the auto backup specific annotation to the PVC,
 
-```console
+```bash
 $ kubectl annotate pvc nfs-pvc -n demo --overwrite           \
     stash.appscode.com/backup-blueprint=pvc-backup-blueprint \
     stash.appscode.com/schedule="*/15 * * * *"
@@ -320,7 +320,7 @@ $ kubectl annotate pvc nfs-pvc -n demo --overwrite           \
 
 Verify that the annotations has been added successfully,
 
-```console
+```bash
 $ kubectl get pvc -n demo nfs-pvc -o yaml
 ```
 
@@ -369,7 +369,7 @@ Now, Stash will create a `Repository` crd and a `BackupConfiguration` crd accord
 
 Verify that the `Repository` has been created successfully by the following command,
 
-```console
+```bash
 $ kubectl get repository -n demo
 NAME                            INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 persistentvolumeclaim-nfs-pvc
@@ -377,7 +377,7 @@ persistentvolumeclaim-nfs-pvc
 
 If we view the YAML of this `Repository`, we are going to see that the variables `${TARGET_NAMESPACE}`, `${TARGET_KIND}` and `${TARGET_NAME}` has been replaced by `demo`, `presistentvolumeclaim` and `nfs-pvc` respectively.
 
-```console
+```bash
 $ kubectl get repository -n demo persistentvolumeclaim-nfs-pvc -o yaml
 ```
 
@@ -406,7 +406,7 @@ spec:
 
 Verify that the `BackupConfiguration` crd has been created by the following command,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo
 NAME                            TASK         SCHEDULE       PAUSED   AGE
 persistentvolumeclaim-nfs-pvc   pvc-backup   */15 * * * *            119s
@@ -414,7 +414,7 @@ persistentvolumeclaim-nfs-pvc   pvc-backup   */15 * * * *            119s
 
 Let's check the YAML of this `BackupConfiguration`,
 
-```console
+```bash
 $ kubectl get backupconfiguration -n demo persistentvolumeclaim-nfs-pvc -o yaml
 ```
 
@@ -462,7 +462,7 @@ Notice that the `spec.target.ref` is pointing to the `nfs-pvc` PVC.
 
 Now, wait for the next backup schedule. Run the following command to watch `BackupSession` crd:
 
-```console
+```bash
 $ watch -n 1 kubectl get backupsession -n demo -l=stash.appscode.com/backup-configuration=persistentvolumeclaim-nfs-pvc
 
 Every 1.0s: kubectl get backupsession -n demo ... workstation: Thu Jul 18 15:18:42 2019
@@ -479,7 +479,7 @@ When backup session is completed, Stash will update the respective `Repository` 
 
 Run the following command to check if a snapshot has been sent to the backend,
 
-```console
+```bash
 $ kubectl get repository -n demo persistentvolumeclaim-nfs-pvc
 NAME                            INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 persistentvolumeclaim-nfs-pvc   true        41 B   1                3m37s                    5m11s
@@ -498,7 +498,7 @@ If we navigate to `stash-backup/demo/persistentvolumeclaim/nfs-pvc` directory of
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
-```console
+```bash
 kubectl delete -n demo backupBlueprint/pvc-backup-blueprint
 kubectl delete -n demo repository/persistentvolumeclaim-nfs-pvc
 kubectl delete -n demo backupconfiguration/persistentvolumeclaim-nfs-pvc

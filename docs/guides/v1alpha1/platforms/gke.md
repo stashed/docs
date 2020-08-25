@@ -34,7 +34,7 @@ At first, you need to have a Kubernetes cluster in Google Cloud Platform. If you
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
-```console
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -47,7 +47,7 @@ In order to take backup, we need some sample data. Stash has some sample data in
 
 Let's create a ConfigMap from these sample data,
 
-```console
+```bash
 $ kubectl create configmap -n demo stash-sample-data \
 	--from-literal=LICENSE="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/LICENSE)" \
 	--from-literal=README.md="$(curl -fsSL https://github.com/stashed/stash-data/raw/master/README.md)"
@@ -98,14 +98,14 @@ spec:
 
 Let's create the deployment we have shown above,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
 Now, wait for deployment's pod to go in `Running` state.
 
-```console
+```bash
 $ kubectl get pods -n demo -l app=stash-demo
 NAME                         READY     STATUS    RESTARTS   AGE
 stash-demo-b66b9cdfd-8s98d   1/1       Running   0          6m
@@ -113,7 +113,7 @@ stash-demo-b66b9cdfd-8s98d   1/1       Running   0          6m
 
 You can check that the `/source/data/` directory of pod is populated with data from the volume source using this command,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-b66b9cdfd-8s98d -- ls -R /source/data/
 /source/data:
 LICENSE
@@ -134,7 +134,7 @@ At first, we need to create a storage secret that hold the credentials for the b
 
 Create storage secret as below,
 
-```console
+```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
@@ -147,7 +147,7 @@ secret "gcs-secret" created
 
 Verify that the secret has been created successfully,
 
-```console
+```bash
 $ kubectl get secret -n demo gcs-secret -o yaml
 ```
 
@@ -172,7 +172,7 @@ type: Opaque
 
 Now, we can create `Restic` crd. This will create a repository in the GCS bucket specified in `gcs.bucket` field and start taking periodic backup of `/source/data` directory.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/restic.yaml
 restic.stash.appscode.com/gcs-restic created
 ```
@@ -209,7 +209,7 @@ spec:
 
 If everything goes well, Stash will inject a sidecar container into the `stash-demo` deployment to take periodic backup. Let's check sidecar has been injected successfully,
 
-```console
+```bash
 $ kubectl get pod -n demo -l app=stash-demo
 NAME                          READY   STATUS    RESTARTS   AGE
 stash-demo-6b8c94cdd7-8jhtn   2/2     Running   1          1h
@@ -221,7 +221,7 @@ Look at the pod. It now has 2 containers. If you view the resource definition of
 
 Stash will create a `Repository` crd with name `deployment.stash-demo` for the respective repository in GCS backend. To verify, run the following command,
 
-```console
+```bash
 $ kubectl get repository deployment.stash-demo -n demo
 NAME                    BACKUPCOUNT   LASTSUCCESSFULBACKUP   AGE
 deployment.stash-demo   1             13s                    1m
@@ -231,7 +231,7 @@ Here, `BACKUPCOUNT` field indicates number of backup snapshot has taken in this 
 
 `Restic` will take backup of the volume periodically with a 1-minute interval. You can verify that backup is taking successfully by,
 
-```console
+```bash
 $ kubectl get snapshots -n demo -l repository=deployment.stash-demo
 NAME                             AGE
 deployment.stash-demo-c1014ca6   10s
@@ -259,7 +259,7 @@ Now, consider that we have lost our workload as well as data volume. We want to 
 
 At first, let's delete `Restic` crd, `stash-demo` deployment and `stash-sample-data` ConfigMap.
 
-```console
+```bash
 $ kubectl delete deployment -n demo stash-demo
 deployment.extensions "stash-demo" deleted
 
@@ -278,7 +278,7 @@ In order to perform recovery, we need `Repository` crd `deployment.stah-demo` an
 
 Now, we are going to recover the backed up data into GCE Persistent Disk. At first, create a GCE disk named `stash-recovered` from [Google cloud console](https://console.cloud.google.com/compute/disks). Then create `Recovery` crd,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/recovery-gcePD.yaml
 recovery.stash.appscode.com/gcs-recovery created
 ```
@@ -306,7 +306,7 @@ spec:
 
 Wait until `Recovery` job completes its task. To verify that recovery has completed successfully run,
 
-```console
+```bash
 $ kubectl get recovery -n demo gcs-recovery
 NAME             REPOSITORYNAMESPACE   REPOSITORYNAME          SNAPSHOT   PHASE       AGE
 gcs-recovery     demo                  deployment.stash-demo              Succeeded   3m
@@ -316,7 +316,7 @@ Here, `PHASE` `Succeeded` indicate that our recovery has been completed successf
 
 If you are using Kubernetes version older than v1.11.0 then run following command and check `status.phase` field to see whether the recovery succeeded or failed.
 
-```console
+```bash
 $ kubectl get recovery -n demo gcs-recovery -o yaml
 ```
 
@@ -365,7 +365,7 @@ spec:
 
 Let's create the deployment,
 
-```console
+```bash
 $  kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/restored-deployment-gcePD.yaml
 deployment.apps/stash-demo created
 ```
@@ -376,7 +376,7 @@ We have re-deployed `stash-demo` deployment with recovered volume. Now, it is ti
 
 Get the pod of new deployment,
 
-```console
+```bash
 $ kubectl get pods -n demo -l app=stash-demo
 NAME                         READY     STATUS    RESTARTS   AGE
 stash-demo-857995799-gpml9   1/1       Running   0          34s
@@ -384,7 +384,7 @@ stash-demo-857995799-gpml9   1/1       Running   0          34s
 
 Run following command to view data of `/source/data` directory of this pod,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-857995799-gpml9 -- ls -R /source/data
 /source/data:
 LICENSE
@@ -400,14 +400,14 @@ So, we can see that the data we had backed up from original deployment are now p
 
 Here, we are going to show how to recover the backed up data into a PVC. If you have re-deployed `stash-demo` deployment by following previous tutorial on `gcePersistentDisk`, delete the deployment first,
 
-```console
+```bash
 $ kubectl delete deployment -n demo stash-demo
 deployment.apps/stash-demo deleted
 ```
 
 Now, create a `PersistentVolumeClaim` where our recovered data will be stored.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/pvc.yaml
 persistentvolumeclaim/stash-recovered created
 ```
@@ -433,7 +433,7 @@ spec:
 
 Check that if cluster has provisioned the requested claim,
 
-```console
+```bash
 $ kubectl get pvc -n demo -l app=stash-demo
 NAME              STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 stash-recovered   Bound     pvc-57bec6e5-3e11-11e8-951b-42010a80002e   2Gi        RWO            standard       1m
@@ -445,7 +445,7 @@ Look at the `STATUS` filed. `stash-recovered` PVC is bounded to volume `pvc-57be
 
 Now, we have to create a `Recovery` crd to recover backed up data into this PVC.
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/recovery-pvc.yaml
 recovery.stash.appscode.com/gcs-recovery created
 ```
@@ -472,7 +472,7 @@ spec:
 
 Wait until `Recovery` job completes its task. To verify that recovery has completed successfully run,
 
-```console
+```bash
 $ kubectl get recovery -n demo gcs-recovery
 NAME             REPOSITORYNAMESPACE   REPOSITORYNAME          SNAPSHOT   PHASE       AGE
 gcs-recovery     demo                  deployment.stash-demo              Succeeded   3m
@@ -524,7 +524,7 @@ spec:
 
 Let's create the deployment,
 
-```console
+```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/platforms/gke/restored-deployment-pvc.yaml
 deployment.apps/stash-demo created
 ```
@@ -535,7 +535,7 @@ We have re-deployed `stash-demo` deployment with recovered volume. Now, it is ti
 
 Get the pod of new deployment,
 
-```console
+```bash
 $ kubectl get pods -n demo -l app=stash-demo
 NAME                          READY     STATUS    RESTARTS   AGE
 stash-demo-559845c5db-8cd4w   1/1       Running   0          33s
@@ -543,7 +543,7 @@ stash-demo-559845c5db-8cd4w   1/1       Running   0          33s
 
 Run following command to view data of `/source/data` directory of this pod,
 
-```console
+```bash
 $ kubectl exec -n demo stash-demo-559845c5db-8cd4w -- ls -R /source/data
 /source/data:
 LICENSE
@@ -559,7 +559,7 @@ So, we can see that the data we had backed up from original deployment are now p
 
 To cleanup the resources created by this tutorial, run following commands:
 
-```console
+```bash
 $ kubectl delete recovery -n demo gcs-recovery
 $ kubectl delete secret -n demo gcs-secret
 $ kubectl delete deployment -n demo stash-demo
