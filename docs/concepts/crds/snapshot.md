@@ -102,7 +102,7 @@ In this section, we are going to show different types of operations you can perf
 
 **Listing Snapshots:**
 
-Stash lists Snapshots directly from the backend. This operation sometime takes more time than the default request timeout. So, we are going to increase the request timeout through `--request-timeout` flag in the list commands.
+Stash lists Snapshots directly from the backend. This operation can take more time than the default request timeout of `kubectl`. So, we are going to increase the request timeout through the `--request-timeout` flag for get/list commands.
 
 ```bash
 # List Snapshots of all Repositories in the current namespace

@@ -12,7 +12,7 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-{{< notice type="warning" message="This is an Enterprise only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
 # Backup & Restore a WordPress Site Using Batch Backup
 
