@@ -1,5 +1,6 @@
 ---
 title: RestoreBatch Overview
+menu:
   docs_{{ .version }}:
     identifier: restorebatch-overview
     name: RestoreBatch
