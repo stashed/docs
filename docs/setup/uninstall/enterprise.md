@@ -1,20 +1,20 @@
 ---
-title: Uninstall
-description: Stash Uninstall
+title: Uninstall Stash Enterprise Edition
+description: Uninstallation guide for Stash Enterprise edition
 menu:
   docs_{{ .version }}:
-    identifier: uninstall-stash
-    name: Uninstall
-    parent: setup
+    identifier: uninstall-stash-enterprise
+    name: Enterprise Edition
+    parent: uninstallation-guide
     weight: 20
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: setup
 ---
 
-# Uninstall Stash
+# Uninstall Stash Enterprise Edition
 
-To uninstall Stash operator, run the following command:
+To uninstall Stash Enterprise edition, run the following command:
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">
@@ -35,7 +35,7 @@ To uninstall Stash operator, run the following command:
 In Helm 3, release names are [scoped to a namespace](https://v3.helm.sh/docs/faq/#release-names-are-now-scoped-to-the-namespace). So, provide the namespace you used to install the operator when installing.
 
 ```bash
-$ helm uninstall stash-operator --namespace kube-system
+$ helm uninstall stash-enterprise --namespace kube-system
 ```
 
 </div>
@@ -44,7 +44,7 @@ $ helm uninstall stash-operator --namespace kube-system
 ## Using Helm 2
 
 ```bash
-$ helm delete stash-operator
+$ helm delete stash-enterprise
 ```
 
 </div>
@@ -55,7 +55,7 @@ $ helm delete stash-operator
 If you prefer to not use Helm, you can generate YAMLs from Stash chart and uninstall using `kubectl`.
 
 ```bash
-$ helm template stash-operator appscode/stash --namespace kube-system | kubectl delete -f -
+$ helm template stash-enterprise appscode/stash-enterprise --namespace kube-system | kubectl delete -f -
 ```
 
 </div>

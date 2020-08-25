@@ -22,7 +22,7 @@ This tutorial will show you how to use Stash to **backup** and **restore** a Kub
 
 At first, you need to have a Kubernetes cluster in Google Cloud Platform. If you don't already have a cluster, you can create one from [here](https://console.cloud.google.com/kubernetes).
 
-- Install Stash in your cluster following the steps [here](/docs/setup/install.md).
+- Install Stash in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following Stash concepts:
   - [Restic](/docs/concepts/crds/v1alpha1/restic.md)
@@ -568,4 +568,4 @@ $ kubectl delete repository -n demo deployment.stash-demo
 $ kubectl delete ns demo
 ```
 
-- To uninstall Stash from your cluster, follow the instructions from [here](/docs/setup/uninstall.md).
+- To uninstall Stash from your cluster, follow the instructions from [here](/docs/setup/README.md).

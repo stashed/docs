@@ -343,7 +343,7 @@ kubectl delete secret stash-apiserver-cert -n monitoring
 kubectl delete ns monitoring
 ```
 
-To uninstall Stash follow this [guide](/docs/setup/uninstall.md).
+To uninstall Stash follow this [guide](/docs/setup/README.md).
 
 ## Next Steps
 

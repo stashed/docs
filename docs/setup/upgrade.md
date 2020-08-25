@@ -6,7 +6,7 @@ menu:
     identifier: upgrade-stash
     name: Upgrade
     parent: setup
-    weight: 15
+    weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: setup
@@ -14,361 +14,73 @@ section_menu_id: setup
 
 # Upgrading Stash
 
-If you are upgrading Stash to a patch release, please reapply the [installation instructions](/docs/setup/install.md). That will upgrade the operator pod to the new version and fix any RBAC issues.
+This guide will show you how to upgrade Stash operator. Here, we are going to show how to update the license and how to upgrade between two Stash versions.
 
-## Upgrading from 0.6.x to 0.7.x
+## Updating License
 
-If you are installing via scripts, then uninstall the old version first and then reinstall the new version. If you are using Helm, follow the instructions from [setup](/docs/setup/install.md) section.
+Stash support updating license without requiring any re-installation or restart. Stash creates a Secret named `<helm release name>-license` with the license file. You just need to update the Secret. The changes will propagate automatically to the operator and it will use the updated license going forward.
 
-## Upgrading from 0.5.x to 0.6.x
+Follow the below instructions to update the license:
 
-The format for `Restic` object has changed in backward incompatiable manner between 0.5.x and 0.6.0 . The steps involved in upgrading Stash operator to 0.6.0 from prior version involves the following steps:
-
-1. Backup all your old `Restic` CRDs.
-2. Delete your old `Restic` objects. It will stop taking backups and remove sidecars from pods.
-3. Uninstall old `Stash` operator.
-4. Move repositories to new location if you want to keep your old backups. We have changed repository location in new version of `Stash` to remove conflicts between  repositories for different target workloads.
-
-**Old Version**
-
-```
-Location depending on restic.spec.useAutoPrefix:
-
-Not Specified or, Smart:
-
-    Deployment:             {BackendPrefix}/
-    Replica Set:            {BackendPrefix}/
-    Replication Controller: {BackendPrefix}/
-    Stateful Set:           {BackendPrefix}/{PodName}/
-    Daemon Set:             {BackendPrefix}/{NodeName}/
-
-NodeName: {BackendPrefix}/{NodeName}/
-PodName:  {BackendPrefix}/{PodName}/
-None:     {BackendPrefix}/
-```
-
-**New Version**
-
-```
-Deployment:             {BackendPrefix}/deployment/{WorkloadName}/
-Replica Set:            {BackendPrefix}/replicaset/{WorkloadName}/
-Replication Controller: {BackendPrefix}/replicationcontroller/{WorkloadName}/
-Stateful Set:           {BackendPrefix}/statefulset/{PodName}/
-Daemon Set:             {BackendPrefix}/daemonset/{WorkloadName}/{NodeName}/
-```
-
-5. Install new `Stash` operator.
-6. Update your backed up `Restic` CRDs in the following ways:
-- `restic.spec.useAutoPrefix` is removed in new version of `Stash`. If you specify it in your old `Restic` CRD, you should remove it.
-- `restic.spec.fileGroups[].retentionPolicy` is moved to `restic.spec.retentionPolicies[]` and referenced using `restic.spec.fileGroups[].retentionPolicyName`.
-
-Consider following example:
-
-**Old version:**
-
-```yaml
-fileGroups:
-- path: /source/path-1
-  retentionPolicy:
-    keepLast: 5
-    prune: true
-- path: /source/path-2
-  retentionPolicy:
-    keepLast: 10
-- path: /source/path-3
-  retentionPolicy:
-    keepLast: 5
-    prune: true
-```
-
-**New version:**
-
-```yaml
-fileGroups:
-- path: /source/path-1
-  retentionPolicyName: policy-1
-- path: /source/path-2
-  retentionPolicyName: policy-2
-- path: /source/path-3
-  retentionPolicyName: policy-1
-retentionPolicies:
-- name: policy-1
-  keepLast: 5
-  prune: true
-- name: policy-2
-  keepLast: 10
-```
-
-7. Now, re-deploy restic CRDs. It will add sidecar to pods again and continue backup.
-
-
-### Example: Upgrading S3 backed volume
-
-Say, you are running `Stash` operator `0.5.1`.
+- Get a new license and save it into a file.
+- Encode the license file content in `base64` format. Make sure that the encoded content is not wrapped. Here is a Linux instruction to encode the license file into `base64` format.
 
 ```bash
-$ kubectl get pods --all-namespaces -l app=stash
-NAMESPACE     NAME                              READY     STATUS    RESTARTS   AGE
-kube-system   stash-operator-7cdc467c5b-drj2r   2/2       Running   0          2s
-
-$ kubectl exec -it stash-operator-7cdc467c5b-drj2r -c operator -n kube-system stash version
-
-Version = 0.5.1
-VersionStrategy = tag
-Os = alpine
-Arch = amd64
-CommitHash = f87995af4875d5e99978def17186ac1957871c1d
-GitBranch = release-0.5
-GitTag = 0.5.1
-CommitTimestamp = 2017-10-10T17:05:31
+$ cat /path/to/the/license.txt | base64 -w 0
 ```
 
-Consider you have following `busybox` deployment:
+- Now, find out the license secret.
+
+```bash
+$ kubectl get Secret -n kube-system | grep license
+stash-license        Opaque           1      2m43s
+```
+
+- Finally, update the value of `key.txt` in the `data` section of the Secret with your new `base64` encoded license.
 
 ```yaml
-apiVersion: apps/v1beta1
-kind: Deployment
+$ kubectl edit secret/stash-license -n kube-system
+apiVersion: v1
+data:
+  key.txt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURTRENDQWpDZ0F3SUJBZ0lJUFRHNDh2SlhZSVV3RFFZSktvWklodmNOQVFFTEJRQXdKVEVXTUJRR0ExVUUKQ2hNTlFYQndjME52WkdVZ1NXNWpMakVMTUFrR0ExVUVBeE1DWTJFd0hoY05NakF3T0RBNU1URXhPRE15V2hjTgpNakV3T0RJeE1EazBOakl6V2pCSk1SZ3dGZ1lEVlFRS0V3OXpkR0Z6YUMxamIyMXRkVzVwZEhreExUQXJCZ05WCkJBTVRKREE1WWpsaE5qY3hMVFExTXpFdE5EZzNOeTFpTlRreExUUm1NMll5T1RZeFpXVm1aRENDQVNJd0RRWUoKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTTJFSEtXM2hwYUVkZ3ZJZ0prcDJJVVV4b2dWK3pyYgp6dCsvTGZWc3lkdC9KNGd1R0RNTExtT016WHFXWjViK21sOUZ4ZGdaai9GVnp6emxwK1ZCR2V6VEZpWWlUMnlQCkdRSk8xRnRDdmVkeGJUWXV4Y2p1T2dtRyt3WEwraCt5RFpHckNycUpEN3IxblFwbzZMVml5alZhcXRFU1hIYjkKT1VMTXNDazBaSTJlc2h1Q3FkWXBKSEt0c1dlUmlFL0ZHamJ5anUyMnd0VE80eDNtb2JReE9zSUsrSlh2Y25YcApaRWpIaU1OVFJEN3BlNWl0cnRYR1p5c0EyN3lNVVhmRWdrQUUybU1BVTlJN0R4d1AyUzc0NHdxTEtUbUNRcWsxCnV3bThxNWZHZEdFbXdvem5zM0hWb05raGw0Ukp3TnpyU3R0SFBvT0ZSUDNNT3JEN21uSEozenNDQXdFQUFhTlkKTUZZd0RnWURWUjBQQVFIL0JBUURBZ1dnTUJNR0ExVWRKUVFNTUFvR0NDc0dBUVVGQndNQ01DOEdBMVVkRVFRbwpNQ2FDSkRBNVlqbGhOamN4TFRRMU16RXRORGczTnkxaU5Ua3hMVFJtTTJZeU9UWXhaV1ZtWkRBTkJna3Foa2lHCjl3MEJBUXNGQUFPQ0FRRUFIb1RBRk03OExGbmlpbDNJZlpxb1l4N0l4M0YyWVZjU0dMQ2hYaG13T0Uyd1hIeFUKSndlMm9FcjBOeEtBOStjVFhkWmsvR1RZU3lwdnJOSDdLbVh3RXlEZWJGNVdmZG0yQTQyT0ZSeEFOU1Q0bGxjWApaakdqbjRUYzNqWHUvMDhhaUJheDhaTlcvT3BFRUxYNDI1cEZsdGc2dG1FTDI3cVhHQ1RFK2xZQXllRlpPRW5nCldsdHlvM21URzV0RHVTZXBkYXFyMUhJUDZjM0dKNnptS1lBRnB4YXJYdVhOa284L1Q3QkF0UU5KMWEvM1hRcGMKelRZbGpLS2dBOTRGMGZYZjdkeFhYNTFtWWZNM1FDclJTM05yQllEbCtOYUZpWWlsdXA1cmNxNTlwNzk2S080QgorM0hpSGZtcDFxUEJIS2hqL2ZYMk1xcU5od2RkWDJ6enlHbWRNZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+kind: Secret
 metadata:
+  creationTimestamp: "2020-08-25T05:23:20Z"
   labels:
-    app: stash-demo
-  name: stash-demo
-  namespace: default
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: stash-demo
-      name: busybox
-    spec:
-      containers:
-      - command:
-        - sleep
-        - "3600"
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
-      restartPolicy: Always
-      volumes:
-      - gitRepo:
-          repository: https://github.com/stashed/stash-data.git
-        name: source-data
+    app.kubernetes.io/instance: stash
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: stash
+    app.kubernetes.io/version: v0.10.0-beta.1
+    helm.sh/chart: stash-v0.10.0-beta.1
+  name: stash-license
+  namespace: kube-system
+  resourceVersion: "111192"
+  selfLink: /api/v1/namespaces/kube-system/secrets/stash-license
+  uid: b5acd352-e9e6-4358-8fb9-90f58c162ce9
+type: Opaque
 ```
 
-Let say you are using following old `Restic` CRD to backup the `busybox` deployment:
+## Upgrading Between Community Edition and Enterprise Edition
 
-```yaml
-$ kubectl get restic s3-restic -o yaml
+Stash uses two different binaries for Community edition and Enterprise edition. So, it is not possible to upgrade between the Community edition and Enterprise edition without re-installation. However, it is possible to re-install Stash without losing the existing backup resources.
 
-apiVersion: stash.appscode.com/v1alpha1
-kind: Restic
-metadata:
-  clusterName: ""
-  creationTimestamp: 2017-12-11T08:29:16Z
-  deletionGracePeriodSeconds: null
-  deletionTimestamp: null
-  generation: 0
-  initializers: null
-  name: s3-restic
-  namespace: default
-  resourceVersion: "39256"
-  selfLink: /apis/stash.appscode.com/v1alpha1/namespaces/default/restics/s3-restic
-  uid: 5ffb03c7-de4d-11e7-af32-0800274b5eab
-spec:
-  backend:
-    s3:
-      bucket: stash-qa
-      endpoint: s3.amazonaws.com
-      prefix: demo
-    storageSecretName: s3-secret
-  fileGroups:
-  - path: /source/data
-    retentionPolicy:
-      keepLast: 5
-      prune: true
-  schedule: '@every 1m'
-  selector:
-    matchLabels:
-      app: stash-demo
-  volumeMounts:
-  - mountPath: /source/data
-    name: source-data
-status:
-  backupCount: 3
-  firstBackupTime: 2017-12-11T08:30:40Z
-  lastBackupDuration: 19.968827042s
-  lastBackupTime: 2017-12-11T08:32:40Z
-```
+Follow the below instructions to re-install Stash:
 
-A restic-repository is initialized in `demo` folder of your `stash-qa` bucket and so far 3 backups are created and stored there. Now, the following steps will upgrade version of `Stash` without loosing those 3 backups.
+- Uninstall the old version by following the respective uninstallation guide. Don't delete the CRDs.
+- Install the new version by following the respective installation guide.
 
-#### Step 1
+## Upgrading between patch versions
 
-Dump your old `Restic` CRD in a file.
+If you are upgrading Stash to a patch release, please reapply the [installation instructions](/docs/setup/README.md). That will upgrade the operator pod to the new version and fix any RBAC issues.
 
-```
-$ kubectl get restic s3-restic -o yaml --export > s3-restic-dump.yaml
-```
+## Upgrading from 0.9.x to v2020.x.x
 
-#### Step 2
+If you are upgrading from `0.9.x` which did not use license verification to new `v2020.x.x`, you have to first uninstall the old version. Then, you have to re-install the new version.
 
-Delete the old `Restic` object.
+If you are upgrading from `0.9.x` to `v2020.x.x` Community edition, please note that following features are only available in Enterprise edition:
 
-```
-$ kubectl delete restic s3-restic
-restic "s3-restic" deleted
-```
+- **Auto-Backup:** Auto-backup is now an enterprise feature. You won't be able to setup any new backup using auto-backup. However, your existing auto-backup resources should keep functioning.
+- **Batch Backup:** Batch backup and restore is also now an enterprise feature. You won't be able to create any new backup using batch-backup. However, your existing backup should continue to work and you would be able to restore the data that were backed up using BatchBackup.
+- **Local Backend:** Local backend now is an enterprise feature. If you are using any Kubernetes volume (i.e. NFS, PVC, HostPath, etc.) as backend, you won't be able to create any new backup using those backends. However, your existing backup that uses sidecar model should keep functioning. You have to use the Enterprise edition to restore from the backed up data. If you are interested in purchasing Enterprise license, please contact us via sales@appscode.com for further discussion. You can also set up a meeting via our [calendly link](https://calendly.com/appscode/30min).
 
-Now wait for sidecar to be removed by `Stash` operator.
-
-```
-$ kubectl get pods -l app=stash-demo
-NAME                          READY     STATUS    RESTARTS   AGE
-stash-demo-6b5459b8d6-7rvpv   2/2       Terminating   0       5s
-stash-demo-788ffcf9c6-xh6nx   1/1       Running       0       1s
-```
-
-#### Step 3
-
-Uninstall old `Stash` operator by following the instructions [here](/docs/setup/uninstall.md).
-
-#### Step 4
-
-To keep your old backups you should move the contents of your old repositories to new locations.
-
-```
-Old location: stash-qa/demo
-New location: stash-qa/demo/deployment/stash-demo
-```
-
-You can use [aws-cli](https://aws.amazon.com/cli) to do this:
-
-```
-$ aws s3 mv s3://stash-qa/demo s3://stash-qa/demo/deployment/stash-demo --recursive
-```
-
-#### Step 5
-
-Install new `Stash` operator by following the instructions [here](/docs/setup/install.md).
-
-#### Step 6
-
-Now update your backed up `Restic` CRD as follows:
-
-```yaml
-apiVersion: stash.appscode.com/v1alpha1
-kind: Restic
-metadata:
-  clusterName: ""
-  creationTimestamp: 2017-12-11T08:29:16Z
-  deletionGracePeriodSeconds: null
-  deletionTimestamp: null
-  generation: 0
-  initializers: null
-  name: s3-restic
-  namespace: default
-  resourceVersion: "39256"
-  selfLink: /apis/stash.appscode.com/v1alpha1/namespaces/default/restics/s3-restic
-  uid: 5ffb03c7-de4d-11e7-af32-0800274b5eab
-spec:
-  backend:
-    s3:
-      bucket: stash-qa
-      endpoint: s3.amazonaws.com
-      prefix: demo
-    storageSecretName: s3-secret
-  fileGroups:
-  - path: /source/data
-    retentionPolicyName: policy-1
-  schedule: '@every 1m'
-  selector:
-    matchLabels:
-      app: stash-demo
-  volumeMounts:
-  - mountPath: /source/data
-    name: source-data
-  retentionPolicies:
-  - name: policy-1
-    keepLast: 5
-    prune: true
-status:
-  backupCount: 3
-  firstBackupTime: 2017-12-11T08:30:40Z
-  lastBackupDuration: 19.968827042s
-  lastBackupTime: 2017-12-11T08:32:40Z
-```
-
-Re-deploy the updated `Restic` CRD.
-
-```
-$ kubectl apply -f s3-restic.yaml
-```
-
-It will add sidecar to the `busybox` pods again and continue backup from where it stopped. You can check status of the `Restic` CRD to verify that new backups are creating.
-
-```yaml
-$ kubectl get restic s3-restic -o yaml
-
-apiVersion: stash.appscode.com/v1alpha1
-kind: Restic
-metadata:
-  clusterName: ""
-  creationTimestamp: 2017-12-11T09:36:08Z
-  deletionGracePeriodSeconds: null
-  deletionTimestamp: null
-  generation: 0
-  initializers: null
-  name: s3-restic
-  namespace: default
-  resourceVersion: "44000"
-  selfLink: /apis/stash.appscode.com/v1alpha1/namespaces/default/restics/s3-restic
-  uid: b7511b7a-de56-11e7-af32-0800274b5eab
-spec:
-  backend:
-    s3:
-      bucket: stash-qa
-      endpoint: s3.amazonaws.com
-      prefix: demo
-    storageSecretName: s3-secret
-  fileGroups:
-  - path: /source/data
-    retentionPolicyName: policy-1
-  retentionPolicies:
-  - keepLast: 5
-    name: policy-1
-    prune: true
-  schedule: '@every 1m'
-  selector:
-    matchLabels:
-      app: stash-demo
-  volumeMounts:
-  - mountPath: /source/data
-    name: source-data
-status:
-  backupCount: 4
-  firstBackupTime: 2017-12-11T08:30:40Z
-  lastBackupDuration: 18.786502029s
-  lastBackupTime: 2017-12-11T09:37:38Z
-```
-
-
-### Example: Upgrading GCS backed volume
-
-Consider you have following gcs backend instead of s3 backend:
-
-```yaml
-backend:
-  gcs:
-    bucket: stash-qa
-    prefix: demo
-  storageSecretName: gcs-secret
-```
-
-You can follow the same steps as the above s3 example. To move old repository to new location using [gsutil](https://cloud.google.com/storage/docs/gsutil/commands/mv#renaming-bucket-subdirectories), run:
-
-```bash
-$ gsutil mv gs://stash-qa/demo gs://stash-qa/demo/deployment/stash-demo
-```
+If you are using any Stash addons, you might need to update the `Task` name in your `BackupConfiguration` to comply with the new naming scheme of the `Function` and `Task`.

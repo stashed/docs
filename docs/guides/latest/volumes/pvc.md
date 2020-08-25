@@ -20,7 +20,7 @@ This guide will show you how to backup a stand-alone PersistentVolumeClaim (PVC)
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
-- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You will need to have a PVC with `ReadWriteMany` access mode. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access mode. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
 
@@ -502,4 +502,4 @@ kubectl delete pvc -n demo nfs-pvc
 kubectl delete pv -n demo nfs-pv
 ```
 
-If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/uninstall.md).
+If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/README.md).

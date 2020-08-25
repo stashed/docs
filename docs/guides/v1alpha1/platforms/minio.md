@@ -22,7 +22,7 @@ section_menu_id: guides
 
 At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
-- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following Stash concepts:
   - [Restic](/docs/concepts/crds/v1alpha1/restic.md)
@@ -460,5 +460,5 @@ $ kubectl delete repository -n demo deployment.stash-demo
 $ kubectl delete ns demo
 ```
 
-- To uninstall Stash from your cluster, follow the instructions from [here](/docs/setup/uninstall.md).
+- To uninstall Stash from your cluster, follow the instructions from [here](/docs/setup/README.md).
 - If you have deployed Minio server by following the tutorial we have linked in [Before You Begin](/docs/guides/v1alpha1/platforms/minio.md#before-you-begin) section, please clean-up Minio resources by following the [cleanup](https://github.com/appscode/third-party-tools/blob/master/storage/minio/README.md#cleanup) section of that tutorial.

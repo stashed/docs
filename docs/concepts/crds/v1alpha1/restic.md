@@ -167,4 +167,3 @@ For more details about how to disable and resume Restic see [here](/docs/guides/
 - See working examples for supported workload types [here](/docs/guides/v1alpha1/workloads.md).
 - Thinking about monitoring your backup operations? Stash works [out-of-the-box with Prometheus](/docs/guides/v1alpha1/monitoring/overview.md).
 - Learn about how to configure [RBAC roles](/docs/guides/v1alpha1/rbac.md).
-- Want to hack on Stash? Check our [contribution guidelines](/docs/CONTRIBUTING.md).

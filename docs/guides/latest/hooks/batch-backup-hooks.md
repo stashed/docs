@@ -24,7 +24,7 @@ Here, we are going to demonstrate how to send a notification to a Slack channel 
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
-- Install Stash in your cluster following the steps [here](/docs/setup/install.md).
+- Install Stash in your cluster following the steps [here](/docs/setup/README.md).
 - Install MySQL addon for Stash following the steps [here](/docs/addons/mysql/setup/install.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/install/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running production-grade databases on private and public clouds.
 - If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview.md).

@@ -15,7 +15,7 @@ section_menu_id: guides
 
 # Configuring RBAC
 
-To use Stash in a RBAC enabled cluster, [install Stash](/docs/setup/install.md) with RBAC options. This creates a ClusterRole named `stash-sidecar`.
+To use Stash in a RBAC enabled cluster, [install Stash](/docs/setup/README.md) with RBAC options. This creates a ClusterRole named `stash-sidecar`.
 
 Sidecar container added to workloads makes various calls to Kubernetes api. ServiceAccounts used with Deployment, ReplicaSet, DaemonSet and ReplicationController workloads are automatically bound to `stash-sidecar` ClusterRole by Stash operator. Users should manually add the following RoleBinding to service accounts used with StatefulSet workloads to authorize these api calls.
 
@@ -47,4 +47,3 @@ You can find full working examples [here](/docs/guides/v1alpha1/workloads.md).
 - See the list of supported backends and how to configure them [here](/docs/guides/v1alpha1/backends/overview.md).
 - See working examples for supported workload types [here](/docs/guides/v1alpha1/workloads.md).
 - Thinking about monitoring your backup operations? Stash works [out-of-the-box with Prometheus](/docs/guides/v1alpha1/monitoring/overview.md).
-- Want to hack on Stash? Check our [contribution guidelines](/docs/CONTRIBUTING.md).

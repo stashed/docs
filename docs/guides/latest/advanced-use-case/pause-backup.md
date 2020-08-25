@@ -20,7 +20,7 @@ Stash supports pausing backups without deleting respective `BackupConfiguration`
 
 - At first, you need to have a Kubernetes cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
-- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)

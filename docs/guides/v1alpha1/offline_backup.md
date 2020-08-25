@@ -22,7 +22,7 @@ This tutorial will show you how to backup a Kubernetes deployment using Stash in
 
 At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
-- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following Stash concepts:
   - [Restic](/docs/concepts/crds/v1alpha1/restic.md)
@@ -421,7 +421,7 @@ $ kubectl delete -n demo repository deployment.stash-demo
 $ kubectl delete namespace demo
 ```
 
-If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/uninstall.md).
+If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/README.md).
 
 ## Next Steps
 
@@ -433,4 +433,3 @@ If you would like to uninstall Stash operator, please follow the steps [here](/d
 - See working examples for supported workload types [here](/docs/guides/v1alpha1/workloads.md).
 - Thinking about monitoring your backup operations? Stash works [out-of-the-box with Prometheus](/docs/guides/v1alpha1/monitoring/overview.md).
 - Learn about how to configure [RBAC roles](/docs/guides/v1alpha1/rbac.md).
-- Want to hack on Stash? Check our [contribution guidelines](/docs/CONTRIBUTING.md).

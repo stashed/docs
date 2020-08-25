@@ -15,7 +15,7 @@ section_menu_id: guides
 
 # Stash kubectl Plugin
 
-Stash gives you kubectl plugin support named `kubectl stash` cli. `kubectl stash` cli can be used to manage Stash objects quickly and easily. It performs various operations like creating Stash objects, coping Stash objects, cloning PVC, unlock Repository, triggering an instant backup, etc. To install Stash kubectl plugin on your workstation, follow the steps [here](/docs/setup/install.md).
+Stash gives you kubectl plugin support named `kubectl stash` cli. `kubectl stash` cli can be used to manage Stash objects quickly and easily. It performs various operations like creating Stash objects, coping Stash objects, cloning PVC, unlock Repository, triggering an instant backup, etc. To install Stash kubectl plugin on your workstation, follow the steps [here](/docs/setup/README.md).
 
 ## Available Command
 

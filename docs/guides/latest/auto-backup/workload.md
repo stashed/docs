@@ -22,7 +22,7 @@ This tutorial will show you how to configure automatic backup for Kubernetes wor
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
-- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following Stash concepts:
   - [Repository](/docs/concepts/crds/repository.md)
@@ -724,4 +724,4 @@ kubectl delete -n demo secret/gcs-secret
 kubectl delete -n demo backupblueprint/workload-backup-blueprint
 ```
 
-If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/uninstall.md).
+If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/README.md).

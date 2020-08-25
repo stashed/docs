@@ -24,7 +24,7 @@ In order to use Kubernetes volumes as backend, you have to create a `Secret` and
 
 To configure storage secret for local backend, following secret keys are needed:
 
-|        Key        |    Type    |                        Description                         |
+| Key               | Type       | Description                                                |
 | ----------------- | ---------- | ---------------------------------------------------------- |
 | `RESTIC_PASSWORD` | `Required` | Password that will be used to encrypt the backup snapshots |
 
@@ -42,11 +42,11 @@ Now, you have to create a `Repository` crd that uses Kubernetes volume as a back
 
 Following parameters are available for `Local` backend.
 
-|      Parameter       |    Type    |                                              Description                                               |
-| -------------------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| `local.mountPath`    | `Required` | Path where this volume will be mounted inside the sidecar container. Example: `/safe/data`. <br> <strong>We have put `stash` binary  in the root directory. Hence, you can not use `/stash` or `/stash/*` as `local.mountPath` </strong>
-| `local.subPath`      | `Optional` | Sub-path inside the referenced volume where the backed up snapshot will be stored instead of its root. |
-| `local.VolumeSource` | `Required` | Any Kubernetes volume. Can be specified inlined. Example: `hostPath`.                                  |
+| Parameter            | Type       | Description                                                                                                                                                                                                                              |
+| -------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `local.mountPath`    | `Required` | Path where this volume will be mounted inside the sidecar container. Example: `/safe/data`. <br> <strong>We have put `stash` binary  in the root directory. Hence, you can not use `/stash` or `/stash/*` as `local.mountPath` </strong> |
+| `local.subPath`      | `Optional` | Sub-path inside the referenced volume where the backed up snapshot will be stored instead of its root.                                                                                                                                   |
+| `local.VolumeSource` | `Required` | Any Kubernetes volume. Can be specified inlined. Example: `hostPath`.                                                                                                                                                                    |
 
 Here, we are going to show some sample `Repository` crds that uses different Kubernetes volume as a backend.
 
@@ -131,7 +131,7 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 repository/local-repo-with-nfs created
 ```
 
->For NFS backend, Stash may have to run the network volume accessor deployments in privileged mode to provide Snapshot listing facility. In this case, please configure network volume accessors by following the instruction [here](/docs/setup/install.md#configuring-network-volume-accessor).
+>For NFS backend, Stash may have to run the network volume accessor deployments in privileged mode to provide Snapshot listing facility. In this case, please configure network volume accessors by following the instruction [here](/docs/setup/install/troubleshoting.md#configuring-network-volume-accessor).
 
 ##### GCE PersitentDisk as Backend
 
