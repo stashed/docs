@@ -22,7 +22,7 @@ This tutorial will show you how to use Stash to **backup** and **restore** a Kub
 
 At first, you need to have a Kubernetes cluster, and the kubectl command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
-- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following Stash concepts:
   - [Restic](/docs/concepts/crds/v1alpha1/restic.md)
@@ -450,4 +450,4 @@ $ kubectl delete repository -n demo deployment.stash-demo
 $ kubectl delete ns demo
 ```
 
-- To uninstall Stash from your cluster, follow the instructions from [here](/docs/setup/uninstall.md).
+- To uninstall Stash from your cluster, follow the instructions from [here](/docs/setup/README.md).

@@ -21,7 +21,7 @@ This tutorial will demonstrate how to use Stash to take backup of an application
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
-- Install `Stash` in your cluster following the steps [here](/docs/setup/install.md).
+- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 - Install MySQL addon for Stash following the steps [here](https://stash.run/docs/v0.9.0-rc.2/addons/mysql/guides/8.0.14/mysql/).
 - If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](https://stash.run/docs/v0.9.0-rc.2/addons/mysql/overview/).
 

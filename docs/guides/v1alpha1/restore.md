@@ -311,7 +311,7 @@ $ kubectl delete repository -n demo deployment.stash-demo
 $ kubectl delete ns demo
 ```
 
-If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/uninstall.md).
+If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/README.md).
 
 ## Next Steps
 
