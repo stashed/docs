@@ -98,7 +98,11 @@ Here, we are going to describe the various sections of a `Snapshot` object.
 
 ## Working with Snapshot
 
+In this section, we are going to show different types of operations you can perform on the Snapshots.
+
 **Listing Snapshots:**
+
+Stash lists Snapshots directly from the backend. This operation can take more time than the default request timeout of `kubectl`. So, we are going to increase the request timeout through the `--request-timeout` flag for get/list commands.
 
 ```bash
 # List Snapshots of all Repositories in the current namespace

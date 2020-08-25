@@ -11,7 +11,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-{{< notice type="warning" message="Batch backup is an enterprise feature. You must install Stash Enterprise operator to use batch backup." >}}
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
 # Hooks in Batch Backup
 

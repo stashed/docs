@@ -12,7 +12,7 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: guides
 ---
 
-{{< notice type="warning" message="Batch backup is an enterprise feature. You must install Stash Enterprise operator to use batch backup." >}}
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
 # Batch Backup and Restore Overview
 
@@ -64,8 +64,10 @@ The batch restore process consists of the following steps:
 
 1. At first, the user creates a `RestoreBatch` CR specifying the targets and the respective Repository where the backed up data has been stored.
 2. The Stash operator watches for the `RestoreBatch` CR.
-3. When the Stash operator finds a `RestoreBatch` CR, it injects an init-container into the target that follows the sidecar model and creates a restore job for the targets that follow the job model.
-4. The restore init-container/job restore their respective data. Stash operator enforces the restore order if the `executionOrder` is set to `Sequential`.
+3. When the Stash operator finds a `RestoreBatch` CR, it executes the global `PreRestore` hooks. If there is no global `PreRestore` hook, Stash will skip this step.
+4. Then, it injects an init-container into the target that follows the sidecar model and creates a restore job for the targets that follow the job model. Stash operator enforces the restore order in this step if the `executionOrder` is set to `Sequential`.
+5. The restore init-container/job first execute their local `PreRestore` hooks. Then, restore their data and finally execute their `PostRestore` hooks.
+6. Finally, Stash operator executes the global `PostRestore` hooks. If there is not global `PostRestore` hook configured for this RestoreBatch, Stash will skip this step.
 
 ## Next Steps
 

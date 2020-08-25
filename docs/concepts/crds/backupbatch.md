@@ -11,7 +11,7 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: concepts
 ---
 
-{{< notice type="warning" message="BackupBatch is an enterprise feature. You must install Stash Enterprise operator to use BackupBatch." >}}
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
 # BackupBatch
 
