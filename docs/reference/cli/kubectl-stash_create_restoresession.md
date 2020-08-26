@@ -34,6 +34,7 @@ kubectl-stash create restoresession [flags]
 ### Options
 
 ```
+      --alias string                 Host identifier of the backed up data. It must be same as the alias used during backup
       --claim.access-modes strings   Access mode of the VolumeClaimTemplates
       --claim.datasource string      DataSource of the VolumeClaimTemplate
       --claim.name string            Name of the VolumeClaimTemplate
