@@ -1,0 +1,3364 @@
+---
+title: Changelog | Stash
+description: Changelog
+menu:
+  docs_{{.version}}:
+    identifier: changelog-stash-v2020.08.27
+    name: Changelog-v2020.08.27
+    parent: welcome
+    weight: 20200827
+product_name: stash
+menu_name: docs_{{.version}}
+section_menu_id: welcome
+url: /docs/{{.version}}/welcome/changelog-v2020.08.27/
+aliases:
+  - /docs/{{.version}}/CHANGELOG-v2020.08.27/
+---
+
+# Stash v2020.08.27 (2020-08-27)
+
+
+## [appscode/stash-enterprise](https://github.com/appscode/stash-enterprise)
+
+### [v0.10.0](https://github.com/appscode/stash-enterprise/releases/tag/v0.10.0)
+
+- [113f8111](https://github.com/appscode/stash-enterprise/commit/113f8111) Prepare for release v0.10.0 (#21)
+- [be8d7f35](https://github.com/appscode/stash-enterprise/commit/be8d7f35) Prepare for release v0.10.0-rc.2 (#20)
+- [dc0c6cf5](https://github.com/appscode/stash-enterprise/commit/dc0c6cf5) Prepare for release v0.10.0-rc.1 (#19)
+- [4836ebc0](https://github.com/appscode/stash-enterprise/commit/4836ebc0) Create GitHub release from release workflow
+- [58833f91](https://github.com/appscode/stash-enterprise/commit/58833f91) Prepare for release v0.10.0-rc.0 (#18)
+- [5a3d33e1](https://github.com/appscode/stash-enterprise/commit/5a3d33e1) Update README.md
+- [cbd97623](https://github.com/appscode/stash-enterprise/commit/cbd97623) Use Docker hub for release images (#17)
+- [d997d3e7](https://github.com/appscode/stash-enterprise/commit/d997d3e7) Refactor parameter passing via annotations (#16)
+- [5300842d](https://github.com/appscode/stash-enterprise/commit/5300842d) Update feature table in README.md (#15)
+- [695b2993](https://github.com/appscode/stash-enterprise/commit/695b2993) Fix update status section + fix tests (#14)
+- [60f3fecd](https://github.com/appscode/stash-enterprise/commit/60f3fecd) Use license-verifier v0.2.2 (#13)
+- [53acec48](https://github.com/appscode/stash-enterprise/commit/53acec48) Add ENFORCE_LICENSE override for licence enforcer (#11)
+- [bd0912d3](https://github.com/appscode/stash-enterprise/commit/bd0912d3) Add offline license verification (#10)
+- [33444a3a](https://github.com/appscode/stash-enterprise/commit/33444a3a) Add license verifier info to build process (#9)
+- [0d8c7294](https://github.com/appscode/stash-enterprise/commit/0d8c7294) Fix restore init-container order (#8)
+- [733d9d47](https://github.com/appscode/stash-enterprise/commit/733d9d47) Pass offshoot labels to backup & restore job's pods (#7)
+- [357341a9](https://github.com/appscode/stash-enterprise/commit/357341a9) Add params and schedule annotation for auto-backup (#6)
+- [aa862d01](https://github.com/appscode/stash-enterprise/commit/aa862d01) Support Snapshot listing for NFS backend without workload running (#5)
+- [6ffc7392](https://github.com/appscode/stash-enterprise/commit/6ffc7392) Introduce RestoreBatch CRD + Additional Improvements (#2)
+- [f3fb0f15](https://github.com/appscode/stash-enterprise/commit/f3fb0f15) Disable e2e tests (#4)
+- [a00abcbb](https://github.com/appscode/stash-enterprise/commit/a00abcbb) Update ci.yml
+- [fb1e1fee](https://github.com/appscode/stash-enterprise/commit/fb1e1fee) Update .kodiak.toml
+- [5d2f056f](https://github.com/appscode/stash-enterprise/commit/5d2f056f) Update update-release-tracker.sh
+- [5160b7a6](https://github.com/appscode/stash-enterprise/commit/5160b7a6) Update update-release-tracker.sh
+- [530542b5](https://github.com/appscode/stash-enterprise/commit/530542b5) Add script to update release tracker on pr merge (#3)
+- [c1e2163f](https://github.com/appscode/stash-enterprise/commit/c1e2163f) Update .kodiak.toml
+- [dd1d1c16](https://github.com/appscode/stash-enterprise/commit/dd1d1c16) Use GCR for enterprise images (#1)
+- [bbde40a3](https://github.com/appscode/stash-enterprise/commit/bbde40a3) Update to Kubernetes v1.18.3 (#1129)
+- [38eb3781](https://github.com/appscode/stash-enterprise/commit/38eb3781) Update to Kubernetes v1.18.3
+- [197aa7bd](https://github.com/appscode/stash-enterprise/commit/197aa7bd) Create .kodiak.toml
+- [181ca49e](https://github.com/appscode/stash-enterprise/commit/181ca49e) Update coverage script
+- [26602c96](https://github.com/appscode/stash-enterprise/commit/26602c96) Merge pull request #1125 from stashed/fix-ci-tests
+- [54f87b78](https://github.com/appscode/stash-enterprise/commit/54f87b78) Increase wait timeout
+- [43428085](https://github.com/appscode/stash-enterprise/commit/43428085) Remove unnecessary test codes + run test in parallel
+- [8a780e0c](https://github.com/appscode/stash-enterprise/commit/8a780e0c) Fix clone-pvc tests
+- [7027c0f6](https://github.com/appscode/stash-enterprise/commit/7027c0f6) Fix E2E test
+- [31de588a](https://github.com/appscode/stash-enterprise/commit/31de588a) Change GCS test bucket name to stash-ci (#1122)
+- [30a490a6](https://github.com/appscode/stash-enterprise/commit/30a490a6) Merge pull request #1121 from stashed/baseline-psp
+- [419a18e3](https://github.com/appscode/stash-enterprise/commit/419a18e3) Use StringSlice type flag
+- [9dd3804d](https://github.com/appscode/stash-enterprise/commit/9dd3804d) Make PSP names configurable through flag
+- [e4edef44](https://github.com/appscode/stash-enterprise/commit/e4edef44) Always use baseline PSP
+- [cf1538a0](https://github.com/appscode/stash-enterprise/commit/cf1538a0) Use filepath.Join to generate Repository prefix for BackupBatch (#1120)
+- [be189169](https://github.com/appscode/stash-enterprise/commit/be189169) Go back to using engineerd/setup-kind
+- [ae2d74fa](https://github.com/appscode/stash-enterprise/commit/ae2d74fa) Update dependencies (#1117)
+- [a93a5b4c](https://github.com/appscode/stash-enterprise/commit/a93a5b4c) Remove defaults from CRD v1beta1 (#1116)
+- [40e65761](https://github.com/appscode/stash-enterprise/commit/40e65761) Use CRD v1 for Kubernetes >= 1.16 (#1115)
+- [7d851e53](https://github.com/appscode/stash-enterprise/commit/7d851e53) Merge pull request #1114 from stashed/x7
+- [352ddeed](https://github.com/appscode/stash-enterprise/commit/352ddeed) Use preinstalled kind
+- [11c9e422](https://github.com/appscode/stash-enterprise/commit/11c9e422) Pass context
+- [21053603](https://github.com/appscode/stash-enterprise/commit/21053603) Update to Kubernetes 1.18.3
+- [f450e9cc](https://github.com/appscode/stash-enterprise/commit/f450e9cc) Add wait for target logic + add conditions for BackupConfiguration + BackupBatch + RestoreSession (#1108)
+- [8f8ff87e](https://github.com/appscode/stash-enterprise/commit/8f8ff87e) Fix volume snapshot job cleanup (#1090)
+- [a4a868b5](https://github.com/appscode/stash-enterprise/commit/a4a868b5) Merge pull request #1111 from stashed/fix-interimVolume
+- [108d0252](https://github.com/appscode/stash-enterprise/commit/108d0252) Set BackupSession as owner of the pvc created from interimVolumeTemplate
+- [fd136c53](https://github.com/appscode/stash-enterprise/commit/fd136c53) Use Go 1.14.3
+- [74c71d22](https://github.com/appscode/stash-enterprise/commit/74c71d22) Update crazy-max/ghaction-docker-buildx flag
+- [f783899b](https://github.com/appscode/stash-enterprise/commit/f783899b) Trigger the workflow on push to master
+- [e7eceb30](https://github.com/appscode/stash-enterprise/commit/e7eceb30) Trigger the workflow on push or pull request
+- [fe479e8c](https://github.com/appscode/stash-enterprise/commit/fe479e8c) Use kind v0.8.0
+- [9fc4665a](https://github.com/appscode/stash-enterprise/commit/9fc4665a) Merge pull request #1093 from robotinfra/master
+- [ef2d57e3](https://github.com/appscode/stash-enterprise/commit/ef2d57e3) fix typo succesSfully
+- [d8d35c49](https://github.com/appscode/stash-enterprise/commit/d8d35c49) fix event types mismatch
+- [53dfe8b0](https://github.com/appscode/stash-enterprise/commit/53dfe8b0) Update stash labels in Makefile
+- [c8081c1d](https://github.com/appscode/stash-enterprise/commit/c8081c1d) Pass image pull secrets to helm chart
+- [37b9b312](https://github.com/appscode/stash-enterprise/commit/37b9b312) Use Go 1.14.2 (#1074)
+- [09621974](https://github.com/appscode/stash-enterprise/commit/09621974) Update K8s version 1.14.6 to 1.14.10 (#1084)
+- [8a1ab32c](https://github.com/appscode/stash-enterprise/commit/8a1ab32c) Give backup triggering CronJob all permissions for Stash crds (#1083)
+- [53b932b1](https://github.com/appscode/stash-enterprise/commit/53b932b1) Use kubectl 1.17 (#1082)
+- [5cdeebee](https://github.com/appscode/stash-enterprise/commit/5cdeebee) Fix nil pointer exception during VolumeSnapshot (#1073)
+- [30630d60](https://github.com/appscode/stash-enterprise/commit/30630d60) Assign returned error properly crateRestoreSessoin() (#1069)
+- [3fcbe1b7](https://github.com/appscode/stash-enterprise/commit/3fcbe1b7) Update README.md to reflect Stash's capability properly (#1060)
+- [53513cfe](https://github.com/appscode/stash-enterprise/commit/53513cfe) Update README.md
+- [d615e2c0](https://github.com/appscode/stash-enterprise/commit/d615e2c0) Add license scan report and status (#1031)
+- [473dab81](https://github.com/appscode/stash-enterprise/commit/473dab81) Use stash.appscode.dev/apimachinery@v0.9.0-rc.6
+- [81be166a](https://github.com/appscode/stash-enterprise/commit/81be166a) Use stash.appscode.dev/apimachinery (#1051)
+- [99dcf0a5](https://github.com/appscode/stash-enterprise/commit/99dcf0a5) Add support for specifying "region" for S3 backend (#1050)
+- [deeaaafe](https://github.com/appscode/stash-enterprise/commit/deeaaafe) Fix event message (#1048)
+- [7bb2ae55](https://github.com/appscode/stash-enterprise/commit/7bb2ae55) Merge pull request #1047 from stashed/rm-fsgroup
+- [a7c3a60b](https://github.com/appscode/stash-enterprise/commit/a7c3a60b) Remove defaulting FSGroup
+- [49bf689d](https://github.com/appscode/stash-enterprise/commit/49bf689d) Fix Repository CRDs print column (#1046)
+- [feb204be](https://github.com/appscode/stash-enterprise/commit/feb204be) Update README.md to v0.9.0-rc.4
+- [ba1733eb](https://github.com/appscode/stash-enterprise/commit/ba1733eb) Don't check if target exist from BackupSession creating CronJob (#1028)
+- [ddc65ceb](https://github.com/appscode/stash-enterprise/commit/ddc65ceb) Fix ServiceAccount name mitchmatch (#1025)
+- [013e5254](https://github.com/appscode/stash-enterprise/commit/013e5254) Suspend CronJob but keep instant backup working while backup is paused (#1024)
+- [64f75bb7](https://github.com/appscode/stash-enterprise/commit/64f75bb7) Add stash specific prefix to automatically created resources (#1023)
+- [d44e0ae2](https://github.com/appscode/stash-enterprise/commit/d44e0ae2) Fix CronJob creation failure handling (#1021)
+- [b2640d36](https://github.com/appscode/stash-enterprise/commit/b2640d36) Use Go 1.13.6
+- [1eb8da6e](https://github.com/appscode/stash-enterprise/commit/1eb8da6e) Update gendocs command (#1016)
+- [6f7c8191](https://github.com/appscode/stash-enterprise/commit/6f7c8191) Add hook tests for BackupBatch (#1014)
+- [84272af9](https://github.com/appscode/stash-enterprise/commit/84272af9) check nil pointer error (#1015)
+- [36ef1d2b](https://github.com/appscode/stash-enterprise/commit/36ef1d2b) Enable tests for K8s 1.11 (#1013)
+- [7c774d77](https://github.com/appscode/stash-enterprise/commit/7c774d77) Fix backup-batch issues (#1004)
+- [5bf1e2c2](https://github.com/appscode/stash-enterprise/commit/5bf1e2c2) Bring back support for k8s 1.11 (#1008)
+- [d6e0fe4b](https://github.com/appscode/stash-enterprise/commit/d6e0fe4b) Remove creationTimestamp from PartialObjectMeta (#1006)
+- [6ae79134](https://github.com/appscode/stash-enterprise/commit/6ae79134) Add BackupBatch support (#985)
+- [ed42b159](https://github.com/appscode/stash-enterprise/commit/ed42b159) Update twitter account (#1003)
+- [c8513185](https://github.com/appscode/stash-enterprise/commit/c8513185) Add Repository Validation for local backend `mountPath` (#947)
+- [11f4c5e2](https://github.com/appscode/stash-enterprise/commit/11f4c5e2) Fix invalid flag name for PVC restorer job (#960)
+- [93358115](https://github.com/appscode/stash-enterprise/commit/93358115) Add Backend e2e Test (#975)
+- [ca688540](https://github.com/appscode/stash-enterprise/commit/ca688540) Update client-go to kubernetes-1.16.3 (#987)
+- [e18f30dd](https://github.com/appscode/stash-enterprise/commit/e18f30dd) Use RWX for restic output.json (#1001)
+- [4d9cdbc8](https://github.com/appscode/stash-enterprise/commit/4d9cdbc8) Run `chmod` on `output.json` only by owner container + Improve… (#1000)
+- [8378f141](https://github.com/appscode/stash-enterprise/commit/8378f141) Add Backup and Restore hooks (#978)
+- [a4dd1a1d](https://github.com/appscode/stash-enterprise/commit/a4dd1a1d) Use helm chart instead of script to install operator (#999)
+- [ec5c9efd](https://github.com/appscode/stash-enterprise/commit/ec5c9efd) Update hack/fmt.sh script
+- [54dbef4c](https://github.com/appscode/stash-enterprise/commit/54dbef4c) Add helper library for CRDs (#977)
+- [16483ce1](https://github.com/appscode/stash-enterprise/commit/16483ce1) Use kubebuilder generated CRD yamls (#971)
+- [eacba300](https://github.com/appscode/stash-enterprise/commit/eacba300) Fix typo (#976)
+- [dd500b08](https://github.com/appscode/stash-enterprise/commit/dd500b08) Use controller-tools@v0.2.2 to generate structural schema (#974)
+- [53331837](https://github.com/appscode/stash-enterprise/commit/53331837) Migrate Repository status.size, Recovery status.observedGeneration (#969)
+- [69ef388b](https://github.com/appscode/stash-enterprise/commit/69ef388b) Generate protobuf files for api types (#967)
+- [decea34f](https://github.com/appscode/stash-enterprise/commit/decea34f) Fix Repository returned error message (#961)
+- [5a9e0356](https://github.com/appscode/stash-enterprise/commit/5a9e0356) Apply valid name functionality (#950)
+- [122ed35f](https://github.com/appscode/stash-enterprise/commit/122ed35f) Test installer against multiple k8s version (#953)
+- [63cfc0f9](https://github.com/appscode/stash-enterprise/commit/63cfc0f9) Format shell scripts (#952)
+- [c77dfcd4](https://github.com/appscode/stash-enterprise/commit/c77dfcd4) Add missing license header
+- [780fd2cb](https://github.com/appscode/stash-enterprise/commit/780fd2cb) Rename Dockerfiles (#946)
+- [dc34560a](https://github.com/appscode/stash-enterprise/commit/dc34560a) Add AutoBackup e2e test (#939)
+- [6979ff8b](https://github.com/appscode/stash-enterprise/commit/6979ff8b) Enable race detector (#944)
+- [69acf528](https://github.com/appscode/stash-enterprise/commit/69acf528) Add license header to files (#943)
+- [b2636f8b](https://github.com/appscode/stash-enterprise/commit/b2636f8b) Don't add AppBinding labels in metric when AppBinding is not available (#942)
+- [18e1ab7e](https://github.com/appscode/stash-enterprise/commit/18e1ab7e) Fix BackupSession creation for ReplicaSet (#940)
+- [8ce4ab86](https://github.com/appscode/stash-enterprise/commit/8ce4ab86) Fix klog flag parsing
+- [efd614f9](https://github.com/appscode/stash-enterprise/commit/efd614f9) Revendor
+- [f3fa386f](https://github.com/appscode/stash-enterprise/commit/f3fa386f) Use crazy-max/ghaction-docker-buildx@v1
+- [5cc99c53](https://github.com/appscode/stash-enterprise/commit/5cc99c53) Show diff when files `make verify` fails (#937)
+- [d20892dd](https://github.com/appscode/stash-enterprise/commit/d20892dd) Update make fmt
+- [fc827b84](https://github.com/appscode/stash-enterprise/commit/fc827b84) Split imports into 3 blocks (#936)
+- [269527cf](https://github.com/appscode/stash-enterprise/commit/269527cf) Volume e2e test github action (#933)
+- [926dcd20](https://github.com/appscode/stash-enterprise/commit/926dcd20) Fix BackupSession additional print column (#932)
+- [f052f7a2](https://github.com/appscode/stash-enterprise/commit/f052f7a2) Remove spec.backupConfiguration from BackupSession (#931)
+- [d378ef2d](https://github.com/appscode/stash-enterprise/commit/d378ef2d) Update e2e tests to run on GitHub actions (#917)
+- [bc27645c](https://github.com/appscode/stash-enterprise/commit/bc27645c) Enable make ci (#928)
+- [9ef3cfeb](https://github.com/appscode/stash-enterprise/commit/9ef3cfeb) Don't restart workload on backup pause+Use ImagePullPolicy: "Always" for Function-Task model (#929)
+- [a5f00836](https://github.com/appscode/stash-enterprise/commit/a5f00836) Add status.observedGeneration (#927)
+- [57eadd03](https://github.com/appscode/stash-enterprise/commit/57eadd03) Implement RetentionPolicy for VolumeSnapshot (#926)
+- [db709fdc](https://github.com/appscode/stash-enterprise/commit/db709fdc) Verify generated files are up to date (#925)
+- [5fb54194](https://github.com/appscode/stash-enterprise/commit/5fb54194) Update and rename go.yml to ci.yml (#922)
+- [0be34c5e](https://github.com/appscode/stash-enterprise/commit/0be34c5e) Add probe and BackupBatch api (#890)
+- [a55b6e84](https://github.com/appscode/stash-enterprise/commit/a55b6e84) Use core package from k8s.io/api repo (#921)
+- [f5a271be](https://github.com/appscode/stash-enterprise/commit/f5a271be) Bring back dependency to github.com/golang/protobuf@v1.2.0 (#918)
+- [5dfeecbc](https://github.com/appscode/stash-enterprise/commit/5dfeecbc) Update tag pattern for release pipeline
+- [e31f5e9a](https://github.com/appscode/stash-enterprise/commit/e31f5e9a) Run e2e tests using GitHub actions (#909)
+- [8bb3ef36](https://github.com/appscode/stash-enterprise/commit/8bb3ef36) Add app=stash label to crd yamls
+- [b50b47c9](https://github.com/appscode/stash-enterprise/commit/b50b47c9) Generate swagger.json for v1beta1 (#916)
+- [095a4a6c](https://github.com/appscode/stash-enterprise/commit/095a4a6c) Add release pipeline (#915)
+- [66926055](https://github.com/appscode/stash-enterprise/commit/66926055) Fix Restore PVC using Task Function method (#897)
+- [404840e4](https://github.com/appscode/stash-enterprise/commit/404840e4) Fix VolumeSnapshot Issues (#912)
+- [7f3b2250](https://github.com/appscode/stash-enterprise/commit/7f3b2250) Add Kubebuilder annotations (#911)
+- [0a499f13](https://github.com/appscode/stash-enterprise/commit/0a499f13) Use kubebuilder to generate crd yamls (#843)
+- [4903508f](https://github.com/appscode/stash-enterprise/commit/4903508f) Update go.yml
+- [23c44bc0](https://github.com/appscode/stash-enterprise/commit/23c44bc0) Introduce InterimVolumeTemplate and BackupHistoryLimit field. (#907)
+- [4ee56d63](https://github.com/appscode/stash-enterprise/commit/4ee56d63) Make RetentionPolicy required in v1beta1 api (#905)
+- [5476cd7a](https://github.com/appscode/stash-enterprise/commit/5476cd7a) Enable GitHub actions (#903)
+- [fe87b789](https://github.com/appscode/stash-enterprise/commit/fe87b789) Fix snapshot listing for local backend (#902)
+- [5f49f5d2](https://github.com/appscode/stash-enterprise/commit/5f49f5d2) Improve Error Handling + Code refactor (#891)
+- [88c84275](https://github.com/appscode/stash-enterprise/commit/88c84275) Add `NICE` and `IONICE` into distroless image (#883)
+- [f63d5c1a](https://github.com/appscode/stash-enterprise/commit/f63d5c1a) Improve metrics handling + make update status uniform (#872)
+- [ea68de24](https://github.com/appscode/stash-enterprise/commit/ea68de24) Use default fsGroup: 65535 (#874)
+- [9bbcabab](https://github.com/appscode/stash-enterprise/commit/9bbcabab) Add DumpEnv func to Restic Config file (#870)
+- [ebde15db](https://github.com/appscode/stash-enterprise/commit/ebde15db) Allow to specify subPath in auto-backup annotation (#871)
+- [6c127323](https://github.com/appscode/stash-enterprise/commit/6c127323) Silence docker buildx command (#866)
+- [5c47abc3](https://github.com/appscode/stash-enterprise/commit/5c47abc3) Update README.md (#865)
+- [50f69ffe](https://github.com/appscode/stash-enterprise/commit/50f69ffe) Use docker buildx to build docker image (#864)
+- [d8c0b1d8](https://github.com/appscode/stash-enterprise/commit/d8c0b1d8) Update version in gendocs script
+- [cb972a98](https://github.com/appscode/stash-enterprise/commit/cb972a98) Use github.com/Azure/go-autorest/autorest@v0.7.0 (#862)
+- [ae5c1325](https://github.com/appscode/stash-enterprise/commit/ae5c1325) Remove the `bs` short name for BackupSession (#859)
+- [1c01d69d](https://github.com/appscode/stash-enterprise/commit/1c01d69d) Use github.com/golang/protobuf@v1.2.0 (#855)
+- [998fac02](https://github.com/appscode/stash-enterprise/commit/998fac02) New variable from type field of AppBinding + Fix RoleBinding nam… (#845)
+- [b97b7622](https://github.com/appscode/stash-enterprise/commit/b97b7622) Fix resolving Task if volumeClaimTemplate is set in RestoreSession(#852)
+- [4ec6caf8](https://github.com/appscode/stash-enterprise/commit/4ec6caf8) Rename BackupConfigurationTemplate to BackupBlueprint (#847)
+- [d8efb120](https://github.com/appscode/stash-enterprise/commit/d8efb120) Use POD_ORDINAL env var to restore using PVC template (#849)
+- [8df5be99](https://github.com/appscode/stash-enterprise/commit/8df5be99) Pass replicas from RestoreSession to Function (#848)
+- [ae5eabd4](https://github.com/appscode/stash-enterprise/commit/ae5eabd4) Use variable for version in BackupConfigurationTemplate name (#846)
+- [fe5b2049](https://github.com/appscode/stash-enterprise/commit/fe5b2049) Fix Platforms Issue (#844)
+- [33fc37cd](https://github.com/appscode/stash-enterprise/commit/33fc37cd) Add support to restore using volumeClaimTemplate in Function-Task model (#841)
+- [3de534ba](https://github.com/appscode/stash-enterprise/commit/3de534ba) Add GetSnapshotSize() function (#839)
+- [6bc80ce2](https://github.com/appscode/stash-enterprise/commit/6bc80ce2) Fix travis build (#837)
+- [1c51a7c5](https://github.com/appscode/stash-enterprise/commit/1c51a7c5) Add support for parallel backup & restore (#833)
+- [e250bb62](https://github.com/appscode/stash-enterprise/commit/e250bb62) Fix RestoreSession replicas logic (#835)
+- [37618091](https://github.com/appscode/stash-enterprise/commit/37618091) Use cron.ParseStandard helper
+- [5015a60d](https://github.com/appscode/stash-enterprise/commit/5015a60d) Update azure-sdk-for-go dependencies (#836)
+- [920dfaea](https://github.com/appscode/stash-enterprise/commit/920dfaea) Update github.com/appscode/go@master
+- [ca2fad07](https://github.com/appscode/stash-enterprise/commit/ca2fad07) Use robfig/cron@v3 (#834)
+- [95728126](https://github.com/appscode/stash-enterprise/commit/95728126) Fix restore Job parallel execution (#832)
+- [94cbae13](https://github.com/appscode/stash-enterprise/commit/94cbae13) Remove unused code (#829)
+- [4dc11263](https://github.com/appscode/stash-enterprise/commit/4dc11263) Generate docs files inside docs repo (#828)
+- [6fb5bc7f](https://github.com/appscode/stash-enterprise/commit/6fb5bc7f) Create default Functions and Tasks from operator (#824)
+- [bb675f67](https://github.com/appscode/stash-enterprise/commit/bb675f67) Fix restore job RBAC (#821)
+- [f96852fc](https://github.com/appscode/stash-enterprise/commit/f96852fc) Fixed volumeSnapshot Error Issue (#819)
+- [08b0f50f](https://github.com/appscode/stash-enterprise/commit/08b0f50f) fix default securityContext passing to restore init-container/job + fix container name (#823)
+- [4aa94675](https://github.com/appscode/stash-enterprise/commit/4aa94675) Add License notice to makefile (#825)
+- [955b1adb](https://github.com/appscode/stash-enterprise/commit/955b1adb) Make --image-tag a required flag. (#817)
+- [9ca08aa6](https://github.com/appscode/stash-enterprise/commit/9ca08aa6) Always attempt to pull a newer image for `make container` (#818)
+- [b88cb9dc](https://github.com/appscode/stash-enterprise/commit/b88cb9dc) Update constants.go
+- [aa0c41f4](https://github.com/appscode/stash-enterprise/commit/aa0c41f4) Add PusgatewayURL input for Functions (#816)
+- [0a45b44a](https://github.com/appscode/stash-enterprise/commit/0a45b44a) Restore PVCs from templates using Restic (#809)
+- [0729ab19](https://github.com/appscode/stash-enterprise/commit/0729ab19) Add TARGET_RESOURCE  variable for BackupConfigurationTemplate (#814)
+- [bab795c2](https://github.com/appscode/stash-enterprise/commit/bab795c2) Add make install, uninstall, purge commands (#813)
+- [604af0d5](https://github.com/appscode/stash-enterprise/commit/604af0d5) Move chart & deploy scripts to github.com/stashed/installer (#811)
+- [521f441b](https://github.com/appscode/stash-enterprise/commit/521f441b) Use stashed/docs repo
+- [4c89667d](https://github.com/appscode/stash-enterprise/commit/4c89667d) Move docs to github.com/stashed/docs repo (#810)
+- [e6614482](https://github.com/appscode/stash-enterprise/commit/e6614482) Fix travis build (#804)
+- [d8f565f4](https://github.com/appscode/stash-enterprise/commit/d8f565f4) Pass labels to offshoot + add generic offshoot labels (#801)
+- [eadca45d](https://github.com/appscode/stash-enterprise/commit/eadca45d) Move HandleResticError to util package (#806)
+- [df42b83f](https://github.com/appscode/stash-enterprise/commit/df42b83f) Remove canary support (#805)
+- [82614d32](https://github.com/appscode/stash-enterprise/commit/82614d32) Update Version.go (#803)
+- [74453ad8](https://github.com/appscode/stash-enterprise/commit/74453ad8) Added ARM64 support to the install script and manifest (#802)
+- [24ece6cc](https://github.com/appscode/stash-enterprise/commit/24ece6cc) Load modules from vendor folder for linter
+- [2672ee05](https://github.com/appscode/stash-enterprise/commit/2672ee05) Add Makefile (#800)
+- [ac829f30](https://github.com/appscode/stash-enterprise/commit/ac829f30) VolumeSnapshot (#787)
+- [a8f3172f](https://github.com/appscode/stash-enterprise/commit/a8f3172f) Remove importance of order of rule in RestoreSession (#795)
+- [886649ed](https://github.com/appscode/stash-enterprise/commit/886649ed) Skip BackupSession creation if target does not exist + use timestamp … (#797)
+- [f038d86e](https://github.com/appscode/stash-enterprise/commit/f038d86e) Use absolute path as aliases for reference docs. (#796)
+- [b9100307](https://github.com/appscode/stash-enterprise/commit/b9100307) Support PSP enabled cluster (#729)
+- [e94399dc](https://github.com/appscode/stash-enterprise/commit/e94399dc) Use restic 0.9.5 (#789)
+- [e962a1c4](https://github.com/appscode/stash-enterprise/commit/e962a1c4) Fix: User and group creation of stash for mongodb and mysql (#786)
+- [228df5a3](https://github.com/appscode/stash-enterprise/commit/228df5a3) Update concept doc (#739)
+- [de9536cd](https://github.com/appscode/stash-enterprise/commit/de9536cd) Update backup manager (#782)
+- [739273a5](https://github.com/appscode/stash-enterprise/commit/739273a5) Configure Env variables for Functions (#780)
+- [c49b24f6](https://github.com/appscode/stash-enterprise/commit/c49b24f6) Add support for backup cluster resources YAML (#721)
+- [91bce2fd](https://github.com/appscode/stash-enterprise/commit/91bce2fd) Add "Supported Backends" doc to new guides (#756)
+- [a8ef2d36](https://github.com/appscode/stash-enterprise/commit/a8ef2d36) Fix rest backend for workloads + add more authentication method for swift backend (#778)
+- [775b6660](https://github.com/appscode/stash-enterprise/commit/775b6660) Backup and restore Elasticsearch (#702)
+- [0fbb9c75](https://github.com/appscode/stash-enterprise/commit/0fbb9c75) Add guides template for new design (#755)
+- [03689414](https://github.com/appscode/stash-enterprise/commit/03689414) Update package path to stash.appscode.dev/stash (#776)
+- [639d499f](https://github.com/appscode/stash-enterprise/commit/639d499f) Update to k8s 1.14.0 client libraries using go.mod (#775)
+- [9ba906d8](https://github.com/appscode/stash-enterprise/commit/9ba906d8) MutatingWebhooks must be without side-effect (#773)
+- [937012d5](https://github.com/appscode/stash-enterprise/commit/937012d5) Introduce VolumeSnapshot APIs (#772)
+- [2b0f0560](https://github.com/appscode/stash-enterprise/commit/2b0f0560) Use osm pkg from kmodules/objectstore-api (#770)
+- [cd9f6ad6](https://github.com/appscode/stash-enterprise/commit/cd9f6ad6) Remove --rbac flag (#761)
+- [09af5d31](https://github.com/appscode/stash-enterprise/commit/09af5d31) Skip creating/processing backup-session when backup-config is paused (#759)
+- [99753f73](https://github.com/appscode/stash-enterprise/commit/99753f73) Fix go fmt
+- [64bb9bdd](https://github.com/appscode/stash-enterprise/commit/64bb9bdd) Stash v1beta1 E2E test for PVC (#753)
+- [bcf8b90d](https://github.com/appscode/stash-enterprise/commit/bcf8b90d) Implement snapshots for v1beta1 api (#749)
+- [3f0ae2d4](https://github.com/appscode/stash-enterprise/commit/3f0ae2d4) Run restic commands using docker (#754)
+- [17feb41c](https://github.com/appscode/stash-enterprise/commit/17feb41c) Update Kubernetes client libraries to 1.13.5 (#752)
+- [2d413ee0](https://github.com/appscode/stash-enterprise/commit/2d413ee0) Stash v1beta1 E2E test for ReplicaSet  (#747)
+- [80b2b3d9](https://github.com/appscode/stash-enterprise/commit/80b2b3d9) Enable pipefail and update restore yamls (#750)
+- [c908df9f](https://github.com/appscode/stash-enterprise/commit/c908df9f) Stash v1beta1 E2E test for ReplicationController (#742)
+- [82c17eaf](https://github.com/appscode/stash-enterprise/commit/82c17eaf) Fixed scratch-dir, output-dir and hostname in functions/tasks yamls (#744)
+- [d113b24f](https://github.com/appscode/stash-enterprise/commit/d113b24f) Add Stash CLI (#734)
+- [286792a6](https://github.com/appscode/stash-enterprise/commit/286792a6) Stash v1beta1 E2E test for DaemonSet (#741)
+- [62960e5b](https://github.com/appscode/stash-enterprise/commit/62960e5b) Apply nice/ionice settings from env (#746)
+- [a2534c97](https://github.com/appscode/stash-enterprise/commit/a2534c97) Stash V1beta1 E2E test for StatefulSet (#737)
+- [37087b38](https://github.com/appscode/stash-enterprise/commit/37087b38) Stash V1beta1 E2E test for Deployment (#710)
+- [c08f04e4](https://github.com/appscode/stash-enterprise/commit/c08f04e4) Attach local backend (#736)
+- [7a282d91](https://github.com/appscode/stash-enterprise/commit/7a282d91) Fix openapi path prefixes for validators and mutators (#732)
+- [a8aef590](https://github.com/appscode/stash-enterprise/commit/a8aef590) Add max-connections for GCS, Azure, B2 backend (#730)
+- [dd3f459c](https://github.com/appscode/stash-enterprise/commit/dd3f459c) Rename admission webhooks to avoid name collision (#725)
+- [a32ceff5](https://github.com/appscode/stash-enterprise/commit/a32ceff5) Apply EmptyDir settings to TmpDir (#719)
+- [36fdb9ae](https://github.com/appscode/stash-enterprise/commit/36fdb9ae) Use FailurePolicy ignore for K8s resource webhooks (#726)
+- [4cab69a0](https://github.com/appscode/stash-enterprise/commit/4cab69a0) Don't write secret data inside temp dir (#724)
+- [e2bcc4a8](https://github.com/appscode/stash-enterprise/commit/e2bcc4a8) Use ionice and nice with Restic CMD (#716)
+- [bf91db4e](https://github.com/appscode/stash-enterprise/commit/bf91db4e) Use cleanup-cache flag (#717)
+- [f2669f17](https://github.com/appscode/stash-enterprise/commit/f2669f17) Add TempDir and PSP settings for Function (#720)
+- [dfc3fbd6](https://github.com/appscode/stash-enterprise/commit/dfc3fbd6) Add support for rest backend (#713)
+- [47cf2dd4](https://github.com/appscode/stash-enterprise/commit/47cf2dd4) Add support for OpenShift DeploymentConfig (#714)
+- [8c2b81b0](https://github.com/appscode/stash-enterprise/commit/8c2b81b0) Backup and restore Mongo DB (#699)
+- [2849319a](https://github.com/appscode/stash-enterprise/commit/2849319a) Backup and restore MySQL DB (#696)
+- [49fe8404](https://github.com/appscode/stash-enterprise/commit/49fe8404) Backup and restore Postgres DB (#695)
+- [dbff05f6](https://github.com/appscode/stash-enterprise/commit/dbff05f6) Backup from stdin and dump to stdout (#694)
+- [08ff2fa5](https://github.com/appscode/stash-enterprise/commit/08ff2fa5) Add BackupSession Controller for Sidecar (#701)
+- [83f1c6e5](https://github.com/appscode/stash-enterprise/commit/83f1c6e5) Update workload controller for new design (#675)
+- [13fb68bd](https://github.com/appscode/stash-enterprise/commit/13fb68bd)  Post backup/restore status update (#691)
+- [30993c08](https://github.com/appscode/stash-enterprise/commit/30993c08) Backup and restore PVC (#676)
+- [7bdf0752](https://github.com/appscode/stash-enterprise/commit/7bdf0752) Resolve tasks for backup/restore sessions (#674)
+- [6a74602a](https://github.com/appscode/stash-enterprise/commit/6a74602a) Add restic wrapper library (#673)
+- [7b8309a5](https://github.com/appscode/stash-enterprise/commit/7b8309a5) Add BackupConfiguration Controller (#671)
+- [6f6c25d1](https://github.com/appscode/stash-enterprise/commit/6f6c25d1) Use ContainerRuntimeSettings in Function spec (#689)
+- [4d80cf6b](https://github.com/appscode/stash-enterprise/commit/4d80cf6b) Update Kubernetes client libraries to 1.13.0 (#687)
+- [361d4ad3](https://github.com/appscode/stash-enterprise/commit/361d4ad3) Fix v1beta1 api for BackupConfigurationTemplate (#688)
+- [302311af](https://github.com/appscode/stash-enterprise/commit/302311af) Introduce v1beta1 api (#647)
+- [ccf4469b](https://github.com/appscode/stash-enterprise/commit/ccf4469b) Prepare docs for 0.8.3 release (#683)
+- [54fb4998](https://github.com/appscode/stash-enterprise/commit/54fb4998) Update changelog for 0.8.3 (#682)
+- [277ef3b7](https://github.com/appscode/stash-enterprise/commit/277ef3b7) Update dependencies (#681)
+- [80d55446](https://github.com/appscode/stash-enterprise/commit/80d55446) Don't add hostname label to Prometheus metrics. (#680)
+- [e5b7f32c](https://github.com/appscode/stash-enterprise/commit/e5b7f32c) Pass pod annotation to deployment (#679)
+- [b342a954](https://github.com/appscode/stash-enterprise/commit/b342a954) Fix the case for deploying using MINGW64 for windows (#678)
+- [4cdc5596](https://github.com/appscode/stash-enterprise/commit/4cdc5596) Use onessl 0.10.0 (#677)
+- [296712f0](https://github.com/appscode/stash-enterprise/commit/296712f0) Fix typo
+- [fbb98590](https://github.com/appscode/stash-enterprise/commit/fbb98590) s/rook/azure/ in possible copy/paste error. (#669)
+- [29e7b6ce](https://github.com/appscode/stash-enterprise/commit/29e7b6ce) Fix builtin monitoring doc (#668)
+- [4b7fe1e4](https://github.com/appscode/stash-enterprise/commit/4b7fe1e4) Update install.md
+- [8a3b2ee6](https://github.com/appscode/stash-enterprise/commit/8a3b2ee6) Don't use priority class when operator namespace is not kube-system (#666)
+- [5bf48b1b](https://github.com/appscode/stash-enterprise/commit/5bf48b1b) Separate type definitions into individual files (#646)
+- [80f21a0d](https://github.com/appscode/stash-enterprise/commit/80f21a0d) Update changelog for 0.8.2
+- [ed5c6b86](https://github.com/appscode/stash-enterprise/commit/ed5c6b86) Prepare docs for 0.8.2 release (#644)
+- [a56261b0](https://github.com/appscode/stash-enterprise/commit/a56261b0) Update copyright notice for 2019 (#643)
+- [812f13e1](https://github.com/appscode/stash-enterprise/commit/812f13e1) Use fullname to generate cleaner name in chart
+- [9daa8a0e](https://github.com/appscode/stash-enterprise/commit/9daa8a0e) apply stash.labels to operator pods
+- [c36875f0](https://github.com/appscode/stash-enterprise/commit/c36875f0) Use stash.labels template in chart (#642)
+- [946df536](https://github.com/appscode/stash-enterprise/commit/946df536) Fixed broken link for bakend (#641)
+- [38d3c734](https://github.com/appscode/stash-enterprise/commit/38d3c734) Only mount stash apiserver `tls.crt` into Prometheus (#639)
+- [9e6a6604](https://github.com/appscode/stash-enterprise/commit/9e6a6604) Fix typo in installer (#638)
+- [0a4488cf](https://github.com/appscode/stash-enterprise/commit/0a4488cf) Fix monitoring in helm + update doc to match with third-party-tools tutorial (#637)
+- [903d9649](https://github.com/appscode/stash-enterprise/commit/903d9649) Add certificate health checker (#636)
+- [a931bbd9](https://github.com/appscode/stash-enterprise/commit/a931bbd9) Update install.md
+- [99e6afba](https://github.com/appscode/stash-enterprise/commit/99e6afba) Update chart readme (#632)
+- [d19ae9fa](https://github.com/appscode/stash-enterprise/commit/d19ae9fa) Update webhook error message format for Kubernetes 1.13+ (#631)
+- [cd9b42df](https://github.com/appscode/stash-enterprise/commit/cd9b42df) Fix typos (#630)
+- [ce1e0d98](https://github.com/appscode/stash-enterprise/commit/ce1e0d98) Fix dependencies.
+- [c2e41214](https://github.com/appscode/stash-enterprise/commit/c2e41214) Update changelog
+- [55233451](https://github.com/appscode/stash-enterprise/commit/55233451) Prepare docs for 0.8.1 release (#629)
+- [d5086aa6](https://github.com/appscode/stash-enterprise/commit/d5086aa6) Add missing validator for respository resource in chart (#628)
+- [d9d7f1d4](https://github.com/appscode/stash-enterprise/commit/d9d7f1d4) Update version matrix
+- [7af5e82c](https://github.com/appscode/stash-enterprise/commit/7af5e82c) Prepare docs for 0.8.0 release (#626)
+- [a1e250f6](https://github.com/appscode/stash-enterprise/commit/a1e250f6) Update docs (Minio, Rook, NFS) (#625)
+- [92779d6c](https://github.com/appscode/stash-enterprise/commit/92779d6c) Use flags.DumpAll to dump flags (#624)
+- [affdebf6](https://github.com/appscode/stash-enterprise/commit/affdebf6) Merge commit '619323825a3fabc55ce2584dd63f8005fd3b78b3'
+- [dddb09f8](https://github.com/appscode/stash-enterprise/commit/dddb09f8) Set periodic analytics (#623)
+- [f054ecf7](https://github.com/appscode/stash-enterprise/commit/f054ecf7) Fix e2e test (#622)
+- [92bcb0e9](https://github.com/appscode/stash-enterprise/commit/92bcb0e9) Recovery Job: Use nodeName for DaemonSet and nodeSelector for other workloads (#620)
+- [3dc6fc5d](https://github.com/appscode/stash-enterprise/commit/3dc6fc5d) Pass --enable-***-webhook flags to operator (#619)
+- [257b33e0](https://github.com/appscode/stash-enterprise/commit/257b33e0) Add validation webhook xray (#618)
+- [fcb6cfdf](https://github.com/appscode/stash-enterprise/commit/fcb6cfdf) Add docs for AKS and EKS (#609)
+- [d1594955](https://github.com/appscode/stash-enterprise/commit/d1594955) Improve monitoring facility (#606)
+- [f484b196](https://github.com/appscode/stash-enterprise/commit/f484b196) Use dynamic pushgateway url (#614)
+- [78b288d3](https://github.com/appscode/stash-enterprise/commit/78b288d3) Pass image pull secrets for cleaner job in chart (#598)
+- [773bd24c](https://github.com/appscode/stash-enterprise/commit/773bd24c) Update kubernetes client libraries to 1.12.0 (#597)
+- [2ff8cb30](https://github.com/appscode/stash-enterprise/commit/2ff8cb30) Support LogLevel in chart (#594)
+- [c71b4cdf](https://github.com/appscode/stash-enterprise/commit/c71b4cdf) Check if Kubernetes version is supported before running operator (#593)
+- [3b443c68](https://github.com/appscode/stash-enterprise/commit/3b443c68) Enable webhooks by default in chart (#591)
+- [9b28c755](https://github.com/appscode/stash-enterprise/commit/9b28c755) Update chart readme for cleaner values (#590)
+- [0da860c2](https://github.com/appscode/stash-enterprise/commit/0da860c2) Update values.yaml
+- [ef90bd48](https://github.com/appscode/stash-enterprise/commit/ef90bd48) Fix #583 and pushgateway version (#584)
+- [fbbaf380](https://github.com/appscode/stash-enterprise/commit/fbbaf380) Use --pull flag with docker build (#581)
+- [0cc79ee4](https://github.com/appscode/stash-enterprise/commit/0cc79ee4) Merge commit '593cbc0910006952073295cea802d37f30ab8e3f'
+- [8a7e068d](https://github.com/appscode/stash-enterprise/commit/8a7e068d) Use kubernetes-1.11.3 (#578)
+- [bd5e17b7](https://github.com/appscode/stash-enterprise/commit/bd5e17b7) Update CertStore (#576)
+- [ea4b0243](https://github.com/appscode/stash-enterprise/commit/ea4b0243) Use apps/v1 apigroup in installer scripts (#574)
+- [fc043125](https://github.com/appscode/stash-enterprise/commit/fc043125) Support pod annotations in chart (#573)
+- [8c840810](https://github.com/appscode/stash-enterprise/commit/8c840810) Set serviceAccount for clearner job (#572)
+- [4506adea](https://github.com/appscode/stash-enterprise/commit/4506adea) Set SecurityContext for stash sidecar (#570)
+- [82416111](https://github.com/appscode/stash-enterprise/commit/82416111) Cleanup webhooks when chart is deleted (#569)
+- [5e466ace](https://github.com/appscode/stash-enterprise/commit/5e466ace) fix success list (#567)
+- [e65fcbf0](https://github.com/appscode/stash-enterprise/commit/e65fcbf0) Use IntHash as status.observedGeneration (#568)
+- [3848ad8d](https://github.com/appscode/stash-enterprise/commit/3848ad8d) Update pipeline (#565)
+- [dcf5c40b](https://github.com/appscode/stash-enterprise/commit/dcf5c40b) Merge commit 'dc51668e81aad9349769f0287cb885477836f2b1'
+- [14797878](https://github.com/appscode/stash-enterprise/commit/14797878) Add observedGenerationHash field (#564)
+- [83ceccc2](https://github.com/appscode/stash-enterprise/commit/83ceccc2) Merge commit 'c73f89c561b2e686d2898b0c8dea8c0bd327e6fd'
+- [af105158](https://github.com/appscode/stash-enterprise/commit/af105158) Fix uninstall for concourse (#563)
+- [41bb7c71](https://github.com/appscode/stash-enterprise/commit/41bb7c71) Fix chart values file (#562)
+- [761d2af9](https://github.com/appscode/stash-enterprise/commit/761d2af9) Improve Helm chart options (#561)
+- [7c69854a](https://github.com/appscode/stash-enterprise/commit/7c69854a) Use apps/v1 apigroup (#555)
+- [067fd837](https://github.com/appscode/stash-enterprise/commit/067fd837) Merge commit 'e0a3eef3ad5bb45a6967704531a303bc7ea7d865'
+- [b93bdb20](https://github.com/appscode/stash-enterprise/commit/b93bdb20) Refactor concourse scripts (#554)
+- [6ba7fc6c](https://github.com/appscode/stash-enterprise/commit/6ba7fc6c) Merge commit '2a5664a73d8d23ced4598e61327a3d7003db2e04'
+- [5f769633](https://github.com/appscode/stash-enterprise/commit/5f769633) Add AlreadyObserved methods (#553)
+- [98998f2c](https://github.com/appscode/stash-enterprise/commit/98998f2c) Add categories support to crds (#552)
+- [cc46dc11](https://github.com/appscode/stash-enterprise/commit/cc46dc11) Improve doc (#550)
+- [59a763c5](https://github.com/appscode/stash-enterprise/commit/59a763c5) Fix concourse test (#496)
+- [7a7145da](https://github.com/appscode/stash-enterprise/commit/7a7145da) Check for snapshot existence before delete (#548)
+- [a3a91ebc](https://github.com/appscode/stash-enterprise/commit/a3a91ebc) Improve logging (#551)
+- [9bb3bbfd](https://github.com/appscode/stash-enterprise/commit/9bb3bbfd) Fix offline backup (#537)
+- [cb676e37](https://github.com/appscode/stash-enterprise/commit/cb676e37) Enable status sub resource for crd yamls (#546)
+- [4f1e66a4](https://github.com/appscode/stash-enterprise/commit/4f1e66a4) Remove old UpdateRecoveryStatus
+- [6d6d5dcf](https://github.com/appscode/stash-enterprise/commit/6d6d5dcf) Retry UpdateStatus calls (#544)
+- [3d191095](https://github.com/appscode/stash-enterprise/commit/3d191095) Retry UpdateStatus calls (#543)
+- [38401b36](https://github.com/appscode/stash-enterprise/commit/38401b36) Revendor objectstore api (#542)
+- [8dc3b6a2](https://github.com/appscode/stash-enterprise/commit/8dc3b6a2) Use kmodules.xyz/objectstore-api (#541)
+- [1d3b1ea1](https://github.com/appscode/stash-enterprise/commit/1d3b1ea1) Merge commit 'da9eaba42e9b93d6975059b7f37c7863e54e1db1'
+- [cee03417](https://github.com/appscode/stash-enterprise/commit/cee03417) Update install.md
+- [e0a00726](https://github.com/appscode/stash-enterprise/commit/e0a00726) Fix extended apiserver issues with Kubernetes 1.11 (#536)
+- [4ee36486](https://github.com/appscode/stash-enterprise/commit/4ee36486) Correctly handle ignored openapi prefixes (#533)
+- [ee3945c4](https://github.com/appscode/stash-enterprise/commit/ee3945c4) Rename dev script (#532)
+- [1bbc5632](https://github.com/appscode/stash-enterprise/commit/1bbc5632) Add rbac permissions for snapshots (#531)
+- [0de9fa5f](https://github.com/appscode/stash-enterprise/commit/0de9fa5f) Use version and additional columns for crds (#530)
+- [dde60d6b](https://github.com/appscode/stash-enterprise/commit/dde60d6b) Don't add admission/v1beta1 group as a prioritized version (#529)
+- [6913f840](https://github.com/appscode/stash-enterprise/commit/6913f840) Update client-go to v8.0.0 (#528)
+- [160b1162](https://github.com/appscode/stash-enterprise/commit/160b1162) Update chart installation instruction for Kubernetes 1.11 (#527)
+- [8cce9279](https://github.com/appscode/stash-enterprise/commit/8cce9279) Format shell scripts (#526)
+- [07a44f72](https://github.com/appscode/stash-enterprise/commit/07a44f72) Merge commit 'bcebfb5adef7b4de9d4da7e48d9ba50a66e75fd3'
+- [e14f357b](https://github.com/appscode/stash-enterprise/commit/e14f357b) Merge commit '2c8b49681a6875886b6be4d90c35908f12b73c65'
+- [0c019e96](https://github.com/appscode/stash-enterprise/commit/0c019e96) Enable status subresource for crds (#524)
+- [54270853](https://github.com/appscode/stash-enterprise/commit/54270853) Remove status from crd.yaml (#523)
+- [97e97d1f](https://github.com/appscode/stash-enterprise/commit/97e97d1f) Upgrade to restic 0.9.1 (#522)
+- [f7910af6](https://github.com/appscode/stash-enterprise/commit/f7910af6) Support node selector for recovery job (#516)
+- [5b4981a1](https://github.com/appscode/stash-enterprise/commit/5b4981a1) Upgrade to prom/pushgateway:v0.5.2 (#519)
+- [05ead203](https://github.com/appscode/stash-enterprise/commit/05ead203) Remove ops-address port (#518)
+- [ceb699f4](https://github.com/appscode/stash-enterprise/commit/ceb699f4) Set cpu limits to 100m (#517)
+- [e426c6cb](https://github.com/appscode/stash-enterprise/commit/e426c6cb) Update stash.sh
+- [97a7d622](https://github.com/appscode/stash-enterprise/commit/97a7d622) Add links to java client
+- [9f6b9a17](https://github.com/appscode/stash-enterprise/commit/9f6b9a17) Move openapi-spec to api folder (#513)
+- [1a2a1af1](https://github.com/appscode/stash-enterprise/commit/1a2a1af1) Deploy operator in kube-system namespace via Helm (#511)
+- [3476b49f](https://github.com/appscode/stash-enterprise/commit/3476b49f) Add togglable tabs for Installation: Script & Helm (#509)
+- [b386851d](https://github.com/appscode/stash-enterprise/commit/b386851d) Revendor dependencies (#508)
+- [0c5d5a41](https://github.com/appscode/stash-enterprise/commit/0c5d5a41) added front matter (#507)
+- [42b26588](https://github.com/appscode/stash-enterprise/commit/42b26588) Improve installer (#504)
+- [705ecd09](https://github.com/appscode/stash-enterprise/commit/705ecd09) Prepare docs for 0.7.0 release. (#502)
+- [72c9e20e](https://github.com/appscode/stash-enterprise/commit/72c9e20e) Prepare docs for 0.7.0-rc.5 (#498)
+- [0da98a7b](https://github.com/appscode/stash-enterprise/commit/0da98a7b) Fix storage implementation for snapshots (#497)
+- [247c0168](https://github.com/appscode/stash-enterprise/commit/247c0168) Update changelog (#495)
+- [8181d490](https://github.com/appscode/stash-enterprise/commit/8181d490) Delete user roles on purge. (#494)
+- [b2f4ab9e](https://github.com/appscode/stash-enterprise/commit/b2f4ab9e) Revert "Add app: stash label to user roles. (#493)"
+- [c7ae0d44](https://github.com/appscode/stash-enterprise/commit/c7ae0d44) Add app: stash label to user roles. (#493)
+- [5ee7ff1d](https://github.com/appscode/stash-enterprise/commit/5ee7ff1d) Use hooks for user roles and fix hook deletion policy
+- [872450a3](https://github.com/appscode/stash-enterprise/commit/872450a3) Use post-install hooks to install admission controller in chart (#492)
+- [5448cd43](https://github.com/appscode/stash-enterprise/commit/5448cd43) Revert "Remove stash crds before uninstalling operator (#458)"
+- [a1d73a47](https://github.com/appscode/stash-enterprise/commit/a1d73a47) Update changelog (#491)
+- [100dd7e4](https://github.com/appscode/stash-enterprise/commit/100dd7e4) Prepare docs for 0.7.0-rc.4 (#483)
+- [7f2665dd](https://github.com/appscode/stash-enterprise/commit/7f2665dd) Avoid creating apiservice when webhooks are not used. (#490)
+- [ff32a4aa](https://github.com/appscode/stash-enterprise/commit/ff32a4aa) Install correct version of stash chart (#489)
+- [74e6f4aa](https://github.com/appscode/stash-enterprise/commit/74e6f4aa) Concourse (#486)
+- [cd2cf249](https://github.com/appscode/stash-enterprise/commit/cd2cf249) Use wait-until instead of fixed delay (#488)
+- [9f023116](https://github.com/appscode/stash-enterprise/commit/9f023116) Removed owner reference from repo-reader role-binding (#484)
+- [d2d3d49f](https://github.com/appscode/stash-enterprise/commit/d2d3d49f) Revendor (#481)
+- [5dc386d6](https://github.com/appscode/stash-enterprise/commit/5dc386d6) Support recovering from repository in different namespace (#474)
+- [b694835b](https://github.com/appscode/stash-enterprise/commit/b694835b) Add support for initial backoff to the apiserver call on recover (#476)
+- [b921d4ed](https://github.com/appscode/stash-enterprise/commit/b921d4ed) Fix enableRBAC  flag for sidecar (#480)
+- [c8c18fb5](https://github.com/appscode/stash-enterprise/commit/c8c18fb5) Typo (`Weclome` → `Welcome`) in page title (#479)
+- [4bddc2e1](https://github.com/appscode/stash-enterprise/commit/4bddc2e1) Update docs (run minio in v1.9.4+ cluster and add example yaml files in respective backends) (#473)
+- [fd676b12](https://github.com/appscode/stash-enterprise/commit/fd676b12) Limit the GCS file permissions to owner only (#472)
+- [0dc74e93](https://github.com/appscode/stash-enterprise/commit/0dc74e93) Fix a typo (#471)
+- [3ca33f76](https://github.com/appscode/stash-enterprise/commit/3ca33f76) Don't panic if admission options is nil (#469)
+- [bc889236](https://github.com/appscode/stash-enterprise/commit/bc889236) Disable admission controllers for webhook server (#468)
+- [4b5ac49d](https://github.com/appscode/stash-enterprise/commit/4b5ac49d) Added SSL support for deleting restic repository from Minio backend (#464)
+- [c8d023a8](https://github.com/appscode/stash-enterprise/commit/c8d023a8) Use new UpdateRecoveryStatus method (#466)
+- [6c0166e2](https://github.com/appscode/stash-enterprise/commit/6c0166e2) Add Update***Status helpers (#465)
+- [5c5ff150](https://github.com/appscode/stash-enterprise/commit/5c5ff150) Update client-go to 7.0.0 (#463)
+- [476a9a88](https://github.com/appscode/stash-enterprise/commit/476a9a88) Rename webhook files in chart (#460)
+- [3e828ad4](https://github.com/appscode/stash-enterprise/commit/3e828ad4) Update workload api (#459)
+- [d3d766d9](https://github.com/appscode/stash-enterprise/commit/d3d766d9) Remove stash crds before uninstalling operator (#458)
+- [8fa3ef63](https://github.com/appscode/stash-enterprise/commit/8fa3ef63) Export kube-ca only if required (#457)
+- [6a294acc](https://github.com/appscode/stash-enterprise/commit/6a294acc) Improve installer (#456)
+- [5c0b35fa](https://github.com/appscode/stash-enterprise/commit/5c0b35fa) Update changelog (#455)
+- [bd9b4b50](https://github.com/appscode/stash-enterprise/commit/bd9b4b50) Various installer fixes (#454)
+- [6f2d013f](https://github.com/appscode/stash-enterprise/commit/6f2d013f) Update workload client (#453)
+- [5d4faa22](https://github.com/appscode/stash-enterprise/commit/5d4faa22) Update workload client (#452)
+- [cbea156f](https://github.com/appscode/stash-enterprise/commit/cbea156f) Revendor workload client (#451)
+- [81a18190](https://github.com/appscode/stash-enterprise/commit/81a18190) Update workload api (#450)
+- [468e6489](https://github.com/appscode/stash-enterprise/commit/468e6489) Fixes RBAC issue in test (#449)
+- [4ba3af7b](https://github.com/appscode/stash-enterprise/commit/4ba3af7b) fixed wipeOut + fixed doc (#447)
+- [3940c79c](https://github.com/appscode/stash-enterprise/commit/3940c79c) Some cleanup (#446)
+- [45f070ff](https://github.com/appscode/stash-enterprise/commit/45f070ff) Delete profile.out
+- [3af16023](https://github.com/appscode/stash-enterprise/commit/3af16023) Add docs for GKE and Rook (#430)
+- [db31cbeb](https://github.com/appscode/stash-enterprise/commit/db31cbeb) concourse configs (#429)
+- [5f288cbc](https://github.com/appscode/stash-enterprise/commit/5f288cbc) Delete restic repository from backend if Repository CRD is deleted (#438)
+- [9940d367](https://github.com/appscode/stash-enterprise/commit/9940d367) Recover specific snapshot (#437)
+- [26571992](https://github.com/appscode/stash-enterprise/commit/26571992) Use Repository data in Recovery CRD (#436)
+- [e1d44499](https://github.com/appscode/stash-enterprise/commit/e1d44499) Update StatefulSet doc (#445)
+- [c6e62f34](https://github.com/appscode/stash-enterprise/commit/c6e62f34) pkg/util: fix error found by vet (#442)
+- [d5b93f8a](https://github.com/appscode/stash-enterprise/commit/d5b93f8a) Move Stash swagger.json to top level folder (#441)
+- [c7753f9b](https://github.com/appscode/stash-enterprise/commit/c7753f9b) Fix go_vet error (#440)
+- [564e63ad](https://github.com/appscode/stash-enterprise/commit/564e63ad) Increase qps and burst limits (#435)
+- [442bfb40](https://github.com/appscode/stash-enterprise/commit/442bfb40) Permit stash operator to perform pods/exec (#433)
+- [4243e931](https://github.com/appscode/stash-enterprise/commit/4243e931) Add RBAC instructions for GKE cluster (#432)
+- [6df2f677](https://github.com/appscode/stash-enterprise/commit/6df2f677) Update charts location (#431)
+- [a980a2c2](https://github.com/appscode/stash-enterprise/commit/a980a2c2) Skip lock while listing snapshots (#428)
+- [a74e2637](https://github.com/appscode/stash-enterprise/commit/a74e2637) Purge repository objects in installer (#427)
+- [435359e0](https://github.com/appscode/stash-enterprise/commit/435359e0) Add SCRIPT_LOCATION variable to installer (#426)
+- [4d6f7eac](https://github.com/appscode/stash-enterprise/commit/4d6f7eac) Show repository snapshot list (#417)
+- [733ec93d](https://github.com/appscode/stash-enterprise/commit/733ec93d) Fixed Repository YAML (#425)
+- [6f50f168](https://github.com/appscode/stash-enterprise/commit/6f50f168) Add delete method for snapshots to swagger.json (#424)
+- [d43b4890](https://github.com/appscode/stash-enterprise/commit/d43b4890) Generate swagger.json (#423)
+- [9ad3d098](https://github.com/appscode/stash-enterprise/commit/9ad3d098) Add install pkg for stash crds (#422)
+- [6ff11a1c](https://github.com/appscode/stash-enterprise/commit/6ff11a1c) Fix openapi spec for stash crds (#421)
+- [a76f6ac5](https://github.com/appscode/stash-enterprise/commit/a76f6ac5) Expose swagger.json (#420)
+- [3f62a44d](https://github.com/appscode/stash-enterprise/commit/3f62a44d) Add missing batch jobs get RBAC permission (#419)
+- [3775b7f9](https://github.com/appscode/stash-enterprise/commit/3775b7f9) Update README.md
+- [8ed47d37](https://github.com/appscode/stash-enterprise/commit/8ed47d37) Add registry skeleton for snapshots (#415)
+- [9d95f38f](https://github.com/appscode/stash-enterprise/commit/9d95f38f) Update chart readme (#413)
+- [429afdaa](https://github.com/appscode/stash-enterprise/commit/429afdaa) Add enableAnalytics to chart readme
+- [b0a197df](https://github.com/appscode/stash-enterprise/commit/b0a197df) Add frontmatter for repository crd (#412)
+- [0dac6862](https://github.com/appscode/stash-enterprise/commit/0dac6862) Use separate registry key for docker images (#410)
+- [b09d7bf9](https://github.com/appscode/stash-enterprise/commit/b09d7bf9) Prepare docs for 0.7.0-rc.3 (#411)
+- [fce51b73](https://github.com/appscode/stash-enterprise/commit/fce51b73) Add test for recovery (#409)
+- [a7dae2e7](https://github.com/appscode/stash-enterprise/commit/a7dae2e7) Skip setting ListKind (#407)
+- [9ecb57c1](https://github.com/appscode/stash-enterprise/commit/9ecb57c1) Add CRD Validation (#406)
+- [7568e62e](https://github.com/appscode/stash-enterprise/commit/7568e62e) Create repository crd for each Restic repository (#394)
+- [f2e78da4](https://github.com/appscode/stash-enterprise/commit/f2e78da4) Generate openapi spec for stash api (#405)
+- [3ef2eed4](https://github.com/appscode/stash-enterprise/commit/3ef2eed4) Fix install script for minikube 0.24.x (Kube 1.8.0) (#404)
+- [301fb68c](https://github.com/appscode/stash-enterprise/commit/301fb68c) Skip downloading onessl if already installed (#401)
+- [9f389a13](https://github.com/appscode/stash-enterprise/commit/9f389a13) Use Restic spec hash instead of resource version to restart pods (#399)
+- [ee28df02](https://github.com/appscode/stash-enterprise/commit/ee28df02) Revendor webhook util and jsonpatch fixes (#400)
+- [716a3548](https://github.com/appscode/stash-enterprise/commit/716a3548) Check for valid owner object (#397)
+- [3b340c16](https://github.com/appscode/stash-enterprise/commit/3b340c16) Revendor webhook library (#393)
+- [cd3c0005](https://github.com/appscode/stash-enterprise/commit/cd3c0005) Update changelog
+- [c556745f](https://github.com/appscode/stash-enterprise/commit/c556745f) Prepare docs for 0.7.0-rc.2 (#391)
+- [e5aee757](https://github.com/appscode/stash-enterprise/commit/e5aee757) Update chart version
+- [270a4983](https://github.com/appscode/stash-enterprise/commit/270a4983) Add variable for dockerRegistry (#390)
+- [c694593b](https://github.com/appscode/stash-enterprise/commit/c694593b) Reorg objects deleted in uninstall command (#389)
+- [d29aa374](https://github.com/appscode/stash-enterprise/commit/d29aa374) Fix --enable-analytics flag (#387)
+- [798253c1](https://github.com/appscode/stash-enterprise/commit/798253c1) Fix flag parsing in tests (#386)
+- [7834ce77](https://github.com/appscode/stash-enterprise/commit/7834ce77) Fix Statefulset Example (#385)
+- [d53219d0](https://github.com/appscode/stash-enterprise/commit/d53219d0) Rename --analytics to --enable-analytics (#384)
+- [0c9daeb1](https://github.com/appscode/stash-enterprise/commit/0c9daeb1) Use separated appscode/kubernetes-webhook-util package (#383)
+- [05686c2a](https://github.com/appscode/stash-enterprise/commit/05686c2a) Update the image tag in operator.yaml (#382)
+- [7e52922b](https://github.com/appscode/stash-enterprise/commit/7e52922b) Don't enable mutator for StatefulSet updates (#381)
+- [6f5cc417](https://github.com/appscode/stash-enterprise/commit/6f5cc417) Update docs to 0.7.0-rc.1 (#380)
+- [208f89b7](https://github.com/appscode/stash-enterprise/commit/208f89b7) Stop using field selectors for CRDs (#379)
+- [da0362b5](https://github.com/appscode/stash-enterprise/commit/da0362b5) Add types for Repository apigroup (#377)
+- [f1b12fea](https://github.com/appscode/stash-enterprise/commit/f1b12fea) Replace initializers with mutation webhook for workloads (#363)
+- [55309b0f](https://github.com/appscode/stash-enterprise/commit/55309b0f) Merge pull request #375 from galexrt/fix373
+- [6acc5711](https://github.com/appscode/stash-enterprise/commit/6acc5711) Add missing front matter (#376)
+- [17254282](https://github.com/appscode/stash-enterprise/commit/17254282) Added error log on restic command error
+- [1685f179](https://github.com/appscode/stash-enterprise/commit/1685f179) Don't fail if check Job already exists
+- [224a1713](https://github.com/appscode/stash-enterprise/commit/224a1713) Update README.md
+- [3992df7d](https://github.com/appscode/stash-enterprise/commit/3992df7d) Fix buid
+- [98eae3a0](https://github.com/appscode/stash-enterprise/commit/98eae3a0) Add travis.yaml (#370)
+- [fc14b6d2](https://github.com/appscode/stash-enterprise/commit/fc14b6d2) Add --purge flag (#369)
+- [c3c18ebe](https://github.com/appscode/stash-enterprise/commit/c3c18ebe) Make it clear that installer is a single command (#365)
+- [182cc702](https://github.com/appscode/stash-enterprise/commit/182cc702) Update installer (#364)
+- [cb573593](https://github.com/appscode/stash-enterprise/commit/cb573593) Update chart to match RBAC best practices for charts (#362)
+- [248bba94](https://github.com/appscode/stash-enterprise/commit/248bba94) Add checks to installer script (#361)
+- [41df1df4](https://github.com/appscode/stash-enterprise/commit/41df1df4) Use admission hook helpers from kutil (#360)
+- [b90a4564](https://github.com/appscode/stash-enterprise/commit/b90a4564) Fix admission webhook flag (#359)
+- [201c871d](https://github.com/appscode/stash-enterprise/commit/201c871d) Support --enable-admission-webhook=false (#358)
+- [d70fc0b2](https://github.com/appscode/stash-enterprise/commit/d70fc0b2) Support multiple webhooks of same apiversion (#357)
+- [da965aee](https://github.com/appscode/stash-enterprise/commit/da965aee) Sync chart to stable charts repo (#356)
+- [34f364f3](https://github.com/appscode/stash-enterprise/commit/34f364f3) Use restic 0.8.3 (#355)
+- [0b0e2cd2](https://github.com/appscode/stash-enterprise/commit/0b0e2cd2) Update README.md (#352)
+- [0d781b4b](https://github.com/appscode/stash-enterprise/commit/0d781b4b) Set RollingUpdate for DaemonSet (#349)
+- [25b60645](https://github.com/appscode/stash-enterprise/commit/25b60645) Document user roles (#348)
+- [a1796d2e](https://github.com/appscode/stash-enterprise/commit/a1796d2e) Add upgrade instructions.
+- [2616f6f7](https://github.com/appscode/stash-enterprise/commit/2616f6f7) Add changelog for 0.7.0-rc.0 (#347)
+- [6f3e7883](https://github.com/appscode/stash-enterprise/commit/6f3e7883) Implement offline backup for multiple replica (#335)
+- [3140f3ab](https://github.com/appscode/stash-enterprise/commit/3140f3ab) Update readme to point to 0.6.4 (#345)
+- [5a2e635a](https://github.com/appscode/stash-enterprise/commit/5a2e635a) Don't block deletion of owner by default (#342)
+- [e6cb9a31](https://github.com/appscode/stash-enterprise/commit/e6cb9a31) Skip generating UpdateStatus method (#341)
+- [9d93b3ed](https://github.com/appscode/stash-enterprise/commit/9d93b3ed) Remove internal types (#340)
+- [59ccb497](https://github.com/appscode/stash-enterprise/commit/59ccb497) Use rbac/v1 apis (#339)
+- [1a532f9b](https://github.com/appscode/stash-enterprise/commit/1a532f9b) Add user roles (#338)
+- [76f18553](https://github.com/appscode/stash-enterprise/commit/76f18553) Use restic 0.8.2 (#337)
+- [fb47ea99](https://github.com/appscode/stash-enterprise/commit/fb47ea99) Use official code generator scripts (#336)
+- [4367fe03](https://github.com/appscode/stash-enterprise/commit/4367fe03) Update rbac-list.yaml
+- [8bcff71f](https://github.com/appscode/stash-enterprise/commit/8bcff71f) Rename appendGroupVersion to appendUniqueGroupVersion
+- [050c9991](https://github.com/appscode/stash-enterprise/commit/050c9991) Update charts to support api registration (#334)
+- [dd82aec9](https://github.com/appscode/stash-enterprise/commit/dd82aec9) Fix e2e tests after webhook merger (#333)
+- [1df3e40a](https://github.com/appscode/stash-enterprise/commit/1df3e40a) Ensure stash can be run locally (#332)
+- [9d8ff669](https://github.com/appscode/stash-enterprise/commit/9d8ff669) Label all stash installer resources
+- [da602cf3](https://github.com/appscode/stash-enterprise/commit/da602cf3) Update Grafana dashboard (#330)
+- [2127401f](https://github.com/appscode/stash-enterprise/commit/2127401f) Delete all stash installer resources
+- [29a51e21](https://github.com/appscode/stash-enterprise/commit/29a51e21) Use binary operator for checking stauts of semver command
+- [5d726907](https://github.com/appscode/stash-enterprise/commit/5d726907) Leave secure port unset
+- [5cba3d0f](https://github.com/appscode/stash-enterprise/commit/5cba3d0f) Use ${} form for onessl envsubst
+- [0b4aa075](https://github.com/appscode/stash-enterprise/commit/0b4aa075) Vendor client-go auth pkg (#331)
+- [4b702a47](https://github.com/appscode/stash-enterprise/commit/4b702a47) Don't append duplicate group versions
+- [ccffa360](https://github.com/appscode/stash-enterprise/commit/ccffa360) Merge admission webhook and operator into one binary (#329)
+- [c3e76f96](https://github.com/appscode/stash-enterprise/commit/c3e76f96) Use envsubst from onessl
+- [639e3fec](https://github.com/appscode/stash-enterprise/commit/639e3fec) Install admission webhook for Kubernetes >=1.9.0
+- [85562989](https://github.com/appscode/stash-enterprise/commit/85562989) Merge uninstall script into the stash.sh script (#328)
+- [cb11fca0](https://github.com/appscode/stash-enterprise/commit/cb11fca0) Implement informer factory for backup scheduler (#325)
+- [29c489e5](https://github.com/appscode/stash-enterprise/commit/29c489e5) Fixed abnormal pod recreation when Restic is deleted (#322)
+- [4238fabc](https://github.com/appscode/stash-enterprise/commit/4238fabc) Implement Pause Restic (#315)
+- [f96cff24](https://github.com/appscode/stash-enterprise/commit/f96cff24) Cleanup apiserver
+- [c13df9c6](https://github.com/appscode/stash-enterprise/commit/c13df9c6) Copy generic-admission-server into pkg (#318)
+- [2b0cf064](https://github.com/appscode/stash-enterprise/commit/2b0cf064) Use shared infromer factory (#317)
+- [b5d67a67](https://github.com/appscode/stash-enterprise/commit/b5d67a67) Support self-signed ca cert for backends (#294)
+- [50639b72](https://github.com/appscode/stash-enterprise/commit/50639b72) Use GetBaseVersion method from kutil (#316)
+- [603c42a1](https://github.com/appscode/stash-enterprise/commit/603c42a1) Update install.md
+- [b1b72d4b](https://github.com/appscode/stash-enterprise/commit/b1b72d4b) Remove system prefix from admission server rbac
+- [1666bc34](https://github.com/appscode/stash-enterprise/commit/1666bc34) Fix webhook command description (#314)
+- [b44f26b2](https://github.com/appscode/stash-enterprise/commit/b44f26b2) Use rbac/v1beta1 api. (#313)
+- [c77b2ccd](https://github.com/appscode/stash-enterprise/commit/c77b2ccd) Reduce log level for admission webhook
+- [147c0788](https://github.com/appscode/stash-enterprise/commit/147c0788) Support Create & Update operations in admission webhook (#312)
+- [45ee2879](https://github.com/appscode/stash-enterprise/commit/45ee2879) Merge webhook plugins into one. (#311)
+- [4403d50c](https://github.com/appscode/stash-enterprise/commit/4403d50c) Fix installer script
+- [2c9166fc](https://github.com/appscode/stash-enterprise/commit/2c9166fc) Support private docker registry in installer (#310)
+- [cfe79458](https://github.com/appscode/stash-enterprise/commit/cfe79458) Add ValidatingAdmissionWebhook for Stash CRDs (#299)
+- [5a93ff74](https://github.com/appscode/stash-enterprise/commit/5a93ff74) Compress go binaries (#309)
+- [24307b0f](https://github.com/appscode/stash-enterprise/commit/24307b0f) Merge commit 'dd01a18d6821b218669437b491e71eff9cf82c89'
+- [75be0ffe](https://github.com/appscode/stash-enterprise/commit/75be0ffe) Merge commit '6cd6efaa2491aea24a0f7f588c86b0ff5ff03283'
+- [6dc58fe7](https://github.com/appscode/stash-enterprise/commit/6dc58fe7) Rename --initializer flag to --enable-initializer (#308)
+- [976e674a](https://github.com/appscode/stash-enterprise/commit/976e674a) Remove STASH_ROLE_TYPE from installer scripts (#307)
+- [310f7395](https://github.com/appscode/stash-enterprise/commit/310f7395) Use rbac/v1 api (#306)
+- [d6be7daf](https://github.com/appscode/stash-enterprise/commit/d6be7daf) Use kubectl auth reconcile (#305)
+- [8a420951](https://github.com/appscode/stash-enterprise/commit/8a420951) Fixed backup count (#295)
+- [38282b43](https://github.com/appscode/stash-enterprise/commit/38282b43) Write restic stderror in error events (#296)
+- [c71ac206](https://github.com/appscode/stash-enterprise/commit/c71ac206) Added support for private docker registry (#300)
+- [1a190437](https://github.com/appscode/stash-enterprise/commit/1a190437) Add --initializer flag to installer (#304)
+- [da0ad798](https://github.com/appscode/stash-enterprise/commit/da0ad798) Prepare docs for 0.7.0-alpha.0 (#302)
+- [3faece70](https://github.com/appscode/stash-enterprise/commit/3faece70) Change installer script (#301)
+- [654bc988](https://github.com/appscode/stash-enterprise/commit/654bc988) Merge commit '5e307d69dbf7e02331cc5bc60154e79a52285060'
+- [0e9ebfc6](https://github.com/appscode/stash-enterprise/commit/0e9ebfc6) Remove TPR to CRD migrator (#298)
+- [b6086636](https://github.com/appscode/stash-enterprise/commit/b6086636) Update dependencies to Kubernetes 1.9 (#297)
+- [4b00589b](https://github.com/appscode/stash-enterprise/commit/4b00589b) Cleanup headless service (#292)
+- [58da0f35](https://github.com/appscode/stash-enterprise/commit/58da0f35) Prepare docs for 0.6.3
+- [fb1629fb](https://github.com/appscode/stash-enterprise/commit/fb1629fb) Fixed parsing argument error (#291)
+- [edd09058](https://github.com/appscode/stash-enterprise/commit/edd09058) Update reference docs
+- [27948f53](https://github.com/appscode/stash-enterprise/commit/27948f53) Update appscode/go log wrapper (#287)
+- [b9526600](https://github.com/appscode/stash-enterprise/commit/b9526600) Fix inline volumeSource marshalling for LocalSpec (#289)
+- [1fe92cef](https://github.com/appscode/stash-enterprise/commit/1fe92cef) Fix roadmap link
+- [f8c6641e](https://github.com/appscode/stash-enterprise/commit/f8c6641e) Added Grafana Stash overview dashboard (#286)
+- [12916afc](https://github.com/appscode/stash-enterprise/commit/12916afc) Pass --pushgateway-url for injected containers. (#284)
+- [321d7414](https://github.com/appscode/stash-enterprise/commit/321d7414) Prepare docs for 0.6.2 release (#278)
+- [001d1592](https://github.com/appscode/stash-enterprise/commit/001d1592) Merge pull request #277 from whereisaaron/master
+- [ae8e801a](https://github.com/appscode/stash-enterprise/commit/ae8e801a) Update Helm chart to use newer 'fullname' template that avoid duplicate (e.g. 'stash-stash-...') resource names
+- [fac516a2](https://github.com/appscode/stash-enterprise/commit/fac516a2) Fix RBAC roles in chart (#276)
+- [6f10418a](https://github.com/appscode/stash-enterprise/commit/6f10418a) Garbage collect service-accounts and role-bindings for jobs (#275)
+- [a021b63f](https://github.com/appscode/stash-enterprise/commit/a021b63f) Update initializer.md
+- [bc24ae45](https://github.com/appscode/stash-enterprise/commit/bc24ae45) Update initializer.md
+- [b1573eba](https://github.com/appscode/stash-enterprise/commit/b1573eba) Fix new restic format in upgrade docs (#274)
+- [c1f54279](https://github.com/appscode/stash-enterprise/commit/c1f54279) Add statefulsets to stash-sidecar ClusterRole creation (#273)
+- [1bc0a02a](https://github.com/appscode/stash-enterprise/commit/1bc0a02a) Reduce operator permissions for service accounts (#270)
+- [d2502bbe](https://github.com/appscode/stash-enterprise/commit/d2502bbe) Fix formatting of uninstall.md (#269)
+- [1341a5fd](https://github.com/appscode/stash-enterprise/commit/1341a5fd) Prepare docs for 0.6.1 (#268)
+- [ac4e8c93](https://github.com/appscode/stash-enterprise/commit/ac4e8c93) Fix kubectl version parsing generation in GKE (#267)
+- [588a2947](https://github.com/appscode/stash-enterprise/commit/588a2947) Fix upgrade instructions.
+- [ea46d9a9](https://github.com/appscode/stash-enterprise/commit/ea46d9a9) Detect analytics client id using env vars (#265)
+- [078f5cfb](https://github.com/appscode/stash-enterprise/commit/078f5cfb) Cleanup release script
+- [937b682c](https://github.com/appscode/stash-enterprise/commit/937b682c) Prepare docs for 0.6.0 release (#264)
+- [ee6e1068](https://github.com/appscode/stash-enterprise/commit/ee6e1068) Reorganize docs (#263)
+- [721dace8](https://github.com/appscode/stash-enterprise/commit/721dace8) Add support for B2 (#262)
+- [39405c0c](https://github.com/appscode/stash-enterprise/commit/39405c0c) Update restic website link (#261)
+- [9058a9bc](https://github.com/appscode/stash-enterprise/commit/9058a9bc) Revendor kutil
+- [f472517e](https://github.com/appscode/stash-enterprise/commit/f472517e) Fix doc
+- [915c53ff](https://github.com/appscode/stash-enterprise/commit/915c53ff) Update docs for unified LocalSpec (#260)
+- [e2bd7c1b](https://github.com/appscode/stash-enterprise/commit/e2bd7c1b) Unify LocalSpec and RecoveredVolume (#259)
+- [cde4f137](https://github.com/appscode/stash-enterprise/commit/cde4f137) Remove restic-dependency from recovery (#258)
+- [6e599853](https://github.com/appscode/stash-enterprise/commit/6e599853) Update restic version to 0.8.1 (#257)
+- [d66a53df](https://github.com/appscode/stash-enterprise/commit/d66a53df) Use cmp methods from kutil (#255)
+- [da8f2331](https://github.com/appscode/stash-enterprise/commit/da8f2331) Remove TryPatch methods (#254)
+- [41e1ff43](https://github.com/appscode/stash-enterprise/commit/41e1ff43) Use log.LEVEL() instead of fmt.Printf() (#252)
+- [aa91dadd](https://github.com/appscode/stash-enterprise/commit/aa91dadd) Log operator version on start (#253)
+- [8b36f5d1](https://github.com/appscode/stash-enterprise/commit/8b36f5d1) Use verb type for mutation (#251)
+- [4a3afb07](https://github.com/appscode/stash-enterprise/commit/4a3afb07) Use CreateOrPatchCronJob from kutil (#250)
+- [fad6e8bb](https://github.com/appscode/stash-enterprise/commit/fad6e8bb) Indicate mutation in PATCH helper method return (#249)
+- [7bd56db6](https://github.com/appscode/stash-enterprise/commit/7bd56db6) Update RBAC for analytics
+- [afa4f8fa](https://github.com/appscode/stash-enterprise/commit/afa4f8fa) Simplify clientID generation for analytics (#247)
+- [fb31ed72](https://github.com/appscode/stash-enterprise/commit/fb31ed72) Set analytics clientID (#246)
+- [29812d44](https://github.com/appscode/stash-enterprise/commit/29812d44) Update README.md
+- [8dd9bb20](https://github.com/appscode/stash-enterprise/commit/8dd9bb20) Cleanup docs
+- [cebe13bf](https://github.com/appscode/stash-enterprise/commit/cebe13bf) Reorganize docs (#245)
+- [4987b08a](https://github.com/appscode/stash-enterprise/commit/4987b08a) Upgrade procedure for 0.5.1 to 0.6.0 (#243)
+- [7997564b](https://github.com/appscode/stash-enterprise/commit/7997564b) Update docs (#236)
+- [8d614880](https://github.com/appscode/stash-enterprise/commit/8d614880) Enable Restic cahce-dir flag (#241)
+- [780754d9](https://github.com/appscode/stash-enterprise/commit/780754d9) Fix retentionPolicyName not found error (#242)
+- [4d291178](https://github.com/appscode/stash-enterprise/commit/4d291178) Lower case workload.kind in prefix (#240)
+- [eaaae57f](https://github.com/appscode/stash-enterprise/commit/eaaae57f) Use RegisterCRDs helper (#239)
+- [2becb354](https://github.com/appscode/stash-enterprise/commit/2becb354) Change left_menu -> menu_name (#235)
+- [a1e2f14d](https://github.com/appscode/stash-enterprise/commit/a1e2f14d) Revendor dependencies (#234)
+- [7241c6dd](https://github.com/appscode/stash-enterprise/commit/7241c6dd) Implement offline backup (#229)
+- [03318f1a](https://github.com/appscode/stash-enterprise/commit/03318f1a) Add aliases for README file (#233)
+- [a560bcb0](https://github.com/appscode/stash-enterprise/commit/a560bcb0) Add Docs Front Matter for 0.5.1 (#231)
+- [a8ff09c0](https://github.com/appscode/stash-enterprise/commit/a8ff09c0) Update bundles restic to 0.8.0 (#232)
+- [84238d2c](https://github.com/appscode/stash-enterprise/commit/84238d2c) Revendor kutil (#230)
+- [0cfe9187](https://github.com/appscode/stash-enterprise/commit/0cfe9187) Fix configmap-lock-name (#228)
+- [cd3c9e36](https://github.com/appscode/stash-enterprise/commit/cd3c9e36) Minor fixes
+- [86157814](https://github.com/appscode/stash-enterprise/commit/86157814) Run `restic check` once every 3 days (#223)
+- [1161ff0b](https://github.com/appscode/stash-enterprise/commit/1161ff0b) Record recovery status for individual FileGroup (#222)
+- [9aeba2e6](https://github.com/appscode/stash-enterprise/commit/9aeba2e6) PollInfinitely for recovery job to succeed
+- [aa3459e6](https://github.com/appscode/stash-enterprise/commit/aa3459e6) Dynamically create stash-sidecar ClusterRole in operator (#221)
+- [6ae7222c](https://github.com/appscode/stash-enterprise/commit/6ae7222c) Implement workload initializer in stash operator (#207)
+- [ef10c66e](https://github.com/appscode/stash-enterprise/commit/ef10c66e) Leader election for deployment, replica set and rc (#206)
+- [106d049d](https://github.com/appscode/stash-enterprise/commit/106d049d) Generate docs
+- [f476f444](https://github.com/appscode/stash-enterprise/commit/f476f444) Implement Recovery for Restic Backup (#202)
+- [d56e913c](https://github.com/appscode/stash-enterprise/commit/d56e913c) Update install.md
+- [7bbe582d](https://github.com/appscode/stash-enterprise/commit/7bbe582d) Update install.md
+- [aa8aaa48](https://github.com/appscode/stash-enterprise/commit/aa8aaa48) Update install.md
+- [b97ebbaf](https://github.com/appscode/stash-enterprise/commit/b97ebbaf) Update chart
+- [0751780f](https://github.com/appscode/stash-enterprise/commit/0751780f) Update install.md
+- [edcab803](https://github.com/appscode/stash-enterprise/commit/edcab803) Update _helpers.tpl
+- [565ae057](https://github.com/appscode/stash-enterprise/commit/565ae057) Support imagePullSecrets in chart
+- [8ae6dc7e](https://github.com/appscode/stash-enterprise/commit/8ae6dc7e) Update _helpers.tpl
+- [2085d5b5](https://github.com/appscode/stash-enterprise/commit/2085d5b5) Make stash chart namespaced (#210)
+- [88e512f5](https://github.com/appscode/stash-enterprise/commit/88e512f5) Update docs to point to 0.4.2 release
+- [88885373](https://github.com/appscode/stash-enterprise/commit/88885373) Update codegen.sh
+- [39108498](https://github.com/appscode/stash-enterprise/commit/39108498) Use typed versioned client for CRD
+- [484df692](https://github.com/appscode/stash-enterprise/commit/484df692) Change `k8s.io/api/core/v1` pkg alias to core (#204)
+- [b854e1cb](https://github.com/appscode/stash-enterprise/commit/b854e1cb) Use client-go 5.x
+- [e2488aa5](https://github.com/appscode/stash-enterprise/commit/e2488aa5) Update rbac.md
+- [8b51195d](https://github.com/appscode/stash-enterprise/commit/8b51195d) Add recovery CRD (#201)
+- [779c373f](https://github.com/appscode/stash-enterprise/commit/779c373f) Merge commit 'bf3f3307acbd69e5147db8abdb75b1529147f0c5'
+- [ad5d6c98](https://github.com/appscode/stash-enterprise/commit/ad5d6c98) Clarify support for DO
+- [f87995af](https://github.com/appscode/stash-enterprise/commit/f87995af) Prepare docs for 0.5.1
+- [cb99e324](https://github.com/appscode/stash-enterprise/commit/cb99e324) Update RBAC permissions
+- [4656ba57](https://github.com/appscode/stash-enterprise/commit/4656ba57) Correctly detect "default" service account (#200)
+- [3e4af9b2](https://github.com/appscode/stash-enterprise/commit/3e4af9b2) Add label to installer objects in rbac mode
+- [1057d95e](https://github.com/appscode/stash-enterprise/commit/1057d95e) Clarify that --tag foo,tag bar style tags are not supported. (#199)
+- [9b6bb88e](https://github.com/appscode/stash-enterprise/commit/9b6bb88e) Set hostname based on resource type (#198)
+- [d2cd1c2d](https://github.com/appscode/stash-enterprise/commit/d2cd1c2d) Manage RoleBinding for rbac enabled cluster (#197)
+- [3b2a281d](https://github.com/appscode/stash-enterprise/commit/3b2a281d) Update install.md
+- [2a550c40](https://github.com/appscode/stash-enterprise/commit/2a550c40) Update install.md
+- [c3ca4669](https://github.com/appscode/stash-enterprise/commit/c3ca4669) Document how to detect operator version (#196)
+- [85b0f16a](https://github.com/appscode/stash-enterprise/commit/85b0f16a) Prepare docs for 0.5.0 release
+- [3003c01a](https://github.com/appscode/stash-enterprise/commit/3003c01a) Rename Scheduler to Controller
+- [e69ec81d](https://github.com/appscode/stash-enterprise/commit/e69ec81d) Stop dumping env vars
+- [657fa06a](https://github.com/appscode/stash-enterprise/commit/657fa06a) Prepare docs for 0.5.0-beta.3 release
+- [a6a98e51](https://github.com/appscode/stash-enterprise/commit/a6a98e51) Use workqueue for scheduler (#194)
+- [cccc23cf](https://github.com/appscode/stash-enterprise/commit/cccc23cf) Register events api group
+- [fadd0ab8](https://github.com/appscode/stash-enterprise/commit/fadd0ab8) Revise RBAC permissions
+- [d3dc55f7](https://github.com/appscode/stash-enterprise/commit/d3dc55f7) Prepare docs for 0.5.0-beta.2
+- [770ff1cd](https://github.com/appscode/stash-enterprise/commit/770ff1cd) Update tutorial.md (#186)
+- [2c0b4836](https://github.com/appscode/stash-enterprise/commit/2c0b4836) Add tests for DO (#193)
+- [2aeef6da](https://github.com/appscode/stash-enterprise/commit/2aeef6da) Use object reference to write events
+- [0ccaa324](https://github.com/appscode/stash-enterprise/commit/0ccaa324) Disable StatefulSet support
+- [0a55c0b8](https://github.com/appscode/stash-enterprise/commit/0a55c0b8) Prepare docs for 0.5.0-beta.1
+- [c268e249](https://github.com/appscode/stash-enterprise/commit/c268e249) Fix prometheus metrics collection (#192)
+- [17da332e](https://github.com/appscode/stash-enterprise/commit/17da332e) Disable StatefulSet controller.
+- [7191de11](https://github.com/appscode/stash-enterprise/commit/7191de11) Fix StatefulSet tests (#190)
+- [c91b9292](https://github.com/appscode/stash-enterprise/commit/c91b9292) Replace reflect.Equal with github.com/google/go-cmp (#188)
+- [027c6d98](https://github.com/appscode/stash-enterprise/commit/027c6d98) Only handle Restic when spec changes.
+- [c80f1a9f](https://github.com/appscode/stash-enterprise/commit/c80f1a9f) Reorder cache controller
+- [9dd89304](https://github.com/appscode/stash-enterprise/commit/9dd89304) Skip ReplicaSet owned by Deployments (#187)
+- [06df8f94](https://github.com/appscode/stash-enterprise/commit/06df8f94) Merge commit '32217c844015816b86c46a8d74a175c42f0e307a'
+- [6ad7ada4](https://github.com/appscode/stash-enterprise/commit/6ad7ada4) Prepare docs for 5.0.0-beta.0 (#185)
+- [f7939ceb](https://github.com/appscode/stash-enterprise/commit/f7939ceb) Don't store status in annotations
+- [94419091](https://github.com/appscode/stash-enterprise/commit/94419091) Rename LastAppliedConfiguration
+- [2237978f](https://github.com/appscode/stash-enterprise/commit/2237978f) Fix patching
+- [ec02f851](https://github.com/appscode/stash-enterprise/commit/ec02f851) Set namespaceIndex as indexer (#184)
+- [3868041c](https://github.com/appscode/stash-enterprise/commit/3868041c) Fix e2e tests (#183)
+- [94c7d2d4](https://github.com/appscode/stash-enterprise/commit/94c7d2d4) Rename injector methods
+- [755e28bc](https://github.com/appscode/stash-enterprise/commit/755e28bc) Use workqueue (#182)
+- [2d41478f](https://github.com/appscode/stash-enterprise/commit/2d41478f) Use Deployment from apps/v1beta1 (#181)
+- [a5229147](https://github.com/appscode/stash-enterprise/commit/a5229147) Delete *.generated.go files for ugorji (#180)
+- [05abff50](https://github.com/appscode/stash-enterprise/commit/05abff50) Use WaitForCRDReady from kutil (#179)
+- [096e1410](https://github.com/appscode/stash-enterprise/commit/096e1410) Only watch apps/v1beta1 Deployment (#178)
+- [ade40c61](https://github.com/appscode/stash-enterprise/commit/ade40c61) Move kutil to client package (#177)
+- [226ffe83](https://github.com/appscode/stash-enterprise/commit/226ffe83) Generate ugorji stuff (#176)
+- [030e7b32](https://github.com/appscode/stash-enterprise/commit/030e7b32) Remove kubernetes/code-generator from builddeps
+- [5c2773d1](https://github.com/appscode/stash-enterprise/commit/5c2773d1) Prepare docs for 0.5.0 (#174)
+- [04afd1cf](https://github.com/appscode/stash-enterprise/commit/04afd1cf) Install stash as a critical addon (#173)
+- [d59093d1](https://github.com/appscode/stash-enterprise/commit/d59093d1) Update chart to add roles for CRD
+- [7ec22dfc](https://github.com/appscode/stash-enterprise/commit/7ec22dfc) Use Namespace() method from kutil.
+- [f4850c29](https://github.com/appscode/stash-enterprise/commit/f4850c29) Add release script.
+- [9a91e124](https://github.com/appscode/stash-enterprise/commit/9a91e124) Prepare docs for 0.5.0-rc.0
+- [324a62fb](https://github.com/appscode/stash-enterprise/commit/324a62fb) Revendor kutil.
+- [2c8add5f](https://github.com/appscode/stash-enterprise/commit/2c8add5f) Set RESTIC_VER to 0.7.3 (#172)
+- [a04187d5](https://github.com/appscode/stash-enterprise/commit/a04187d5) Refresh charts to match recent convention (#171)
+- [c9b5662a](https://github.com/appscode/stash-enterprise/commit/c9b5662a) Fix deployment name in tutorial (#169)
+- [1356b31b](https://github.com/appscode/stash-enterprise/commit/1356b31b) Update kutil (#170)
+- [4ea31986](https://github.com/appscode/stash-enterprise/commit/4ea31986) Set RESTIC_VER to 0.7.2
+- [f7d9c903](https://github.com/appscode/stash-enterprise/commit/f7d9c903) Use object ref for Restic
+- [49e5a33b](https://github.com/appscode/stash-enterprise/commit/49e5a33b) Fix command in Developer-guide (#168)
+- [9bacd5bb](https://github.com/appscode/stash-enterprise/commit/9bacd5bb) Set root scope kinds
+- [6bb6c582](https://github.com/appscode/stash-enterprise/commit/6bb6c582) Use apis/v1alpha1 instead of internal version (#167)
+- [1206be03](https://github.com/appscode/stash-enterprise/commit/1206be03) Remove resource:path (#166)
+- [d1b790de](https://github.com/appscode/stash-enterprise/commit/d1b790de) Use kubernetes/code-generator (#163)
+- [9cfb37cf](https://github.com/appscode/stash-enterprise/commit/9cfb37cf) Update kutil
+- [cac94ede](https://github.com/appscode/stash-enterprise/commit/cac94ede) Expose resync-period as flag
+- [e31dd8f7](https://github.com/appscode/stash-enterprise/commit/e31dd8f7) Remove pkg/analytics
+- [5f79c4da](https://github.com/appscode/stash-enterprise/commit/5f79c4da) Move analytics collector to root command (#164)
+- [e4a88e55](https://github.com/appscode/stash-enterprise/commit/e4a88e55) Revendor k8s.io/apiextensions-apiserver (#162)
+- [2fe16a61](https://github.com/appscode/stash-enterprise/commit/2fe16a61) Migrate TPR to CRD (#160)
+- [cc22b572](https://github.com/appscode/stash-enterprise/commit/cc22b572) Fix Restic (#159)
+- [ae0d9406](https://github.com/appscode/stash-enterprise/commit/ae0d9406) Update kutil dependency (#158)
+- [cc9ee0e5](https://github.com/appscode/stash-enterprise/commit/cc9ee0e5) Use CheckAPIVersion() (#157)
+- [b7e97424](https://github.com/appscode/stash-enterprise/commit/b7e97424) Use PATCH api instead of UPDATE (#156)
+- [5a50804a](https://github.com/appscode/stash-enterprise/commit/5a50804a) Check version using semver library (#152)
+- [8364234d](https://github.com/appscode/stash-enterprise/commit/8364234d) Support adding Sidecar containers for StatefulSet. (#151)
+- [d20e52ed](https://github.com/appscode/stash-enterprise/commit/d20e52ed) Update client-go to 4.0.0 (#150)
+- [24c79bf5](https://github.com/appscode/stash-enterprise/commit/24c79bf5) Update build commands for restic. (#149)
+- [f276cd38](https://github.com/appscode/stash-enterprise/commit/f276cd38) Update client-go to 3.0.0 from 3.0.0-beta (#148)
+- [c4a3bfe3](https://github.com/appscode/stash-enterprise/commit/c4a3bfe3) Add DCO
+- [f98d1877](https://github.com/appscode/stash-enterprise/commit/f98d1877) Fix typos of tutorial.md file (#138)
+- [e7c5154b](https://github.com/appscode/stash-enterprise/commit/e7c5154b) Add uninstall.sh script (#144)
+- [15deeba0](https://github.com/appscode/stash-enterprise/commit/15deeba0) Change receiver for Invocation to fi
+- [7b8829fc](https://github.com/appscode/stash-enterprise/commit/7b8829fc) Use console type instead of sh
+- [e6065cb2](https://github.com/appscode/stash-enterprise/commit/e6065cb2) Prepare docs for 0.4.1 release
+- [1d1dbbfb](https://github.com/appscode/stash-enterprise/commit/1d1dbbfb) Build binary inside Docker image
+- [ceafa959](https://github.com/appscode/stash-enterprise/commit/ceafa959) Merge commit 'b8c45d0d4379587a31302b834334047cc77e59db'
+- [b629d0cd](https://github.com/appscode/stash-enterprise/commit/b629d0cd) Revendor forked robfig/cron (#139)
+- [5e34ea69](https://github.com/appscode/stash-enterprise/commit/5e34ea69) Update stash-without-rbac.yaml
+- [9ae078bb](https://github.com/appscode/stash-enterprise/commit/9ae078bb) Add omitempty for Local storage
+- [7ac0a7a2](https://github.com/appscode/stash-enterprise/commit/7ac0a7a2) Move resource consts to api pkg
+- [42ccbccd](https://github.com/appscode/stash-enterprise/commit/42ccbccd) Fix Fake restic resource Url (#137)
+- [c25545b6](https://github.com/appscode/stash-enterprise/commit/c25545b6) Clarify bucket location
+- [cec2d878](https://github.com/appscode/stash-enterprise/commit/cec2d878) Update gcs-restic.yaml
+- [8bf7efc1](https://github.com/appscode/stash-enterprise/commit/8bf7efc1) Update backends.md
+- [cc75a55a](https://github.com/appscode/stash-enterprise/commit/cc75a55a) Update tutorial.md
+- [f05372b9](https://github.com/appscode/stash-enterprise/commit/f05372b9) Update backends.md
+- [f657a4cf](https://github.com/appscode/stash-enterprise/commit/f657a4cf) Add example e2e env file for OpenStack swift.
+- [53f97fe3](https://github.com/appscode/stash-enterprise/commit/53f97fe3) Update docs to 0.4.0 release.
+- [e2bf7234](https://github.com/appscode/stash-enterprise/commit/e2bf7234) Update docs to remove setting name for local.VolumeSource
+- [50aff91d](https://github.com/appscode/stash-enterprise/commit/50aff91d) Support selecting restic branch
+- [a7f0a995](https://github.com/appscode/stash-enterprise/commit/a7f0a995) Prepare docs for 0.4.0 release.
+- [df7bd521](https://github.com/appscode/stash-enterprise/commit/df7bd521) Update concept.md
+- [bc4f6f13](https://github.com/appscode/stash-enterprise/commit/bc4f6f13) Rename RepositorySecretName to StorageSecretName (#135)
+- [8ff66993](https://github.com/appscode/stash-enterprise/commit/8ff66993) Rename Volume to VolumeSource (#134)
+- [39a390f9](https://github.com/appscode/stash-enterprise/commit/39a390f9) Use updated URL format (: after container)
+- [993faac2](https://github.com/appscode/stash-enterprise/commit/993faac2) Update charts
+- [3f68045b](https://github.com/appscode/stash-enterprise/commit/3f68045b) Use VolumeSource instead of Volume for Local backend. (#132)
+- [883cebd4](https://github.com/appscode/stash-enterprise/commit/883cebd4) Update concept.md
+- [387ac071](https://github.com/appscode/stash-enterprise/commit/387ac071) Fix linting issues in chart
+- [dc19110f](https://github.com/appscode/stash-enterprise/commit/dc19110f) Add String() method to PrefixType.
+- [f4cf5e67](https://github.com/appscode/stash-enterprise/commit/f4cf5e67) Remove unused type Source
+- [f1a21897](https://github.com/appscode/stash-enterprise/commit/f1a21897) Update readme
+- [a3827bf5](https://github.com/appscode/stash-enterprise/commit/a3827bf5) Various corrections to chart based on code review.
+- [c12c3fab](https://github.com/appscode/stash-enterprise/commit/c12c3fab) Prepare docs for 0.3.1 release.
+- [def4f783](https://github.com/appscode/stash-enterprise/commit/def4f783) Add tests for swift (#130)
+- [12ee8e9e](https://github.com/appscode/stash-enterprise/commit/12ee8e9e) Support setting compute resources for sidecar (#129)
+- [6eb6ba6e](https://github.com/appscode/stash-enterprise/commit/6eb6ba6e) Update chart with rbac
+- [0ba63fb7](https://github.com/appscode/stash-enterprise/commit/0ba63fb7) Update rbac.md
+- [fdbd84a2](https://github.com/appscode/stash-enterprise/commit/fdbd84a2) Fix RBAC docs (#127)
+- [68b6b0c5](https://github.com/appscode/stash-enterprise/commit/68b6b0c5) Update release.md
+- [33a59ad8](https://github.com/appscode/stash-enterprise/commit/33a59ad8) Merge commit 'fba07b3994b0e1fd3a95c91d890353aa23a0f3c1'
+- [c0ed3b61](https://github.com/appscode/stash-enterprise/commit/c0ed3b61) Print commit timestamp with version command
+- [5c6f2d27](https://github.com/appscode/stash-enterprise/commit/5c6f2d27) Prepare docs for 0.3.0 release
+- [97630f69](https://github.com/appscode/stash-enterprise/commit/97630f69) Document RBAC
+- [59e09023](https://github.com/appscode/stash-enterprise/commit/59e09023) Document behavior in case of multiple Restic
+- [9ae9107d](https://github.com/appscode/stash-enterprise/commit/9ae9107d) Document e2e test setup
+- [a6ba0787](https://github.com/appscode/stash-enterprise/commit/a6ba0787) Document swift (#124)
+- [2a38a883](https://github.com/appscode/stash-enterprise/commit/2a38a883) Remove support for B2 & Rest server for now.
+- [8a4ca945](https://github.com/appscode/stash-enterprise/commit/8a4ca945) Remove Location choice for GCS
+- [c89b9109](https://github.com/appscode/stash-enterprise/commit/c89b9109) Fix spelling
+- [7ecffb1f](https://github.com/appscode/stash-enterprise/commit/7ecffb1f) Update backends.md
+- [61385e73](https://github.com/appscode/stash-enterprise/commit/61385e73) Update uninstall.md
+- [50e98026](https://github.com/appscode/stash-enterprise/commit/50e98026) Update uninstall.md
+- [c1fd8915](https://github.com/appscode/stash-enterprise/commit/c1fd8915) Use TPR labels to verify installation
+- [d896d763](https://github.com/appscode/stash-enterprise/commit/d896d763) Add labels to TPR registration
+- [0644dc8a](https://github.com/appscode/stash-enterprise/commit/0644dc8a) Remove pod template name
+- [011bba8e](https://github.com/appscode/stash-enterprise/commit/011bba8e) Don't fail scheduler if bad credetials are given
+- [50d5b35d](https://github.com/appscode/stash-enterprise/commit/50d5b35d) Fix google sa file permission
+- [569b1289](https://github.com/appscode/stash-enterprise/commit/569b1289) Change mount path for labels to /etc/stash
+- [7483b929](https://github.com/appscode/stash-enterprise/commit/7483b929) Fix remote backend repository format
+- [d6ba05c6](https://github.com/appscode/stash-enterprise/commit/d6ba05c6) Part 6 - Update docs (#121)
+- [6c95f2d6](https://github.com/appscode/stash-enterprise/commit/6c95f2d6) Update docs (#120)
+- [a979c4bc](https://github.com/appscode/stash-enterprise/commit/a979c4bc) Update docs for 0.2.0 release
+- [ba6bf1bb](https://github.com/appscode/stash-enterprise/commit/ba6bf1bb) Fix build.
+- [e27cf027](https://github.com/appscode/stash-enterprise/commit/e27cf027) Various bug fixes (#118)
+- [33fe5ebe](https://github.com/appscode/stash-enterprise/commit/33fe5ebe) Mention swift in readme
+- [4df56363](https://github.com/appscode/stash-enterprise/commit/4df56363) Update pitch (#117)
+- [e92e6f93](https://github.com/appscode/stash-enterprise/commit/e92e6f93) Various changes to RetentionPolicy	 (#116)
+- [bbf726ee](https://github.com/appscode/stash-enterprise/commit/bbf726ee) Set TMPDIR env var for restic (#115)
+- [7e2944aa](https://github.com/appscode/stash-enterprise/commit/7e2944aa) Update ROADMAP.md
+- [ac262649](https://github.com/appscode/stash-enterprise/commit/ac262649) Update tutorial.md
+- [1405e499](https://github.com/appscode/stash-enterprise/commit/1405e499) Update ROADMAP.md
+- [9ba3bf8a](https://github.com/appscode/stash-enterprise/commit/9ba3bf8a) Update workloads.md
+- [a3e41c8e](https://github.com/appscode/stash-enterprise/commit/a3e41c8e) Part 5 - User Guide (#114)
+- [3484d8fc](https://github.com/appscode/stash-enterprise/commit/3484d8fc) Update ROADMAP.md
+- [d3369091](https://github.com/appscode/stash-enterprise/commit/d3369091) Part 4- User Guide (#113)
+- [6ada7f4b](https://github.com/appscode/stash-enterprise/commit/6ada7f4b) Part 3 - User Guide (#110)
+- [565e2a34](https://github.com/appscode/stash-enterprise/commit/565e2a34) Part - 2 of User guide (#99)
+- [e32edec6](https://github.com/appscode/stash-enterprise/commit/e32edec6) Update user guide (#94)
+- [ba7ef578](https://github.com/appscode/stash-enterprise/commit/ba7ef578) Update release.md
+- [40a12019](https://github.com/appscode/stash-enterprise/commit/40a12019) Update Prometheus job name to use restic ns & name (#93)
+- [46da38ea](https://github.com/appscode/stash-enterprise/commit/46da38ea) Create separate restic for each type of backend. (#92)
+- [b5a8abea](https://github.com/appscode/stash-enterprise/commit/b5a8abea) Update README.md
+- [f42511ea](https://github.com/appscode/stash-enterprise/commit/f42511ea) Use app & release name labels together in chart
+- [cdeb926d](https://github.com/appscode/stash-enterprise/commit/cdeb926d) Update chart readme
+- [56fa7765](https://github.com/appscode/stash-enterprise/commit/56fa7765) Update Stash chart (#89)
+- [1ed35f09](https://github.com/appscode/stash-enterprise/commit/1ed35f09) Remove selectors so that `template.metadata.labels` are used (#91)
+- [8d9065de](https://github.com/appscode/stash-enterprise/commit/8d9065de) Update CONTRIBUTING.md
+- [550eb7e4](https://github.com/appscode/stash-enterprise/commit/550eb7e4) Update contribution guide
+- [8f0e31e6](https://github.com/appscode/stash-enterprise/commit/8f0e31e6) Fix dev guide (#88)
+- [6b61ee27](https://github.com/appscode/stash-enterprise/commit/6b61ee27) Add docs for commands (#90)
+- [d85cd5f9](https://github.com/appscode/stash-enterprise/commit/d85cd5f9) Update stash.yaml
+- [8577bee3](https://github.com/appscode/stash-enterprise/commit/8577bee3) Update stash.yaml
+- [a948319b](https://github.com/appscode/stash-enterprise/commit/a948319b) Change stash version to 0.1.0
+- [db3d1813](https://github.com/appscode/stash-enterprise/commit/db3d1813) Cleanup test commands
+- [a6144456](https://github.com/appscode/stash-enterprise/commit/a6144456) Add e2e tests for major cloud providers (#84)
+- [4d219217](https://github.com/appscode/stash-enterprise/commit/4d219217) Fix headless service for statefulset e2e test
+- [7fbc6cd6](https://github.com/appscode/stash-enterprise/commit/7fbc6cd6) Create separate selectors for each invocation of framework
+- [7e949c96](https://github.com/appscode/stash-enterprise/commit/7e949c96) Move check for sidecars inside retry loop
+- [60e0cec4](https://github.com/appscode/stash-enterprise/commit/60e0cec4) Don't update resource from update calls.
+- [5c75cb0d](https://github.com/appscode/stash-enterprise/commit/5c75cb0d) Fix selectors for Deployment e2e tests
+- [87ae2427](https://github.com/appscode/stash-enterprise/commit/87ae2427) Add node selector for DaemonSet e2e test
+- [9b946345](https://github.com/appscode/stash-enterprise/commit/9b946345) Check for successful backup events
+- [30bd7d6b](https://github.com/appscode/stash-enterprise/commit/30bd7d6b) Fix e2e tests (#83)
+- [a220d50a](https://github.com/appscode/stash-enterprise/commit/a220d50a) Add /snapshots endpoint in operator (#82)
+- [35428b88](https://github.com/appscode/stash-enterprise/commit/35428b88) Mount scratchDir with operator (#80)
+- [887c432b](https://github.com/appscode/stash-enterprise/commit/887c432b) Fix scheduler  (#79)
+- [f120695e](https://github.com/appscode/stash-enterprise/commit/f120695e) Handle update conflicts (#78)
+- [36245014](https://github.com/appscode/stash-enterprise/commit/36245014) Test e2e tests (#76)
+- [7410da10](https://github.com/appscode/stash-enterprise/commit/7410da10) Remove restic source downloaded for building binary
+- [01b72b61](https://github.com/appscode/stash-enterprise/commit/01b72b61) . import custom matchers
+- [44416b81](https://github.com/appscode/stash-enterprise/commit/44416b81) Review analytics events.
+- [5d6169e3](https://github.com/appscode/stash-enterprise/commit/5d6169e3) Remove unused and/or duplicate constants
+- [d425d674](https://github.com/appscode/stash-enterprise/commit/d425d674) Delete old testify tests (#75)
+- [80a96849](https://github.com/appscode/stash-enterprise/commit/80a96849) Add ginkgo based e2e tests (#70)
+- [8de3189a](https://github.com/appscode/stash-enterprise/commit/8de3189a) Create a cli wrapper for restic (#74)
+- [da41f6ed](https://github.com/appscode/stash-enterprise/commit/da41f6ed) Revise EnsureXXXSidecar methods (#73)
+- [75aa7458](https://github.com/appscode/stash-enterprise/commit/75aa7458) Avoid pushing metrics if missing gateway URL
+- [c42c6cae](https://github.com/appscode/stash-enterprise/commit/c42c6cae) Fix pushgateway --web.listen-address flag
+- [efd42e00](https://github.com/appscode/stash-enterprise/commit/efd42e00) Use service account with operator pods
+- [5729f7b0](https://github.com/appscode/stash-enterprise/commit/5729f7b0) Create RBAC objects for operator (#69)
+- [3b5b0291](https://github.com/appscode/stash-enterprise/commit/3b5b0291) Push metrics to Prometheus push gateway (#67)
+- [6ec35ada](https://github.com/appscode/stash-enterprise/commit/6ec35ada) Mount labels using Downward api (#66)
+- [76a9ced7](https://github.com/appscode/stash-enterprise/commit/76a9ced7) Vendor go-sh dependency (#65)
+- [d505ad0e](https://github.com/appscode/stash-enterprise/commit/d505ad0e) Use go-sh to execute restic commands (#63)
+- [585b33f9](https://github.com/appscode/stash-enterprise/commit/585b33f9) Add scratchPad Dir & prefixHostname flags (#62)
+- [e5c9f69b](https://github.com/appscode/stash-enterprise/commit/e5c9f69b) Support remote backends (#58)
+- [af2e14a7](https://github.com/appscode/stash-enterprise/commit/af2e14a7) Expose metrics port from Docker
+- [87dfdae4](https://github.com/appscode/stash-enterprise/commit/87dfdae4) Rename cron pkg to scheduler.
+- [0503fe64](https://github.com/appscode/stash-enterprise/commit/0503fe64) Organize backup code. (#54)
+- [12c0921a](https://github.com/appscode/stash-enterprise/commit/12c0921a) Synchronize scheduler reconfiguration (#53)
+- [cbebb9de](https://github.com/appscode/stash-enterprise/commit/cbebb9de) Build master branch of restic
+- [23e92576](https://github.com/appscode/stash-enterprise/commit/23e92576) Fix tag detection from Version
+- [af2f9271](https://github.com/appscode/stash-enterprise/commit/af2f9271) Update e2e tests (#52)
+- [e7b85533](https://github.com/appscode/stash-enterprise/commit/e7b85533) Fix NPE
+- [8308dd26](https://github.com/appscode/stash-enterprise/commit/8308dd26) Fix unit tests (#51)
+- [52b6cfb7](https://github.com/appscode/stash-enterprise/commit/52b6cfb7) Update README.md
+- [d41bd0db](https://github.com/appscode/stash-enterprise/commit/d41bd0db) Run watchers for preferred api group version kind (#50)
+- [f8878a34](https://github.com/appscode/stash-enterprise/commit/f8878a34) Build restic from source by default (#49)
+- [7d240bbf](https://github.com/appscode/stash-enterprise/commit/7d240bbf) Use updated docker build script format
+- [f87445d4](https://github.com/appscode/stash-enterprise/commit/f87445d4) Merge commit '6d30c353f174f641159a88f6280f6be163a44cb4'
+- [abd7fcca](https://github.com/appscode/stash-enterprise/commit/abd7fcca) Rename variable watcher to ctrl
+- [e8cb5c06](https://github.com/appscode/stash-enterprise/commit/e8cb5c06) Watch individual object types. (#48)
+- [3bc3fc81](https://github.com/appscode/stash-enterprise/commit/3bc3fc81) Various code cleanup (#47)
+- [1ba94a88](https://github.com/appscode/stash-enterprise/commit/1ba94a88) Reorganize cron controller (#46)
+- [d9c5ead9](https://github.com/appscode/stash-enterprise/commit/d9c5ead9) Check docker image tag before starting operator (#45)
+- [3887dd92](https://github.com/appscode/stash-enterprise/commit/3887dd92) Expose metrics from operator (#44)
+- [cadf7c1d](https://github.com/appscode/stash-enterprise/commit/cadf7c1d) Run push gateway as a side-car for restik operator. (#43)
+- [966564b0](https://github.com/appscode/stash-enterprise/commit/966564b0) Pre-install ca-certificates.
+- [bb5b24b2](https://github.com/appscode/stash-enterprise/commit/bb5b24b2) Send analytics for start & stop events.
+- [95e4209a](https://github.com/appscode/stash-enterprise/commit/95e4209a) Move all commands to root folder.
+- [f6816d8e](https://github.com/appscode/stash-enterprise/commit/f6816d8e) Remove all reference to k8s.io/kubernetes repo.
+- [edb64910](https://github.com/appscode/stash-enterprise/commit/edb64910) Move main.go to root folder.
+- [f7bfd1a8](https://github.com/appscode/stash-enterprise/commit/f7bfd1a8) Merge commit 'e6c0614c629d719cc9300e71a668a43f42b37f68'
+- [4c1a638b](https://github.com/appscode/stash-enterprise/commit/4c1a638b) Point to client-go in versioning policy.
+- [17fbce2b](https://github.com/appscode/stash-enterprise/commit/17fbce2b) Update README.md
+- [d57ddc79](https://github.com/appscode/stash-enterprise/commit/d57ddc79) Add analytics (#41)
+- [59d38bd5](https://github.com/appscode/stash-enterprise/commit/59d38bd5) Use V1alpha1SchemeGroupVersion for Restik (#40)
+- [b258051b](https://github.com/appscode/stash-enterprise/commit/b258051b) Fix registration of wrong group (#39)
+- [572eab2b](https://github.com/appscode/stash-enterprise/commit/572eab2b) fix status update (#38)
+- [f3b0e990](https://github.com/appscode/stash-enterprise/commit/f3b0e990) Upgrade restic version to 0.6.1 (#37)
+- [52f44f88](https://github.com/appscode/stash-enterprise/commit/52f44f88) Use client-go (#36)
+- [8f9eaa75](https://github.com/appscode/stash-enterprise/commit/8f9eaa75) Merge commit '4a5c3083fd86cbe409e8a0f8db02ebc92b403cdc'
+- [fa30bfde](https://github.com/appscode/stash-enterprise/commit/fa30bfde) Create conversion_v1alpha1.go
+- [71dd7331](https://github.com/appscode/stash-enterprise/commit/71dd7331) Create register_v1alpha1.go
+- [a4dd5595](https://github.com/appscode/stash-enterprise/commit/a4dd5595) fmt api & client pkg-es
+- [34651f88](https://github.com/appscode/stash-enterprise/commit/34651f88) Use same var as receiver
+- [028e312f](https://github.com/appscode/stash-enterprise/commit/028e312f) Add version policy & analytics collection to readme
+- [7377c5e0](https://github.com/appscode/stash-enterprise/commit/7377c5e0) Change api version to v1alpha1 (#30)
+- [f893fd1d](https://github.com/appscode/stash-enterprise/commit/f893fd1d) Merge commit '7ade13456a688a54292abaf589c2e9f1804f7d8b'
+- [ce677bb9](https://github.com/appscode/stash-enterprise/commit/ce677bb9) Rename clientset
+- [570bea8c](https://github.com/appscode/stash-enterprise/commit/570bea8c) Rename function and structure (#29)
+- [db1643f2](https://github.com/appscode/stash-enterprise/commit/db1643f2) Rename Backup into Restik (#28)
+- [f5db80b4](https://github.com/appscode/stash-enterprise/commit/f5db80b4) Move api from k8s-addons (#27)
+- [94ce3a20](https://github.com/appscode/stash-enterprise/commit/94ce3a20) Add Restik chart (#20)
+- [f1955669](https://github.com/appscode/stash-enterprise/commit/f1955669) Bubble up errors to caller (#26)
+- [2b6d4735](https://github.com/appscode/stash-enterprise/commit/2b6d4735) Update README.md
+- [90fbf2ab](https://github.com/appscode/stash-enterprise/commit/90fbf2ab) Allow modifying the cron expression (#25)
+- [3e416598](https://github.com/appscode/stash-enterprise/commit/3e416598) Merge commit '958f7da4904598c85aabadf104c687e321eacb33'
+- [0f787535](https://github.com/appscode/stash-enterprise/commit/0f787535) Use unversioned time (#23)
+- [3521adfb](https://github.com/appscode/stash-enterprise/commit/3521adfb) Update design.md
+- [ebfa0624](https://github.com/appscode/stash-enterprise/commit/ebfa0624) Update design.md
+- [7785bc86](https://github.com/appscode/stash-enterprise/commit/7785bc86) example added (#19)
+- [ca8a2ec6](https://github.com/appscode/stash-enterprise/commit/ca8a2ec6) Use restik api and client from k8s-addons (#18)
+- [2aae97a9](https://github.com/appscode/stash-enterprise/commit/2aae97a9) Error print fix (#17)
+- [379b853e](https://github.com/appscode/stash-enterprise/commit/379b853e) Check group registration Before Register Groups (#16)
+- [f2643e91](https://github.com/appscode/stash-enterprise/commit/f2643e91) Add Restik docs (#15)
+- [fb8e6c12](https://github.com/appscode/stash-enterprise/commit/fb8e6c12) Restik unit test, e2e test (#14)
+- [45f9bc69](https://github.com/appscode/stash-enterprise/commit/45f9bc69) Restik create delete initial implementation (#12)
+- [829887a0](https://github.com/appscode/stash-enterprise/commit/829887a0) Update restic to 0.5.0
+- [4e0c40f9](https://github.com/appscode/stash-enterprise/commit/4e0c40f9) Don't allow push with tags.
+- [b33d8142](https://github.com/appscode/stash-enterprise/commit/b33d8142) Unify restic and restik docker images.
+- [6c7484ad](https://github.com/appscode/stash-enterprise/commit/6c7484ad) Make restic executable.
+- [67272949](https://github.com/appscode/stash-enterprise/commit/67272949) Build docker image (#11)
+- [1d3b939c](https://github.com/appscode/stash-enterprise/commit/1d3b939c) Add links to proposal in readme
+- [6548fd84](https://github.com/appscode/stash-enterprise/commit/6548fd84) Use cobra to structure restik commands.
+- [8c6425b6](https://github.com/appscode/stash-enterprise/commit/8c6425b6) Clone skeleton from appscode/k3pc (#10)
+- [ba60c6d4](https://github.com/appscode/stash-enterprise/commit/ba60c6d4) Merge commit 'a3e8a4a46d31a8c6e9fcceda85d3a55f36293f67' as 'hack/libbuild'
+
+
+
+## [stashed/apimachinery](https://github.com/stashed/apimachinery)
+
+### [v0.10.0](https://github.com/stashed/apimachinery/releases/tag/v0.10.0)
+
+- [7dbdff5f](https://github.com/stashed/apimachinery/commit/7dbdff5f) Update README.md
+- [254ee64e](https://github.com/stashed/apimachinery/commit/254ee64e) Rename param annotation (#42)
+- [2210ed42](https://github.com/stashed/apimachinery/commit/2210ed42) Update Kubernetes v1.18.3 dependencies (#41)
+- [835c0358](https://github.com/stashed/apimachinery/commit/835c0358) Update Kubernetes v1.18.3 dependencies (#40)
+- [692909fe](https://github.com/stashed/apimachinery/commit/692909fe) Add params and schedule annotation (#38)
+- [b9ff4f14](https://github.com/stashed/apimachinery/commit/b9ff4f14) Update Kubernetes v1.18.3 dependencies (#37)
+- [c44c52c8](https://github.com/stashed/apimachinery/commit/c44c52c8) Update Kubernetes v1.18.3 dependencies (#36)
+- [073a93c8](https://github.com/stashed/apimachinery/commit/073a93c8) Rename StashLocalBackendAccessor to StashNetVolAccessor (#35)
+- [e29c2724](https://github.com/stashed/apimachinery/commit/e29c2724) Update Kubernetes v1.18.3 dependencies (#34)
+- [a4807149](https://github.com/stashed/apimachinery/commit/a4807149) Update Kubernetes v1.18.3 dependencies (#33)
+- [d6fcb2c6](https://github.com/stashed/apimachinery/commit/d6fcb2c6) Fix protobuf tags (#32)
+- [d255d800](https://github.com/stashed/apimachinery/commit/d255d800) Pass target reference for restore job condition (#31)
+- [a3ce1cee](https://github.com/stashed/apimachinery/commit/a3ce1cee) Add helper method for NFS backend (#30)
+- [a4be15a1](https://github.com/stashed/apimachinery/commit/a4be15a1) Introduce RestoreBatch CRD + Additional Improvements (#22)
+- [710228f4](https://github.com/stashed/apimachinery/commit/710228f4) Update to Kubernetes v1.18.3 (#29)
+- [0f69a3ab](https://github.com/stashed/apimachinery/commit/0f69a3ab) Update to Kubernetes v1.18.3 (#28)
+- [504a57e7](https://github.com/stashed/apimachinery/commit/504a57e7) Update to Kubernetes v1.18.3 (#27)
+- [843421e4](https://github.com/stashed/apimachinery/commit/843421e4) Show AppsCode in copyright file header (#26)
+- [ad462cc4](https://github.com/stashed/apimachinery/commit/ad462cc4) Update to Kubernetes v1.18.3 (#25)
+- [28d53699](https://github.com/stashed/apimachinery/commit/28d53699) Update update-release-tracker.sh
+- [34624044](https://github.com/stashed/apimachinery/commit/34624044) Update update-release-tracker.sh
+- [5f5de63c](https://github.com/stashed/apimachinery/commit/5f5de63c) Fix openapi path (#24)
+- [6e0ad5f8](https://github.com/stashed/apimachinery/commit/6e0ad5f8) Add script to update release tracker on pr merge (#23)
+- [cbf9b376](https://github.com/stashed/apimachinery/commit/cbf9b376) Update .kodiak.toml
+- [d12b3d4b](https://github.com/stashed/apimachinery/commit/d12b3d4b) Update to Kubernetes v1.18.3 (#21)
+- [1956a312](https://github.com/stashed/apimachinery/commit/1956a312) Update to Kubernetes v1.18.3
+- [c3966002](https://github.com/stashed/apimachinery/commit/c3966002) Unwrap top level api folder (#20)
+- [5ba03fb5](https://github.com/stashed/apimachinery/commit/5ba03fb5) Update to Kubernetes v1.18.3 (#19)
+- [abeb620e](https://github.com/stashed/apimachinery/commit/abeb620e) Update to Kubernetes v1.18.3
+- [6fdf8a60](https://github.com/stashed/apimachinery/commit/6fdf8a60) Enable https://kodiakhq.com (#13)
+- [479258ed](https://github.com/stashed/apimachinery/commit/479258ed) Update dev scripts (#12)
+- [a85ced99](https://github.com/stashed/apimachinery/commit/a85ced99) Merge pull request #11 from stashed/k8s-gomod-refresher-1591208266
+- [82df6f26](https://github.com/stashed/apimachinery/commit/82df6f26) Update to Kubernetes v1.18.3
+- [788f6921](https://github.com/stashed/apimachinery/commit/788f6921) Add default annotation for Snapshotter (#9)
+- [d2f3f5d4](https://github.com/stashed/apimachinery/commit/d2f3f5d4) Remove defaults from crd v1beta1 YAML (#8)
+- [1a09ffde](https://github.com/stashed/apimachinery/commit/1a09ffde) Update dependencies
+- [58525b4b](https://github.com/stashed/apimachinery/commit/58525b4b) Update dependencies
+- [c34c2ec1](https://github.com/stashed/apimachinery/commit/c34c2ec1) Generate both v1beta1 and v1 CRD YAML (#7)
+- [e81205a3](https://github.com/stashed/apimachinery/commit/e81205a3) Bring back mistakenly removed SetRecoveryStats
+- [5f8cf3a6](https://github.com/stashed/apimachinery/commit/5f8cf3a6) Merge pull request #6 from stashed/k-1.18.3
+- [723f4de9](https://github.com/stashed/apimachinery/commit/723f4de9) Add context to crd utils
+- [59478af4](https://github.com/stashed/apimachinery/commit/59478af4) Update to Kubernetes 1.18.3
+- [e83b90a7](https://github.com/stashed/apimachinery/commit/e83b90a7) Merge pull request #3 from stashed/wait-for-target
+- [a5b9a011](https://github.com/stashed/apimachinery/commit/a5b9a011) Simplify targetMatched() function
+- [58948bd9](https://github.com/stashed/apimachinery/commit/58948bd9) Refactor
+- [5568cb90](https://github.com/stashed/apimachinery/commit/5568cb90) Add RestoreSession conditions
+- [906c5910](https://github.com/stashed/apimachinery/commit/906c5910) Add TypeMeta to invoker
+- [22843fdb](https://github.com/stashed/apimachinery/commit/22843fdb) Use Go 1.14.3
+- [238d1bd0](https://github.com/stashed/apimachinery/commit/238d1bd0) Add backup invoker condition transion reasons
+- [275965f9](https://github.com/stashed/apimachinery/commit/275965f9) Introduce conditions for BackupConfiguration and BackupBatch
+- [35159c81](https://github.com/stashed/apimachinery/commit/35159c81) Merge pull request #5 from stashed/fix-updatestatus
+- [f1d78326](https://github.com/stashed/apimachinery/commit/f1d78326) Fix helper methods
+- [dbb02873](https://github.com/stashed/apimachinery/commit/dbb02873) Fix UpdateStatus() function
+- [a7bd75ad](https://github.com/stashed/apimachinery/commit/a7bd75ad) Update crazy-max/ghaction-docker-buildx flag
+- [1d65a7d4](https://github.com/stashed/apimachinery/commit/1d65a7d4) Use recommended kubernetes app labels (#4)
+- [5b322e9f](https://github.com/stashed/apimachinery/commit/5b322e9f) Add Enum markers to api types
+- [e6017151](https://github.com/stashed/apimachinery/commit/e6017151) Trigger the workflow on push or pull request
+- [54097441](https://github.com/stashed/apimachinery/commit/54097441) Use kubectl v1.17 (#1)
+- [43743e92](https://github.com/stashed/apimachinery/commit/43743e92) Update module path
+- [9c16896f](https://github.com/stashed/apimachinery/commit/9c16896f) Add support for specifying "region" for S3 backend (#1050)
+- [b8c83f74](https://github.com/stashed/apimachinery/commit/b8c83f74) Fix Repository CRDs print column (#1046)
+- [52367e1b](https://github.com/stashed/apimachinery/commit/52367e1b) Update README.md to v0.9.0-rc.4
+- [48dba9c9](https://github.com/stashed/apimachinery/commit/48dba9c9) Fix ServiceAccount name mitchmatch (#1025)
+- [a0fceff6](https://github.com/stashed/apimachinery/commit/a0fceff6) Suspend CronJob but keep instant backup working while backup is paused (#1024)
+- [3d591020](https://github.com/stashed/apimachinery/commit/3d591020) Add stash specific prefix to automatically created resources (#1023)
+- [b113839c](https://github.com/stashed/apimachinery/commit/b113839c) Use Go 1.13.6
+- [50071f71](https://github.com/stashed/apimachinery/commit/50071f71) Enable tests for K8s 1.11 (#1013)
+- [e1069c9a](https://github.com/stashed/apimachinery/commit/e1069c9a) Bring back support for k8s 1.11 (#1008)
+- [427a9c57](https://github.com/stashed/apimachinery/commit/427a9c57) Remove creationTimestamp from PartialObjectMeta (#1006)
+- [62ce8323](https://github.com/stashed/apimachinery/commit/62ce8323) Add BackupBatch support (#985)
+- [190e4cc3](https://github.com/stashed/apimachinery/commit/190e4cc3) Update twitter account (#1003)
+- [35e8db63](https://github.com/stashed/apimachinery/commit/35e8db63) Add Repository Validation for local backend `mountPath` (#947)
+- [f28abce2](https://github.com/stashed/apimachinery/commit/f28abce2) Add Backend e2e Test (#975)
+- [4283b841](https://github.com/stashed/apimachinery/commit/4283b841) Update client-go to kubernetes-1.16.3 (#987)
+- [999fc6e3](https://github.com/stashed/apimachinery/commit/999fc6e3) Use RWX for restic output.json (#1001)
+- [3bd3b357](https://github.com/stashed/apimachinery/commit/3bd3b357) Run `chmod` on `output.json` only by owner container + Improve… (#1000)
+- [fa597188](https://github.com/stashed/apimachinery/commit/fa597188) Add Backup and Restore hooks (#978)
+- [cc11d985](https://github.com/stashed/apimachinery/commit/cc11d985) Use helm chart instead of script to install operator (#999)
+- [7fa6e4c2](https://github.com/stashed/apimachinery/commit/7fa6e4c2) Update hack/fmt.sh script
+- [56ef2680](https://github.com/stashed/apimachinery/commit/56ef2680) Add helper library for CRDs (#977)
+- [1c1c41c2](https://github.com/stashed/apimachinery/commit/1c1c41c2) Use kubebuilder generated CRD yamls (#971)
+- [9c43c131](https://github.com/stashed/apimachinery/commit/9c43c131) Use controller-tools@v0.2.2 to generate structural schema (#974)
+- [7e1a1899](https://github.com/stashed/apimachinery/commit/7e1a1899) Generate protobuf files for api types (#967)
+- [a9e058d8](https://github.com/stashed/apimachinery/commit/a9e058d8) Fix Repository returned error message (#961)
+- [1bfbca9b](https://github.com/stashed/apimachinery/commit/1bfbca9b) Apply valid name functionality (#950)
+- [1cd02749](https://github.com/stashed/apimachinery/commit/1cd02749) Test installer against multiple k8s version (#953)
+- [a6808bfa](https://github.com/stashed/apimachinery/commit/a6808bfa) Format shell scripts (#952)
+- [1e513927](https://github.com/stashed/apimachinery/commit/1e513927) Add missing license header
+- [00596ec8](https://github.com/stashed/apimachinery/commit/00596ec8) Rename Dockerfiles (#946)
+- [b8eea322](https://github.com/stashed/apimachinery/commit/b8eea322) Add AutoBackup e2e test (#939)
+- [e469e86e](https://github.com/stashed/apimachinery/commit/e469e86e) Enable race detector (#944)
+- [81778745](https://github.com/stashed/apimachinery/commit/81778745) Add license header to files (#943)
+- [f5000aa5](https://github.com/stashed/apimachinery/commit/f5000aa5) Don't add AppBinding labels in metric when AppBinding is not available (#942)
+- [06537e5e](https://github.com/stashed/apimachinery/commit/06537e5e) Fix klog flag parsing
+- [926f960a](https://github.com/stashed/apimachinery/commit/926f960a) Revendor
+- [6ce2ee96](https://github.com/stashed/apimachinery/commit/6ce2ee96) Use crazy-max/ghaction-docker-buildx@v1
+- [5adb77e4](https://github.com/stashed/apimachinery/commit/5adb77e4) Show diff when files `make verify` fails (#937)
+- [86be7d3e](https://github.com/stashed/apimachinery/commit/86be7d3e) Update make fmt
+- [d3c773c2](https://github.com/stashed/apimachinery/commit/d3c773c2) Split imports into 3 blocks (#936)
+- [a1326209](https://github.com/stashed/apimachinery/commit/a1326209) Volume e2e test github action (#933)
+- [497a062a](https://github.com/stashed/apimachinery/commit/497a062a) Fix BackupSession additional print column (#932)
+- [ed8fc701](https://github.com/stashed/apimachinery/commit/ed8fc701) Remove spec.backupConfiguration from BackupSession (#931)
+- [5b202733](https://github.com/stashed/apimachinery/commit/5b202733) Update e2e tests to run on GitHub actions (#917)
+- [c35f0b5f](https://github.com/stashed/apimachinery/commit/c35f0b5f) Enable make ci (#928)
+- [18559697](https://github.com/stashed/apimachinery/commit/18559697) Don't restart workload on backup pause+Use ImagePullPolicy: "Always" for Function-Task model (#929)
+- [65095dfe](https://github.com/stashed/apimachinery/commit/65095dfe) Add status.observedGeneration (#927)
+- [f6181414](https://github.com/stashed/apimachinery/commit/f6181414) Implement RetentionPolicy for VolumeSnapshot (#926)
+- [e69a37ca](https://github.com/stashed/apimachinery/commit/e69a37ca) Verify generated files are up to date (#925)
+- [9514193d](https://github.com/stashed/apimachinery/commit/9514193d) Update and rename go.yml to ci.yml (#922)
+- [675769a7](https://github.com/stashed/apimachinery/commit/675769a7) Add probe and BackupBatch api (#890)
+- [149cf02d](https://github.com/stashed/apimachinery/commit/149cf02d) Use core package from k8s.io/api repo (#921)
+- [f5cf5adf](https://github.com/stashed/apimachinery/commit/f5cf5adf) Bring back dependency to github.com/golang/protobuf@v1.2.0 (#918)
+- [76e892de](https://github.com/stashed/apimachinery/commit/76e892de) Update tag pattern for release pipeline
+- [8329fa4f](https://github.com/stashed/apimachinery/commit/8329fa4f) Run e2e tests using GitHub actions (#909)
+- [11dabe80](https://github.com/stashed/apimachinery/commit/11dabe80) Add app=stash label to crd yamls
+- [b1c9e012](https://github.com/stashed/apimachinery/commit/b1c9e012) Generate swagger.json for v1beta1 (#916)
+- [538973b8](https://github.com/stashed/apimachinery/commit/538973b8) Add release pipeline (#915)
+- [eeb53e04](https://github.com/stashed/apimachinery/commit/eeb53e04) Fix VolumeSnapshot Issues (#912)
+- [d61e7bac](https://github.com/stashed/apimachinery/commit/d61e7bac) Add Kubebuilder annotations (#911)
+- [e190f29a](https://github.com/stashed/apimachinery/commit/e190f29a) Use kubebuilder to generate crd yamls (#843)
+- [bb4b5267](https://github.com/stashed/apimachinery/commit/bb4b5267) Update go.yml
+- [84fbd266](https://github.com/stashed/apimachinery/commit/84fbd266) Introduce InterimVolumeTemplate and BackupHistoryLimit field. (#907)
+- [4fda42c8](https://github.com/stashed/apimachinery/commit/4fda42c8) Make RetentionPolicy required in v1beta1 api (#905)
+- [75c2560e](https://github.com/stashed/apimachinery/commit/75c2560e) Enable GitHub actions (#903)
+- [326051df](https://github.com/stashed/apimachinery/commit/326051df) Fix snapshot listing for local backend (#902)
+- [3950661b](https://github.com/stashed/apimachinery/commit/3950661b) Improve Error Handling + Code refactor (#891)
+- [215680ee](https://github.com/stashed/apimachinery/commit/215680ee) Add `NICE` and `IONICE` into distroless image (#883)
+- [91ff6961](https://github.com/stashed/apimachinery/commit/91ff6961) Improve metrics handling + make update status uniform (#872)
+- [54acd006](https://github.com/stashed/apimachinery/commit/54acd006) Add DumpEnv func to Restic Config file (#870)
+- [02f7f1e5](https://github.com/stashed/apimachinery/commit/02f7f1e5) Allow to specify subPath in auto-backup annotation (#871)
+- [8a67406f](https://github.com/stashed/apimachinery/commit/8a67406f) Silence docker buildx command (#866)
+- [50110a2d](https://github.com/stashed/apimachinery/commit/50110a2d) Update README.md (#865)
+- [9dfef064](https://github.com/stashed/apimachinery/commit/9dfef064) Use docker buildx to build docker image (#864)
+- [67974206](https://github.com/stashed/apimachinery/commit/67974206) Update version in gendocs script
+- [d3613ff4](https://github.com/stashed/apimachinery/commit/d3613ff4) Use github.com/Azure/go-autorest/autorest@v0.7.0 (#862)
+- [da23461d](https://github.com/stashed/apimachinery/commit/da23461d) Remove the `bs` short name for BackupSession (#859)
+- [f4c425ec](https://github.com/stashed/apimachinery/commit/f4c425ec) Use github.com/golang/protobuf@v1.2.0 (#855)
+- [90a9cd35](https://github.com/stashed/apimachinery/commit/90a9cd35) New variable from type field of AppBinding + Fix RoleBinding nam… (#845)
+- [26a35938](https://github.com/stashed/apimachinery/commit/26a35938) Fix resolving Task if volumeClaimTemplate is set in RestoreSession(#852)
+- [f6de2e47](https://github.com/stashed/apimachinery/commit/f6de2e47) Rename BackupConfigurationTemplate to BackupBlueprint (#847)
+- [a18041a9](https://github.com/stashed/apimachinery/commit/a18041a9) Pass replicas from RestoreSession to Function (#848)
+- [e061c7df](https://github.com/stashed/apimachinery/commit/e061c7df) Use variable for version in BackupConfigurationTemplate name (#846)
+- [18ee8f1e](https://github.com/stashed/apimachinery/commit/18ee8f1e) Fix Platforms Issue (#844)
+- [a3e48977](https://github.com/stashed/apimachinery/commit/a3e48977) Add GetSnapshotSize() function (#839)
+- [a2563e2a](https://github.com/stashed/apimachinery/commit/a2563e2a) Fix travis build (#837)
+- [737a9f9f](https://github.com/stashed/apimachinery/commit/737a9f9f) Add support for parallel backup & restore (#833)
+- [ff29a86f](https://github.com/stashed/apimachinery/commit/ff29a86f) Use cron.ParseStandard helper
+- [60dfc70e](https://github.com/stashed/apimachinery/commit/60dfc70e) Update azure-sdk-for-go dependencies (#836)
+- [690424c6](https://github.com/stashed/apimachinery/commit/690424c6) Update github.com/appscode/go@master
+- [975b72f7](https://github.com/stashed/apimachinery/commit/975b72f7) Use robfig/cron@v3 (#834)
+- [db237826](https://github.com/stashed/apimachinery/commit/db237826) Remove unused code (#829)
+- [cf8d0316](https://github.com/stashed/apimachinery/commit/cf8d0316) Generate docs files inside docs repo (#828)
+- [0b7642b2](https://github.com/stashed/apimachinery/commit/0b7642b2) Add License notice to makefile (#825)
+- [7aeda1a7](https://github.com/stashed/apimachinery/commit/7aeda1a7) Always attempt to pull a newer image for `make container` (#818)
+- [2dd72ed0](https://github.com/stashed/apimachinery/commit/2dd72ed0) Update constants.go
+- [6b54344b](https://github.com/stashed/apimachinery/commit/6b54344b) Add PusgatewayURL input for Functions (#816)
+- [48f909ff](https://github.com/stashed/apimachinery/commit/48f909ff) Restore PVCs from templates using Restic (#809)
+- [9c01bc29](https://github.com/stashed/apimachinery/commit/9c01bc29) Add TARGET_RESOURCE  variable for BackupConfigurationTemplate (#814)
+- [f88e6ce6](https://github.com/stashed/apimachinery/commit/f88e6ce6) Add make install, uninstall, purge commands (#813)
+- [ecbe5573](https://github.com/stashed/apimachinery/commit/ecbe5573) Move chart & deploy scripts to github.com/stashed/installer (#811)
+- [41bb5197](https://github.com/stashed/apimachinery/commit/41bb5197) Use stashed/docs repo
+- [1348e419](https://github.com/stashed/apimachinery/commit/1348e419) Move docs to github.com/stashed/docs repo (#810)
+- [7ebb2319](https://github.com/stashed/apimachinery/commit/7ebb2319) Fix travis build (#804)
+- [06f0bf36](https://github.com/stashed/apimachinery/commit/06f0bf36) Pass labels to offshoot + add generic offshoot labels (#801)
+- [e66ed12a](https://github.com/stashed/apimachinery/commit/e66ed12a) Remove canary support (#805)
+- [7a2d937b](https://github.com/stashed/apimachinery/commit/7a2d937b) Update Version.go (#803)
+- [1f00c4e5](https://github.com/stashed/apimachinery/commit/1f00c4e5) Added ARM64 support to the install script and manifest (#802)
+- [b7582d56](https://github.com/stashed/apimachinery/commit/b7582d56) Load modules from vendor folder for linter
+- [3afc2b8c](https://github.com/stashed/apimachinery/commit/3afc2b8c) Add Makefile (#800)
+- [27d43b71](https://github.com/stashed/apimachinery/commit/27d43b71) VolumeSnapshot (#787)
+- [31d0538c](https://github.com/stashed/apimachinery/commit/31d0538c) Remove importance of order of rule in RestoreSession (#795)
+- [840611ac](https://github.com/stashed/apimachinery/commit/840611ac) Skip BackupSession creation if target does not exist + use timestamp … (#797)
+- [3d514977](https://github.com/stashed/apimachinery/commit/3d514977) Use absolute path as aliases for reference docs. (#796)
+- [c7cd13cd](https://github.com/stashed/apimachinery/commit/c7cd13cd) Support PSP enabled cluster (#729)
+- [74b90737](https://github.com/stashed/apimachinery/commit/74b90737) Use restic 0.9.5 (#789)
+- [7b52a1d9](https://github.com/stashed/apimachinery/commit/7b52a1d9) Fix: User and group creation of stash for mongodb and mysql (#786)
+- [42eb3082](https://github.com/stashed/apimachinery/commit/42eb3082) Update concept doc (#739)
+- [34516293](https://github.com/stashed/apimachinery/commit/34516293) Update backup manager (#782)
+- [d451c9e6](https://github.com/stashed/apimachinery/commit/d451c9e6) Configure Env variables for Functions (#780)
+- [3045aa70](https://github.com/stashed/apimachinery/commit/3045aa70) Add support for backup cluster resources YAML (#721)
+- [84be8e6f](https://github.com/stashed/apimachinery/commit/84be8e6f) Add "Supported Backends" doc to new guides (#756)
+- [43700290](https://github.com/stashed/apimachinery/commit/43700290) Fix rest backend for workloads + add more authentication method for swift backend (#778)
+- [c347fecc](https://github.com/stashed/apimachinery/commit/c347fecc) Backup and restore Elasticsearch (#702)
+- [1a90ede6](https://github.com/stashed/apimachinery/commit/1a90ede6) Add guides template for new design (#755)
+- [b784b8ee](https://github.com/stashed/apimachinery/commit/b784b8ee) Update package path to stash.appscode.dev/stash (#776)
+- [bd05d186](https://github.com/stashed/apimachinery/commit/bd05d186) Update to k8s 1.14.0 client libraries using go.mod (#775)
+- [eaa16de0](https://github.com/stashed/apimachinery/commit/eaa16de0) Introduce VolumeSnapshot APIs (#772)
+- [2265c79d](https://github.com/stashed/apimachinery/commit/2265c79d) Use osm pkg from kmodules/objectstore-api (#770)
+- [fc13863f](https://github.com/stashed/apimachinery/commit/fc13863f) Remove --rbac flag (#761)
+- [039d0fd7](https://github.com/stashed/apimachinery/commit/039d0fd7) Skip creating/processing backup-session when backup-config is paused (#759)
+- [2be48d23](https://github.com/stashed/apimachinery/commit/2be48d23) Stash v1beta1 E2E test for PVC (#753)
+- [8c1949c2](https://github.com/stashed/apimachinery/commit/8c1949c2) Update Kubernetes client libraries to 1.13.5 (#752)
+- [b40b5d72](https://github.com/stashed/apimachinery/commit/b40b5d72) Enable pipefail and update restore yamls (#750)
+- [ba94ee71](https://github.com/stashed/apimachinery/commit/ba94ee71) Fixed scratch-dir, output-dir and hostname in functions/tasks yamls (#744)
+- [a5d80180](https://github.com/stashed/apimachinery/commit/a5d80180) Add Stash CLI (#734)
+- [fdb56095](https://github.com/stashed/apimachinery/commit/fdb56095) Stash v1beta1 E2E test for DaemonSet (#741)
+- [04344b00](https://github.com/stashed/apimachinery/commit/04344b00) Apply nice/ionice settings from env (#746)
+- [7782f71b](https://github.com/stashed/apimachinery/commit/7782f71b) Stash V1beta1 E2E test for Deployment (#710)
+- [263f7f6e](https://github.com/stashed/apimachinery/commit/263f7f6e) Fix openapi path prefixes for validators and mutators (#732)
+- [fe9c3ecb](https://github.com/stashed/apimachinery/commit/fe9c3ecb) Add max-connections for GCS, Azure, B2 backend (#730)
+- [3af1ee29](https://github.com/stashed/apimachinery/commit/3af1ee29) Rename admission webhooks to avoid name collision (#725)
+- [b1f960cd](https://github.com/stashed/apimachinery/commit/b1f960cd) Apply EmptyDir settings to TmpDir (#719)
+- [a8749398](https://github.com/stashed/apimachinery/commit/a8749398) Use FailurePolicy ignore for K8s resource webhooks (#726)
+- [af242f16](https://github.com/stashed/apimachinery/commit/af242f16) Don't write secret data inside temp dir (#724)
+- [1ede0246](https://github.com/stashed/apimachinery/commit/1ede0246) Use ionice and nice with Restic CMD (#716)
+- [ccdd4294](https://github.com/stashed/apimachinery/commit/ccdd4294) Use cleanup-cache flag (#717)
+- [9e0bd095](https://github.com/stashed/apimachinery/commit/9e0bd095) Add TempDir and PSP settings for Function (#720)
+- [117e6f0b](https://github.com/stashed/apimachinery/commit/117e6f0b) Add support for rest backend (#713)
+- [f7d9de0f](https://github.com/stashed/apimachinery/commit/f7d9de0f) Add support for OpenShift DeploymentConfig (#714)
+- [94b53f5f](https://github.com/stashed/apimachinery/commit/94b53f5f) Backup and restore Mongo DB (#699)
+- [a505764b](https://github.com/stashed/apimachinery/commit/a505764b) Backup and restore MySQL DB (#696)
+- [260f79d5](https://github.com/stashed/apimachinery/commit/260f79d5) Backup and restore Postgres DB (#695)
+- [dc5d0ce4](https://github.com/stashed/apimachinery/commit/dc5d0ce4) Backup from stdin and dump to stdout (#694)
+- [b911253c](https://github.com/stashed/apimachinery/commit/b911253c) Add BackupSession Controller for Sidecar (#701)
+- [886adaa9](https://github.com/stashed/apimachinery/commit/886adaa9) Update workload controller for new design (#675)
+- [30e17229](https://github.com/stashed/apimachinery/commit/30e17229)  Post backup/restore status update (#691)
+- [ef3ca6ba](https://github.com/stashed/apimachinery/commit/ef3ca6ba) Backup and restore PVC (#676)
+- [e98d1357](https://github.com/stashed/apimachinery/commit/e98d1357) Resolve tasks for backup/restore sessions (#674)
+- [2d5e2a40](https://github.com/stashed/apimachinery/commit/2d5e2a40) Add restic wrapper library (#673)
+- [22ce2f85](https://github.com/stashed/apimachinery/commit/22ce2f85) Add BackupConfiguration Controller (#671)
+- [73478a31](https://github.com/stashed/apimachinery/commit/73478a31) Use ContainerRuntimeSettings in Function spec (#689)
+- [8daa144d](https://github.com/stashed/apimachinery/commit/8daa144d) Update Kubernetes client libraries to 1.13.0 (#687)
+- [ffe7eff3](https://github.com/stashed/apimachinery/commit/ffe7eff3) Fix v1beta1 api for BackupConfigurationTemplate (#688)
+- [6310146c](https://github.com/stashed/apimachinery/commit/6310146c) Introduce v1beta1 api (#647)
+- [a806c546](https://github.com/stashed/apimachinery/commit/a806c546) Prepare docs for 0.8.3 release (#683)
+- [c0a281a2](https://github.com/stashed/apimachinery/commit/c0a281a2) Update changelog for 0.8.3 (#682)
+- [057b41d4](https://github.com/stashed/apimachinery/commit/057b41d4) Update dependencies (#681)
+- [ccf44b55](https://github.com/stashed/apimachinery/commit/ccf44b55) Pass pod annotation to deployment (#679)
+- [322e9812](https://github.com/stashed/apimachinery/commit/322e9812) Fix the case for deploying using MINGW64 for windows (#678)
+- [c096b55a](https://github.com/stashed/apimachinery/commit/c096b55a) Use onessl 0.10.0 (#677)
+- [ffa27f22](https://github.com/stashed/apimachinery/commit/ffa27f22) Fix typo
+- [f4d6ecc1](https://github.com/stashed/apimachinery/commit/f4d6ecc1) s/rook/azure/ in possible copy/paste error. (#669)
+- [99f44fa1](https://github.com/stashed/apimachinery/commit/99f44fa1) Fix builtin monitoring doc (#668)
+- [747b7ba2](https://github.com/stashed/apimachinery/commit/747b7ba2) Update install.md
+- [85ecd963](https://github.com/stashed/apimachinery/commit/85ecd963) Don't use priority class when operator namespace is not kube-system (#666)
+- [78c88a52](https://github.com/stashed/apimachinery/commit/78c88a52) Separate type definitions into individual files (#646)
+- [760613d2](https://github.com/stashed/apimachinery/commit/760613d2) Update changelog for 0.8.2
+- [fe861de7](https://github.com/stashed/apimachinery/commit/fe861de7) Prepare docs for 0.8.2 release (#644)
+- [a9c7e3da](https://github.com/stashed/apimachinery/commit/a9c7e3da) Update copyright notice for 2019 (#643)
+- [5a9efe76](https://github.com/stashed/apimachinery/commit/5a9efe76) Use fullname to generate cleaner name in chart
+- [a876a9da](https://github.com/stashed/apimachinery/commit/a876a9da) apply stash.labels to operator pods
+- [09b83f2e](https://github.com/stashed/apimachinery/commit/09b83f2e) Use stash.labels template in chart (#642)
+- [70d2af23](https://github.com/stashed/apimachinery/commit/70d2af23) Fixed broken link for bakend (#641)
+- [21b91a96](https://github.com/stashed/apimachinery/commit/21b91a96) Only mount stash apiserver `tls.crt` into Prometheus (#639)
+- [d9c87802](https://github.com/stashed/apimachinery/commit/d9c87802) Fix typo in installer (#638)
+- [893b3a41](https://github.com/stashed/apimachinery/commit/893b3a41) Fix monitoring in helm + update doc to match with third-party-tools tutorial (#637)
+- [5fd484ba](https://github.com/stashed/apimachinery/commit/5fd484ba) Add certificate health checker (#636)
+- [ecbefd44](https://github.com/stashed/apimachinery/commit/ecbefd44) Update install.md
+- [5e8221d4](https://github.com/stashed/apimachinery/commit/5e8221d4) Update chart readme (#632)
+- [960dac71](https://github.com/stashed/apimachinery/commit/960dac71) Update webhook error message format for Kubernetes 1.13+ (#631)
+- [096afccb](https://github.com/stashed/apimachinery/commit/096afccb) Fix typos (#630)
+- [e2a7f03a](https://github.com/stashed/apimachinery/commit/e2a7f03a) Fix dependencies.
+- [591a7cec](https://github.com/stashed/apimachinery/commit/591a7cec) Update changelog
+- [248daebf](https://github.com/stashed/apimachinery/commit/248daebf) Prepare docs for 0.8.1 release (#629)
+- [7ce0d537](https://github.com/stashed/apimachinery/commit/7ce0d537) Add missing validator for respository resource in chart (#628)
+- [2114829d](https://github.com/stashed/apimachinery/commit/2114829d) Update version matrix
+- [18c29c62](https://github.com/stashed/apimachinery/commit/18c29c62) Prepare docs for 0.8.0 release (#626)
+- [b5779f22](https://github.com/stashed/apimachinery/commit/b5779f22) Update docs (Minio, Rook, NFS) (#625)
+- [fb104264](https://github.com/stashed/apimachinery/commit/fb104264) Use flags.DumpAll to dump flags (#624)
+- [7e11a97c](https://github.com/stashed/apimachinery/commit/7e11a97c) Merge commit '619323825a3fabc55ce2584dd63f8005fd3b78b3'
+- [8f32db19](https://github.com/stashed/apimachinery/commit/8f32db19) Set periodic analytics (#623)
+- [b8b20447](https://github.com/stashed/apimachinery/commit/b8b20447) Fix e2e test (#622)
+- [e4da720f](https://github.com/stashed/apimachinery/commit/e4da720f) Pass --enable-***-webhook flags to operator (#619)
+- [e5a91c47](https://github.com/stashed/apimachinery/commit/e5a91c47) Add validation webhook xray (#618)
+- [de6a6c03](https://github.com/stashed/apimachinery/commit/de6a6c03) Add docs for AKS and EKS (#609)
+- [2eb4e9df](https://github.com/stashed/apimachinery/commit/2eb4e9df) Improve monitoring facility (#606)
+- [6b1b8f3f](https://github.com/stashed/apimachinery/commit/6b1b8f3f) Use dynamic pushgateway url (#614)
+- [4f2aaca3](https://github.com/stashed/apimachinery/commit/4f2aaca3) Pass image pull secrets for cleaner job in chart (#598)
+- [5f59b5ba](https://github.com/stashed/apimachinery/commit/5f59b5ba) Update kubernetes client libraries to 1.12.0 (#597)
+- [9a9916ac](https://github.com/stashed/apimachinery/commit/9a9916ac) Support LogLevel in chart (#594)
+- [b7c9253a](https://github.com/stashed/apimachinery/commit/b7c9253a) Check if Kubernetes version is supported before running operator (#593)
+- [a3a0c8d2](https://github.com/stashed/apimachinery/commit/a3a0c8d2) Enable webhooks by default in chart (#591)
+- [d84b36ae](https://github.com/stashed/apimachinery/commit/d84b36ae) Update chart readme for cleaner values (#590)
+- [dde9fe0f](https://github.com/stashed/apimachinery/commit/dde9fe0f) Update values.yaml
+- [b401f6af](https://github.com/stashed/apimachinery/commit/b401f6af) Fix #583 and pushgateway version (#584)
+- [df29c67d](https://github.com/stashed/apimachinery/commit/df29c67d) Use --pull flag with docker build (#581)
+- [bab17f30](https://github.com/stashed/apimachinery/commit/bab17f30) Merge commit '593cbc0910006952073295cea802d37f30ab8e3f'
+- [36a54348](https://github.com/stashed/apimachinery/commit/36a54348) Use kubernetes-1.11.3 (#578)
+- [0f78cc59](https://github.com/stashed/apimachinery/commit/0f78cc59) Update CertStore (#576)
+- [b6ad4fd8](https://github.com/stashed/apimachinery/commit/b6ad4fd8) Use apps/v1 apigroup in installer scripts (#574)
+- [21a3a0fa](https://github.com/stashed/apimachinery/commit/21a3a0fa) Support pod annotations in chart (#573)
+- [f4188df6](https://github.com/stashed/apimachinery/commit/f4188df6) Set serviceAccount for clearner job (#572)
+- [71419568](https://github.com/stashed/apimachinery/commit/71419568) Cleanup webhooks when chart is deleted (#569)
+- [1afecd9c](https://github.com/stashed/apimachinery/commit/1afecd9c) Use IntHash as status.observedGeneration (#568)
+- [06fb96ef](https://github.com/stashed/apimachinery/commit/06fb96ef) Update pipeline (#565)
+- [a5c10e03](https://github.com/stashed/apimachinery/commit/a5c10e03) Merge commit 'dc51668e81aad9349769f0287cb885477836f2b1'
+- [f3e41a08](https://github.com/stashed/apimachinery/commit/f3e41a08) Add observedGenerationHash field (#564)
+- [a228cfd5](https://github.com/stashed/apimachinery/commit/a228cfd5) Merge commit 'c73f89c561b2e686d2898b0c8dea8c0bd327e6fd'
+- [b9c2405b](https://github.com/stashed/apimachinery/commit/b9c2405b) Fix uninstall for concourse (#563)
+- [9b494b4b](https://github.com/stashed/apimachinery/commit/9b494b4b) Fix chart values file (#562)
+- [dac75e67](https://github.com/stashed/apimachinery/commit/dac75e67) Improve Helm chart options (#561)
+- [fdcd84af](https://github.com/stashed/apimachinery/commit/fdcd84af) Use apps/v1 apigroup (#555)
+- [7a3d3a6d](https://github.com/stashed/apimachinery/commit/7a3d3a6d) Merge commit 'e0a3eef3ad5bb45a6967704531a303bc7ea7d865'
+- [7ecb7aa6](https://github.com/stashed/apimachinery/commit/7ecb7aa6) Refactor concourse scripts (#554)
+- [97675d40](https://github.com/stashed/apimachinery/commit/97675d40) Merge commit '2a5664a73d8d23ced4598e61327a3d7003db2e04'
+- [0dde94b8](https://github.com/stashed/apimachinery/commit/0dde94b8) Add AlreadyObserved methods (#553)
+- [1471ef4b](https://github.com/stashed/apimachinery/commit/1471ef4b) Add categories support to crds (#552)
+- [a49b2e35](https://github.com/stashed/apimachinery/commit/a49b2e35) Improve doc (#550)
+- [0f3876ce](https://github.com/stashed/apimachinery/commit/0f3876ce) Fix concourse test (#496)
+- [1c7af39a](https://github.com/stashed/apimachinery/commit/1c7af39a) Check for snapshot existence before delete (#548)
+- [a06e72b5](https://github.com/stashed/apimachinery/commit/a06e72b5) Fix offline backup (#537)
+- [dafa74fb](https://github.com/stashed/apimachinery/commit/dafa74fb) Enable status sub resource for crd yamls (#546)
+- [f2a91600](https://github.com/stashed/apimachinery/commit/f2a91600) Remove old UpdateRecoveryStatus
+- [6da21a36](https://github.com/stashed/apimachinery/commit/6da21a36) Retry UpdateStatus calls (#544)
+- [acfcf7a5](https://github.com/stashed/apimachinery/commit/acfcf7a5) Retry UpdateStatus calls (#543)
+- [e180ef6a](https://github.com/stashed/apimachinery/commit/e180ef6a) Revendor objectstore api (#542)
+- [71bb0853](https://github.com/stashed/apimachinery/commit/71bb0853) Use kmodules.xyz/objectstore-api (#541)
+- [dd3cf1ca](https://github.com/stashed/apimachinery/commit/dd3cf1ca) Merge commit 'da9eaba42e9b93d6975059b7f37c7863e54e1db1'
+- [e6370a8b](https://github.com/stashed/apimachinery/commit/e6370a8b) Update install.md
+- [676e1d02](https://github.com/stashed/apimachinery/commit/676e1d02) Fix extended apiserver issues with Kubernetes 1.11 (#536)
+- [e8249dde](https://github.com/stashed/apimachinery/commit/e8249dde) Correctly handle ignored openapi prefixes (#533)
+- [90f9a296](https://github.com/stashed/apimachinery/commit/90f9a296) Add rbac permissions for snapshots (#531)
+- [f7976e7e](https://github.com/stashed/apimachinery/commit/f7976e7e) Use version and additional columns for crds (#530)
+- [f3ec9a1e](https://github.com/stashed/apimachinery/commit/f3ec9a1e) Update client-go to v8.0.0 (#528)
+- [3321c0c0](https://github.com/stashed/apimachinery/commit/3321c0c0) Update chart installation instruction for Kubernetes 1.11 (#527)
+- [2bfa4a03](https://github.com/stashed/apimachinery/commit/2bfa4a03) Format shell scripts (#526)
+- [f83f57d5](https://github.com/stashed/apimachinery/commit/f83f57d5) Merge commit 'bcebfb5adef7b4de9d4da7e48d9ba50a66e75fd3'
+- [7a184805](https://github.com/stashed/apimachinery/commit/7a184805) Merge commit '2c8b49681a6875886b6be4d90c35908f12b73c65'
+- [ec81f6b9](https://github.com/stashed/apimachinery/commit/ec81f6b9) Enable status subresource for crds (#524)
+- [8a3a3bad](https://github.com/stashed/apimachinery/commit/8a3a3bad) Remove status from crd.yaml (#523)
+- [0ebf9294](https://github.com/stashed/apimachinery/commit/0ebf9294) Upgrade to restic 0.9.1 (#522)
+- [820a432c](https://github.com/stashed/apimachinery/commit/820a432c) Support node selector for recovery job (#516)
+- [7313940f](https://github.com/stashed/apimachinery/commit/7313940f) Upgrade to prom/pushgateway:v0.5.2 (#519)
+- [762193ce](https://github.com/stashed/apimachinery/commit/762193ce) Remove ops-address port (#518)
+- [a944b88a](https://github.com/stashed/apimachinery/commit/a944b88a) Set cpu limits to 100m (#517)
+- [02eca27a](https://github.com/stashed/apimachinery/commit/02eca27a) Update stash.sh
+- [63783cc8](https://github.com/stashed/apimachinery/commit/63783cc8) Add links to java client
+- [25005f65](https://github.com/stashed/apimachinery/commit/25005f65) Move openapi-spec to api folder (#513)
+- [02ac221a](https://github.com/stashed/apimachinery/commit/02ac221a) Deploy operator in kube-system namespace via Helm (#511)
+- [472d823a](https://github.com/stashed/apimachinery/commit/472d823a) Add togglable tabs for Installation: Script & Helm (#509)
+- [60d571e4](https://github.com/stashed/apimachinery/commit/60d571e4) Revendor dependencies (#508)
+- [5d56183b](https://github.com/stashed/apimachinery/commit/5d56183b) added front matter (#507)
+- [ec715ab3](https://github.com/stashed/apimachinery/commit/ec715ab3) Improve installer (#504)
+- [935db661](https://github.com/stashed/apimachinery/commit/935db661) Prepare docs for 0.7.0 release. (#502)
+- [ecd85f2a](https://github.com/stashed/apimachinery/commit/ecd85f2a) Prepare docs for 0.7.0-rc.5 (#498)
+- [6df2325b](https://github.com/stashed/apimachinery/commit/6df2325b) Fix storage implementation for snapshots (#497)
+- [d3fdad71](https://github.com/stashed/apimachinery/commit/d3fdad71) Update changelog (#495)
+- [794d4aca](https://github.com/stashed/apimachinery/commit/794d4aca) Delete user roles on purge. (#494)
+- [f8744a6f](https://github.com/stashed/apimachinery/commit/f8744a6f) Revert "Add app: stash label to user roles. (#493)"
+- [c506dc4c](https://github.com/stashed/apimachinery/commit/c506dc4c) Add app: stash label to user roles. (#493)
+- [e1b0d6c7](https://github.com/stashed/apimachinery/commit/e1b0d6c7) Use hooks for user roles and fix hook deletion policy
+- [bf59c614](https://github.com/stashed/apimachinery/commit/bf59c614) Use post-install hooks to install admission controller in chart (#492)
+- [b50824e2](https://github.com/stashed/apimachinery/commit/b50824e2) Revert "Remove stash crds before uninstalling operator (#458)"
+- [7b15b320](https://github.com/stashed/apimachinery/commit/7b15b320) Update changelog (#491)
+- [8ec73428](https://github.com/stashed/apimachinery/commit/8ec73428) Prepare docs for 0.7.0-rc.4 (#483)
+- [e1967d97](https://github.com/stashed/apimachinery/commit/e1967d97) Avoid creating apiservice when webhooks are not used. (#490)
+- [ee1ef7c1](https://github.com/stashed/apimachinery/commit/ee1ef7c1) Install correct version of stash chart (#489)
+- [5e5181fc](https://github.com/stashed/apimachinery/commit/5e5181fc) Concourse (#486)
+- [02366a87](https://github.com/stashed/apimachinery/commit/02366a87) Revendor (#481)
+- [b69f01df](https://github.com/stashed/apimachinery/commit/b69f01df) Support recovering from repository in different namespace (#474)
+- [42c42112](https://github.com/stashed/apimachinery/commit/42c42112) Add support for initial backoff to the apiserver call on recover (#476)
+- [b3ffb323](https://github.com/stashed/apimachinery/commit/b3ffb323) Typo (`Weclome` → `Welcome`) in page title (#479)
+- [c448e138](https://github.com/stashed/apimachinery/commit/c448e138) Update docs (run minio in v1.9.4+ cluster and add example yaml files in respective backends) (#473)
+- [6510947d](https://github.com/stashed/apimachinery/commit/6510947d) Fix a typo (#471)
+- [5ce9da2d](https://github.com/stashed/apimachinery/commit/5ce9da2d) Don't panic if admission options is nil (#469)
+- [7fdf126a](https://github.com/stashed/apimachinery/commit/7fdf126a) Disable admission controllers for webhook server (#468)
+- [89f5b0c8](https://github.com/stashed/apimachinery/commit/89f5b0c8) Added SSL support for deleting restic repository from Minio backend (#464)
+- [4e328d3e](https://github.com/stashed/apimachinery/commit/4e328d3e) Use new UpdateRecoveryStatus method (#466)
+- [166e9283](https://github.com/stashed/apimachinery/commit/166e9283) Add Update***Status helpers (#465)
+- [9a3c0b21](https://github.com/stashed/apimachinery/commit/9a3c0b21) Update client-go to 7.0.0 (#463)
+- [7f995931](https://github.com/stashed/apimachinery/commit/7f995931) Rename webhook files in chart (#460)
+- [2cf5cceb](https://github.com/stashed/apimachinery/commit/2cf5cceb) Update workload api (#459)
+- [eeca55cf](https://github.com/stashed/apimachinery/commit/eeca55cf) Remove stash crds before uninstalling operator (#458)
+- [b5319061](https://github.com/stashed/apimachinery/commit/b5319061) Export kube-ca only if required (#457)
+- [37510e21](https://github.com/stashed/apimachinery/commit/37510e21) Improve installer (#456)
+- [9b5fcbb2](https://github.com/stashed/apimachinery/commit/9b5fcbb2) Update changelog (#455)
+- [b17c2190](https://github.com/stashed/apimachinery/commit/b17c2190) Various installer fixes (#454)
+- [ca561960](https://github.com/stashed/apimachinery/commit/ca561960) Update workload client (#453)
+- [28298bd1](https://github.com/stashed/apimachinery/commit/28298bd1) Update workload client (#452)
+- [2d5b2882](https://github.com/stashed/apimachinery/commit/2d5b2882) Revendor workload client (#451)
+- [274410b9](https://github.com/stashed/apimachinery/commit/274410b9) Update workload api (#450)
+- [3899e0b7](https://github.com/stashed/apimachinery/commit/3899e0b7) Fixes RBAC issue in test (#449)
+- [5afb9c7f](https://github.com/stashed/apimachinery/commit/5afb9c7f) fixed wipeOut + fixed doc (#447)
+- [6565cb35](https://github.com/stashed/apimachinery/commit/6565cb35) Delete profile.out
+- [3f7945c2](https://github.com/stashed/apimachinery/commit/3f7945c2) Add docs for GKE and Rook (#430)
+- [d317210a](https://github.com/stashed/apimachinery/commit/d317210a) concourse configs (#429)
+- [ff9d8e99](https://github.com/stashed/apimachinery/commit/ff9d8e99) Delete restic repository from backend if Repository CRD is deleted (#438)
+- [2af3de25](https://github.com/stashed/apimachinery/commit/2af3de25) Use Repository data in Recovery CRD (#436)
+- [1f71dae1](https://github.com/stashed/apimachinery/commit/1f71dae1) Update StatefulSet doc (#445)
+- [d5a461b3](https://github.com/stashed/apimachinery/commit/d5a461b3) Move Stash swagger.json to top level folder (#441)
+- [2a2eb1dd](https://github.com/stashed/apimachinery/commit/2a2eb1dd) Fix go_vet error (#440)
+- [40a357e4](https://github.com/stashed/apimachinery/commit/40a357e4) Increase qps and burst limits (#435)
+- [ceb8d0fc](https://github.com/stashed/apimachinery/commit/ceb8d0fc) Permit stash operator to perform pods/exec (#433)
+- [0aaaf1bf](https://github.com/stashed/apimachinery/commit/0aaaf1bf) Add RBAC instructions for GKE cluster (#432)
+- [1c414b05](https://github.com/stashed/apimachinery/commit/1c414b05) Update charts location (#431)
+- [4a08b918](https://github.com/stashed/apimachinery/commit/4a08b918) Purge repository objects in installer (#427)
+- [a25ff455](https://github.com/stashed/apimachinery/commit/a25ff455) Add SCRIPT_LOCATION variable to installer (#426)
+- [4dcfe82f](https://github.com/stashed/apimachinery/commit/4dcfe82f) Show repository snapshot list (#417)
+- [d33ffd85](https://github.com/stashed/apimachinery/commit/d33ffd85) Fixed Repository YAML (#425)
+- [367009a4](https://github.com/stashed/apimachinery/commit/367009a4) Add delete method for snapshots to swagger.json (#424)
+- [84085086](https://github.com/stashed/apimachinery/commit/84085086) Generate swagger.json (#423)
+- [36cfec54](https://github.com/stashed/apimachinery/commit/36cfec54) Add install pkg for stash crds (#422)
+- [18dc29a5](https://github.com/stashed/apimachinery/commit/18dc29a5) Fix openapi spec for stash crds (#421)
+- [22256ccc](https://github.com/stashed/apimachinery/commit/22256ccc) Update README.md
+- [12a039f9](https://github.com/stashed/apimachinery/commit/12a039f9) Add registry skeleton for snapshots (#415)
+- [c18af633](https://github.com/stashed/apimachinery/commit/c18af633) Update chart readme (#413)
+- [5ef3ca58](https://github.com/stashed/apimachinery/commit/5ef3ca58) Add enableAnalytics to chart readme
+- [fd0ece69](https://github.com/stashed/apimachinery/commit/fd0ece69) Add frontmatter for repository crd (#412)
+- [af50930a](https://github.com/stashed/apimachinery/commit/af50930a) Use separate registry key for docker images (#410)
+- [c59e3fbb](https://github.com/stashed/apimachinery/commit/c59e3fbb) Prepare docs for 0.7.0-rc.3 (#411)
+- [159c2750](https://github.com/stashed/apimachinery/commit/159c2750) Add test for recovery (#409)
+- [aa36b115](https://github.com/stashed/apimachinery/commit/aa36b115) Skip setting ListKind (#407)
+- [964c6f35](https://github.com/stashed/apimachinery/commit/964c6f35) Add CRD Validation (#406)
+- [a7351a48](https://github.com/stashed/apimachinery/commit/a7351a48) Create repository crd for each Restic repository (#394)
+- [273794d8](https://github.com/stashed/apimachinery/commit/273794d8) Generate openapi spec for stash api (#405)
+- [9c2df315](https://github.com/stashed/apimachinery/commit/9c2df315) Fix install script for minikube 0.24.x (Kube 1.8.0) (#404)
+- [aca52873](https://github.com/stashed/apimachinery/commit/aca52873) Skip downloading onessl if already installed (#401)
+- [afb1746b](https://github.com/stashed/apimachinery/commit/afb1746b) Use Restic spec hash instead of resource version to restart pods (#399)
+- [44867248](https://github.com/stashed/apimachinery/commit/44867248) Revendor webhook util and jsonpatch fixes (#400)
+- [ce710f86](https://github.com/stashed/apimachinery/commit/ce710f86) Check for valid owner object (#397)
+- [7b7821da](https://github.com/stashed/apimachinery/commit/7b7821da) Revendor webhook library (#393)
+- [f763a5c1](https://github.com/stashed/apimachinery/commit/f763a5c1) Update changelog
+- [b9b409e0](https://github.com/stashed/apimachinery/commit/b9b409e0) Prepare docs for 0.7.0-rc.2 (#391)
+- [472e7cad](https://github.com/stashed/apimachinery/commit/472e7cad) Update chart version
+- [296a6b4d](https://github.com/stashed/apimachinery/commit/296a6b4d) Add variable for dockerRegistry (#390)
+- [2f29b8dd](https://github.com/stashed/apimachinery/commit/2f29b8dd) Reorg objects deleted in uninstall command (#389)
+- [8a44a744](https://github.com/stashed/apimachinery/commit/8a44a744) Fix --enable-analytics flag (#387)
+- [85c0a2a1](https://github.com/stashed/apimachinery/commit/85c0a2a1) Fix flag parsing in tests (#386)
+- [e1c1d543](https://github.com/stashed/apimachinery/commit/e1c1d543) Fix Statefulset Example (#385)
+- [d0b7eb1c](https://github.com/stashed/apimachinery/commit/d0b7eb1c) Rename --analytics to --enable-analytics (#384)
+- [44383721](https://github.com/stashed/apimachinery/commit/44383721) Use separated appscode/kubernetes-webhook-util package (#383)
+- [e5199369](https://github.com/stashed/apimachinery/commit/e5199369) Update the image tag in operator.yaml (#382)
+- [dd9f165d](https://github.com/stashed/apimachinery/commit/dd9f165d) Don't enable mutator for StatefulSet updates (#381)
+- [fe9fcda6](https://github.com/stashed/apimachinery/commit/fe9fcda6) Update docs to 0.7.0-rc.1 (#380)
+- [2e5d9bb5](https://github.com/stashed/apimachinery/commit/2e5d9bb5) Add types for Repository apigroup (#377)
+- [59f3eb1b](https://github.com/stashed/apimachinery/commit/59f3eb1b) Replace initializers with mutation webhook for workloads (#363)
+- [ef98338c](https://github.com/stashed/apimachinery/commit/ef98338c) Merge pull request #375 from galexrt/fix373
+- [37e6f8a8](https://github.com/stashed/apimachinery/commit/37e6f8a8) Add missing front matter (#376)
+- [293f27f7](https://github.com/stashed/apimachinery/commit/293f27f7) Update README.md
+- [3e1a16ae](https://github.com/stashed/apimachinery/commit/3e1a16ae) Fix buid
+- [7d300d87](https://github.com/stashed/apimachinery/commit/7d300d87) Add travis.yaml (#370)
+- [9f14db3b](https://github.com/stashed/apimachinery/commit/9f14db3b) Add --purge flag (#369)
+- [3e9ac0bc](https://github.com/stashed/apimachinery/commit/3e9ac0bc) Make it clear that installer is a single command (#365)
+- [f1f3228d](https://github.com/stashed/apimachinery/commit/f1f3228d) Update installer (#364)
+- [048e2f42](https://github.com/stashed/apimachinery/commit/048e2f42) Update chart to match RBAC best practices for charts (#362)
+- [b0a50b64](https://github.com/stashed/apimachinery/commit/b0a50b64) Add checks to installer script (#361)
+- [d96dd1c8](https://github.com/stashed/apimachinery/commit/d96dd1c8) Use admission hook helpers from kutil (#360)
+- [18501324](https://github.com/stashed/apimachinery/commit/18501324) Fix admission webhook flag (#359)
+- [731c6e1b](https://github.com/stashed/apimachinery/commit/731c6e1b) Support --enable-admission-webhook=false (#358)
+- [41a93897](https://github.com/stashed/apimachinery/commit/41a93897) Sync chart to stable charts repo (#356)
+- [f2cb99dd](https://github.com/stashed/apimachinery/commit/f2cb99dd) Use restic 0.8.3 (#355)
+- [ce618fd3](https://github.com/stashed/apimachinery/commit/ce618fd3) Update README.md (#352)
+- [9b82c516](https://github.com/stashed/apimachinery/commit/9b82c516) Document user roles (#348)
+- [ab638a29](https://github.com/stashed/apimachinery/commit/ab638a29) Add upgrade instructions.
+- [9369e1bb](https://github.com/stashed/apimachinery/commit/9369e1bb) Add changelog for 0.7.0-rc.0 (#347)
+- [03bd2d5f](https://github.com/stashed/apimachinery/commit/03bd2d5f) Implement offline backup for multiple replica (#335)
+- [628b1713](https://github.com/stashed/apimachinery/commit/628b1713) Update readme to point to 0.6.4 (#345)
+- [68f09062](https://github.com/stashed/apimachinery/commit/68f09062) Don't block deletion of owner by default (#342)
+- [7a8f7e29](https://github.com/stashed/apimachinery/commit/7a8f7e29) Skip generating UpdateStatus method (#341)
+- [ffd0701b](https://github.com/stashed/apimachinery/commit/ffd0701b) Remove internal types (#340)
+- [9b497a83](https://github.com/stashed/apimachinery/commit/9b497a83) Use rbac/v1 apis (#339)
+- [5f1a8d58](https://github.com/stashed/apimachinery/commit/5f1a8d58) Add user roles (#338)
+- [e909732f](https://github.com/stashed/apimachinery/commit/e909732f) Use restic 0.8.2 (#337)
+- [f811c096](https://github.com/stashed/apimachinery/commit/f811c096) Use official code generator scripts (#336)
+- [45fe6695](https://github.com/stashed/apimachinery/commit/45fe6695) Update rbac-list.yaml
+- [4bab2035](https://github.com/stashed/apimachinery/commit/4bab2035) Update charts to support api registration (#334)
+- [e882132d](https://github.com/stashed/apimachinery/commit/e882132d) Fix e2e tests after webhook merger (#333)
+- [327dc4d6](https://github.com/stashed/apimachinery/commit/327dc4d6) Ensure stash can be run locally (#332)
+- [8b69538e](https://github.com/stashed/apimachinery/commit/8b69538e) Label all stash installer resources
+- [201a9e23](https://github.com/stashed/apimachinery/commit/201a9e23) Update Grafana dashboard (#330)
+- [ab583820](https://github.com/stashed/apimachinery/commit/ab583820) Delete all stash installer resources
+- [f933585b](https://github.com/stashed/apimachinery/commit/f933585b) Use binary operator for checking stauts of semver command
+- [3e9418ab](https://github.com/stashed/apimachinery/commit/3e9418ab) Leave secure port unset
+- [fedfa749](https://github.com/stashed/apimachinery/commit/fedfa749) Use ${} form for onessl envsubst
+- [a6a0a3ec](https://github.com/stashed/apimachinery/commit/a6a0a3ec) Vendor client-go auth pkg (#331)
+- [f6f821f3](https://github.com/stashed/apimachinery/commit/f6f821f3) Merge admission webhook and operator into one binary (#329)
+- [adf04545](https://github.com/stashed/apimachinery/commit/adf04545) Use envsubst from onessl
+- [f90dc3c1](https://github.com/stashed/apimachinery/commit/f90dc3c1) Install admission webhook for Kubernetes >=1.9.0
+- [d4ff727c](https://github.com/stashed/apimachinery/commit/d4ff727c) Merge uninstall script into the stash.sh script (#328)
+- [98e2b892](https://github.com/stashed/apimachinery/commit/98e2b892) Implement Pause Restic (#315)
+- [f2d86207](https://github.com/stashed/apimachinery/commit/f2d86207) Copy generic-admission-server into pkg (#318)
+- [2381c8bc](https://github.com/stashed/apimachinery/commit/2381c8bc) Use shared infromer factory (#317)
+- [da343f4e](https://github.com/stashed/apimachinery/commit/da343f4e) Support self-signed ca cert for backends (#294)
+- [e3ef7e8e](https://github.com/stashed/apimachinery/commit/e3ef7e8e) Use GetBaseVersion method from kutil (#316)
+- [0c3b7cc6](https://github.com/stashed/apimachinery/commit/0c3b7cc6) Update install.md
+- [e3e52e79](https://github.com/stashed/apimachinery/commit/e3e52e79) Remove system prefix from admission server rbac
+- [373f7a1f](https://github.com/stashed/apimachinery/commit/373f7a1f) Fix webhook command description (#314)
+- [57ddc07c](https://github.com/stashed/apimachinery/commit/57ddc07c) Use rbac/v1beta1 api. (#313)
+- [5a58a810](https://github.com/stashed/apimachinery/commit/5a58a810) Reduce log level for admission webhook
+- [0dee8016](https://github.com/stashed/apimachinery/commit/0dee8016) Support Create & Update operations in admission webhook (#312)
+- [2af05ccb](https://github.com/stashed/apimachinery/commit/2af05ccb) Merge webhook plugins into one. (#311)
+- [326a2151](https://github.com/stashed/apimachinery/commit/326a2151) Fix installer script
+- [f13b1a52](https://github.com/stashed/apimachinery/commit/f13b1a52) Support private docker registry in installer (#310)
+- [bb97b9f2](https://github.com/stashed/apimachinery/commit/bb97b9f2) Add ValidatingAdmissionWebhook for Stash CRDs (#299)
+- [5d6fe487](https://github.com/stashed/apimachinery/commit/5d6fe487) Compress go binaries (#309)
+- [be4c3242](https://github.com/stashed/apimachinery/commit/be4c3242) Merge commit 'dd01a18d6821b218669437b491e71eff9cf82c89'
+- [a7add4ea](https://github.com/stashed/apimachinery/commit/a7add4ea) Merge commit '6cd6efaa2491aea24a0f7f588c86b0ff5ff03283'
+- [02c433af](https://github.com/stashed/apimachinery/commit/02c433af) Rename --initializer flag to --enable-initializer (#308)
+- [d711439e](https://github.com/stashed/apimachinery/commit/d711439e) Remove STASH_ROLE_TYPE from installer scripts (#307)
+- [b607b2ab](https://github.com/stashed/apimachinery/commit/b607b2ab) Use rbac/v1 api (#306)
+- [eb4e3fac](https://github.com/stashed/apimachinery/commit/eb4e3fac) Use kubectl auth reconcile (#305)
+- [c90dd8e1](https://github.com/stashed/apimachinery/commit/c90dd8e1) Added support for private docker registry (#300)
+- [6a624c75](https://github.com/stashed/apimachinery/commit/6a624c75) Add --initializer flag to installer (#304)
+- [89115fb2](https://github.com/stashed/apimachinery/commit/89115fb2) Prepare docs for 0.7.0-alpha.0 (#302)
+- [9b0130f4](https://github.com/stashed/apimachinery/commit/9b0130f4) Change installer script (#301)
+- [e9233056](https://github.com/stashed/apimachinery/commit/e9233056) Merge commit '5e307d69dbf7e02331cc5bc60154e79a52285060'
+- [6fda8eb8](https://github.com/stashed/apimachinery/commit/6fda8eb8) Remove TPR to CRD migrator (#298)
+- [7216f7b7](https://github.com/stashed/apimachinery/commit/7216f7b7) Update dependencies to Kubernetes 1.9 (#297)
+- [f43201d5](https://github.com/stashed/apimachinery/commit/f43201d5) Prepare docs for 0.6.3
+- [ef1196ba](https://github.com/stashed/apimachinery/commit/ef1196ba) Fixed parsing argument error (#291)
+- [d88d57cc](https://github.com/stashed/apimachinery/commit/d88d57cc) Update reference docs
+- [7398bce7](https://github.com/stashed/apimachinery/commit/7398bce7) Update appscode/go log wrapper (#287)
+- [85deef48](https://github.com/stashed/apimachinery/commit/85deef48) Fix inline volumeSource marshalling for LocalSpec (#289)
+- [d62b7a77](https://github.com/stashed/apimachinery/commit/d62b7a77) Fix roadmap link
+- [96211379](https://github.com/stashed/apimachinery/commit/96211379) Added Grafana Stash overview dashboard (#286)
+- [76878d55](https://github.com/stashed/apimachinery/commit/76878d55) Prepare docs for 0.6.2 release (#278)
+- [976257be](https://github.com/stashed/apimachinery/commit/976257be) Merge pull request #277 from whereisaaron/master
+- [0d5b2f92](https://github.com/stashed/apimachinery/commit/0d5b2f92) Update Helm chart to use newer 'fullname' template that avoid duplicate (e.g. 'stash-stash-...') resource names
+- [f1c7ab64](https://github.com/stashed/apimachinery/commit/f1c7ab64) Fix RBAC roles in chart (#276)
+- [8f13869d](https://github.com/stashed/apimachinery/commit/8f13869d) Update initializer.md
+- [43c1a121](https://github.com/stashed/apimachinery/commit/43c1a121) Update initializer.md
+- [3031ea25](https://github.com/stashed/apimachinery/commit/3031ea25) Fix new restic format in upgrade docs (#274)
+- [d8bdd9ed](https://github.com/stashed/apimachinery/commit/d8bdd9ed) Reduce operator permissions for service accounts (#270)
+- [33e15c12](https://github.com/stashed/apimachinery/commit/33e15c12) Fix formatting of uninstall.md (#269)
+- [ac0bcc4e](https://github.com/stashed/apimachinery/commit/ac0bcc4e) Prepare docs for 0.6.1 (#268)
+- [bf7406f9](https://github.com/stashed/apimachinery/commit/bf7406f9) Fix upgrade instructions.
+- [d1814caa](https://github.com/stashed/apimachinery/commit/d1814caa) Detect analytics client id using env vars (#265)
+- [0a320152](https://github.com/stashed/apimachinery/commit/0a320152) Cleanup release script
+- [197c7f90](https://github.com/stashed/apimachinery/commit/197c7f90) Prepare docs for 0.6.0 release (#264)
+- [68fa5fd3](https://github.com/stashed/apimachinery/commit/68fa5fd3) Reorganize docs (#263)
+- [8a189576](https://github.com/stashed/apimachinery/commit/8a189576) Add support for B2 (#262)
+- [7dabc027](https://github.com/stashed/apimachinery/commit/7dabc027) Update restic website link (#261)
+- [450ed8a7](https://github.com/stashed/apimachinery/commit/450ed8a7) Revendor kutil
+- [1411550c](https://github.com/stashed/apimachinery/commit/1411550c) Fix doc
+- [c751baa0](https://github.com/stashed/apimachinery/commit/c751baa0) Update docs for unified LocalSpec (#260)
+- [d614bdb6](https://github.com/stashed/apimachinery/commit/d614bdb6) Unify LocalSpec and RecoveredVolume (#259)
+- [7a8cfd9f](https://github.com/stashed/apimachinery/commit/7a8cfd9f) Remove restic-dependency from recovery (#258)
+- [a24707a0](https://github.com/stashed/apimachinery/commit/a24707a0) Update restic version to 0.8.1 (#257)
+- [61e86c73](https://github.com/stashed/apimachinery/commit/61e86c73) Use cmp methods from kutil (#255)
+- [2677c1d5](https://github.com/stashed/apimachinery/commit/2677c1d5) Remove TryPatch methods (#254)
+- [7706452d](https://github.com/stashed/apimachinery/commit/7706452d) Use verb type for mutation (#251)
+- [2b3eff73](https://github.com/stashed/apimachinery/commit/2b3eff73) Use CreateOrPatchCronJob from kutil (#250)
+- [d86c9ddb](https://github.com/stashed/apimachinery/commit/d86c9ddb) Indicate mutation in PATCH helper method return (#249)
+- [98f87c60](https://github.com/stashed/apimachinery/commit/98f87c60) Update RBAC for analytics
+- [b1a6b198](https://github.com/stashed/apimachinery/commit/b1a6b198) Simplify clientID generation for analytics (#247)
+- [dfbd6691](https://github.com/stashed/apimachinery/commit/dfbd6691) Set analytics clientID (#246)
+- [266190d0](https://github.com/stashed/apimachinery/commit/266190d0) Update README.md
+- [6e56e5d4](https://github.com/stashed/apimachinery/commit/6e56e5d4) Cleanup docs
+- [d7fd65de](https://github.com/stashed/apimachinery/commit/d7fd65de) Reorganize docs (#245)
+- [e314b186](https://github.com/stashed/apimachinery/commit/e314b186) Upgrade procedure for 0.5.1 to 0.6.0 (#243)
+- [dfc5eeba](https://github.com/stashed/apimachinery/commit/dfc5eeba) Update docs (#236)
+- [e30693ac](https://github.com/stashed/apimachinery/commit/e30693ac) Fix retentionPolicyName not found error (#242)
+- [d9d63b9f](https://github.com/stashed/apimachinery/commit/d9d63b9f) Lower case workload.kind in prefix (#240)
+- [e9796acc](https://github.com/stashed/apimachinery/commit/e9796acc) Use RegisterCRDs helper (#239)
+- [a347ce80](https://github.com/stashed/apimachinery/commit/a347ce80) Change left_menu -> menu_name (#235)
+- [f5a15dd4](https://github.com/stashed/apimachinery/commit/f5a15dd4) Revendor dependencies (#234)
+- [3a63651b](https://github.com/stashed/apimachinery/commit/3a63651b) Implement offline backup (#229)
+- [fd5b997c](https://github.com/stashed/apimachinery/commit/fd5b997c) Add aliases for README file (#233)
+- [9fa96d42](https://github.com/stashed/apimachinery/commit/9fa96d42) Add Docs Front Matter for 0.5.1 (#231)
+- [20f207ea](https://github.com/stashed/apimachinery/commit/20f207ea) Update bundles restic to 0.8.0 (#232)
+- [46b995a0](https://github.com/stashed/apimachinery/commit/46b995a0) Revendor kutil (#230)
+- [06f4dade](https://github.com/stashed/apimachinery/commit/06f4dade) Run `restic check` once every 3 days (#223)
+- [88d0679a](https://github.com/stashed/apimachinery/commit/88d0679a) Record recovery status for individual FileGroup (#222)
+- [5bbeab6c](https://github.com/stashed/apimachinery/commit/5bbeab6c) PollInfinitely for recovery job to succeed
+- [d18c00b9](https://github.com/stashed/apimachinery/commit/d18c00b9) Dynamically create stash-sidecar ClusterRole in operator (#221)
+- [51530bed](https://github.com/stashed/apimachinery/commit/51530bed) Implement workload initializer in stash operator (#207)
+- [2739bf10](https://github.com/stashed/apimachinery/commit/2739bf10) Leader election for deployment, replica set and rc (#206)
+- [836f8395](https://github.com/stashed/apimachinery/commit/836f8395) Generate docs
+- [fd5261e5](https://github.com/stashed/apimachinery/commit/fd5261e5) Implement Recovery for Restic Backup (#202)
+- [44062f68](https://github.com/stashed/apimachinery/commit/44062f68) Update install.md
+- [1fc29cbf](https://github.com/stashed/apimachinery/commit/1fc29cbf) Update install.md
+- [3bf7fb00](https://github.com/stashed/apimachinery/commit/3bf7fb00) Update install.md
+- [14ad778f](https://github.com/stashed/apimachinery/commit/14ad778f) Update chart
+- [5b35477e](https://github.com/stashed/apimachinery/commit/5b35477e) Update install.md
+- [59f2943c](https://github.com/stashed/apimachinery/commit/59f2943c) Update _helpers.tpl
+- [a80b1f9d](https://github.com/stashed/apimachinery/commit/a80b1f9d) Support imagePullSecrets in chart
+- [dee95f21](https://github.com/stashed/apimachinery/commit/dee95f21) Update _helpers.tpl
+- [1fd9876f](https://github.com/stashed/apimachinery/commit/1fd9876f) Make stash chart namespaced (#210)
+- [ea616292](https://github.com/stashed/apimachinery/commit/ea616292) Update docs to point to 0.4.2 release
+- [1458c97a](https://github.com/stashed/apimachinery/commit/1458c97a) Update codegen.sh
+- [8e1ca40b](https://github.com/stashed/apimachinery/commit/8e1ca40b) Use typed versioned client for CRD
+- [ed12717a](https://github.com/stashed/apimachinery/commit/ed12717a) Change `k8s.io/api/core/v1` pkg alias to core (#204)
+- [d938ead0](https://github.com/stashed/apimachinery/commit/d938ead0) Use client-go 5.x
+- [499b759a](https://github.com/stashed/apimachinery/commit/499b759a) Update rbac.md
+- [da60e496](https://github.com/stashed/apimachinery/commit/da60e496) Add recovery CRD (#201)
+- [9b5b6ba9](https://github.com/stashed/apimachinery/commit/9b5b6ba9) Merge commit 'bf3f3307acbd69e5147db8abdb75b1529147f0c5'
+- [acd149eb](https://github.com/stashed/apimachinery/commit/acd149eb) Clarify support for DO
+- [9d65b92b](https://github.com/stashed/apimachinery/commit/9d65b92b) Prepare docs for 0.5.1
+- [8eedf90f](https://github.com/stashed/apimachinery/commit/8eedf90f) Update RBAC permissions
+- [041e109b](https://github.com/stashed/apimachinery/commit/041e109b) Add label to installer objects in rbac mode
+- [fad14779](https://github.com/stashed/apimachinery/commit/fad14779) Clarify that --tag foo,tag bar style tags are not supported. (#199)
+- [0da46f7d](https://github.com/stashed/apimachinery/commit/0da46f7d) Set hostname based on resource type (#198)
+- [d04f26f3](https://github.com/stashed/apimachinery/commit/d04f26f3) Manage RoleBinding for rbac enabled cluster (#197)
+- [44b9ea19](https://github.com/stashed/apimachinery/commit/44b9ea19) Update install.md
+- [1c098d38](https://github.com/stashed/apimachinery/commit/1c098d38) Update install.md
+- [002ee683](https://github.com/stashed/apimachinery/commit/002ee683) Document how to detect operator version (#196)
+- [a7fd4940](https://github.com/stashed/apimachinery/commit/a7fd4940) Prepare docs for 0.5.0 release
+- [a0cea425](https://github.com/stashed/apimachinery/commit/a0cea425) Rename Scheduler to Controller
+- [c094e627](https://github.com/stashed/apimachinery/commit/c094e627) Stop dumping env vars
+- [43881e0b](https://github.com/stashed/apimachinery/commit/43881e0b) Prepare docs for 0.5.0-beta.3 release
+- [d1654675](https://github.com/stashed/apimachinery/commit/d1654675) Use workqueue for scheduler (#194)
+- [7d27c516](https://github.com/stashed/apimachinery/commit/7d27c516) Revise RBAC permissions
+- [d53e59a8](https://github.com/stashed/apimachinery/commit/d53e59a8) Prepare docs for 0.5.0-beta.2
+- [fb496b89](https://github.com/stashed/apimachinery/commit/fb496b89) Update tutorial.md (#186)
+- [717ee431](https://github.com/stashed/apimachinery/commit/717ee431) Add tests for DO (#193)
+- [0306530e](https://github.com/stashed/apimachinery/commit/0306530e) Use object reference to write events
+- [dc1fe141](https://github.com/stashed/apimachinery/commit/dc1fe141) Prepare docs for 0.5.0-beta.1
+- [b0f94976](https://github.com/stashed/apimachinery/commit/b0f94976) Fix prometheus metrics collection (#192)
+- [060a4748](https://github.com/stashed/apimachinery/commit/060a4748) Replace reflect.Equal with github.com/google/go-cmp (#188)
+- [0002e64c](https://github.com/stashed/apimachinery/commit/0002e64c) Skip ReplicaSet owned by Deployments (#187)
+- [daf989e6](https://github.com/stashed/apimachinery/commit/daf989e6) Merge commit '32217c844015816b86c46a8d74a175c42f0e307a'
+- [cfea8b51](https://github.com/stashed/apimachinery/commit/cfea8b51) Prepare docs for 5.0.0-beta.0 (#185)
+- [8cac1df7](https://github.com/stashed/apimachinery/commit/8cac1df7) Rename LastAppliedConfiguration
+- [d8ed50dc](https://github.com/stashed/apimachinery/commit/d8ed50dc) Fix e2e tests (#183)
+- [9dcef9ef](https://github.com/stashed/apimachinery/commit/9dcef9ef) Use workqueue (#182)
+- [c37c155b](https://github.com/stashed/apimachinery/commit/c37c155b) Use Deployment from apps/v1beta1 (#181)
+- [7f4653e9](https://github.com/stashed/apimachinery/commit/7f4653e9) Delete *.generated.go files for ugorji (#180)
+- [f98e1f7e](https://github.com/stashed/apimachinery/commit/f98e1f7e) Use WaitForCRDReady from kutil (#179)
+- [003980d8](https://github.com/stashed/apimachinery/commit/003980d8) Only watch apps/v1beta1 Deployment (#178)
+- [1e5eb1ba](https://github.com/stashed/apimachinery/commit/1e5eb1ba) Move kutil to client package (#177)
+- [87b78d76](https://github.com/stashed/apimachinery/commit/87b78d76) Generate ugorji stuff (#176)
+- [a92313c0](https://github.com/stashed/apimachinery/commit/a92313c0) Remove kubernetes/code-generator from builddeps
+- [e74eeb0e](https://github.com/stashed/apimachinery/commit/e74eeb0e) Prepare docs for 0.5.0 (#174)
+- [02cd8fe9](https://github.com/stashed/apimachinery/commit/02cd8fe9) Install stash as a critical addon (#173)
+- [f1b74850](https://github.com/stashed/apimachinery/commit/f1b74850) Update chart to add roles for CRD
+- [5f3061a2](https://github.com/stashed/apimachinery/commit/5f3061a2) Use Namespace() method from kutil.
+- [16eaf13c](https://github.com/stashed/apimachinery/commit/16eaf13c) Add release script.
+- [2f9775fd](https://github.com/stashed/apimachinery/commit/2f9775fd) Prepare docs for 0.5.0-rc.0
+- [60949d9f](https://github.com/stashed/apimachinery/commit/60949d9f) Revendor kutil.
+- [6c3f64fa](https://github.com/stashed/apimachinery/commit/6c3f64fa) Set RESTIC_VER to 0.7.3 (#172)
+- [0676e71f](https://github.com/stashed/apimachinery/commit/0676e71f) Refresh charts to match recent convention (#171)
+- [ceb87bf7](https://github.com/stashed/apimachinery/commit/ceb87bf7) Fix deployment name in tutorial (#169)
+- [081e1fe1](https://github.com/stashed/apimachinery/commit/081e1fe1) Update kutil (#170)
+- [5cfd7024](https://github.com/stashed/apimachinery/commit/5cfd7024) Set RESTIC_VER to 0.7.2
+- [7ed720e6](https://github.com/stashed/apimachinery/commit/7ed720e6) Use object ref for Restic
+- [e391de24](https://github.com/stashed/apimachinery/commit/e391de24) Fix command in Developer-guide (#168)
+- [4fc51330](https://github.com/stashed/apimachinery/commit/4fc51330) Set root scope kinds
+- [25b61d96](https://github.com/stashed/apimachinery/commit/25b61d96) Use apis/v1alpha1 instead of internal version (#167)
+- [51d82b9b](https://github.com/stashed/apimachinery/commit/51d82b9b) Remove resource:path (#166)
+- [fc386932](https://github.com/stashed/apimachinery/commit/fc386932) Use kubernetes/code-generator (#163)
+- [0e086fec](https://github.com/stashed/apimachinery/commit/0e086fec) Update kutil
+- [819b0364](https://github.com/stashed/apimachinery/commit/819b0364) Expose resync-period as flag
+- [ffdecbc7](https://github.com/stashed/apimachinery/commit/ffdecbc7) Remove pkg/analytics
+- [4a448fbd](https://github.com/stashed/apimachinery/commit/4a448fbd) Move analytics collector to root command (#164)
+- [378e869a](https://github.com/stashed/apimachinery/commit/378e869a) Revendor k8s.io/apiextensions-apiserver (#162)
+- [a9b2bb4a](https://github.com/stashed/apimachinery/commit/a9b2bb4a) Migrate TPR to CRD (#160)
+- [42e52e41](https://github.com/stashed/apimachinery/commit/42e52e41) Fix Restic (#159)
+- [9f04a977](https://github.com/stashed/apimachinery/commit/9f04a977) Update kutil dependency (#158)
+- [772866f7](https://github.com/stashed/apimachinery/commit/772866f7) Use CheckAPIVersion() (#157)
+- [35bd52a0](https://github.com/stashed/apimachinery/commit/35bd52a0) Use PATCH api instead of UPDATE (#156)
+- [0c4d7901](https://github.com/stashed/apimachinery/commit/0c4d7901) Check version using semver library (#152)
+- [dee5c57d](https://github.com/stashed/apimachinery/commit/dee5c57d) Update client-go to 4.0.0 (#150)
+- [b351150d](https://github.com/stashed/apimachinery/commit/b351150d) Update build commands for restic. (#149)
+- [1f3b2d7c](https://github.com/stashed/apimachinery/commit/1f3b2d7c) Update client-go to 3.0.0 from 3.0.0-beta (#148)
+- [59e7171e](https://github.com/stashed/apimachinery/commit/59e7171e) Add DCO
+- [22ed31d1](https://github.com/stashed/apimachinery/commit/22ed31d1) Fix typos of tutorial.md file (#138)
+- [757186ec](https://github.com/stashed/apimachinery/commit/757186ec) Add uninstall.sh script (#144)
+- [d3328e52](https://github.com/stashed/apimachinery/commit/d3328e52) Use console type instead of sh
+- [1d3c6c27](https://github.com/stashed/apimachinery/commit/1d3c6c27) Prepare docs for 0.4.1 release
+- [c1906d66](https://github.com/stashed/apimachinery/commit/c1906d66) Build binary inside Docker image
+- [7c528e4a](https://github.com/stashed/apimachinery/commit/7c528e4a) Merge commit 'b8c45d0d4379587a31302b834334047cc77e59db'
+- [ad005cab](https://github.com/stashed/apimachinery/commit/ad005cab) Revendor forked robfig/cron (#139)
+- [46720dff](https://github.com/stashed/apimachinery/commit/46720dff) Update stash-without-rbac.yaml
+- [244f7ca8](https://github.com/stashed/apimachinery/commit/244f7ca8) Add omitempty for Local storage
+- [8f479b3c](https://github.com/stashed/apimachinery/commit/8f479b3c) Move resource consts to api pkg
+- [ace063eb](https://github.com/stashed/apimachinery/commit/ace063eb) Fix Fake restic resource Url (#137)
+- [7ec252b1](https://github.com/stashed/apimachinery/commit/7ec252b1) Clarify bucket location
+- [6d31b48b](https://github.com/stashed/apimachinery/commit/6d31b48b) Update gcs-restic.yaml
+- [bc394d4a](https://github.com/stashed/apimachinery/commit/bc394d4a) Update backends.md
+- [98d90308](https://github.com/stashed/apimachinery/commit/98d90308) Update tutorial.md
+- [9a6ea80f](https://github.com/stashed/apimachinery/commit/9a6ea80f) Update backends.md
+- [191dd168](https://github.com/stashed/apimachinery/commit/191dd168) Update docs to 0.4.0 release.
+- [0ebf939c](https://github.com/stashed/apimachinery/commit/0ebf939c) Update docs to remove setting name for local.VolumeSource
+- [7369ffde](https://github.com/stashed/apimachinery/commit/7369ffde) Support selecting restic branch
+- [b038ac58](https://github.com/stashed/apimachinery/commit/b038ac58) Prepare docs for 0.4.0 release.
+- [df04e61f](https://github.com/stashed/apimachinery/commit/df04e61f) Update concept.md
+- [168b1d51](https://github.com/stashed/apimachinery/commit/168b1d51) Rename RepositorySecretName to StorageSecretName (#135)
+- [b783c47b](https://github.com/stashed/apimachinery/commit/b783c47b) Rename Volume to VolumeSource (#134)
+- [40340c60](https://github.com/stashed/apimachinery/commit/40340c60) Update charts
+- [b2e9e439](https://github.com/stashed/apimachinery/commit/b2e9e439) Use VolumeSource instead of Volume for Local backend. (#132)
+- [c1a10199](https://github.com/stashed/apimachinery/commit/c1a10199) Update concept.md
+- [522e057b](https://github.com/stashed/apimachinery/commit/522e057b) Fix linting issues in chart
+- [335b721c](https://github.com/stashed/apimachinery/commit/335b721c) Add String() method to PrefixType.
+- [158bdabd](https://github.com/stashed/apimachinery/commit/158bdabd) Remove unused type Source
+- [ebee1005](https://github.com/stashed/apimachinery/commit/ebee1005) Update readme
+- [13ebd392](https://github.com/stashed/apimachinery/commit/13ebd392) Various corrections to chart based on code review.
+- [a96ddcda](https://github.com/stashed/apimachinery/commit/a96ddcda) Prepare docs for 0.3.1 release.
+- [dcf34f1c](https://github.com/stashed/apimachinery/commit/dcf34f1c) Support setting compute resources for sidecar (#129)
+- [ef468bc0](https://github.com/stashed/apimachinery/commit/ef468bc0) Update chart with rbac
+- [fd9d6c02](https://github.com/stashed/apimachinery/commit/fd9d6c02) Update rbac.md
+- [f743cb66](https://github.com/stashed/apimachinery/commit/f743cb66) Fix RBAC docs (#127)
+- [3cd9c508](https://github.com/stashed/apimachinery/commit/3cd9c508) Update release.md
+- [6ff18600](https://github.com/stashed/apimachinery/commit/6ff18600) Merge commit 'fba07b3994b0e1fd3a95c91d890353aa23a0f3c1'
+- [0fe79c4b](https://github.com/stashed/apimachinery/commit/0fe79c4b) Print commit timestamp with version command
+- [7379cec6](https://github.com/stashed/apimachinery/commit/7379cec6) Prepare docs for 0.3.0 release
+- [8632871c](https://github.com/stashed/apimachinery/commit/8632871c) Document RBAC
+- [703edc49](https://github.com/stashed/apimachinery/commit/703edc49) Document behavior in case of multiple Restic
+- [0282621a](https://github.com/stashed/apimachinery/commit/0282621a) Document e2e test setup
+- [8f320ccc](https://github.com/stashed/apimachinery/commit/8f320ccc) Document swift (#124)
+- [b6068d83](https://github.com/stashed/apimachinery/commit/b6068d83) Remove support for B2 & Rest server for now.
+- [f3f02ecb](https://github.com/stashed/apimachinery/commit/f3f02ecb) Remove Location choice for GCS
+- [2ad0c18c](https://github.com/stashed/apimachinery/commit/2ad0c18c) Fix spelling
+- [a56137ea](https://github.com/stashed/apimachinery/commit/a56137ea) Update backends.md
+- [a0e3f118](https://github.com/stashed/apimachinery/commit/a0e3f118) Update uninstall.md
+- [0c270985](https://github.com/stashed/apimachinery/commit/0c270985) Update uninstall.md
+- [bca4db3f](https://github.com/stashed/apimachinery/commit/bca4db3f) Use TPR labels to verify installation
+- [6cdbd8f5](https://github.com/stashed/apimachinery/commit/6cdbd8f5) Don't fail scheduler if bad credetials are given
+- [a61a45eb](https://github.com/stashed/apimachinery/commit/a61a45eb) Change mount path for labels to /etc/stash
+- [84c1149a](https://github.com/stashed/apimachinery/commit/84c1149a) Fix remote backend repository format
+- [58eeed1c](https://github.com/stashed/apimachinery/commit/58eeed1c) Part 6 - Update docs (#121)
+- [21034ebe](https://github.com/stashed/apimachinery/commit/21034ebe) Update docs (#120)
+- [f24a1f03](https://github.com/stashed/apimachinery/commit/f24a1f03) Update docs for 0.2.0 release
+- [9478e1d6](https://github.com/stashed/apimachinery/commit/9478e1d6) Various bug fixes (#118)
+- [ee8fca49](https://github.com/stashed/apimachinery/commit/ee8fca49) Mention swift in readme
+- [1b5dd702](https://github.com/stashed/apimachinery/commit/1b5dd702) Update pitch (#117)
+- [f6153296](https://github.com/stashed/apimachinery/commit/f6153296) Various changes to RetentionPolicy	 (#116)
+- [943cf880](https://github.com/stashed/apimachinery/commit/943cf880) Update ROADMAP.md
+- [5b1bf69e](https://github.com/stashed/apimachinery/commit/5b1bf69e) Update tutorial.md
+- [46047d57](https://github.com/stashed/apimachinery/commit/46047d57) Update ROADMAP.md
+- [91fc8541](https://github.com/stashed/apimachinery/commit/91fc8541) Update workloads.md
+- [6e004526](https://github.com/stashed/apimachinery/commit/6e004526) Part 5 - User Guide (#114)
+- [a1d825b5](https://github.com/stashed/apimachinery/commit/a1d825b5) Update ROADMAP.md
+- [f8c093a4](https://github.com/stashed/apimachinery/commit/f8c093a4) Part 4- User Guide (#113)
+- [735536c4](https://github.com/stashed/apimachinery/commit/735536c4) Part 3 - User Guide (#110)
+- [53c775b3](https://github.com/stashed/apimachinery/commit/53c775b3) Part - 2 of User guide (#99)
+- [b9d61921](https://github.com/stashed/apimachinery/commit/b9d61921) Update user guide (#94)
+- [38612df3](https://github.com/stashed/apimachinery/commit/38612df3) Update release.md
+- [612a019b](https://github.com/stashed/apimachinery/commit/612a019b) Update Prometheus job name to use restic ns & name (#93)
+- [47b3b9fe](https://github.com/stashed/apimachinery/commit/47b3b9fe) Update README.md
+- [6c186ba0](https://github.com/stashed/apimachinery/commit/6c186ba0) Use app & release name labels together in chart
+- [b5ed18bc](https://github.com/stashed/apimachinery/commit/b5ed18bc) Update chart readme
+- [09c69811](https://github.com/stashed/apimachinery/commit/09c69811) Update Stash chart (#89)
+- [a3d0ca9a](https://github.com/stashed/apimachinery/commit/a3d0ca9a) Update CONTRIBUTING.md
+- [be57d29e](https://github.com/stashed/apimachinery/commit/be57d29e) Update contribution guide
+- [d7cc52af](https://github.com/stashed/apimachinery/commit/d7cc52af) Fix dev guide (#88)
+- [b51e6516](https://github.com/stashed/apimachinery/commit/b51e6516) Add docs for commands (#90)
+- [c7cac80e](https://github.com/stashed/apimachinery/commit/c7cac80e) Update stash.yaml
+- [b6108163](https://github.com/stashed/apimachinery/commit/b6108163) Update stash.yaml
+- [0d6b20fc](https://github.com/stashed/apimachinery/commit/0d6b20fc) Change stash version to 0.1.0
+- [aede78dd](https://github.com/stashed/apimachinery/commit/aede78dd) Cleanup test commands
+- [272cd162](https://github.com/stashed/apimachinery/commit/272cd162) Add e2e tests for major cloud providers (#84)
+- [75c10a5c](https://github.com/stashed/apimachinery/commit/75c10a5c) Add node selector for DaemonSet e2e test
+- [51052056](https://github.com/stashed/apimachinery/commit/51052056) Check for successful backup events
+- [a22f6c68](https://github.com/stashed/apimachinery/commit/a22f6c68) Fix e2e tests (#83)
+- [b4a8af40](https://github.com/stashed/apimachinery/commit/b4a8af40) Add /snapshots endpoint in operator (#82)
+- [a6571440](https://github.com/stashed/apimachinery/commit/a6571440) Mount scratchDir with operator (#80)
+- [27e45297](https://github.com/stashed/apimachinery/commit/27e45297) Fix scheduler  (#79)
+- [5617d2ef](https://github.com/stashed/apimachinery/commit/5617d2ef) Test e2e tests (#76)
+- [343b29e2](https://github.com/stashed/apimachinery/commit/343b29e2) Remove restic source downloaded for building binary
+- [d66b5f7e](https://github.com/stashed/apimachinery/commit/d66b5f7e) Review analytics events.
+- [d6c926e3](https://github.com/stashed/apimachinery/commit/d6c926e3) Remove unused and/or duplicate constants
+- [97c801aa](https://github.com/stashed/apimachinery/commit/97c801aa) Add ginkgo based e2e tests (#70)
+- [a636d882](https://github.com/stashed/apimachinery/commit/a636d882) Create a cli wrapper for restic (#74)
+- [365f7478](https://github.com/stashed/apimachinery/commit/365f7478) Revise EnsureXXXSidecar methods (#73)
+- [3c0ed950](https://github.com/stashed/apimachinery/commit/3c0ed950) Avoid pushing metrics if missing gateway URL
+- [663a7f47](https://github.com/stashed/apimachinery/commit/663a7f47) Fix pushgateway --web.listen-address flag
+- [6c120054](https://github.com/stashed/apimachinery/commit/6c120054) Use service account with operator pods
+- [7b908422](https://github.com/stashed/apimachinery/commit/7b908422) Create RBAC objects for operator (#69)
+- [b29d5e3a](https://github.com/stashed/apimachinery/commit/b29d5e3a) Push metrics to Prometheus push gateway (#67)
+- [472a3396](https://github.com/stashed/apimachinery/commit/472a3396) Vendor go-sh dependency (#65)
+- [90140fbe](https://github.com/stashed/apimachinery/commit/90140fbe) Use go-sh to execute restic commands (#63)
+- [f8173749](https://github.com/stashed/apimachinery/commit/f8173749) Add scratchPad Dir & prefixHostname flags (#62)
+- [25d006a7](https://github.com/stashed/apimachinery/commit/25d006a7) Support remote backends (#58)
+- [6e13780f](https://github.com/stashed/apimachinery/commit/6e13780f) Expose metrics port from Docker
+- [4ce7c500](https://github.com/stashed/apimachinery/commit/4ce7c500) Rename cron pkg to scheduler.
+- [94e8dacc](https://github.com/stashed/apimachinery/commit/94e8dacc) Organize backup code. (#54)
+- [72992971](https://github.com/stashed/apimachinery/commit/72992971) Synchronize scheduler reconfiguration (#53)
+- [23a65283](https://github.com/stashed/apimachinery/commit/23a65283) Build master branch of restic
+- [db3db58e](https://github.com/stashed/apimachinery/commit/db3db58e) Fix tag detection from Version
+- [8ed3b177](https://github.com/stashed/apimachinery/commit/8ed3b177) Fix unit tests (#51)
+- [b4c1e981](https://github.com/stashed/apimachinery/commit/b4c1e981) Update README.md
+- [cf75d645](https://github.com/stashed/apimachinery/commit/cf75d645) Run watchers for preferred api group version kind (#50)
+- [1d8ffe81](https://github.com/stashed/apimachinery/commit/1d8ffe81) Build restic from source by default (#49)
+- [2ceb34ce](https://github.com/stashed/apimachinery/commit/2ceb34ce) Use updated docker build script format
+- [1a5464f3](https://github.com/stashed/apimachinery/commit/1a5464f3) Merge commit '6d30c353f174f641159a88f6280f6be163a44cb4'
+- [84da3fea](https://github.com/stashed/apimachinery/commit/84da3fea) Watch individual object types. (#48)
+- [7e496f22](https://github.com/stashed/apimachinery/commit/7e496f22) Various code cleanup (#47)
+- [7a3e1fc6](https://github.com/stashed/apimachinery/commit/7a3e1fc6) Reorganize cron controller (#46)
+- [4a85189c](https://github.com/stashed/apimachinery/commit/4a85189c) Check docker image tag before starting operator (#45)
+- [3c6c7cd6](https://github.com/stashed/apimachinery/commit/3c6c7cd6) Expose metrics from operator (#44)
+- [4a3e8bc3](https://github.com/stashed/apimachinery/commit/4a3e8bc3) Run push gateway as a side-car for restik operator. (#43)
+- [51509a81](https://github.com/stashed/apimachinery/commit/51509a81) Pre-install ca-certificates.
+- [10fc9162](https://github.com/stashed/apimachinery/commit/10fc9162) Send analytics for start & stop events.
+- [1bb9c517](https://github.com/stashed/apimachinery/commit/1bb9c517) Move all commands to root folder.
+- [92778ce7](https://github.com/stashed/apimachinery/commit/92778ce7) Remove all reference to k8s.io/kubernetes repo.
+- [e010916a](https://github.com/stashed/apimachinery/commit/e010916a) Move main.go to root folder.
+- [ab5c7220](https://github.com/stashed/apimachinery/commit/ab5c7220) Merge commit 'e6c0614c629d719cc9300e71a668a43f42b37f68'
+- [f86c51e0](https://github.com/stashed/apimachinery/commit/f86c51e0) Point to client-go in versioning policy.
+- [28fc893b](https://github.com/stashed/apimachinery/commit/28fc893b) Update README.md
+- [8b71920b](https://github.com/stashed/apimachinery/commit/8b71920b) Add analytics (#41)
+- [e9dfb675](https://github.com/stashed/apimachinery/commit/e9dfb675) Use V1alpha1SchemeGroupVersion for Restik (#40)
+- [cf30acfd](https://github.com/stashed/apimachinery/commit/cf30acfd) Fix registration of wrong group (#39)
+- [33174390](https://github.com/stashed/apimachinery/commit/33174390) Upgrade restic version to 0.6.1 (#37)
+- [d36ac63b](https://github.com/stashed/apimachinery/commit/d36ac63b) Use client-go (#36)
+- [00673a90](https://github.com/stashed/apimachinery/commit/00673a90) Merge commit '4a5c3083fd86cbe409e8a0f8db02ebc92b403cdc'
+- [6aa832cf](https://github.com/stashed/apimachinery/commit/6aa832cf) Create conversion_v1alpha1.go
+- [792dd3cb](https://github.com/stashed/apimachinery/commit/792dd3cb) Create register_v1alpha1.go
+- [5168d87f](https://github.com/stashed/apimachinery/commit/5168d87f) fmt api & client pkg-es
+- [63bd2a07](https://github.com/stashed/apimachinery/commit/63bd2a07) Add version policy & analytics collection to readme
+- [0d32a717](https://github.com/stashed/apimachinery/commit/0d32a717) Change api version to v1alpha1 (#30)
+- [476b4e24](https://github.com/stashed/apimachinery/commit/476b4e24) Merge commit '7ade13456a688a54292abaf589c2e9f1804f7d8b'
+- [11e8a6b0](https://github.com/stashed/apimachinery/commit/11e8a6b0) Rename clientset
+- [352bce7f](https://github.com/stashed/apimachinery/commit/352bce7f) Rename function and structure (#29)
+- [d9f6f85d](https://github.com/stashed/apimachinery/commit/d9f6f85d) Rename Backup into Restik (#28)
+- [4bdd455c](https://github.com/stashed/apimachinery/commit/4bdd455c) Move api from k8s-addons (#27)
+- [9fb9a1ea](https://github.com/stashed/apimachinery/commit/9fb9a1ea) Add Restik chart (#20)
+- [ffd4e2f9](https://github.com/stashed/apimachinery/commit/ffd4e2f9) Bubble up errors to caller (#26)
+- [f6e1f093](https://github.com/stashed/apimachinery/commit/f6e1f093) Update README.md
+- [15723957](https://github.com/stashed/apimachinery/commit/15723957) Merge commit '958f7da4904598c85aabadf104c687e321eacb33'
+- [3409789a](https://github.com/stashed/apimachinery/commit/3409789a) Use unversioned time (#23)
+- [8e932b24](https://github.com/stashed/apimachinery/commit/8e932b24) Update design.md
+- [4dff3b04](https://github.com/stashed/apimachinery/commit/4dff3b04) Update design.md
+- [bf01be6f](https://github.com/stashed/apimachinery/commit/bf01be6f) example added (#19)
+- [6c3712fd](https://github.com/stashed/apimachinery/commit/6c3712fd) Use restik api and client from k8s-addons (#18)
+- [70b9e4ad](https://github.com/stashed/apimachinery/commit/70b9e4ad) Error print fix (#17)
+- [c1cfa79d](https://github.com/stashed/apimachinery/commit/c1cfa79d) Check group registration Before Register Groups (#16)
+- [16640d0c](https://github.com/stashed/apimachinery/commit/16640d0c) Add Restik docs (#15)
+- [caf774ce](https://github.com/stashed/apimachinery/commit/caf774ce) Restik unit test, e2e test (#14)
+- [36909bf0](https://github.com/stashed/apimachinery/commit/36909bf0) Restik create delete initial implementation (#12)
+- [183b9a7b](https://github.com/stashed/apimachinery/commit/183b9a7b) Update restic to 0.5.0
+- [850131ea](https://github.com/stashed/apimachinery/commit/850131ea) Don't allow push with tags.
+- [2111829a](https://github.com/stashed/apimachinery/commit/2111829a) Unify restic and restik docker images.
+- [7d93e330](https://github.com/stashed/apimachinery/commit/7d93e330) Make restic executable.
+- [ab14ac0b](https://github.com/stashed/apimachinery/commit/ab14ac0b) Build docker image (#11)
+- [bc29563f](https://github.com/stashed/apimachinery/commit/bc29563f) Add links to proposal in readme
+- [cafc63fb](https://github.com/stashed/apimachinery/commit/cafc63fb) Use cobra to structure restik commands.
+- [8c6425b6](https://github.com/stashed/apimachinery/commit/8c6425b6) Clone skeleton from appscode/k3pc (#10)
+- [ba60c6d4](https://github.com/stashed/apimachinery/commit/ba60c6d4) Merge commit 'a3e8a4a46d31a8c6e9fcceda85d3a55f36293f67' as 'hack/libbuild'
+
+
+
+## [stashed/catalog](https://github.com/stashed/catalog)
+
+### [v2020.08.27](https://github.com/stashed/catalog/releases/tag/v2020.08.27)
+
+
+
+
+## [stashed/cli](https://github.com/stashed/cli)
+
+### [v0.10.0](https://github.com/stashed/cli/releases/tag/v0.10.0)
+
+- [8921695](https://github.com/stashed/cli/commit/8921695) Prepare for release v0.10.0 (#41)
+- [bcff194](https://github.com/stashed/cli/commit/bcff194) Prepare for release v0.10.0-rc.2 (#40)
+- [43e0370](https://github.com/stashed/cli/commit/43e0370) Prepare for release v0.10.0-rc.1 (#39)
+- [2c90092](https://github.com/stashed/cli/commit/2c90092) Update README.md
+- [fdfe6b8](https://github.com/stashed/cli/commit/fdfe6b8) Prepare for release v0.10.0-rc.0 (#38)
+- [132ae15](https://github.com/stashed/cli/commit/132ae15) Fix build (#37)
+- [77a76a7](https://github.com/stashed/cli/commit/77a76a7) Update Kubernetes v1.18.3 dependencies (#36)
+- [efe0fc5](https://github.com/stashed/cli/commit/efe0fc5) Update Kubernetes v1.18.3 dependencies (#35)
+- [d39bd97](https://github.com/stashed/cli/commit/d39bd97) Update Kubernetes v1.18.3 dependencies (#34)
+- [3e074e7](https://github.com/stashed/cli/commit/3e074e7) Update Kubernetes v1.18.3 dependencies (#33)
+- [f020137](https://github.com/stashed/cli/commit/f020137) Update Kubernetes v1.18.3 dependencies (#32)
+- [99d27f0](https://github.com/stashed/cli/commit/99d27f0) Update Kubernetes v1.18.3 dependencies (#31)
+- [3c78ec5](https://github.com/stashed/cli/commit/3c78ec5) Use actions/upload-artifact@v2
+- [e416569](https://github.com/stashed/cli/commit/e416569) Update to Kubernetes v1.18.3 (#30)
+- [2baaae1](https://github.com/stashed/cli/commit/2baaae1) Update to Kubernetes v1.18.3 (#29)
+- [44a1514](https://github.com/stashed/cli/commit/44a1514) Update to Kubernetes v1.18.3 (#28)
+- [250372c](https://github.com/stashed/cli/commit/250372c) Prepare for release v0.10.0-beta.1 (#27)
+- [3728110](https://github.com/stashed/cli/commit/3728110) Prepare for release v0.10.0-beta.0 (#26)
+- [e7111a5](https://github.com/stashed/cli/commit/e7111a5) Update License
+- [7fe1e07](https://github.com/stashed/cli/commit/7fe1e07) Update to Kubernetes v1.18.3 (#25)
+- [66b3b46](https://github.com/stashed/cli/commit/66b3b46) Shorten command name for cli (#24)
+- [b913cfc](https://github.com/stashed/cli/commit/b913cfc) Add workflow to update docs (#23)
+- [1881c64](https://github.com/stashed/cli/commit/1881c64) Update update-release-tracker.sh
+- [0548bdc](https://github.com/stashed/cli/commit/0548bdc) Update update-release-tracker.sh
+- [b1b28ff](https://github.com/stashed/cli/commit/b1b28ff) Use GITHUB_BASE_REF to detect target branch
+- [1e16b99](https://github.com/stashed/cli/commit/1e16b99) Add script to update release tracker on pr merge (#21)
+- [f91bf33](https://github.com/stashed/cli/commit/f91bf33) Make release non-draft
+- [d29bdb6](https://github.com/stashed/cli/commit/d29bdb6) Update .kodiak.toml
+- [b727108](https://github.com/stashed/cli/commit/b727108) Update to Kubernetes v1.18.3 (#20)
+- [f3f03aa](https://github.com/stashed/cli/commit/f3f03aa) Update to Kubernetes v1.18.3
+- [bcd7c5e](https://github.com/stashed/cli/commit/bcd7c5e) Create .kodiak.toml
+- [9882aa2](https://github.com/stashed/cli/commit/9882aa2) Add blank line after license header (#19)
+- [7774218](https://github.com/stashed/cli/commit/7774218) Update dev scripts (#18)
+- [38eb35c](https://github.com/stashed/cli/commit/38eb35c) Run unit tests against SRC_PKGS
+- [526949c](https://github.com/stashed/cli/commit/526949c) Update to Kubernetes v1.18.3 (#17)
+- [fc3e6c5](https://github.com/stashed/cli/commit/fc3e6c5) Update crazy-max/ghaction-docker-buildx flag
+- [3943575](https://github.com/stashed/cli/commit/3943575) Trigger the workflow on push or pull request
+
+
+
+## [stashed/elasticsearch](https://github.com/stashed/elasticsearch)
+
+### [5.6.4-v1](https://github.com/stashed/elasticsearch/releases/tag/5.6.4-v1)
+
+- [840132d](https://github.com/stashed/elasticsearch/commit/840132d) Prepare for release 5.6.4-v1 (#201)
+- [51262cc](https://github.com/stashed/elasticsearch/commit/51262cc) Prepare for release 5.6.4-rc.20200827 (#192)
+- [bcba1e7](https://github.com/stashed/elasticsearch/commit/bcba1e7) [cherry-pick] Upload charts without updating index (#184)
+- [48d00db](https://github.com/stashed/elasticsearch/commit/48d00db) Prepare for release 5.6.4-rc.20200826 (#175)
+- [46c78a6](https://github.com/stashed/elasticsearch/commit/46c78a6) [cherry-pick] Update README.md (#167)
+- [df82b88](https://github.com/stashed/elasticsearch/commit/df82b88) Prepare for release 5.6.4-beta.20200826 (#158)
+- [465a9f0](https://github.com/stashed/elasticsearch/commit/465a9f0) [cherry-pick] Update Stash installation link (#149) (#150)
+- [4fd2af7](https://github.com/stashed/elasticsearch/commit/4fd2af7) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#141)
+- [f9f6ab1](https://github.com/stashed/elasticsearch/commit/f9f6ab1) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#133)
+- [cf70698](https://github.com/stashed/elasticsearch/commit/cf70698) [cherry-pick] Update chart icon (#123)
+- [f1c9257](https://github.com/stashed/elasticsearch/commit/f1c9257) [cherry-pick] Make chart registry configurable (#114) (#115)
+- [4f6f04d](https://github.com/stashed/elasticsearch/commit/4f6f04d) Prepare for release 5.6.4-beta.20200709 (#105)
+- [c0b63a8](https://github.com/stashed/elasticsearch/commit/c0b63a8) [cherry-pick] Build docker image in release workflow (#96) (#97)
+- [7115da1](https://github.com/stashed/elasticsearch/commit/7115da1) Prepare for release 5.6.4-beta.20200708 (#87)
+- [f5ab33d](https://github.com/stashed/elasticsearch/commit/f5ab33d) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#79)
+- [7d73d30](https://github.com/stashed/elasticsearch/commit/7d73d30) [cherry-pick] Update License (#69) (#70)
+- [04e8a63](https://github.com/stashed/elasticsearch/commit/04e8a63) Add commands to update chart version (#68)
+- [3a5cd78](https://github.com/stashed/elasticsearch/commit/3a5cd78) [cherry-pick] Update update-release-tracker.sh (#60)
+- [77bb76e](https://github.com/stashed/elasticsearch/commit/77bb76e) [cherry-pick] Update update-release-tracker.sh (#52)
+- [3b47ba6](https://github.com/stashed/elasticsearch/commit/3b47ba6) [cherry-pick] Update release.yml (#43) (#44)
+- [444cb3b](https://github.com/stashed/elasticsearch/commit/444cb3b) [cherry-pick] Add script to update release tracker on pr merge (#34) (#35)
+- [d349617](https://github.com/stashed/elasticsearch/commit/d349617) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#26)
+- [4038abd](https://github.com/stashed/elasticsearch/commit/4038abd) Fix chart release process (#24)
+- [895a73f](https://github.com/stashed/elasticsearch/commit/895a73f) Update .kodiak.toml
+- [6b9451c](https://github.com/stashed/elasticsearch/commit/6b9451c) Allow overwriting secret key via SecretTransformation (#23)
+- [0fcb64e](https://github.com/stashed/elasticsearch/commit/0fcb64e) Make waitTimeout Configurable through flag (#22)
+- [b3859b9](https://github.com/stashed/elasticsearch/commit/b3859b9) Create .kodiak.toml
+- [c0f3b97](https://github.com/stashed/elasticsearch/commit/c0f3b97) Update to Kubernetes v1.18.3 (#21)
+- [210dd08](https://github.com/stashed/elasticsearch/commit/210dd08) Update crazy-max/ghaction-docker-buildx flag
+- [5c74a42](https://github.com/stashed/elasticsearch/commit/5c74a42) Trigger the workflow on push or pull request
+- [76424d0](https://github.com/stashed/elasticsearch/commit/76424d0) Auto generate chart readme file
+- [fc144c2](https://github.com/stashed/elasticsearch/commit/fc144c2) Correctly mark optional fields
+- [3559c2c](https://github.com/stashed/elasticsearch/commit/3559c2c) Add openapi v3 schema for values file (#18)
+
+
+### [6.2.4-v1](https://github.com/stashed/elasticsearch/releases/tag/6.2.4-v1)
+
+- [931aab3](https://github.com/stashed/elasticsearch/commit/931aab3) Prepare for release 6.2.4-v1 (#202)
+- [00cc0e7](https://github.com/stashed/elasticsearch/commit/00cc0e7) Prepare for release 6.2.4-rc.20200827 (#193)
+- [54bab71](https://github.com/stashed/elasticsearch/commit/54bab71) [cherry-pick] Upload charts without updating index (#185)
+- [e73aada](https://github.com/stashed/elasticsearch/commit/e73aada) Prepare for release 6.2.4-rc.20200826 (#176)
+- [3547a90](https://github.com/stashed/elasticsearch/commit/3547a90) [cherry-pick] Update README.md (#168)
+- [6c3dfa5](https://github.com/stashed/elasticsearch/commit/6c3dfa5) Prepare for release 6.2.4-beta.20200826 (#159)
+- [4aa0746](https://github.com/stashed/elasticsearch/commit/4aa0746) [cherry-pick] Update Stash installation link (#149) (#151)
+- [9847b08](https://github.com/stashed/elasticsearch/commit/9847b08) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#142)
+- [e13632d](https://github.com/stashed/elasticsearch/commit/e13632d) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#134)
+- [94dc85b](https://github.com/stashed/elasticsearch/commit/94dc85b) [cherry-pick] Update chart icon (#124)
+- [efc6ad0](https://github.com/stashed/elasticsearch/commit/efc6ad0) [cherry-pick] Make chart registry configurable (#114) (#116)
+- [eb90a4d](https://github.com/stashed/elasticsearch/commit/eb90a4d) Prepare for release 6.2.4-beta.20200709 (#106)
+- [341d4ad](https://github.com/stashed/elasticsearch/commit/341d4ad) [cherry-pick] Build docker image in release workflow (#96) (#98)
+- [ec42b5c](https://github.com/stashed/elasticsearch/commit/ec42b5c) Prepare for release 6.2.4-beta.20200708 (#88)
+- [89d065d](https://github.com/stashed/elasticsearch/commit/89d065d) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#80)
+- [0210d13](https://github.com/stashed/elasticsearch/commit/0210d13) [cherry-pick] Update License (#69) (#71)
+- [a2e7d5f](https://github.com/stashed/elasticsearch/commit/a2e7d5f) Add commands to update chart version (#68)
+- [e60d8f5](https://github.com/stashed/elasticsearch/commit/e60d8f5) [cherry-pick] Update update-release-tracker.sh (#61)
+- [a91e4a3](https://github.com/stashed/elasticsearch/commit/a91e4a3) [cherry-pick] Update update-release-tracker.sh (#53)
+- [0cab17a](https://github.com/stashed/elasticsearch/commit/0cab17a) [cherry-pick] Update release.yml (#43) (#45)
+- [778f2fa](https://github.com/stashed/elasticsearch/commit/778f2fa) [cherry-pick] Add script to update release tracker on pr merge (#34) (#36)
+- [6ed9b1e](https://github.com/stashed/elasticsearch/commit/6ed9b1e) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#27)
+- [fdcde29](https://github.com/stashed/elasticsearch/commit/fdcde29) Fix chart release process (#24)
+- [906159b](https://github.com/stashed/elasticsearch/commit/906159b) Update .kodiak.toml
+- [dd28147](https://github.com/stashed/elasticsearch/commit/dd28147) Allow overwriting secret key via SecretTransformation (#23)
+- [e0be3ed](https://github.com/stashed/elasticsearch/commit/e0be3ed) Make waitTimeout Configurable through flag (#22)
+- [ef3a476](https://github.com/stashed/elasticsearch/commit/ef3a476) Create .kodiak.toml
+- [cac2d27](https://github.com/stashed/elasticsearch/commit/cac2d27) Update to Kubernetes v1.18.3 (#21)
+- [2a32dad](https://github.com/stashed/elasticsearch/commit/2a32dad) Update crazy-max/ghaction-docker-buildx flag
+- [eebd43c](https://github.com/stashed/elasticsearch/commit/eebd43c) Trigger the workflow on push or pull request
+- [ecf774c](https://github.com/stashed/elasticsearch/commit/ecf774c) Auto generate chart readme file
+- [5e0f88c](https://github.com/stashed/elasticsearch/commit/5e0f88c) Correctly mark optional fields
+- [59e28fe](https://github.com/stashed/elasticsearch/commit/59e28fe) Add openapi v3 schema for values file (#18)
+
+
+### [6.3.0-v1](https://github.com/stashed/elasticsearch/releases/tag/6.3.0-v1)
+
+- [bbfd144](https://github.com/stashed/elasticsearch/commit/bbfd144) Prepare for release 6.3.0-v1 (#203)
+- [4bf05ac](https://github.com/stashed/elasticsearch/commit/4bf05ac) Prepare for release 6.3.0-rc.20200827 (#194)
+- [16053f8](https://github.com/stashed/elasticsearch/commit/16053f8) [cherry-pick] Upload charts without updating index (#186)
+- [0cafcc1](https://github.com/stashed/elasticsearch/commit/0cafcc1) Prepare for release 6.3.0-rc.20200826 (#177)
+- [c1ac9ec](https://github.com/stashed/elasticsearch/commit/c1ac9ec) [cherry-pick] Update README.md (#169)
+- [4a32c49](https://github.com/stashed/elasticsearch/commit/4a32c49) Prepare for release 6.3.0-beta.20200826 (#160)
+- [4bc4449](https://github.com/stashed/elasticsearch/commit/4bc4449) [cherry-pick] Update Stash installation link (#149) (#152)
+- [31d3860](https://github.com/stashed/elasticsearch/commit/31d3860) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#143)
+- [c19466a](https://github.com/stashed/elasticsearch/commit/c19466a) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#135)
+- [1aaa172](https://github.com/stashed/elasticsearch/commit/1aaa172) [cherry-pick] Update chart icon (#125)
+- [30412a8](https://github.com/stashed/elasticsearch/commit/30412a8) [cherry-pick] Make chart registry configurable (#114) (#117)
+- [ba97538](https://github.com/stashed/elasticsearch/commit/ba97538) Prepare for release 6.3.0-beta.20200709 (#107)
+- [fe8fad4](https://github.com/stashed/elasticsearch/commit/fe8fad4) [cherry-pick] Build docker image in release workflow (#96) (#99)
+- [671e33a](https://github.com/stashed/elasticsearch/commit/671e33a) Prepare for release 6.3.0-beta.20200708 (#89)
+- [c5b5810](https://github.com/stashed/elasticsearch/commit/c5b5810) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#81)
+- [a2139f0](https://github.com/stashed/elasticsearch/commit/a2139f0) [cherry-pick] Update License (#69) (#72)
+- [3ffe99c](https://github.com/stashed/elasticsearch/commit/3ffe99c) Add commands to update chart version (#68)
+- [4232c66](https://github.com/stashed/elasticsearch/commit/4232c66) [cherry-pick] Update update-release-tracker.sh (#62)
+- [edbc756](https://github.com/stashed/elasticsearch/commit/edbc756) [cherry-pick] Update update-release-tracker.sh (#54)
+- [476a2ef](https://github.com/stashed/elasticsearch/commit/476a2ef) [cherry-pick] Update release.yml (#43) (#46)
+- [f0b82c7](https://github.com/stashed/elasticsearch/commit/f0b82c7) [cherry-pick] Add script to update release tracker on pr merge (#34) (#37)
+- [4908f3a](https://github.com/stashed/elasticsearch/commit/4908f3a) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#28)
+- [5a35f5c](https://github.com/stashed/elasticsearch/commit/5a35f5c) Fix chart release process (#24)
+- [6b491ca](https://github.com/stashed/elasticsearch/commit/6b491ca) Update .kodiak.toml
+- [4aaf57b](https://github.com/stashed/elasticsearch/commit/4aaf57b) Allow overwriting secret key via SecretTransformation (#23)
+- [eaaa73a](https://github.com/stashed/elasticsearch/commit/eaaa73a) Make waitTimeout Configurable through flag (#22)
+- [a4d67ec](https://github.com/stashed/elasticsearch/commit/a4d67ec) Create .kodiak.toml
+- [f644e81](https://github.com/stashed/elasticsearch/commit/f644e81) Update to Kubernetes v1.18.3 (#21)
+- [1f37605](https://github.com/stashed/elasticsearch/commit/1f37605) Update crazy-max/ghaction-docker-buildx flag
+- [1e8d99b](https://github.com/stashed/elasticsearch/commit/1e8d99b) Trigger the workflow on push or pull request
+- [07ae51e](https://github.com/stashed/elasticsearch/commit/07ae51e) Auto generate chart readme file
+- [e8e4382](https://github.com/stashed/elasticsearch/commit/e8e4382) Correctly mark optional fields
+- [cd05619](https://github.com/stashed/elasticsearch/commit/cd05619) Add openapi v3 schema for values file (#18)
+
+
+### [6.4.0-v1](https://github.com/stashed/elasticsearch/releases/tag/6.4.0-v1)
+
+- [32230ba](https://github.com/stashed/elasticsearch/commit/32230ba) Prepare for release 6.4.0-v1 (#204)
+- [c37a5b5](https://github.com/stashed/elasticsearch/commit/c37a5b5) Prepare for release 6.4.0-rc.20200827 (#195)
+- [6a44a65](https://github.com/stashed/elasticsearch/commit/6a44a65) [cherry-pick] Upload charts without updating index (#187)
+- [92d193d](https://github.com/stashed/elasticsearch/commit/92d193d) Prepare for release 6.4.0-rc.20200826 (#178)
+- [6c2c0c1](https://github.com/stashed/elasticsearch/commit/6c2c0c1) [cherry-pick] Update README.md (#170)
+- [0770775](https://github.com/stashed/elasticsearch/commit/0770775) Prepare for release 6.4.0-beta.20200826 (#161)
+- [38be1db](https://github.com/stashed/elasticsearch/commit/38be1db) [cherry-pick] Update Stash installation link (#149) (#153)
+- [87ca905](https://github.com/stashed/elasticsearch/commit/87ca905) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#144)
+- [75dd0a5](https://github.com/stashed/elasticsearch/commit/75dd0a5) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#136)
+- [ad75b67](https://github.com/stashed/elasticsearch/commit/ad75b67) [cherry-pick] Update chart icon (#126)
+- [e5e9c7b](https://github.com/stashed/elasticsearch/commit/e5e9c7b) [cherry-pick] Make chart registry configurable (#114) (#118)
+- [223de60](https://github.com/stashed/elasticsearch/commit/223de60) Prepare for release 6.4.0-beta.20200709 (#108)
+- [3eb01b0](https://github.com/stashed/elasticsearch/commit/3eb01b0) [cherry-pick] Build docker image in release workflow (#96) (#100)
+- [cc612b9](https://github.com/stashed/elasticsearch/commit/cc612b9) Prepare for release 6.4.0-beta.20200708 (#90)
+- [f92c1c7](https://github.com/stashed/elasticsearch/commit/f92c1c7) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#82)
+- [f54017a](https://github.com/stashed/elasticsearch/commit/f54017a) [cherry-pick] Update License (#69) (#73)
+- [7ad416e](https://github.com/stashed/elasticsearch/commit/7ad416e) Add commands to update chart version (#68)
+- [af7e6b4](https://github.com/stashed/elasticsearch/commit/af7e6b4) [cherry-pick] Update update-release-tracker.sh (#63)
+- [a7477ba](https://github.com/stashed/elasticsearch/commit/a7477ba) [cherry-pick] Update update-release-tracker.sh (#55)
+- [98c4094](https://github.com/stashed/elasticsearch/commit/98c4094) [cherry-pick] Update release.yml (#43) (#47)
+- [59323ef](https://github.com/stashed/elasticsearch/commit/59323ef) [cherry-pick] Add script to update release tracker on pr merge (#34) (#38)
+- [0b9c91c](https://github.com/stashed/elasticsearch/commit/0b9c91c) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#29)
+- [900203b](https://github.com/stashed/elasticsearch/commit/900203b) Fix chart release process (#24)
+- [cfe9a92](https://github.com/stashed/elasticsearch/commit/cfe9a92) Update .kodiak.toml
+- [aa1fe2c](https://github.com/stashed/elasticsearch/commit/aa1fe2c) Allow overwriting secret key via SecretTransformation (#23)
+- [a8153db](https://github.com/stashed/elasticsearch/commit/a8153db) Make waitTimeout Configurable through flag (#22)
+- [55c09d2](https://github.com/stashed/elasticsearch/commit/55c09d2) Create .kodiak.toml
+- [1623bac](https://github.com/stashed/elasticsearch/commit/1623bac) Update to Kubernetes v1.18.3 (#21)
+- [5467acc](https://github.com/stashed/elasticsearch/commit/5467acc) Update crazy-max/ghaction-docker-buildx flag
+- [82a9e18](https://github.com/stashed/elasticsearch/commit/82a9e18) Trigger the workflow on push or pull request
+- [50e977c](https://github.com/stashed/elasticsearch/commit/50e977c) Auto generate chart readme file
+- [9057ff5](https://github.com/stashed/elasticsearch/commit/9057ff5) Correctly mark optional fields
+- [13753df](https://github.com/stashed/elasticsearch/commit/13753df) Add openapi v3 schema for values file (#18)
+
+
+### [6.5.3-v1](https://github.com/stashed/elasticsearch/releases/tag/6.5.3-v1)
+
+- [03483cd](https://github.com/stashed/elasticsearch/commit/03483cd) Prepare for release 6.5.3-v1 (#205)
+- [68b5356](https://github.com/stashed/elasticsearch/commit/68b5356) Prepare for release 6.5.3-rc.20200827 (#196)
+- [babe6ed](https://github.com/stashed/elasticsearch/commit/babe6ed) [cherry-pick] Upload charts without updating index (#188)
+- [b50a46f](https://github.com/stashed/elasticsearch/commit/b50a46f) Prepare for release 6.5.3-rc.20200826 (#179)
+- [c600cf4](https://github.com/stashed/elasticsearch/commit/c600cf4) [cherry-pick] Update README.md (#171)
+- [58af00f](https://github.com/stashed/elasticsearch/commit/58af00f) Prepare for release 6.5.3-beta.20200826 (#162)
+- [1365067](https://github.com/stashed/elasticsearch/commit/1365067) [cherry-pick] Update Stash installation link (#149) (#154)
+- [16f9593](https://github.com/stashed/elasticsearch/commit/16f9593) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#145)
+- [8413eba](https://github.com/stashed/elasticsearch/commit/8413eba) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#137)
+- [b0237a3](https://github.com/stashed/elasticsearch/commit/b0237a3) [cherry-pick] Update chart icon (#127)
+- [daec12d](https://github.com/stashed/elasticsearch/commit/daec12d) [cherry-pick] Make chart registry configurable (#114) (#119)
+- [27ca5d7](https://github.com/stashed/elasticsearch/commit/27ca5d7) Prepare for release 6.5.3-beta.20200709 (#109)
+- [cfc95c6](https://github.com/stashed/elasticsearch/commit/cfc95c6) [cherry-pick] Build docker image in release workflow (#96) (#101)
+- [398bb23](https://github.com/stashed/elasticsearch/commit/398bb23) Prepare for release 6.5.3-beta.20200708 (#91)
+- [2644470](https://github.com/stashed/elasticsearch/commit/2644470) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#83)
+- [f2550a7](https://github.com/stashed/elasticsearch/commit/f2550a7) [cherry-pick] Update License (#69) (#74)
+- [a6e78ba](https://github.com/stashed/elasticsearch/commit/a6e78ba) Add commands to update chart version (#68)
+- [f748f8a](https://github.com/stashed/elasticsearch/commit/f748f8a) [cherry-pick] Update update-release-tracker.sh (#64)
+- [3834375](https://github.com/stashed/elasticsearch/commit/3834375) [cherry-pick] Update update-release-tracker.sh (#56)
+- [199053c](https://github.com/stashed/elasticsearch/commit/199053c) [cherry-pick] Update release.yml (#43) (#48)
+- [c1e785f](https://github.com/stashed/elasticsearch/commit/c1e785f) [cherry-pick] Add script to update release tracker on pr merge (#34) (#39)
+- [8b7e78c](https://github.com/stashed/elasticsearch/commit/8b7e78c) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#30)
+- [d36469f](https://github.com/stashed/elasticsearch/commit/d36469f) Fix chart release process (#24)
+- [973b2c0](https://github.com/stashed/elasticsearch/commit/973b2c0) Update .kodiak.toml
+- [f85e675](https://github.com/stashed/elasticsearch/commit/f85e675) Allow overwriting secret key via SecretTransformation (#23)
+- [6d12042](https://github.com/stashed/elasticsearch/commit/6d12042) Make waitTimeout Configurable through flag (#22)
+- [e7cfd20](https://github.com/stashed/elasticsearch/commit/e7cfd20) Create .kodiak.toml
+- [bc228b6](https://github.com/stashed/elasticsearch/commit/bc228b6) Update to Kubernetes v1.18.3 (#21)
+- [12c840e](https://github.com/stashed/elasticsearch/commit/12c840e) Update crazy-max/ghaction-docker-buildx flag
+- [4cbb496](https://github.com/stashed/elasticsearch/commit/4cbb496) Trigger the workflow on push or pull request
+- [9a6392c](https://github.com/stashed/elasticsearch/commit/9a6392c) Auto generate chart readme file
+- [44be3d5](https://github.com/stashed/elasticsearch/commit/44be3d5) Correctly mark optional fields
+- [86d7264](https://github.com/stashed/elasticsearch/commit/86d7264) Add openapi v3 schema for values file (#18)
+
+
+### [6.8.0-v1](https://github.com/stashed/elasticsearch/releases/tag/6.8.0-v1)
+
+- [94537ac](https://github.com/stashed/elasticsearch/commit/94537ac) Prepare for release 6.8.0-v1 (#206)
+- [74bcf84](https://github.com/stashed/elasticsearch/commit/74bcf84) Prepare for release 6.8.0-rc.20200827 (#197)
+- [a836713](https://github.com/stashed/elasticsearch/commit/a836713) [cherry-pick] Upload charts without updating index (#189)
+- [0f1874b](https://github.com/stashed/elasticsearch/commit/0f1874b) Prepare for release 6.8.0-rc.20200826 (#180)
+- [db75b3b](https://github.com/stashed/elasticsearch/commit/db75b3b) [cherry-pick] Update README.md (#172)
+- [8811915](https://github.com/stashed/elasticsearch/commit/8811915) Prepare for release 6.8.0-beta.20200826 (#163)
+- [46e0b2a](https://github.com/stashed/elasticsearch/commit/46e0b2a) [cherry-pick] Update Stash installation link (#149) (#155)
+- [9a00bba](https://github.com/stashed/elasticsearch/commit/9a00bba) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#146)
+- [f0ae71f](https://github.com/stashed/elasticsearch/commit/f0ae71f) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#138)
+- [9561dd8](https://github.com/stashed/elasticsearch/commit/9561dd8) [cherry-pick] Update chart icon (#128)
+- [bc40c89](https://github.com/stashed/elasticsearch/commit/bc40c89) [cherry-pick] Make chart registry configurable (#114) (#120)
+- [ebff50b](https://github.com/stashed/elasticsearch/commit/ebff50b) Prepare for release 6.8.0-beta.20200709 (#110)
+- [c4322e7](https://github.com/stashed/elasticsearch/commit/c4322e7) [cherry-pick] Build docker image in release workflow (#96) (#102)
+- [7c3b8da](https://github.com/stashed/elasticsearch/commit/7c3b8da) Prepare for release 6.8.0-beta.20200708 (#92)
+- [3f7975e](https://github.com/stashed/elasticsearch/commit/3f7975e) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#84)
+- [ee4b2d9](https://github.com/stashed/elasticsearch/commit/ee4b2d9) [cherry-pick] Update License (#69) (#75)
+- [5658bcf](https://github.com/stashed/elasticsearch/commit/5658bcf) Add commands to update chart version (#68)
+- [e79b0c3](https://github.com/stashed/elasticsearch/commit/e79b0c3) [cherry-pick] Update update-release-tracker.sh (#65)
+- [d3a4ebb](https://github.com/stashed/elasticsearch/commit/d3a4ebb) [cherry-pick] Update update-release-tracker.sh (#57)
+- [22f1387](https://github.com/stashed/elasticsearch/commit/22f1387) [cherry-pick] Update release.yml (#43) (#49)
+- [94f3e61](https://github.com/stashed/elasticsearch/commit/94f3e61) [cherry-pick] Add script to update release tracker on pr merge (#34) (#40)
+- [00e3510](https://github.com/stashed/elasticsearch/commit/00e3510) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#31)
+- [f9ed864](https://github.com/stashed/elasticsearch/commit/f9ed864) Fix chart release process (#24)
+- [b629030](https://github.com/stashed/elasticsearch/commit/b629030) Update .kodiak.toml
+- [0c4cd3b](https://github.com/stashed/elasticsearch/commit/0c4cd3b) Allow overwriting secret key via SecretTransformation (#23)
+- [dbd81ad](https://github.com/stashed/elasticsearch/commit/dbd81ad) Make waitTimeout Configurable through flag (#22)
+- [fc71aac](https://github.com/stashed/elasticsearch/commit/fc71aac) Create .kodiak.toml
+- [da8f470](https://github.com/stashed/elasticsearch/commit/da8f470) Update to Kubernetes v1.18.3 (#21)
+- [ee7cc8d](https://github.com/stashed/elasticsearch/commit/ee7cc8d) Update crazy-max/ghaction-docker-buildx flag
+- [66e3fa8](https://github.com/stashed/elasticsearch/commit/66e3fa8) Trigger the workflow on push or pull request
+- [af6e9ba](https://github.com/stashed/elasticsearch/commit/af6e9ba) Auto generate chart readme file
+- [ae3168a](https://github.com/stashed/elasticsearch/commit/ae3168a) Correctly mark optional fields
+- [700bda7](https://github.com/stashed/elasticsearch/commit/700bda7) Add openapi v3 schema for values file (#18)
+
+
+### [7.2.0-v1](https://github.com/stashed/elasticsearch/releases/tag/7.2.0-v1)
+
+- [a4f5de4](https://github.com/stashed/elasticsearch/commit/a4f5de4) Prepare for release 7.2.0-v1 (#207)
+- [036e850](https://github.com/stashed/elasticsearch/commit/036e850) Prepare for release 7.2.0-rc.20200827 (#198)
+- [54fd94d](https://github.com/stashed/elasticsearch/commit/54fd94d) [cherry-pick] Upload charts without updating index (#190)
+- [592ebd3](https://github.com/stashed/elasticsearch/commit/592ebd3) Prepare for release 7.2.0-rc.20200826 (#181)
+- [29f8c8f](https://github.com/stashed/elasticsearch/commit/29f8c8f) [cherry-pick] Update README.md (#173)
+- [bd2c6bc](https://github.com/stashed/elasticsearch/commit/bd2c6bc) Prepare for release 7.2.0-beta.20200826 (#164)
+- [2c3a9e1](https://github.com/stashed/elasticsearch/commit/2c3a9e1) [cherry-pick] Update Stash installation link (#149) (#156)
+- [c862e31](https://github.com/stashed/elasticsearch/commit/c862e31) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#147)
+- [1010749](https://github.com/stashed/elasticsearch/commit/1010749) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#139)
+- [b0cac90](https://github.com/stashed/elasticsearch/commit/b0cac90) [cherry-pick] Update chart icon (#129)
+- [abd52d3](https://github.com/stashed/elasticsearch/commit/abd52d3) [cherry-pick] Make chart registry configurable (#114) (#121)
+- [bf94d4d](https://github.com/stashed/elasticsearch/commit/bf94d4d) Prepare for release 7.2.0-beta.20200709 (#111)
+- [d1cdabd](https://github.com/stashed/elasticsearch/commit/d1cdabd) [cherry-pick] Build docker image in release workflow (#96) (#103)
+- [756fd43](https://github.com/stashed/elasticsearch/commit/756fd43) Prepare for release 7.2.0-beta.20200708 (#93)
+- [b3432e1](https://github.com/stashed/elasticsearch/commit/b3432e1) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#85)
+- [281635d](https://github.com/stashed/elasticsearch/commit/281635d) [cherry-pick] Update License (#69) (#76)
+- [497de33](https://github.com/stashed/elasticsearch/commit/497de33) Add commands to update chart version (#68)
+- [fd38969](https://github.com/stashed/elasticsearch/commit/fd38969) [cherry-pick] Update update-release-tracker.sh (#66)
+- [e5941de](https://github.com/stashed/elasticsearch/commit/e5941de) [cherry-pick] Update update-release-tracker.sh (#58)
+- [e59ef4e](https://github.com/stashed/elasticsearch/commit/e59ef4e) [cherry-pick] Update release.yml (#43) (#50)
+- [05145d3](https://github.com/stashed/elasticsearch/commit/05145d3) [cherry-pick] Add script to update release tracker on pr merge (#34) (#41)
+- [ee1d54b](https://github.com/stashed/elasticsearch/commit/ee1d54b) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#32)
+- [2179a5b](https://github.com/stashed/elasticsearch/commit/2179a5b) Fix chart release process (#24)
+- [846f589](https://github.com/stashed/elasticsearch/commit/846f589) Update .kodiak.toml
+- [fe25329](https://github.com/stashed/elasticsearch/commit/fe25329) Allow overwriting secret key via SecretTransformation (#23)
+- [14c4329](https://github.com/stashed/elasticsearch/commit/14c4329) Make waitTimeout Configurable through flag (#22)
+- [9e9da11](https://github.com/stashed/elasticsearch/commit/9e9da11) Create .kodiak.toml
+- [a4136d6](https://github.com/stashed/elasticsearch/commit/a4136d6) Update to Kubernetes v1.18.3 (#21)
+- [76eeee5](https://github.com/stashed/elasticsearch/commit/76eeee5) Update crazy-max/ghaction-docker-buildx flag
+- [c7b7250](https://github.com/stashed/elasticsearch/commit/c7b7250) Trigger the workflow on push or pull request
+- [cebf7fc](https://github.com/stashed/elasticsearch/commit/cebf7fc) Auto generate chart readme file
+- [64104e9](https://github.com/stashed/elasticsearch/commit/64104e9) Correctly mark optional fields
+- [d7807e4](https://github.com/stashed/elasticsearch/commit/d7807e4) Add openapi v3 schema for values file (#18)
+
+
+### [7.3.2-v1](https://github.com/stashed/elasticsearch/releases/tag/7.3.2-v1)
+
+- [c451831](https://github.com/stashed/elasticsearch/commit/c451831) Prepare for release 7.3.2-v1 (#208)
+- [c6f8b5d](https://github.com/stashed/elasticsearch/commit/c6f8b5d) Prepare for release 7.3.2-rc.20200827 (#199)
+- [0f8ba19](https://github.com/stashed/elasticsearch/commit/0f8ba19) [cherry-pick] Upload charts without updating index (#191)
+- [d502610](https://github.com/stashed/elasticsearch/commit/d502610) Prepare for release 7.3.2-rc.20200826 (#182)
+- [00b3cee](https://github.com/stashed/elasticsearch/commit/00b3cee) [cherry-pick] Update README.md (#174)
+- [a163678](https://github.com/stashed/elasticsearch/commit/a163678) Prepare for release 7.3.2-beta.20200826 (#165)
+- [152792e](https://github.com/stashed/elasticsearch/commit/152792e) [cherry-pick] Update Stash installation link (#149) (#157)
+- [2d0f427](https://github.com/stashed/elasticsearch/commit/2d0f427) [cherry-pick] Make image.tag in values.yaml file same as the $APP_VERSION (#132) (#148)
+- [281a0ce](https://github.com/stashed/elasticsearch/commit/281a0ce) [cherry-pick] Fix output format + Add PreBackupActions logic (#131) (#140)
+- [e89cbde](https://github.com/stashed/elasticsearch/commit/e89cbde) [cherry-pick] Update chart icon (#130)
+- [a4c3327](https://github.com/stashed/elasticsearch/commit/a4c3327) [cherry-pick] Make chart registry configurable (#114) (#122)
+- [d0e8ff7](https://github.com/stashed/elasticsearch/commit/d0e8ff7) Prepare for release 7.3.2-beta.20200709 (#112)
+- [0b0df2e](https://github.com/stashed/elasticsearch/commit/0b0df2e) [cherry-pick] Build docker image in release workflow (#96) (#104)
+- [7ca1e93](https://github.com/stashed/elasticsearch/commit/7ca1e93) Prepare for release 7.3.2-beta.20200708 (#94)
+- [8d81227](https://github.com/stashed/elasticsearch/commit/8d81227) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#86)
+- [a095aa8](https://github.com/stashed/elasticsearch/commit/a095aa8) [cherry-pick] Update License (#69) (#77)
+- [28fd99f](https://github.com/stashed/elasticsearch/commit/28fd99f) Add commands to update chart version (#68)
+- [40ea5b4](https://github.com/stashed/elasticsearch/commit/40ea5b4) [cherry-pick] Update update-release-tracker.sh (#67)
+- [83391c5](https://github.com/stashed/elasticsearch/commit/83391c5) [cherry-pick] Update update-release-tracker.sh (#59)
+- [3968178](https://github.com/stashed/elasticsearch/commit/3968178) [cherry-pick] Update release.yml (#43) (#51)
+- [b8a89f4](https://github.com/stashed/elasticsearch/commit/b8a89f4) [cherry-pick] Add script to update release tracker on pr merge (#34) (#42)
+- [2d87390](https://github.com/stashed/elasticsearch/commit/2d87390) [cherry-pick] Add workflow to cherry pick commits to master (#25) (#33)
+- [f367b58](https://github.com/stashed/elasticsearch/commit/f367b58) Fix chart release process (#24)
+- [74b4d4b](https://github.com/stashed/elasticsearch/commit/74b4d4b) Update .kodiak.toml
+- [40f7aa5](https://github.com/stashed/elasticsearch/commit/40f7aa5) Allow overwriting secret key via SecretTransformation (#23)
+- [f223f71](https://github.com/stashed/elasticsearch/commit/f223f71) Make waitTimeout Configurable through flag (#22)
+- [911d6cb](https://github.com/stashed/elasticsearch/commit/911d6cb) Create .kodiak.toml
+- [ea27783](https://github.com/stashed/elasticsearch/commit/ea27783) Update to Kubernetes v1.18.3 (#21)
+- [2e1b526](https://github.com/stashed/elasticsearch/commit/2e1b526) Update crazy-max/ghaction-docker-buildx flag
+- [987346a](https://github.com/stashed/elasticsearch/commit/987346a) Trigger the workflow on push or pull request
+- [83197f1](https://github.com/stashed/elasticsearch/commit/83197f1) Auto generate chart readme file
+- [da8d9f0](https://github.com/stashed/elasticsearch/commit/da8d9f0) Correctly mark optional fields
+- [808a7c0](https://github.com/stashed/elasticsearch/commit/808a7c0) Add openapi v3 schema for values file (#18)
+
+
+
+## [stashed/installer](https://github.com/stashed/installer)
+
+### [v0.10.0](https://github.com/stashed/installer/releases/tag/v0.10.0)
+
+- [cc6a53e](https://github.com/stashed/installer/commit/cc6a53e) Prepare for release v0.10.0 (#93)
+- [7d5e440](https://github.com/stashed/installer/commit/7d5e440) Prepare for release v0.10.0-rc.2 (#92)
+- [f4cae9f](https://github.com/stashed/installer/commit/f4cae9f) Upload charts without updating index
+- [90d9c52](https://github.com/stashed/installer/commit/90d9c52) Update Kubernetes v1.18.3 dependencies (#91)
+- [037a349](https://github.com/stashed/installer/commit/037a349) Prepare for release v0.10.0-rc.1 (#90)
+- [f94e175](https://github.com/stashed/installer/commit/f94e175) Correctly pass license to CI workflow
+- [9f6539d](https://github.com/stashed/installer/commit/9f6539d) Update stash-enterprise chart version
+- [5904e2c](https://github.com/stashed/installer/commit/5904e2c) Update README.md
+- [d3d30cc](https://github.com/stashed/installer/commit/d3d30cc) Add link to the steps to get a license (#89)
+- [1fb05d9](https://github.com/stashed/installer/commit/1fb05d9) Issue license for testing enterprise charts (#88)
+- [6018270](https://github.com/stashed/installer/commit/6018270) Prepare for release v0.10.0-rc.0 (#87)
+- [9da1502](https://github.com/stashed/installer/commit/9da1502) Port changes from enterprise version (#85)
+- [0838112](https://github.com/stashed/installer/commit/0838112) Add offline license verification (#84)
+- [d869f33](https://github.com/stashed/installer/commit/d869f33) Always give use permission for baseline psp to operator (#83)
+- [d1e0142](https://github.com/stashed/installer/commit/d1e0142) Support Snapshot listing for NFS backend without workload running (#80)
+- [53bab27](https://github.com/stashed/installer/commit/53bab27) Pass imagePullSecrets as operator flag (#71)
+- [4e3a984](https://github.com/stashed/installer/commit/4e3a984) Update to Kubernetes v1.18.3 (#79)
+- [6e57dd4](https://github.com/stashed/installer/commit/6e57dd4) Update to Kubernetes v1.18.3 (#78)
+- [5c681fe](https://github.com/stashed/installer/commit/5c681fe) Update to Kubernetes v1.18.3 (#77)
+- [c268a57](https://github.com/stashed/installer/commit/c268a57) Make chart registry configurable
+- [bed8319](https://github.com/stashed/installer/commit/bed8319) Prepare for release v0.10.0-beta.1 (#76)
+- [cd44ba9](https://github.com/stashed/installer/commit/cd44ba9) Prepare for release v0.10.0-beta.0 (#75)
+- [a04e173](https://github.com/stashed/installer/commit/a04e173) Publish to testing dir for alpha/beta releases
+- [4b23e1c](https://github.com/stashed/installer/commit/4b23e1c) Update License (#74)
+- [9b7a4e0](https://github.com/stashed/installer/commit/9b7a4e0) Update to Kubernetes v1.18.3 (#72)
+- [4318306](https://github.com/stashed/installer/commit/4318306) Update ci.yml
+- [15d1594](https://github.com/stashed/installer/commit/15d1594) Fix Stash Enterprise installer (#70)
+- [31c9dcc](https://github.com/stashed/installer/commit/31c9dcc) Tag chart and app version as string for yq (#69)
+- [1782049](https://github.com/stashed/installer/commit/1782049) Update links (#68)
+- [634da4d](https://github.com/stashed/installer/commit/634da4d) Update update-release-tracker.sh
+- [1155610](https://github.com/stashed/installer/commit/1155610) Update update-release-tracker.sh
+- [1b10b5e](https://github.com/stashed/installer/commit/1b10b5e) Add script to update release tracker on pr merge (#67)
+- [ce0b28e](https://github.com/stashed/installer/commit/ce0b28e) Update release workflow
+- [c3ac668](https://github.com/stashed/installer/commit/c3ac668) Update ci.yml
+- [98bad7e](https://github.com/stashed/installer/commit/98bad7e) Add Stash Enterprise chart (#63)
+- [73f52a6](https://github.com/stashed/installer/commit/73f52a6) Add commands to update chart (#65)
+- [0dc7f91](https://github.com/stashed/installer/commit/0dc7f91) Fix chart release process (#64)
+- [0d5c4e1](https://github.com/stashed/installer/commit/0d5c4e1) Update .kodiak.toml
+- [3b53e64](https://github.com/stashed/installer/commit/3b53e64) Update to Kubernetes v1.18.3 (#58)
+- [43c5dbe](https://github.com/stashed/installer/commit/43c5dbe) Update to Kubernetes v1.18.3
+- [b9e784c](https://github.com/stashed/installer/commit/b9e784c) Create .kodiak.toml
+- [b30b3b0](https://github.com/stashed/installer/commit/b30b3b0) Merge pull request #57 from stashed/psp
+- [1b89401](https://github.com/stashed/installer/commit/1b89401) Disable apparmor and seccomp by default
+- [6bed1aa](https://github.com/stashed/installer/commit/6bed1aa) Pass psp names for the jobs through flag
+- [bd35d81](https://github.com/stashed/installer/commit/bd35d81) Always use baseline psp for stash
+- [4e3474a](https://github.com/stashed/installer/commit/4e3474a) Add RBAC permission for generic-garbage-collector (#56)
+- [be006f6](https://github.com/stashed/installer/commit/be006f6) Permit configmap list/watch -ing for delegated authentication checking (#55)
+- [5685c15](https://github.com/stashed/installer/commit/5685c15) Update dependencies
+- [8b7b805](https://github.com/stashed/installer/commit/8b7b805) Update dependencies
+- [d2b2b09](https://github.com/stashed/installer/commit/d2b2b09) Generate both v1beta1 and v1 CRD YAML (#54)
+- [7fbcb29](https://github.com/stashed/installer/commit/7fbcb29) Update to Kubernetes v1.18.3 (#53)
+- [88e5e8c](https://github.com/stashed/installer/commit/88e5e8c) Use Go 1.14.3
+- [8e56cb1](https://github.com/stashed/installer/commit/8e56cb1) Trigger build on push to only master branch
+- [562caf8](https://github.com/stashed/installer/commit/562caf8) Use recommended kubernetes app labels (#52)
+- [cc55e5a](https://github.com/stashed/installer/commit/cc55e5a) Trigger the workflow on push or pull request
+- [fd8acf5](https://github.com/stashed/installer/commit/fd8acf5) Update chart readme
+- [672f37e](https://github.com/stashed/installer/commit/672f37e) Show examples in chart readme
+- [39f4ca1](https://github.com/stashed/installer/commit/39f4ca1) Auto generate chart readme file (#50)
+- [47f4250](https://github.com/stashed/installer/commit/47f4250) Update release.yml
+- [b68d9cb](https://github.com/stashed/installer/commit/b68d9cb) Cleanup newlines
+- [20d51b0](https://github.com/stashed/installer/commit/20d51b0) Reformat stash chart template (#49)
+- [65f8bee](https://github.com/stashed/installer/commit/65f8bee) Use kubectl v1.16 as cleaner (#48)
+- [85a7cfd](https://github.com/stashed/installer/commit/85a7cfd) Rename prometheus.io/coreos-operator to prometheus.io/operator (#47)
+- [b042def](https://github.com/stashed/installer/commit/b042def) Move apireg annotation to operator pod (#46)
+- [a543953](https://github.com/stashed/installer/commit/a543953) Various cleanup (#44)
+- [b6e2bec](https://github.com/stashed/installer/commit/b6e2bec) Fix helm install --wait flag (#42)
+- [806aada](https://github.com/stashed/installer/commit/806aada) Do not harcode namespace (#40)
+- [a2713aa](https://github.com/stashed/installer/commit/a2713aa) Add release script to upload charts (#39)
+- [57f829a](https://github.com/stashed/installer/commit/57f829a) Prepare charts for v0.9.0-rc.6 release (#38)
+- [72e0aff](https://github.com/stashed/installer/commit/72e0aff) Properly mark optional fields (#37)
+- [388fcc0](https://github.com/stashed/installer/commit/388fcc0) Update chart readme
+- [8595fa6](https://github.com/stashed/installer/commit/8595fa6) Properly mark options fields. (#36)
+- [4c491b6](https://github.com/stashed/installer/commit/4c491b6) Prepare v0.9.0-rc.4 release (#35)
+- [79f59b6](https://github.com/stashed/installer/commit/79f59b6) Allow specifying rather than generating certs (#34)
+- [23a9b97](https://github.com/stashed/installer/commit/23a9b97) Test against k8s 1.11
+- [a0b9659](https://github.com/stashed/installer/commit/a0b9659) Bring back support for k8s 1.11 (#33)
+- [c753211](https://github.com/stashed/installer/commit/c753211) Change minimum k8s req to 1.12 and use helm 3 in chart readme (#32)
+- [3dec466](https://github.com/stashed/installer/commit/3dec466) Update twitter account
+- [3ab35e3](https://github.com/stashed/installer/commit/3ab35e3) Delete orphaned apiservice (#31)
+- [a9c33b3](https://github.com/stashed/installer/commit/a9c33b3) Delete script based installer (#30)
+- [2d9ea3d](https://github.com/stashed/installer/commit/2d9ea3d) Pass imagePullSecrets via service account (#29)
+- [04f65d8](https://github.com/stashed/installer/commit/04f65d8) Add endpoint get permission (#26)
+- [e5a3418](https://github.com/stashed/installer/commit/e5a3418) Use helm 3 for chart testing (#28)
+- [19fa9b6](https://github.com/stashed/installer/commit/19fa9b6) Move chart Vaules of the root of the spec. (#27)
+- [26fcf6c](https://github.com/stashed/installer/commit/26fcf6c) Use int32 for Stash operator installer CRD
+- [f41c997](https://github.com/stashed/installer/commit/f41c997) Update license headers
+- [baa751a](https://github.com/stashed/installer/commit/baa751a) Run fuzz tests for generated API schemas (#25)
+- [b92981a](https://github.com/stashed/installer/commit/b92981a) Update client-go to kubernetes-1.16.3 (#24)
+- [310e243](https://github.com/stashed/installer/commit/310e243) Fix #981 RBAC permissions missing from chart (#22)
+- [77703f3](https://github.com/stashed/installer/commit/77703f3) Properly handle empty image pull secret name in installer (#23)
+- [31b4634](https://github.com/stashed/installer/commit/31b4634) Update swagger.json
+- [9425820](https://github.com/stashed/installer/commit/9425820) Update Chart.yaml
+- [74abc6e](https://github.com/stashed/installer/commit/74abc6e) Add StashOperator crd (#17)
+- [c0ff647](https://github.com/stashed/installer/commit/c0ff647) Fix rbac permission for PVC in chart (#20)
+- [51a712b](https://github.com/stashed/installer/commit/51a712b) Test against multiple k8s version (#19)
+- [2afb705](https://github.com/stashed/installer/commit/2afb705) Update icon
+- [ea1561e](https://github.com/stashed/installer/commit/ea1561e) Fix linter errors
+- [170af3a](https://github.com/stashed/installer/commit/170af3a) Enable race detector
+- [848e9fa](https://github.com/stashed/installer/commit/848e9fa) Test installers (#18)
+- [2b3b665](https://github.com/stashed/installer/commit/2b3b665) Prepare for release v0.9.0-rc.2 (#16)
+- [b1ef8b5](https://github.com/stashed/installer/commit/b1ef8b5) Remove --enable-status-subresource flag (#15)
+- [0c87e77](https://github.com/stashed/installer/commit/0c87e77) Add delete permission ClusterRole to vs (#13)
+- [5387b57](https://github.com/stashed/installer/commit/5387b57) Ignore error while delete resources from uninstaller script (#14)
+- [b8dc5e9](https://github.com/stashed/installer/commit/b8dc5e9) Prepare for v0.9.0-rc.1 release (#12)
+- [48f2f3b](https://github.com/stashed/installer/commit/48f2f3b) Download onessl version v0.13.1 for Kubernetes 1.16 fix (#11)
+- [4c0ce1f](https://github.com/stashed/installer/commit/4c0ce1f) Update onessl for Kubernetes 1.16+ (#10)
+- [478817b](https://github.com/stashed/installer/commit/478817b) Run as fsGroup: 65535 (#8)
+- [366a4f5](https://github.com/stashed/installer/commit/366a4f5) Prepare v0.9.0-rc.0 release (#7)
+- [8674bc6](https://github.com/stashed/installer/commit/8674bc6) Rename BackupConfigurationTemplates to BackupBlueprints (#6)
+- [fcf2297](https://github.com/stashed/installer/commit/fcf2297) Cleanup default Functions & Tasks while uninstall+ refactor installer script (#4)
+- [68de871](https://github.com/stashed/installer/commit/68de871) Always set --image-tag flag (#3)
+- [4b3f2a7](https://github.com/stashed/installer/commit/4b3f2a7) Fix purging non-namespaced crd (#2)
+- [e9f0e2c](https://github.com/stashed/installer/commit/e9f0e2c) Fix script path for installer repo (#1)
+- [525fff8](https://github.com/stashed/installer/commit/525fff8) Add License & DCO
+- [257f0f2](https://github.com/stashed/installer/commit/257f0f2) Added ARM64 support to the install script and manifest (#802)
+- [e490367](https://github.com/stashed/installer/commit/e490367) Add Makefile (#800)
+- [cb2289d](https://github.com/stashed/installer/commit/cb2289d) VolumeSnapshot (#787)
+- [bde38a8](https://github.com/stashed/installer/commit/bde38a8) Remove importance of order of rule in RestoreSession (#795)
+- [0c150a7](https://github.com/stashed/installer/commit/0c150a7) Support PSP enabled cluster (#729)
+- [f0d7e34](https://github.com/stashed/installer/commit/f0d7e34) Update package path to stash.appscode.dev/stash (#776)
+- [f10a28c](https://github.com/stashed/installer/commit/f10a28c) Remove --rbac flag (#761)
+- [1ab5470](https://github.com/stashed/installer/commit/1ab5470) Stash v1beta1 E2E test for DaemonSet (#741)
+- [786b827](https://github.com/stashed/installer/commit/786b827) Stash V1beta1 E2E test for Deployment (#710)
+- [0d65d5d](https://github.com/stashed/installer/commit/0d65d5d) Fix openapi path prefixes for validators and mutators (#732)
+- [13ddd4b](https://github.com/stashed/installer/commit/13ddd4b) Rename admission webhooks to avoid name collision (#725)
+- [bd11979](https://github.com/stashed/installer/commit/bd11979) Use FailurePolicy ignore for K8s resource webhooks (#726)
+- [bbd9bd4](https://github.com/stashed/installer/commit/bbd9bd4) Add support for OpenShift DeploymentConfig (#714)
+- [8c019a2](https://github.com/stashed/installer/commit/8c019a2) Update workload controller for new design (#675)
+
+
+
+## [stashed/mongodb](https://github.com/stashed/mongodb)
+
+### [3.4.1-v1](https://github.com/stashed/mongodb/releases/tag/3.4.1-v1)
+
+- [1ca3960](https://github.com/stashed/mongodb/commit/1ca3960) Prepare for release 3.4.1-v1 (#243)
+- [9890353](https://github.com/stashed/mongodb/commit/9890353) Prepare for release 3.4.1-rc.20200827 (#231)
+- [d941a98](https://github.com/stashed/mongodb/commit/d941a98) [cherry-pick] Upload charts without updating index (#220)
+- [1d2811c](https://github.com/stashed/mongodb/commit/1d2811c) Prepare for release 3.4.1-rc.20200826 (#208)
+- [b3501fb](https://github.com/stashed/mongodb/commit/b3501fb) [cherry-pick] Update README.md (#197)
+- [1c08dfd](https://github.com/stashed/mongodb/commit/1c08dfd) Prepare for release 3.4.1-beta.20200826 (#185)
+- [a4d2b49](https://github.com/stashed/mongodb/commit/a4d2b49) [cherry-pick] Update Stash installation link (#173) (#174)
+- [3ae949e](https://github.com/stashed/mongodb/commit/3ae949e) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#162)
+- [75ebc36](https://github.com/stashed/mongodb/commit/75ebc36) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#151)
+- [c261899](https://github.com/stashed/mongodb/commit/c261899) [cherry-pick] Update chart icon (#138)
+- [465f36c](https://github.com/stashed/mongodb/commit/465f36c) [cherry-pick] Make chart registry configurable (#126) (#127)
+- [a354b6c](https://github.com/stashed/mongodb/commit/a354b6c) Prepare for release 3.4.1-beta.20200709 (#114)
+- [2269fa6](https://github.com/stashed/mongodb/commit/2269fa6) [cherry-pick] Build docker image in release workflow (#102) (#103)
+- [47b1d72](https://github.com/stashed/mongodb/commit/47b1d72) Prepare for release 3.4.1-beta.20200708 (#90)
+- [67b293a](https://github.com/stashed/mongodb/commit/67b293a) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#79)
+- [d8c9489](https://github.com/stashed/mongodb/commit/d8c9489) [cherry-pick] Update License (#66) (#67)
+- [13f91cd](https://github.com/stashed/mongodb/commit/13f91cd) Add commands to update chart version (#65)
+- [5ec5c3c](https://github.com/stashed/mongodb/commit/5ec5c3c) [cherry-pick] Update update-release-tracker.sh (#54)
+- [409301c](https://github.com/stashed/mongodb/commit/409301c) Add script to update release tracker on pr merge (#41)
+- [deed415](https://github.com/stashed/mongodb/commit/deed415) [cherry-pick] Update release.yml (#42) (#43)
+- [7efcffb](https://github.com/stashed/mongodb/commit/7efcffb) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#30)
+- [2ed8277](https://github.com/stashed/mongodb/commit/2ed8277) Fix chart release process (#28)
+- [b7b3bc6](https://github.com/stashed/mongodb/commit/b7b3bc6) Update .kodiak.toml
+- [33abf73](https://github.com/stashed/mongodb/commit/33abf73) Allow overwriting secret key via SecretTransformation (#27)
+- [ad30b7d](https://github.com/stashed/mongodb/commit/ad30b7d) Make waitTimeout configurable through flag (#26)
+- [80f62d1](https://github.com/stashed/mongodb/commit/80f62d1) Create .kodiak.toml
+- [d8e7b86](https://github.com/stashed/mongodb/commit/d8e7b86) Fix typos
+- [f5dfaea](https://github.com/stashed/mongodb/commit/f5dfaea) Update to Kubernetes v1.18.3 (#25)
+- [4a462cb](https://github.com/stashed/mongodb/commit/4a462cb) Update crazy-max/ghaction-docker-buildx flag
+- [961fad3](https://github.com/stashed/mongodb/commit/961fad3) Fix typos
+- [14024ab](https://github.com/stashed/mongodb/commit/14024ab) Trigger the workflow on push or pull request
+- [c80a723](https://github.com/stashed/mongodb/commit/c80a723) Auto generate chart readme file
+- [223dbfd](https://github.com/stashed/mongodb/commit/223dbfd) Correctly mark optional fields
+- [8b3b75d](https://github.com/stashed/mongodb/commit/8b3b75d) Add openapi v3 schema for values file (#21)
+- [6229815](https://github.com/stashed/mongodb/commit/6229815) Update CI configuration
+- [3f2f090](https://github.com/stashed/mongodb/commit/3f2f090) Add support for specifying S3 region (#20)
+- [55f007d](https://github.com/stashed/mongodb/commit/55f007d) Make output.json file writable to all users + Fix Flag types (#19)
+- [93643f3](https://github.com/stashed/mongodb/commit/93643f3) Fix with arguments to mongorestore (#14)
+- [0d9595c](https://github.com/stashed/mongodb/commit/0d9595c) Update hugo frontmatter for stash website
+- [cb27f47](https://github.com/stashed/mongodb/commit/cb27f47) Added --nsExclude=config.changelog to standalone
+- [a941eb0](https://github.com/stashed/mongodb/commit/a941eb0) Enable race detector in e2e tests
+- [2ed387f](https://github.com/stashed/mongodb/commit/2ed387f) Fix broken link and add AppBinding scheme field (#13)
+- [8dd0ea1](https://github.com/stashed/mongodb/commit/8dd0ea1) Test installers (#12)
+- [5199d20](https://github.com/stashed/mongodb/commit/5199d20) Add license header to files (#11)
+- [f89adec](https://github.com/stashed/mongodb/commit/f89adec) Split imports into 3 parts (#10)
+- [1c447f4](https://github.com/stashed/mongodb/commit/1c447f4) Fix BackupSession's Print Columns (#9)
+- [201a06e](https://github.com/stashed/mongodb/commit/201a06e) Enable make ci (#8)
+- [613feea](https://github.com/stashed/mongodb/commit/613feea) Remove --enable-status-subresource flag (#7)
+- [95c3974](https://github.com/stashed/mongodb/commit/95c3974) Update totalHosts from backup/restore process (#6)
+- [3097a67](https://github.com/stashed/mongodb/commit/3097a67) Fix argument passing (#5)
+- [ccdf81f](https://github.com/stashed/mongodb/commit/ccdf81f) Remove support for arm and arm64 architecture
+- [f0b8e87](https://github.com/stashed/mongodb/commit/f0b8e87) Prepare for 3.4.17 release
+- [16ad538](https://github.com/stashed/mongodb/commit/16ad538) Prepare for 3.4 release
+- [c4eb920](https://github.com/stashed/mongodb/commit/c4eb920) Add release pipeline (#4)
+- [02b9a9f](https://github.com/stashed/mongodb/commit/02b9a9f) Update go.yml
+- [7ede5fd](https://github.com/stashed/mongodb/commit/7ede5fd) Finalize doc template (#3)
+- [bb3b7fd](https://github.com/stashed/mongodb/commit/bb3b7fd) Enable GitHub actions
+- [6874298](https://github.com/stashed/mongodb/commit/6874298) Improve error handling + remove metrics handling part (#2)
+- [000f2c6](https://github.com/stashed/mongodb/commit/000f2c6) Use docker buildx to build docker image
+- [867a620](https://github.com/stashed/mongodb/commit/867a620) Use github.com/Azure/go-autorest/autorest@v0.7.0
+- [ecb6143](https://github.com/stashed/mongodb/commit/ecb6143) run `go fmt`
+- [618886d](https://github.com/stashed/mongodb/commit/618886d)  Improve Mongodump for sharded and replicaset cluster && Chart and documentation (#1)
+- [4a7d5c8](https://github.com/stashed/mongodb/commit/4a7d5c8) Reorganize repo
+- [1972a9a](https://github.com/stashed/mongodb/commit/1972a9a) VolumeSnapshot (#787)
+- [3f1f4cf](https://github.com/stashed/mongodb/commit/3f1f4cf) Remove importance of order of rule in RestoreSession (#795)
+- [86a4af0](https://github.com/stashed/mongodb/commit/86a4af0) Skip BackupSession creation if target does not exist + use timestamp … (#797)
+- [3abe6f6](https://github.com/stashed/mongodb/commit/3abe6f6) Use restic 0.9.5 (#789)
+- [85b21bf](https://github.com/stashed/mongodb/commit/85b21bf) Update concept doc (#739)
+- [ad5c8f2](https://github.com/stashed/mongodb/commit/ad5c8f2) Add support for backup cluster resources YAML (#721)
+- [2bb8ec3](https://github.com/stashed/mongodb/commit/2bb8ec3) Backup and restore Elasticsearch (#702)
+- [1f21268](https://github.com/stashed/mongodb/commit/1f21268) Update package path to stash.appscode.dev/stash (#776)
+- [e8fb571](https://github.com/stashed/mongodb/commit/e8fb571) Update to k8s 1.14.0 client libraries using go.mod (#775)
+- [eab0f8e](https://github.com/stashed/mongodb/commit/eab0f8e) Remove --rbac flag (#761)
+- [4c3e7ea](https://github.com/stashed/mongodb/commit/4c3e7ea) Skip creating/processing backup-session when backup-config is paused (#759)
+- [7905eff](https://github.com/stashed/mongodb/commit/7905eff) Stash v1beta1 E2E test for PVC (#753)
+- [2c44ee8](https://github.com/stashed/mongodb/commit/2c44ee8) Implement snapshots for v1beta1 api (#749)
+- [c88df7a](https://github.com/stashed/mongodb/commit/c88df7a) Run restic commands using docker (#754)
+- [8e24d32](https://github.com/stashed/mongodb/commit/8e24d32) Fixed scratch-dir, output-dir and hostname in functions/tasks yamls (#744)
+- [8d5944d](https://github.com/stashed/mongodb/commit/8d5944d) Add Stash CLI (#734)
+- [550ab37](https://github.com/stashed/mongodb/commit/550ab37) Apply nice/ionice settings from env (#746)
+- [42ed76b](https://github.com/stashed/mongodb/commit/42ed76b) Stash V1beta1 E2E test for Deployment (#710)
+- [d63f9e9](https://github.com/stashed/mongodb/commit/d63f9e9) Fix openapi path prefixes for validators and mutators (#732)
+- [c1347ed](https://github.com/stashed/mongodb/commit/c1347ed) Add max-connections for GCS, Azure, B2 backend (#730)
+- [859c4ee](https://github.com/stashed/mongodb/commit/859c4ee) Rename admission webhooks to avoid name collision (#725)
+- [d631bb9](https://github.com/stashed/mongodb/commit/d631bb9) Apply EmptyDir settings to TmpDir (#719)
+- [cc70068](https://github.com/stashed/mongodb/commit/cc70068) Add support for rest backend (#713)
+- [e4db000](https://github.com/stashed/mongodb/commit/e4db000) Add support for OpenShift DeploymentConfig (#714)
+- [3fa7bdb](https://github.com/stashed/mongodb/commit/3fa7bdb) Backup and restore Mongo DB (#699)
+- [4c39235](https://github.com/stashed/mongodb/commit/4c39235) Backup and restore MySQL DB (#696)
+- [3e89d32](https://github.com/stashed/mongodb/commit/3e89d32) Backup and restore Postgres DB (#695)
+- [03b95f3](https://github.com/stashed/mongodb/commit/03b95f3) Add BackupSession Controller for Sidecar (#701)
+- [cacbc7d](https://github.com/stashed/mongodb/commit/cacbc7d) Update workload controller for new design (#675)
+- [5c173e5](https://github.com/stashed/mongodb/commit/5c173e5)  Post backup/restore status update (#691)
+- [50bbb0a](https://github.com/stashed/mongodb/commit/50bbb0a) Backup and restore PVC (#676)
+- [d4a53e2](https://github.com/stashed/mongodb/commit/d4a53e2) Add BackupConfiguration Controller (#671)
+- [ef9a4ae](https://github.com/stashed/mongodb/commit/ef9a4ae) Update Kubernetes client libraries to 1.13.0 (#687)
+- [c48dbfc](https://github.com/stashed/mongodb/commit/c48dbfc) Separate type definitions into individual files (#646)
+- [77f2113](https://github.com/stashed/mongodb/commit/77f2113) Use flags.DumpAll to dump flags (#624)
+- [cb54d8c](https://github.com/stashed/mongodb/commit/cb54d8c) Set periodic analytics (#623)
+- [248a53a](https://github.com/stashed/mongodb/commit/248a53a) Add validation webhook xray (#618)
+- [2029bf4](https://github.com/stashed/mongodb/commit/2029bf4) Use dynamic pushgateway url (#614)
+- [bcf5926](https://github.com/stashed/mongodb/commit/bcf5926) Fix offline backup (#537)
+- [5049a63](https://github.com/stashed/mongodb/commit/5049a63) Fix extended apiserver issues with Kubernetes 1.11 (#536)
+- [9d31255](https://github.com/stashed/mongodb/commit/9d31255) Update client-go to v8.0.0 (#528)
+- [d872b4c](https://github.com/stashed/mongodb/commit/d872b4c) Enable status subresource for crds (#524)
+- [4795dba](https://github.com/stashed/mongodb/commit/4795dba) Remove ops-address port (#518)
+- [e95b151](https://github.com/stashed/mongodb/commit/e95b151) Add support for initial backoff to the apiserver call on recover (#476)
+- [120e5de](https://github.com/stashed/mongodb/commit/120e5de) Disable admission controllers for webhook server (#468)
+- [2f19545](https://github.com/stashed/mongodb/commit/2f19545) Update client-go to 7.0.0 (#463)
+- [e613ff5](https://github.com/stashed/mongodb/commit/e613ff5) Fixes RBAC issue in test (#449)
+- [56a3a74](https://github.com/stashed/mongodb/commit/56a3a74) Some cleanup (#446)
+- [02565bb](https://github.com/stashed/mongodb/commit/02565bb) Delete restic repository from backend if Repository CRD is deleted (#438)
+- [ea98067](https://github.com/stashed/mongodb/commit/ea98067) Fix go_vet error (#440)
+- [9d626eb](https://github.com/stashed/mongodb/commit/9d626eb) Increase qps and burst limits (#435)
+- [5c6713f](https://github.com/stashed/mongodb/commit/5c6713f) Show repository snapshot list (#417)
+- [6d8ef78](https://github.com/stashed/mongodb/commit/6d8ef78) Expose swagger.json (#420)
+- [8e04ca0](https://github.com/stashed/mongodb/commit/8e04ca0) Create repository crd for each Restic repository (#394)
+- [4c9a478](https://github.com/stashed/mongodb/commit/4c9a478) Rename --analytics to --enable-analytics (#384)
+- [7ea2220](https://github.com/stashed/mongodb/commit/7ea2220) Replace initializers with mutation webhook for workloads (#363)
+- [2770e6b](https://github.com/stashed/mongodb/commit/2770e6b) Use admission hook helpers from kutil (#360)
+- [d3754d7](https://github.com/stashed/mongodb/commit/d3754d7) Implement offline backup for multiple replica (#335)
+- [13a2d14](https://github.com/stashed/mongodb/commit/13a2d14) Use official code generator scripts (#336)
+- [90642ce](https://github.com/stashed/mongodb/commit/90642ce) Fix e2e tests after webhook merger (#333)
+- [2fc3239](https://github.com/stashed/mongodb/commit/2fc3239) Leave secure port unset
+- [7cb52b2](https://github.com/stashed/mongodb/commit/7cb52b2) Merge admission webhook and operator into one binary (#329)
+- [3306427](https://github.com/stashed/mongodb/commit/3306427) Implement informer factory for backup scheduler (#325)
+- [7bb027b](https://github.com/stashed/mongodb/commit/7bb027b) Cleanup apiserver
+- [fb8c1e4](https://github.com/stashed/mongodb/commit/fb8c1e4) Copy generic-admission-server into pkg (#318)
+- [5a5093f](https://github.com/stashed/mongodb/commit/5a5093f) Use shared infromer factory (#317)
+- [0ccb948](https://github.com/stashed/mongodb/commit/0ccb948) Use GetBaseVersion method from kutil (#316)
+- [8c5e6ff](https://github.com/stashed/mongodb/commit/8c5e6ff) Fix webhook command description (#314)
+- [775a2b6](https://github.com/stashed/mongodb/commit/775a2b6) Merge webhook plugins into one. (#311)
+- [a8659fe](https://github.com/stashed/mongodb/commit/a8659fe) Add ValidatingAdmissionWebhook for Stash CRDs (#299)
+- [c3e177c](https://github.com/stashed/mongodb/commit/c3e177c) Added support for private docker registry (#300)
+- [62ec42e](https://github.com/stashed/mongodb/commit/62ec42e) Update dependencies to Kubernetes 1.9 (#297)
+- [cf3ea7c](https://github.com/stashed/mongodb/commit/cf3ea7c) Update appscode/go log wrapper (#287)
+- [470cc31](https://github.com/stashed/mongodb/commit/470cc31) Pass --pushgateway-url for injected containers. (#284)
+- [e2e79c6](https://github.com/stashed/mongodb/commit/e2e79c6) Fix kubectl version parsing generation in GKE (#267)
+- [326aea4](https://github.com/stashed/mongodb/commit/326aea4) Detect analytics client id using env vars (#265)
+- [4a5912c](https://github.com/stashed/mongodb/commit/4a5912c) Prepare docs for 0.6.0 release (#264)
+- [f75d5df](https://github.com/stashed/mongodb/commit/f75d5df) Remove restic-dependency from recovery (#258)
+- [86f01f3](https://github.com/stashed/mongodb/commit/86f01f3) Log operator version on start (#253)
+- [4e29b70](https://github.com/stashed/mongodb/commit/4e29b70) Simplify clientID generation for analytics (#247)
+- [a45937f](https://github.com/stashed/mongodb/commit/a45937f) Set analytics clientID (#246)
+- [ea53cea](https://github.com/stashed/mongodb/commit/ea53cea) Enable Restic cahce-dir flag (#241)
+- [dc0030d](https://github.com/stashed/mongodb/commit/dc0030d) Implement offline backup (#229)
+- [ae40f35](https://github.com/stashed/mongodb/commit/ae40f35) Revendor kutil (#230)
+- [d68a34d](https://github.com/stashed/mongodb/commit/d68a34d) Record recovery status for individual FileGroup (#222)
+- [15a24b7](https://github.com/stashed/mongodb/commit/15a24b7) Leader election for deployment, replica set and rc (#206)
+- [4a75689](https://github.com/stashed/mongodb/commit/4a75689) Implement Recovery for Restic Backup (#202)
+- [78b3942](https://github.com/stashed/mongodb/commit/78b3942) Use typed versioned client for CRD
+- [b857b05](https://github.com/stashed/mongodb/commit/b857b05) Change `k8s.io/api/core/v1` pkg alias to core (#204)
+- [e52f848](https://github.com/stashed/mongodb/commit/e52f848) Use client-go 5.x
+- [4f376ad](https://github.com/stashed/mongodb/commit/4f376ad) Set hostname based on resource type (#198)
+- [e530116](https://github.com/stashed/mongodb/commit/e530116) Manage RoleBinding for rbac enabled cluster (#197)
+- [e28c13f](https://github.com/stashed/mongodb/commit/e28c13f) Use workqueue for scheduler (#194)
+- [2719cbd](https://github.com/stashed/mongodb/commit/2719cbd) Fix e2e tests (#183)
+- [9c1cc43](https://github.com/stashed/mongodb/commit/9c1cc43) Use workqueue (#182)
+- [b3ee076](https://github.com/stashed/mongodb/commit/b3ee076) Only watch apps/v1beta1 Deployment (#178)
+- [4f92ca6](https://github.com/stashed/mongodb/commit/4f92ca6) Use Namespace() method from kutil.
+- [78f1e7f](https://github.com/stashed/mongodb/commit/78f1e7f) Update kutil (#170)
+- [29a8a1f](https://github.com/stashed/mongodb/commit/29a8a1f) Use apis/v1alpha1 instead of internal version (#167)
+- [da3eb2e](https://github.com/stashed/mongodb/commit/da3eb2e) Use kubernetes/code-generator (#163)
+- [3b1d6bf](https://github.com/stashed/mongodb/commit/3b1d6bf) Expose resync-period as flag
+- [35d8dc6](https://github.com/stashed/mongodb/commit/35d8dc6) Move analytics collector to root command (#164)
+- [6a55694](https://github.com/stashed/mongodb/commit/6a55694) Migrate TPR to CRD (#160)
+- [91f678f](https://github.com/stashed/mongodb/commit/91f678f) Rename RepositorySecretName to StorageSecretName (#135)
+- [d666c81](https://github.com/stashed/mongodb/commit/d666c81) Change mount path for labels to /etc/stash
+- [1177d60](https://github.com/stashed/mongodb/commit/1177d60) Part 6 - Update docs (#121)
+- [a15689d](https://github.com/stashed/mongodb/commit/a15689d) Various bug fixes (#118)
+- [d8a5771](https://github.com/stashed/mongodb/commit/d8a5771) Set TMPDIR env var for restic (#115)
+- [60ed8f7](https://github.com/stashed/mongodb/commit/60ed8f7) Update user guide (#94)
+
+
+### [3.4.2-v1](https://github.com/stashed/mongodb/releases/tag/3.4.2-v1)
+
+
+
+### [3.6.1-v1](https://github.com/stashed/mongodb/releases/tag/3.6.1-v1)
+
+
+
+### [3.6.8-v1](https://github.com/stashed/mongodb/releases/tag/3.6.8-v1)
+
+- [384ac18](https://github.com/stashed/mongodb/commit/384ac18) Prepare for release 3.6.8-v1 (#246)
+- [fae0fa3](https://github.com/stashed/mongodb/commit/fae0fa3) Prepare for release 3.6.8-rc.20200827 (#234)
+- [59da835](https://github.com/stashed/mongodb/commit/59da835) [cherry-pick] Upload charts without updating index (#223)
+- [ae2ba11](https://github.com/stashed/mongodb/commit/ae2ba11) Prepare for release 3.6.8-rc.20200826 (#211)
+- [f6bbd70](https://github.com/stashed/mongodb/commit/f6bbd70) [cherry-pick] Update README.md (#200)
+- [a2098a8](https://github.com/stashed/mongodb/commit/a2098a8) Prepare for release 3.6.8-beta.20200826 (#188)
+- [81cad93](https://github.com/stashed/mongodb/commit/81cad93) [cherry-pick] Update Stash installation link (#173) (#177)
+- [0711cec](https://github.com/stashed/mongodb/commit/0711cec) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#165)
+- [cd921b7](https://github.com/stashed/mongodb/commit/cd921b7) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#154)
+- [5d29173](https://github.com/stashed/mongodb/commit/5d29173) [cherry-pick] Update chart icon (#141)
+- [a8265a7](https://github.com/stashed/mongodb/commit/a8265a7) [cherry-pick] Make chart registry configurable (#126) (#130)
+- [a95f051](https://github.com/stashed/mongodb/commit/a95f051) Prepare for release 3.6.8-beta.20200709 (#117)
+- [8f74e62](https://github.com/stashed/mongodb/commit/8f74e62) [cherry-pick] Build docker image in release workflow (#102) (#106)
+- [2c74f48](https://github.com/stashed/mongodb/commit/2c74f48) Prepare for release 3.6.8-beta.20200708 (#93)
+- [ad45d26](https://github.com/stashed/mongodb/commit/ad45d26) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#82)
+- [8eb1169](https://github.com/stashed/mongodb/commit/8eb1169) [cherry-pick] Update License (#66) (#70)
+- [0d12f73](https://github.com/stashed/mongodb/commit/0d12f73) Add commands to update chart version (#65)
+- [ab1ca6b](https://github.com/stashed/mongodb/commit/ab1ca6b) [cherry-pick] Update update-release-tracker.sh (#57)
+- [5c13265](https://github.com/stashed/mongodb/commit/5c13265) Add script to update release tracker on pr merge (#41)
+- [300fd5d](https://github.com/stashed/mongodb/commit/300fd5d) [cherry-pick] Update release.yml (#42) (#46)
+- [0b1ef75](https://github.com/stashed/mongodb/commit/0b1ef75) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#33)
+- [37671b0](https://github.com/stashed/mongodb/commit/37671b0) Fix chart release process (#28)
+- [4c11ef1](https://github.com/stashed/mongodb/commit/4c11ef1) Update .kodiak.toml
+- [438d408](https://github.com/stashed/mongodb/commit/438d408) Allow overwriting secret key via SecretTransformation (#27)
+- [64c3cef](https://github.com/stashed/mongodb/commit/64c3cef) Make waitTimeout configurable through flag (#26)
+- [f22e19d](https://github.com/stashed/mongodb/commit/f22e19d) Create .kodiak.toml
+- [bbcdca0](https://github.com/stashed/mongodb/commit/bbcdca0) Fix typos
+- [cae40f7](https://github.com/stashed/mongodb/commit/cae40f7) Update to Kubernetes v1.18.3 (#25)
+- [6e726c5](https://github.com/stashed/mongodb/commit/6e726c5) Update crazy-max/ghaction-docker-buildx flag
+- [7e0a42b](https://github.com/stashed/mongodb/commit/7e0a42b) Fix typos
+- [a908726](https://github.com/stashed/mongodb/commit/a908726) Trigger the workflow on push or pull request
+- [cfda73c](https://github.com/stashed/mongodb/commit/cfda73c) Auto generate chart readme file
+- [f38510e](https://github.com/stashed/mongodb/commit/f38510e) Correctly mark optional fields
+- [9d9fc23](https://github.com/stashed/mongodb/commit/9d9fc23) Add openapi v3 schema for values file (#21)
+
+
+### [4.0.3-v1](https://github.com/stashed/mongodb/releases/tag/4.0.3-v1)
+
+- [fa38022](https://github.com/stashed/mongodb/commit/fa38022) Prepare for release 4.0.3-v1 (#248)
+- [e6669a9](https://github.com/stashed/mongodb/commit/e6669a9) Prepare for release 4.0.3-rc.20200827 (#236)
+- [7a1efc6](https://github.com/stashed/mongodb/commit/7a1efc6) [cherry-pick] Upload charts without updating index (#225)
+- [0166946](https://github.com/stashed/mongodb/commit/0166946) Prepare for release 4.0.3-rc.20200826 (#213)
+- [0d636e1](https://github.com/stashed/mongodb/commit/0d636e1) [cherry-pick] Update README.md (#202)
+- [fd4d40e](https://github.com/stashed/mongodb/commit/fd4d40e) Prepare for release 4.0.3-beta.20200826 (#190)
+- [3b2f40b](https://github.com/stashed/mongodb/commit/3b2f40b) [cherry-pick] Update Stash installation link (#173) (#179)
+- [5ba31a4](https://github.com/stashed/mongodb/commit/5ba31a4) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#167)
+- [349f6c0](https://github.com/stashed/mongodb/commit/349f6c0) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#156)
+- [eb32485](https://github.com/stashed/mongodb/commit/eb32485) [cherry-pick] Update chart icon (#143)
+- [e2b05d8](https://github.com/stashed/mongodb/commit/e2b05d8) [cherry-pick] Make chart registry configurable (#126) (#132)
+- [b7719bd](https://github.com/stashed/mongodb/commit/b7719bd) Prepare for release 4.0.3-beta.20200709 (#119)
+- [7c9074d](https://github.com/stashed/mongodb/commit/7c9074d) [cherry-pick] Build docker image in release workflow (#102) (#108)
+- [974b230](https://github.com/stashed/mongodb/commit/974b230) Prepare for release 4.0.3-beta.20200708 (#95)
+- [70d290e](https://github.com/stashed/mongodb/commit/70d290e) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#84)
+- [ffb3cc5](https://github.com/stashed/mongodb/commit/ffb3cc5) [cherry-pick] Update License (#66) (#72)
+- [42c182f](https://github.com/stashed/mongodb/commit/42c182f) Add commands to update chart version (#65)
+- [602e631](https://github.com/stashed/mongodb/commit/602e631) [cherry-pick] Update update-release-tracker.sh (#59)
+- [f2c40c3](https://github.com/stashed/mongodb/commit/f2c40c3) Add script to update release tracker on pr merge (#41)
+- [f2fe3de](https://github.com/stashed/mongodb/commit/f2fe3de) [cherry-pick] Update release.yml (#42) (#48)
+- [69e0816](https://github.com/stashed/mongodb/commit/69e0816) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#35)
+- [5d3ebfa](https://github.com/stashed/mongodb/commit/5d3ebfa) Fix chart release process (#28)
+- [6c1edad](https://github.com/stashed/mongodb/commit/6c1edad) Update .kodiak.toml
+- [6ec1e40](https://github.com/stashed/mongodb/commit/6ec1e40) Allow overwriting secret key via SecretTransformation (#27)
+- [8ec94bf](https://github.com/stashed/mongodb/commit/8ec94bf) Make waitTimeout configurable through flag (#26)
+- [ebd3f81](https://github.com/stashed/mongodb/commit/ebd3f81) Create .kodiak.toml
+- [ade156f](https://github.com/stashed/mongodb/commit/ade156f) Fix typos
+- [b5e7b0f](https://github.com/stashed/mongodb/commit/b5e7b0f) Update to Kubernetes v1.18.3 (#25)
+- [41fa9af](https://github.com/stashed/mongodb/commit/41fa9af) Update crazy-max/ghaction-docker-buildx flag
+- [55eb7fe](https://github.com/stashed/mongodb/commit/55eb7fe) Fix typos
+- [a94509b](https://github.com/stashed/mongodb/commit/a94509b) Trigger the workflow on push or pull request
+- [d00083a](https://github.com/stashed/mongodb/commit/d00083a) Auto generate chart readme file
+- [2347473](https://github.com/stashed/mongodb/commit/2347473) Correctly mark optional fields
+- [22c33b8](https://github.com/stashed/mongodb/commit/22c33b8) Add openapi v3 schema for values file (#21)
+
+
+### [4.0.5-v1](https://github.com/stashed/mongodb/releases/tag/4.0.5-v1)
+
+- [0559144](https://github.com/stashed/mongodb/commit/0559144) Prepare for release 4.0.5-v1 (#249)
+- [8bded32](https://github.com/stashed/mongodb/commit/8bded32) Prepare for release 4.0.5-rc.20200827 (#237)
+- [58fa99e](https://github.com/stashed/mongodb/commit/58fa99e) [cherry-pick] Upload charts without updating index (#226)
+- [77353e5](https://github.com/stashed/mongodb/commit/77353e5) Prepare for release 4.0.5-rc.20200826 (#214)
+- [8d3af1e](https://github.com/stashed/mongodb/commit/8d3af1e) [cherry-pick] Update README.md (#203)
+- [1bbff77](https://github.com/stashed/mongodb/commit/1bbff77) Prepare for release 4.0.5-beta.20200826 (#191)
+- [51d0388](https://github.com/stashed/mongodb/commit/51d0388) [cherry-pick] Update Stash installation link (#173) (#180)
+- [444ed15](https://github.com/stashed/mongodb/commit/444ed15) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#168)
+- [00cfb11](https://github.com/stashed/mongodb/commit/00cfb11) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#157)
+- [8a0c6ce](https://github.com/stashed/mongodb/commit/8a0c6ce) [cherry-pick] Update chart icon (#144)
+- [e514864](https://github.com/stashed/mongodb/commit/e514864) [cherry-pick] Make chart registry configurable (#126) (#133)
+- [78ab8d2](https://github.com/stashed/mongodb/commit/78ab8d2) Prepare for release 4.0.5-beta.20200709 (#120)
+- [12af669](https://github.com/stashed/mongodb/commit/12af669) [cherry-pick] Build docker image in release workflow (#102) (#109)
+- [18a8386](https://github.com/stashed/mongodb/commit/18a8386) Prepare for release 4.0.5-beta.20200708 (#96)
+- [cdba01e](https://github.com/stashed/mongodb/commit/cdba01e) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#85)
+- [54ac1e0](https://github.com/stashed/mongodb/commit/54ac1e0) [cherry-pick] Update License (#66) (#73)
+- [84c004f](https://github.com/stashed/mongodb/commit/84c004f) Add commands to update chart version (#65)
+- [46d5d4c](https://github.com/stashed/mongodb/commit/46d5d4c) [cherry-pick] Update update-release-tracker.sh (#60)
+- [a4d76a8](https://github.com/stashed/mongodb/commit/a4d76a8) Add script to update release tracker on pr merge (#41)
+- [49bffca](https://github.com/stashed/mongodb/commit/49bffca) [cherry-pick] Update release.yml (#42) (#49)
+- [f55af9c](https://github.com/stashed/mongodb/commit/f55af9c) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#36)
+- [2e094ad](https://github.com/stashed/mongodb/commit/2e094ad) Fix chart release process (#28)
+- [57335b4](https://github.com/stashed/mongodb/commit/57335b4) Update .kodiak.toml
+- [d2be592](https://github.com/stashed/mongodb/commit/d2be592) Allow overwriting secret key via SecretTransformation (#27)
+- [123c843](https://github.com/stashed/mongodb/commit/123c843) Make waitTimeout configurable through flag (#26)
+- [e63c62b](https://github.com/stashed/mongodb/commit/e63c62b) Create .kodiak.toml
+- [96a2417](https://github.com/stashed/mongodb/commit/96a2417) Fix typos
+- [2a8fd96](https://github.com/stashed/mongodb/commit/2a8fd96) Update to Kubernetes v1.18.3 (#25)
+- [b9efbb1](https://github.com/stashed/mongodb/commit/b9efbb1) Update crazy-max/ghaction-docker-buildx flag
+- [048464c](https://github.com/stashed/mongodb/commit/048464c) Fix typos
+- [fc3d4aa](https://github.com/stashed/mongodb/commit/fc3d4aa) Trigger the workflow on push or pull request
+- [901f4d0](https://github.com/stashed/mongodb/commit/901f4d0) Auto generate chart readme file
+- [7775e7c](https://github.com/stashed/mongodb/commit/7775e7c) Correctly mark optional fields
+- [480ad5b](https://github.com/stashed/mongodb/commit/480ad5b) Add openapi v3 schema for values file (#21)
+
+
+### [4.0.11-v1](https://github.com/stashed/mongodb/releases/tag/4.0.11-v1)
+
+- [bc7a353](https://github.com/stashed/mongodb/commit/bc7a353) Prepare for release 4.0.11-v1 (#247)
+- [2dfe220](https://github.com/stashed/mongodb/commit/2dfe220) Prepare for release 4.0.11-rc.20200827 (#235)
+- [7ccf88d](https://github.com/stashed/mongodb/commit/7ccf88d) [cherry-pick] Upload charts without updating index (#224)
+- [5f7ae55](https://github.com/stashed/mongodb/commit/5f7ae55) Prepare for release 4.0.11-rc.20200826 (#212)
+- [359a868](https://github.com/stashed/mongodb/commit/359a868) [cherry-pick] Update README.md (#201)
+- [b794eee](https://github.com/stashed/mongodb/commit/b794eee) Prepare for release 4.0.1-beta.20200826 (#189)
+- [8e835ce](https://github.com/stashed/mongodb/commit/8e835ce) [cherry-pick] Update Stash installation link (#173) (#178)
+- [0025cc4](https://github.com/stashed/mongodb/commit/0025cc4) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#166)
+- [bc8f7a5](https://github.com/stashed/mongodb/commit/bc8f7a5) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#155)
+- [7b0bb50](https://github.com/stashed/mongodb/commit/7b0bb50) [cherry-pick] Update chart icon (#142)
+- [a9621b6](https://github.com/stashed/mongodb/commit/a9621b6) [cherry-pick] Make chart registry configurable (#126) (#131)
+- [4168a4b](https://github.com/stashed/mongodb/commit/4168a4b) Prepare for release 4.0.1-beta.20200709 (#118)
+- [90723f4](https://github.com/stashed/mongodb/commit/90723f4) [cherry-pick] Build docker image in release workflow (#102) (#107)
+- [0304c42](https://github.com/stashed/mongodb/commit/0304c42) Prepare for release 4.0.1-beta.20200708 (#94)
+- [276fcb6](https://github.com/stashed/mongodb/commit/276fcb6) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#83)
+- [bf8701f](https://github.com/stashed/mongodb/commit/bf8701f) [cherry-pick] Update License (#66) (#71)
+- [6aaff28](https://github.com/stashed/mongodb/commit/6aaff28) Add commands to update chart version (#65)
+- [222720b](https://github.com/stashed/mongodb/commit/222720b) [cherry-pick] Update update-release-tracker.sh (#58)
+- [3184ed5](https://github.com/stashed/mongodb/commit/3184ed5) Add script to update release tracker on pr merge (#41)
+- [fa39e11](https://github.com/stashed/mongodb/commit/fa39e11) [cherry-pick] Update release.yml (#42) (#47)
+- [3bbadab](https://github.com/stashed/mongodb/commit/3bbadab) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#34)
+- [576171a](https://github.com/stashed/mongodb/commit/576171a) Fix chart release process (#28)
+- [2b84c51](https://github.com/stashed/mongodb/commit/2b84c51) Update .kodiak.toml
+- [bfcfd1e](https://github.com/stashed/mongodb/commit/bfcfd1e) Allow overwriting secret key via SecretTransformation (#27)
+- [4830c47](https://github.com/stashed/mongodb/commit/4830c47) Make waitTimeout configurable through flag (#26)
+- [cf7ae46](https://github.com/stashed/mongodb/commit/cf7ae46) Create .kodiak.toml
+- [3c23777](https://github.com/stashed/mongodb/commit/3c23777) Fix typos
+- [b774f8d](https://github.com/stashed/mongodb/commit/b774f8d) Update to Kubernetes v1.18.3 (#25)
+- [83bfeeb](https://github.com/stashed/mongodb/commit/83bfeeb) Update crazy-max/ghaction-docker-buildx flag
+- [ec8d37a](https://github.com/stashed/mongodb/commit/ec8d37a) Fix typos
+- [5478e9b](https://github.com/stashed/mongodb/commit/5478e9b) Trigger the workflow on push or pull request
+- [b35efa4](https://github.com/stashed/mongodb/commit/b35efa4) Auto generate chart readme file
+- [f6c6cf8](https://github.com/stashed/mongodb/commit/f6c6cf8) Correctly mark optional fields
+- [3e35f9b](https://github.com/stashed/mongodb/commit/3e35f9b) Add openapi v3 schema for values file (#21)
+
+
+### [4.1.1-v1](https://github.com/stashed/mongodb/releases/tag/4.1.1-v1)
+
+
+
+### [4.1.4-v1](https://github.com/stashed/mongodb/releases/tag/4.1.4-v1)
+
+- [2fba087](https://github.com/stashed/mongodb/commit/2fba087) Prepare for release 4.1.4-v1 (#251)
+- [84e97a4](https://github.com/stashed/mongodb/commit/84e97a4) Prepare for release 4.1.4-rc.20200827 (#239)
+- [3a168e8](https://github.com/stashed/mongodb/commit/3a168e8) [cherry-pick] Upload charts without updating index (#228)
+- [14aaf6c](https://github.com/stashed/mongodb/commit/14aaf6c) Prepare for release 4.1.4-rc.20200826 (#216)
+- [20d3e9d](https://github.com/stashed/mongodb/commit/20d3e9d) [cherry-pick] Update README.md (#205)
+- [c092f8a](https://github.com/stashed/mongodb/commit/c092f8a) Prepare for release 4.1.4-beta.20200826 (#193)
+- [cbb683a](https://github.com/stashed/mongodb/commit/cbb683a) [cherry-pick] Update Stash installation link (#173) (#182)
+- [f8b1f2c](https://github.com/stashed/mongodb/commit/f8b1f2c) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#170)
+- [b99744e](https://github.com/stashed/mongodb/commit/b99744e) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#159)
+- [9ee1654](https://github.com/stashed/mongodb/commit/9ee1654) [cherry-pick] Update chart icon (#146)
+- [8604d7b](https://github.com/stashed/mongodb/commit/8604d7b) [cherry-pick] Make chart registry configurable (#126) (#135)
+- [e3cd383](https://github.com/stashed/mongodb/commit/e3cd383) Prepare for release 4.1.4-beta.20200709 (#122)
+- [a310c43](https://github.com/stashed/mongodb/commit/a310c43) [cherry-pick] Build docker image in release workflow (#102) (#111)
+- [ae591b4](https://github.com/stashed/mongodb/commit/ae591b4) Prepare for release 4.1.4-beta.20200708 (#98)
+- [266e031](https://github.com/stashed/mongodb/commit/266e031) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#87)
+- [50a7cbd](https://github.com/stashed/mongodb/commit/50a7cbd) [cherry-pick] Update License (#66) (#75)
+- [8bbbe69](https://github.com/stashed/mongodb/commit/8bbbe69) Add commands to update chart version (#65)
+- [10150b9](https://github.com/stashed/mongodb/commit/10150b9) [cherry-pick] Update update-release-tracker.sh (#62)
+- [119fea1](https://github.com/stashed/mongodb/commit/119fea1) Add script to update release tracker on pr merge (#41)
+- [1ac6874](https://github.com/stashed/mongodb/commit/1ac6874) [cherry-pick] Update release.yml (#42) (#51)
+- [1df644f](https://github.com/stashed/mongodb/commit/1df644f) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#38)
+- [053a6bb](https://github.com/stashed/mongodb/commit/053a6bb) Fix chart release process (#28)
+- [b65cd98](https://github.com/stashed/mongodb/commit/b65cd98) Update .kodiak.toml
+- [b477602](https://github.com/stashed/mongodb/commit/b477602) Allow overwriting secret key via SecretTransformation (#27)
+- [77eb85a](https://github.com/stashed/mongodb/commit/77eb85a) Make waitTimeout configurable through flag (#26)
+- [4efe18c](https://github.com/stashed/mongodb/commit/4efe18c) Create .kodiak.toml
+- [fceb614](https://github.com/stashed/mongodb/commit/fceb614) Fix typos
+- [bba7918](https://github.com/stashed/mongodb/commit/bba7918) Update to Kubernetes v1.18.3 (#25)
+- [a6540e2](https://github.com/stashed/mongodb/commit/a6540e2) Update crazy-max/ghaction-docker-buildx flag
+- [b4b3d8d](https://github.com/stashed/mongodb/commit/b4b3d8d) Fix typos
+- [85802fd](https://github.com/stashed/mongodb/commit/85802fd) Trigger the workflow on push or pull request
+- [da3e334](https://github.com/stashed/mongodb/commit/da3e334) Auto generate chart readme file
+- [56f2d0f](https://github.com/stashed/mongodb/commit/56f2d0f) Correctly mark optional fields
+- [f96b2a0](https://github.com/stashed/mongodb/commit/f96b2a0) Add openapi v3 schema for values file (#21)
+
+
+### [4.1.7-v1](https://github.com/stashed/mongodb/releases/tag/4.1.7-v1)
+
+- [c3f18aa](https://github.com/stashed/mongodb/commit/c3f18aa) Prepare for release 4.1.7-v1 (#252)
+- [df9852f](https://github.com/stashed/mongodb/commit/df9852f) Prepare for release 4.1.7-rc.20200827 (#240)
+- [b22a028](https://github.com/stashed/mongodb/commit/b22a028) [cherry-pick] Upload charts without updating index (#229)
+- [5f2dd1f](https://github.com/stashed/mongodb/commit/5f2dd1f) Prepare for release 4.1.7-rc.20200826 (#217)
+- [57fc2d0](https://github.com/stashed/mongodb/commit/57fc2d0) [cherry-pick] Update README.md (#206)
+- [8334c89](https://github.com/stashed/mongodb/commit/8334c89) Prepare for release 4.1.7-beta.20200826 (#194)
+- [905bdde](https://github.com/stashed/mongodb/commit/905bdde) [cherry-pick] Update Stash installation link (#173) (#183)
+- [1eea836](https://github.com/stashed/mongodb/commit/1eea836) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#171)
+- [52c06d6](https://github.com/stashed/mongodb/commit/52c06d6) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#160)
+- [7765f65](https://github.com/stashed/mongodb/commit/7765f65) [cherry-pick] Update chart icon (#147)
+- [7426cba](https://github.com/stashed/mongodb/commit/7426cba) [cherry-pick] Make chart registry configurable (#126) (#136)
+- [3eccd08](https://github.com/stashed/mongodb/commit/3eccd08) Prepare for release 4.1.7-beta.20200709 (#123)
+- [6377c55](https://github.com/stashed/mongodb/commit/6377c55) [cherry-pick] Build docker image in release workflow (#102) (#112)
+- [984ef29](https://github.com/stashed/mongodb/commit/984ef29) Prepare for release 4.1.7-beta.20200708 (#99)
+- [09a6e49](https://github.com/stashed/mongodb/commit/09a6e49) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#88)
+- [6ae5da1](https://github.com/stashed/mongodb/commit/6ae5da1) [cherry-pick] Update License (#66) (#76)
+- [e110d7f](https://github.com/stashed/mongodb/commit/e110d7f) Add commands to update chart version (#65)
+- [d98d524](https://github.com/stashed/mongodb/commit/d98d524) [cherry-pick] Update update-release-tracker.sh (#63)
+- [e7400cf](https://github.com/stashed/mongodb/commit/e7400cf) Add script to update release tracker on pr merge (#41)
+- [5917bb7](https://github.com/stashed/mongodb/commit/5917bb7) [cherry-pick] Update release.yml (#42) (#52)
+- [2cf14b2](https://github.com/stashed/mongodb/commit/2cf14b2) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#39)
+- [e4467cf](https://github.com/stashed/mongodb/commit/e4467cf) Fix chart release process (#28)
+- [98ff251](https://github.com/stashed/mongodb/commit/98ff251) Update .kodiak.toml
+- [58e7c6b](https://github.com/stashed/mongodb/commit/58e7c6b) Allow overwriting secret key via SecretTransformation (#27)
+- [d9381b5](https://github.com/stashed/mongodb/commit/d9381b5) Make waitTimeout configurable through flag (#26)
+- [8f0549f](https://github.com/stashed/mongodb/commit/8f0549f) Create .kodiak.toml
+- [e06d601](https://github.com/stashed/mongodb/commit/e06d601) Fix typos
+- [e2f9971](https://github.com/stashed/mongodb/commit/e2f9971) Update to Kubernetes v1.18.3 (#25)
+- [7a93c56](https://github.com/stashed/mongodb/commit/7a93c56) Update crazy-max/ghaction-docker-buildx flag
+- [1518e46](https://github.com/stashed/mongodb/commit/1518e46) Fix typos
+- [95f7060](https://github.com/stashed/mongodb/commit/95f7060) Trigger the workflow on push or pull request
+- [4cc04fb](https://github.com/stashed/mongodb/commit/4cc04fb) Auto generate chart readme file
+- [250c96d](https://github.com/stashed/mongodb/commit/250c96d) Correctly mark optional fields
+- [672f36e](https://github.com/stashed/mongodb/commit/672f36e) Add openapi v3 schema for values file (#21)
+
+
+### [4.2.3-v1](https://github.com/stashed/mongodb/releases/tag/4.2.3-v1)
+
+- [3c800d5](https://github.com/stashed/mongodb/commit/3c800d5) Prepare for release 4.2.3-v1 (#253)
+- [e4c8466](https://github.com/stashed/mongodb/commit/e4c8466) Prepare for release 4.2.3-rc.20200827 (#241)
+- [b45397b](https://github.com/stashed/mongodb/commit/b45397b) [cherry-pick] Upload charts without updating index (#230)
+- [ed39fa9](https://github.com/stashed/mongodb/commit/ed39fa9) Prepare for release 4.2.3-rc.20200826 (#218)
+- [d4b3301](https://github.com/stashed/mongodb/commit/d4b3301) [cherry-pick] Update README.md (#207)
+- [244da2c](https://github.com/stashed/mongodb/commit/244da2c) Prepare for release 4.2.3-beta.20200826 (#195)
+- [953e51f](https://github.com/stashed/mongodb/commit/953e51f) Update Stash installation link (#173) (#184)
+- [d9c6d0b](https://github.com/stashed/mongodb/commit/d9c6d0b) [cherry-pick] Fix output format + Add PreBackupActions logic (#149) (#172)
+- [0ef5cc0](https://github.com/stashed/mongodb/commit/0ef5cc0) [cherry-pick] Make image.tag in values.yaml same as $APP_VERSION (#150) (#161)
+- [a51bdac](https://github.com/stashed/mongodb/commit/a51bdac) [cherry-pick] Update chart icon (#148)
+- [2ad3b80](https://github.com/stashed/mongodb/commit/2ad3b80) [cherry-pick] Make chart registry configurable (#126) (#137)
+- [149e6ba](https://github.com/stashed/mongodb/commit/149e6ba) Prepare for release 4.2.3-beta.20200709 (#124)
+- [47879da](https://github.com/stashed/mongodb/commit/47879da) [cherry-pick] Build docker image in release workflow (#102) (#113)
+- [51831a5](https://github.com/stashed/mongodb/commit/51831a5) Prepare for release 4.2.3-beta.20200708 (#100)
+- [a165f10](https://github.com/stashed/mongodb/commit/a165f10) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#89)
+- [bff9a6c](https://github.com/stashed/mongodb/commit/bff9a6c) [cherry-pick] Update License (#66) (#77)
+- [453ee35](https://github.com/stashed/mongodb/commit/453ee35) Add commands to update chart version (#65)
+- [aa8bb11](https://github.com/stashed/mongodb/commit/aa8bb11) [cherry-pick] Update update-release-tracker.sh (#64)
+- [14cbd6b](https://github.com/stashed/mongodb/commit/14cbd6b) Add script to update release tracker on pr merge (#41)
+- [9c196ca](https://github.com/stashed/mongodb/commit/9c196ca) [cherry-pick] Update release.yml (#42) (#53)
+- [e23a429](https://github.com/stashed/mongodb/commit/e23a429) [cherry-pick] Add workflow to cherry pick commits to master (#29) (#40)
+- [9e025b1](https://github.com/stashed/mongodb/commit/9e025b1) Fix chart release process (#28)
+- [3eff74c](https://github.com/stashed/mongodb/commit/3eff74c) Update .kodiak.toml
+- [d0b7108](https://github.com/stashed/mongodb/commit/d0b7108) Allow overwriting secret key via SecretTransformation (#27)
+- [5fc5d46](https://github.com/stashed/mongodb/commit/5fc5d46) Make waitTimeout configurable through flag (#26)
+- [b5df21e](https://github.com/stashed/mongodb/commit/b5df21e) Create .kodiak.toml
+- [7ee7c62](https://github.com/stashed/mongodb/commit/7ee7c62) Fix typos
+- [28c4d75](https://github.com/stashed/mongodb/commit/28c4d75) Update to Kubernetes v1.18.3 (#25)
+- [579ca21](https://github.com/stashed/mongodb/commit/579ca21) Update crazy-max/ghaction-docker-buildx flag
+- [0f7868a](https://github.com/stashed/mongodb/commit/0f7868a) Fix typos
+- [812f4a6](https://github.com/stashed/mongodb/commit/812f4a6) Trigger the workflow on push or pull request
+- [47f71ff](https://github.com/stashed/mongodb/commit/47f71ff) Auto generate chart readme file
+- [c6e0879](https://github.com/stashed/mongodb/commit/c6e0879) Correctly mark optional fields
+- [ce90c63](https://github.com/stashed/mongodb/commit/ce90c63) Add openapi v3 schema for values file (#21)
+
+
+
+## [stashed/mysql](https://github.com/stashed/mysql)
+
+### [5.7.25-v1](https://github.com/stashed/mysql/releases/tag/5.7.25-v1)
+
+- [87d41e0](https://github.com/stashed/mysql/commit/87d41e0) Prepare for release 5.7.25-v1 (#103)
+- [263f795](https://github.com/stashed/mysql/commit/263f795) Prepare for release 5.7.25-rc.20200827 (#99)
+- [96023d1](https://github.com/stashed/mysql/commit/96023d1) [cherry-pick] Upload charts without updating index (#96)
+- [3cb98d3](https://github.com/stashed/mysql/commit/3cb98d3) Prepare for release 5.7.25-rc.20200826 (#92)
+- [d5b1978](https://github.com/stashed/mysql/commit/d5b1978) [cherry-pick] Update README.md (#89)
+- [813ee01](https://github.com/stashed/mysql/commit/813ee01) Prepare for release 5.7.25-beta.20200826 (#85)
+- [e646be7](https://github.com/stashed/mysql/commit/e646be7) [cherry-pick] Update Stash installation link (#81) (#82)
+- [ecc7d0c](https://github.com/stashed/mysql/commit/ecc7d0c) [cherry-pick] Fix output format (#46) (#78)
+- [7fcbd24](https://github.com/stashed/mysql/commit/7fcbd24) [cherry-pick] Pass image tag in values.yaml file (#74) (#75)
+- [3188584](https://github.com/stashed/mysql/commit/3188584) [cherry-pick] Update chart icon (#71)
+- [9060c7a](https://github.com/stashed/mysql/commit/9060c7a) [cherry-pick] Make chart registry configurable (#67) (#68)
+- [422a411](https://github.com/stashed/mysql/commit/422a411) Prepare for release 5.7.25-beta.20200709 (#63)
+- [e345110](https://github.com/stashed/mysql/commit/e345110) [cherry-pick] Build docker image in release workflow (#59) (#60)
+- [3a44b41](https://github.com/stashed/mysql/commit/3a44b41) Prepare for release 5.7.25-beta.20200708 (#55)
+- [7e2984b](https://github.com/stashed/mysql/commit/7e2984b) [cherry-pick] Publish to testing dir for alpha/beta releases (#51) (#52)
+- [aa1eac2](https://github.com/stashed/mysql/commit/aa1eac2) [cherry-pick] Update License (#47) (#48)
+- [d4370c9](https://github.com/stashed/mysql/commit/d4370c9) Add commands to update chart version (#45)
+- [38fb308](https://github.com/stashed/mysql/commit/38fb308) [cherry-pick] Update update-release-tracker.sh (#42)
+- [f3bfd48](https://github.com/stashed/mysql/commit/f3bfd48) [cherry-pick] Update update-release-tracker.sh (#39)
+- [56e92c4](https://github.com/stashed/mysql/commit/56e92c4) [cherry-pick] Update release.yml (#36)
+- [be341e7](https://github.com/stashed/mysql/commit/be341e7) [cherry-pick] Add script to update release tracker on pr merge (#32) (#33)
+- [96504a7](https://github.com/stashed/mysql/commit/96504a7) [cherry-pick] Add workflow to cherry pick commits to master (#28) (#29)
+- [fcbe891](https://github.com/stashed/mysql/commit/fcbe891) Fix chart release process (#27)
+- [c012edf](https://github.com/stashed/mysql/commit/c012edf) Update .kodiak.toml
+- [0d22657](https://github.com/stashed/mysql/commit/0d22657) Allow overwriting secret key via SecretTransformation (#26)
+- [f717a19](https://github.com/stashed/mysql/commit/f717a19) Fix unit tests (#25)
+- [d4f5c4c](https://github.com/stashed/mysql/commit/d4f5c4c) Create .kodiak.toml
+- [2bfa098](https://github.com/stashed/mysql/commit/2bfa098) Fix typos
+- [5c1a53d](https://github.com/stashed/mysql/commit/5c1a53d) mend
+- [9eb402f](https://github.com/stashed/mysql/commit/9eb402f) Update to Kubernetes v1.18.3 (#24)
+- [4d4afa2](https://github.com/stashed/mysql/commit/4d4afa2) Fix waitForDBReady() logic + Make timeout configurable (#23)
+- [4548802](https://github.com/stashed/mysql/commit/4548802) Update crazy-max/ghaction-docker-buildx flag
+- [ce1fa72](https://github.com/stashed/mysql/commit/ce1fa72) Trigger the workflow on push or pull request
+- [dad10df](https://github.com/stashed/mysql/commit/dad10df) Auto generate chart readme file
+- [462eecf](https://github.com/stashed/mysql/commit/462eecf) Correctly mark optional fields
+- [424ec5a](https://github.com/stashed/mysql/commit/424ec5a) Add openapi v3 schema for values file (#20)
+
+
+### [8.0.3-v1](https://github.com/stashed/mysql/releases/tag/8.0.3-v1)
+
+- [cc49837](https://github.com/stashed/mysql/commit/cc49837) Prepare for release 8.0.3-v1 (#105)
+- [7d02720](https://github.com/stashed/mysql/commit/7d02720) Prepare for release 8.0.3-rc.20200827 (#101)
+- [dc8e2b5](https://github.com/stashed/mysql/commit/dc8e2b5) [cherry-pick] Upload charts without updating index (#98)
+- [f80506e](https://github.com/stashed/mysql/commit/f80506e) Prepare for release 8.0.3-rc.20200826 (#94)
+- [130b967](https://github.com/stashed/mysql/commit/130b967) [cherry-pick] Update README.md (#91)
+- [7326b37](https://github.com/stashed/mysql/commit/7326b37) Prepare for release 8.0.3-beta.20200826 (#87)
+- [72ba0ee](https://github.com/stashed/mysql/commit/72ba0ee) [cherry-pick] Update Stash installation link (#81) (#84)
+- [3e856a9](https://github.com/stashed/mysql/commit/3e856a9) [cherry-pick] Fix output format (#46) (#80)
+- [8621d51](https://github.com/stashed/mysql/commit/8621d51) [cherry-pick] Pass image tag in values.yaml file (#74) (#77)
+- [41702eb](https://github.com/stashed/mysql/commit/41702eb) [cherry-pick] Update chart icon (#73)
+- [31740f9](https://github.com/stashed/mysql/commit/31740f9) [cherry-pick] Make chart registry configurable (#67) (#70)
+- [ced3feb](https://github.com/stashed/mysql/commit/ced3feb) Prepare for release 8.0.3-beta.20200709 (#65)
+- [8299693](https://github.com/stashed/mysql/commit/8299693) [cherry-pick] Build docker image in release workflow (#59) (#62)
+- [18cc48f](https://github.com/stashed/mysql/commit/18cc48f) Prepare for release 8.0.3-beta.20200708 (#57)
+- [4e94b93](https://github.com/stashed/mysql/commit/4e94b93) [cherry-pick] Publish to testing dir for alpha/beta releases (#51) (#54)
+- [1c7bfc4](https://github.com/stashed/mysql/commit/1c7bfc4) [cherry-pick] Update License (#47) (#50)
+- [56485b1](https://github.com/stashed/mysql/commit/56485b1) Add commands to update chart version (#45)
+- [4f200fd](https://github.com/stashed/mysql/commit/4f200fd) [cherry-pick] Update update-release-tracker.sh (#44)
+- [0df0fc6](https://github.com/stashed/mysql/commit/0df0fc6) [cherry-pick] Update update-release-tracker.sh (#41)
+- [432da4e](https://github.com/stashed/mysql/commit/432da4e) [cherry-pick] Update release.yml (#38)
+- [0f1c7b3](https://github.com/stashed/mysql/commit/0f1c7b3) [cherry-pick] Add script to update release tracker on pr merge (#32) (#35)
+- [287a12f](https://github.com/stashed/mysql/commit/287a12f) [cherry-pick] Add workflow to cherry pick commits to master (#28) (#31)
+- [a962fe3](https://github.com/stashed/mysql/commit/a962fe3) Fix chart release process (#27)
+- [83c0565](https://github.com/stashed/mysql/commit/83c0565) Update .kodiak.toml
+- [a87889d](https://github.com/stashed/mysql/commit/a87889d) Allow overwriting secret key via SecretTransformation (#26)
+- [ca8f6b8](https://github.com/stashed/mysql/commit/ca8f6b8) Fix unit tests (#25)
+- [a38f3d9](https://github.com/stashed/mysql/commit/a38f3d9) Create .kodiak.toml
+- [119de10](https://github.com/stashed/mysql/commit/119de10) Fix typos
+- [71efc34](https://github.com/stashed/mysql/commit/71efc34) mend
+- [d4b025d](https://github.com/stashed/mysql/commit/d4b025d) Update to Kubernetes v1.18.3 (#24)
+- [270997e](https://github.com/stashed/mysql/commit/270997e) Fix waitForDBReady() logic + Make timeout configurable (#23)
+- [764ab66](https://github.com/stashed/mysql/commit/764ab66) Update crazy-max/ghaction-docker-buildx flag
+- [1325c75](https://github.com/stashed/mysql/commit/1325c75) Trigger the workflow on push or pull request
+- [dc106c2](https://github.com/stashed/mysql/commit/dc106c2) Auto generate chart readme file
+- [cb99aeb](https://github.com/stashed/mysql/commit/cb99aeb) Correctly mark optional fields
+- [0d30048](https://github.com/stashed/mysql/commit/0d30048) Add openapi v3 schema for values file (#20)
+
+
+### [8.0.14-v1](https://github.com/stashed/mysql/releases/tag/8.0.14-v1)
+
+- [ced706b](https://github.com/stashed/mysql/commit/ced706b) Prepare for release 8.0.14-v1 (#104)
+- [720aa02](https://github.com/stashed/mysql/commit/720aa02) Prepare for release 8.0.14-rc.20200827 (#100)
+- [7019c00](https://github.com/stashed/mysql/commit/7019c00) [cherry-pick] Upload charts without updating index (#97)
+- [0b6f158](https://github.com/stashed/mysql/commit/0b6f158) Prepare for release 8.0.14-rc.20200826 (#93)
+- [e4c86da](https://github.com/stashed/mysql/commit/e4c86da) [cherry-pick] Update README.md (#90)
+- [5816915](https://github.com/stashed/mysql/commit/5816915) Prepare for release 8.0.14-beta.20200826 (#86)
+- [96b78ca](https://github.com/stashed/mysql/commit/96b78ca) [cherry-pick] Update Stash installation link (#81) (#83)
+- [4f6c15b](https://github.com/stashed/mysql/commit/4f6c15b) [cherry-pick] Fix output format (#46) (#79)
+- [9da1616](https://github.com/stashed/mysql/commit/9da1616) [cherry-pick] Pass image tag in values.yaml file (#74) (#76)
+- [72edf00](https://github.com/stashed/mysql/commit/72edf00) [cherry-pick] Update chart icon (#72)
+- [9f253db](https://github.com/stashed/mysql/commit/9f253db) [cherry-pick] Make chart registry configurable (#67) (#69)
+- [bf2dd2d](https://github.com/stashed/mysql/commit/bf2dd2d) Prepare for release 8.0.14-beta.20200709 (#64)
+- [226b3a9](https://github.com/stashed/mysql/commit/226b3a9) [cherry-pick] Build docker image in release workflow (#59) (#61)
+- [5a303f2](https://github.com/stashed/mysql/commit/5a303f2) Prepare for release 8.0.14-beta.20200708 (#56)
+- [840101a](https://github.com/stashed/mysql/commit/840101a) [cherry-pick] Publish to testing dir for alpha/beta releases (#51) (#53)
+- [9cf212d](https://github.com/stashed/mysql/commit/9cf212d) [cherry-pick] Update License (#47) (#49)
+- [4d460b1](https://github.com/stashed/mysql/commit/4d460b1) Add commands to update chart version (#45)
+- [ad14dcd](https://github.com/stashed/mysql/commit/ad14dcd) [cherry-pick] Update update-release-tracker.sh (#43)
+- [7612f08](https://github.com/stashed/mysql/commit/7612f08) [cherry-pick] Update update-release-tracker.sh (#40)
+- [bb67fea](https://github.com/stashed/mysql/commit/bb67fea) [cherry-pick] Update release.yml (#37)
+- [5551469](https://github.com/stashed/mysql/commit/5551469) [cherry-pick] Add script to update release tracker on pr merge (#32) (#34)
+- [cf2d0a5](https://github.com/stashed/mysql/commit/cf2d0a5) [cherry-pick] Add workflow to cherry pick commits to master (#28) (#30)
+- [b983837](https://github.com/stashed/mysql/commit/b983837) Fix chart release process (#27)
+- [e2d3718](https://github.com/stashed/mysql/commit/e2d3718) Update .kodiak.toml
+- [1779968](https://github.com/stashed/mysql/commit/1779968) Allow overwriting secret key via SecretTransformation (#26)
+- [1ff9fa6](https://github.com/stashed/mysql/commit/1ff9fa6) Fix unit tests (#25)
+- [8c86606](https://github.com/stashed/mysql/commit/8c86606) Create .kodiak.toml
+- [d6cfde9](https://github.com/stashed/mysql/commit/d6cfde9) Fix typos
+- [065eb14](https://github.com/stashed/mysql/commit/065eb14) mend
+- [43335f5](https://github.com/stashed/mysql/commit/43335f5) Update to Kubernetes v1.18.3 (#24)
+- [9d5a550](https://github.com/stashed/mysql/commit/9d5a550) Fix waitForDBReady() logic + Make timeout configurable (#23)
+- [1ce533a](https://github.com/stashed/mysql/commit/1ce533a) Update crazy-max/ghaction-docker-buildx flag
+- [4daf2f0](https://github.com/stashed/mysql/commit/4daf2f0) Trigger the workflow on push or pull request
+- [dee1282](https://github.com/stashed/mysql/commit/dee1282) Auto generate chart readme file
+- [857d7dc](https://github.com/stashed/mysql/commit/857d7dc) Correctly mark optional fields
+- [915ff47](https://github.com/stashed/mysql/commit/915ff47) Add openapi v3 schema for values file (#20)
+
+
+
+## [stashed/percona-xtradb](https://github.com/stashed/percona-xtradb)
+
+### [5.7-v1](https://github.com/stashed/percona-xtradb/releases/tag/5.7-v1)
+
+
+
+
+## [stashed/postgres](https://github.com/stashed/postgres)
+
+### [9.6-v1](https://github.com/stashed/postgres/releases/tag/9.6-v1)
+
+- [473cc47](https://github.com/stashed/postgres/commit/473cc47) Prepare for release 9.6-v1 (#169)
+- [e9febb8](https://github.com/stashed/postgres/commit/e9febb8) Prepare for release 9.6-rc.20200827 (#163)
+- [3f724ee](https://github.com/stashed/postgres/commit/3f724ee) [cherry-pick] Upload charts without updating index (#158)
+- [5715456](https://github.com/stashed/postgres/commit/5715456) Prepare for release 9.6-rc.20200826 (#152)
+- [0442f99](https://github.com/stashed/postgres/commit/0442f99) [cherry-pick] Update README.md (#147)
+- [61c4425](https://github.com/stashed/postgres/commit/61c4425) Prepare for release 9.6-beta.20200826 (#141)
+- [b313c2c](https://github.com/stashed/postgres/commit/b313c2c) Update Stash installation link (#131) (#136)
+- [d73595e](https://github.com/stashed/postgres/commit/d73595e) [cherry-pick] Update twitter handle (#125) (#130)
+- [875edd5](https://github.com/stashed/postgres/commit/875edd5) [cherry-pick] Use image tag same as the $APP_VERSION (#114) (#124)
+- [5a9a784](https://github.com/stashed/postgres/commit/5a9a784) [cherry-pick] Fix output format + Add PreBackupActions logic (#113) (#119)
+- [ce47f3a](https://github.com/stashed/postgres/commit/ce47f3a) [cherry-pick] Update chart icon (#112)
+- [decfbb0](https://github.com/stashed/postgres/commit/decfbb0) [cherry-pick] Make chart registry configurable (#102) (#107)
+- [5befa82](https://github.com/stashed/postgres/commit/5befa82) Prepare for release 9.6-beta.20200709 (#100)
+- [52fab57](https://github.com/stashed/postgres/commit/52fab57) [cherry-pick] Build docker images in release workflow (#90) (#95)
+- [d85fc80](https://github.com/stashed/postgres/commit/d85fc80) Prepare for release 9.6-beta.20200708 (#88)
+- [fbd6766](https://github.com/stashed/postgres/commit/fbd6766) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#83)
+- [1b32879](https://github.com/stashed/postgres/commit/1b32879) [cherry-pick] Update License (#72) (#77)
+- [388ddee](https://github.com/stashed/postgres/commit/388ddee) Add commands to update chart version (#71)
+- [875c1f0](https://github.com/stashed/postgres/commit/875c1f0) [cherry-pick] Update update-release-tracker.sh (#70)
+- [0e71e2d](https://github.com/stashed/postgres/commit/0e71e2d) [cherry-pick] Update update-release-tracker.sh (#65)
+- [bbfac61](https://github.com/stashed/postgres/commit/bbfac61) [cherry-pick] Update release.yml (#55) (#60)
+- [986d0a7](https://github.com/stashed/postgres/commit/986d0a7) [cherry-pick] Add script to update release tracker on pr merge (#49) (#54)
+- [6edaf36](https://github.com/stashed/postgres/commit/6edaf36) [cherry-pick] Remove /cherry-pick from cherry picked prs (#43) (#48)
+- [6743dbe](https://github.com/stashed/postgres/commit/6743dbe) [cherry-pick] Add workflow to cherry pick commits to master (#37) (#42)
+- [fb4f222](https://github.com/stashed/postgres/commit/fb4f222) Fix chart release process (#36)
+- [b5ddf5f](https://github.com/stashed/postgres/commit/b5ddf5f) Update .kodiak.toml
+- [7951787](https://github.com/stashed/postgres/commit/7951787) Fix waitForDBReady() logic + Make timeout configurable (#35)
+- [e7bb18f](https://github.com/stashed/postgres/commit/e7bb18f) Create .kodiak.toml
+- [60acc09](https://github.com/stashed/postgres/commit/60acc09) Merge pull request Allow overriding secret keys from AppBinding #33
+- [aaff7fb](https://github.com/stashed/postgres/commit/aaff7fb) Fix typos (#32)
+- [568f584](https://github.com/stashed/postgres/commit/568f584) Update to Kubernetes v1.18.3 (#34)
+- [098bb78](https://github.com/stashed/postgres/commit/098bb78) Update crazy-max/ghaction-docker-buildx flag
+- [4385362](https://github.com/stashed/postgres/commit/4385362) function-args: add pg-back-cmd option
+- [7cd065c](https://github.com/stashed/postgres/commit/7cd065c) Trigger the workflow on push or pull request
+- [b63e3e5](https://github.com/stashed/postgres/commit/b63e3e5) Auto generate chart readme file
+- [dea1a41](https://github.com/stashed/postgres/commit/dea1a41) Correctly mark optional fields
+- [efc4283](https://github.com/stashed/postgres/commit/efc4283) Add openapi v3 schema for values file (#27)
+
+
+### [10.2-v1](https://github.com/stashed/postgres/releases/tag/10.2-v1)
+
+- [7973fe4](https://github.com/stashed/postgres/commit/7973fe4) Prepare for release 10.2-v1 (#165)
+- [fd9fc7a](https://github.com/stashed/postgres/commit/fd9fc7a) Prepare for release 10.2-rc.20200827 (#159)
+- [7d1033a](https://github.com/stashed/postgres/commit/7d1033a) [cherry-pick] Upload charts without updating index (#154)
+- [4777da6](https://github.com/stashed/postgres/commit/4777da6) Prepare for release 10.2-rc.20200826 (#148)
+- [2f2a469](https://github.com/stashed/postgres/commit/2f2a469) [cherry-pick] Update README.md (#143)
+- [ac65186](https://github.com/stashed/postgres/commit/ac65186) Prepare for release 10.2-beta.20200826 (#137)
+- [1757b5f](https://github.com/stashed/postgres/commit/1757b5f) [cherry-pick] Update Stash installation link (#131) (#132)
+- [56f90c7](https://github.com/stashed/postgres/commit/56f90c7) [cherry-pick] Update twitter handle (#125) (#126)
+- [9734711](https://github.com/stashed/postgres/commit/9734711) [cherry-pick] Use image tag same as the $APP_VERSION (#114) (#120)
+- [9556ade](https://github.com/stashed/postgres/commit/9556ade) [cherry-pick] Fix output format + Add PreBackupActions logic (#113) (#115)
+- [ce7257e](https://github.com/stashed/postgres/commit/ce7257e) [cherry-pick] Update chart icon (#108)
+- [754640f](https://github.com/stashed/postgres/commit/754640f) [cherry-pick] Make chart registry configurable (#102) (#103)
+- [d8a2be0](https://github.com/stashed/postgres/commit/d8a2be0) Prepare for release 10.2-beta.20200709 (#96)
+- [0bba297](https://github.com/stashed/postgres/commit/0bba297) [cherry-pick] Build docker images in release workflow (#90) (#91)
+- [168bd5a](https://github.com/stashed/postgres/commit/168bd5a) Prepare for release 10.2-beta.20200708 (#84)
+- [5ad2e00](https://github.com/stashed/postgres/commit/5ad2e00) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#79)
+- [8eb154d](https://github.com/stashed/postgres/commit/8eb154d) [cherry-pick] Update License (#72) (#73)
+- [27604a5](https://github.com/stashed/postgres/commit/27604a5) Add commands to update chart version (#71)
+- [bac456e](https://github.com/stashed/postgres/commit/bac456e) [cherry-pick] Update update-release-tracker.sh (#66)
+- [a50a3a8](https://github.com/stashed/postgres/commit/a50a3a8) [cherry-pick] Update update-release-tracker.sh (#61)
+- [2d792b7](https://github.com/stashed/postgres/commit/2d792b7) [cherry-pick] Update release.yml (#55) (#56)
+- [c4603ac](https://github.com/stashed/postgres/commit/c4603ac) [cherry-pick] Add script to update release tracker on pr merge (#49) (#50)
+- [0c08bad](https://github.com/stashed/postgres/commit/0c08bad) [cherry-pick] Remove /cherry-pick from cherry picked prs (#43) (#44)
+- [6764fe3](https://github.com/stashed/postgres/commit/6764fe3) [cherry-pick] Add workflow to cherry pick commits to master (#37) (#38)
+- [826f678](https://github.com/stashed/postgres/commit/826f678) Fix chart release process (#36)
+- [e5146e3](https://github.com/stashed/postgres/commit/e5146e3) Update .kodiak.toml
+- [d4d68ef](https://github.com/stashed/postgres/commit/d4d68ef) Fix waitForDBReady() logic + Make timeout configurable (#35)
+- [78fa0ac](https://github.com/stashed/postgres/commit/78fa0ac) Create .kodiak.toml
+- [23cfc56](https://github.com/stashed/postgres/commit/23cfc56) Merge pull request Allow overriding secret keys from AppBinding #33
+- [0cdc7c9](https://github.com/stashed/postgres/commit/0cdc7c9) Fix typos (#32)
+- [a148ace](https://github.com/stashed/postgres/commit/a148ace) Update to Kubernetes v1.18.3 (#34)
+- [db126f4](https://github.com/stashed/postgres/commit/db126f4) Update crazy-max/ghaction-docker-buildx flag
+- [854a522](https://github.com/stashed/postgres/commit/854a522) function-args: add pg-back-cmd option
+- [e64e5b0](https://github.com/stashed/postgres/commit/e64e5b0) Trigger the workflow on push or pull request
+- [d667589](https://github.com/stashed/postgres/commit/d667589) Auto generate chart readme file
+- [f562d87](https://github.com/stashed/postgres/commit/f562d87) Correctly mark optional fields
+- [3c5b7bc](https://github.com/stashed/postgres/commit/3c5b7bc) Add openapi v3 schema for values file (#27)
+
+
+### [10.6-v1](https://github.com/stashed/postgres/releases/tag/10.6-v1)
+
+- [6b0077a](https://github.com/stashed/postgres/commit/6b0077a) Prepare for release 10.6-v1 (#166)
+- [4724218](https://github.com/stashed/postgres/commit/4724218) Prepare for release 10.6-rc.20200827 (#160)
+- [1167129](https://github.com/stashed/postgres/commit/1167129) [cherry-pick] Upload charts without updating index (#155)
+- [bd548b2](https://github.com/stashed/postgres/commit/bd548b2) Prepare for release 10.6-rc.20200826 (#149)
+- [3d86318](https://github.com/stashed/postgres/commit/3d86318) [cherry-pick] Update README.md (#144)
+- [1446996](https://github.com/stashed/postgres/commit/1446996) Prepare for release 10.6-beta.20200826 (#138)
+- [720cc7b](https://github.com/stashed/postgres/commit/720cc7b) [cherry-pick] Update Stash installation link (#131) (#133)
+- [6b17dea](https://github.com/stashed/postgres/commit/6b17dea) [cherry-pick] Update twitter handle (#125) (#127)
+- [d1af1c6](https://github.com/stashed/postgres/commit/d1af1c6) [cherry-pick] Use image tag same as the $APP_VERSION (#114) (#121)
+- [cd2f8ec](https://github.com/stashed/postgres/commit/cd2f8ec) [cherry-pick] Fix output format + Add PreBackupActions logic (#113) (#116)
+- [d89559c](https://github.com/stashed/postgres/commit/d89559c) [cherry-pick] Update chart icon (#109)
+- [192c564](https://github.com/stashed/postgres/commit/192c564) [cherry-pick] Make chart registry configurable (#102) (#104)
+- [78fdd94](https://github.com/stashed/postgres/commit/78fdd94) Prepare for release 10.6-beta.20200709 (#97)
+- [c70d2d9](https://github.com/stashed/postgres/commit/c70d2d9) [cherry-pick] Build docker images in release workflow (#90) (#92)
+- [0c873e0](https://github.com/stashed/postgres/commit/0c873e0) Prepare for release 10.6-beta.20200708 (#85)
+- [aa80111](https://github.com/stashed/postgres/commit/aa80111) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#80)
+- [2989c96](https://github.com/stashed/postgres/commit/2989c96) [cherry-pick] Update License (#72) (#74)
+- [8ae0673](https://github.com/stashed/postgres/commit/8ae0673) Add commands to update chart version (#71)
+- [44bf83d](https://github.com/stashed/postgres/commit/44bf83d) [cherry-pick] Update update-release-tracker.sh (#67)
+- [e20f246](https://github.com/stashed/postgres/commit/e20f246) [cherry-pick] Update update-release-tracker.sh (#62)
+- [0120b84](https://github.com/stashed/postgres/commit/0120b84) [cherry-pick] Update release.yml (#55) (#57)
+- [ddfc26d](https://github.com/stashed/postgres/commit/ddfc26d) [cherry-pick] Add script to update release tracker on pr merge (#49) (#51)
+- [bde7425](https://github.com/stashed/postgres/commit/bde7425) [cherry-pick] Remove /cherry-pick from cherry picked prs (#43) (#45)
+- [00a5c97](https://github.com/stashed/postgres/commit/00a5c97) [cherry-pick] Add workflow to cherry pick commits to master (#37) (#39)
+- [1720053](https://github.com/stashed/postgres/commit/1720053) Fix chart release process (#36)
+- [f67d343](https://github.com/stashed/postgres/commit/f67d343) Update .kodiak.toml
+- [6f70879](https://github.com/stashed/postgres/commit/6f70879) Fix waitForDBReady() logic + Make timeout configurable (#35)
+- [39a7fc4](https://github.com/stashed/postgres/commit/39a7fc4) Create .kodiak.toml
+- [4ba7a9f](https://github.com/stashed/postgres/commit/4ba7a9f) Merge pull request Allow overriding secret keys from AppBinding #33
+- [804433c](https://github.com/stashed/postgres/commit/804433c) Fix typos (#32)
+- [42e792f](https://github.com/stashed/postgres/commit/42e792f) Update to Kubernetes v1.18.3 (#34)
+- [b15f604](https://github.com/stashed/postgres/commit/b15f604) Update crazy-max/ghaction-docker-buildx flag
+- [288b3ea](https://github.com/stashed/postgres/commit/288b3ea) function-args: add pg-back-cmd option
+- [d0ff5d9](https://github.com/stashed/postgres/commit/d0ff5d9) Trigger the workflow on push or pull request
+- [23e9f4a](https://github.com/stashed/postgres/commit/23e9f4a) Auto generate chart readme file
+- [9431b3a](https://github.com/stashed/postgres/commit/9431b3a) Correctly mark optional fields
+- [0fe49c0](https://github.com/stashed/postgres/commit/0fe49c0) Add openapi v3 schema for values file (#27)
+
+
+### [11.1-v1](https://github.com/stashed/postgres/releases/tag/11.1-v1)
+
+- [229fba7](https://github.com/stashed/postgres/commit/229fba7) Prepare for release 11.1-v1 (#167)
+- [0fbd548](https://github.com/stashed/postgres/commit/0fbd548) Prepare for release 11.1-rc.20200827 (#161)
+- [fc8cb58](https://github.com/stashed/postgres/commit/fc8cb58) [cherry-pick] Upload charts without updating index (#156)
+- [32e008c](https://github.com/stashed/postgres/commit/32e008c) Prepare for release 11.1-rc.20200826 (#150)
+- [aa588fa](https://github.com/stashed/postgres/commit/aa588fa) [cherry-pick] Update README.md (#145)
+- [0cc9647](https://github.com/stashed/postgres/commit/0cc9647) Prepare for release 11.1-beta.20200826 (#139)
+- [dff51be](https://github.com/stashed/postgres/commit/dff51be) [cherry-pick] Update Stash installation link (#131) (#134)
+- [b8480c8](https://github.com/stashed/postgres/commit/b8480c8) [cherry-pick] Update twitter handle (#125) (#128)
+- [33fe94b](https://github.com/stashed/postgres/commit/33fe94b) [cherry-pick] Use image tag same as the $APP_VERSION (#114) (#122)
+- [6a631b0](https://github.com/stashed/postgres/commit/6a631b0) [cherry-pick] Fix output format + Add PreBackupActions logic (#113) (#117)
+- [8bccb9c](https://github.com/stashed/postgres/commit/8bccb9c) [cherry-pick] Update chart icon (#110)
+- [aca1577](https://github.com/stashed/postgres/commit/aca1577) [cherry-pick] Make chart registry configurable (#102) (#105)
+- [81b21f0](https://github.com/stashed/postgres/commit/81b21f0) Prepare for release 11.1-beta.20200709 (#98)
+- [4fc87ef](https://github.com/stashed/postgres/commit/4fc87ef) [cherry-pick] Build docker images in release workflow (#90) (#93)
+- [2a43673](https://github.com/stashed/postgres/commit/2a43673) Prepare for release 11.1-beta.20200708 (#86)
+- [296b239](https://github.com/stashed/postgres/commit/296b239) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#81)
+- [c811e7e](https://github.com/stashed/postgres/commit/c811e7e) [cherry-pick] Update License (#72) (#75)
+- [7bf38e7](https://github.com/stashed/postgres/commit/7bf38e7) Add commands to update chart version (#71)
+- [6ecb8bc](https://github.com/stashed/postgres/commit/6ecb8bc) [cherry-pick] Update update-release-tracker.sh (#68)
+- [526e335](https://github.com/stashed/postgres/commit/526e335) [cherry-pick] Update update-release-tracker.sh (#63)
+- [e5fff5c](https://github.com/stashed/postgres/commit/e5fff5c) [cherry-pick] Update release.yml (#55) (#58)
+- [81f3b07](https://github.com/stashed/postgres/commit/81f3b07) [cherry-pick] Add script to update release tracker on pr merge (#49) (#52)
+- [5ba7bd6](https://github.com/stashed/postgres/commit/5ba7bd6) [cherry-pick] Remove /cherry-pick from cherry picked prs (#43) (#46)
+- [12adf32](https://github.com/stashed/postgres/commit/12adf32) [cherry-pick] Add workflow to cherry pick commits to master (#37) (#40)
+- [cac2584](https://github.com/stashed/postgres/commit/cac2584) Fix chart release process (#36)
+- [fadf4ec](https://github.com/stashed/postgres/commit/fadf4ec) Update .kodiak.toml
+- [46669d7](https://github.com/stashed/postgres/commit/46669d7) Fix waitForDBReady() logic + Make timeout configurable (#35)
+- [338ab6c](https://github.com/stashed/postgres/commit/338ab6c) Create .kodiak.toml
+- [3acfe21](https://github.com/stashed/postgres/commit/3acfe21) Merge pull request Allow overriding secret keys from AppBinding #33
+- [1c5cd1c](https://github.com/stashed/postgres/commit/1c5cd1c) Fix typos (#32)
+- [5c09c1b](https://github.com/stashed/postgres/commit/5c09c1b) Update to Kubernetes v1.18.3 (#34)
+- [ed629e5](https://github.com/stashed/postgres/commit/ed629e5) Update crazy-max/ghaction-docker-buildx flag
+- [0b8cd43](https://github.com/stashed/postgres/commit/0b8cd43) function-args: add pg-back-cmd option
+- [161a325](https://github.com/stashed/postgres/commit/161a325) Trigger the workflow on push or pull request
+- [062a652](https://github.com/stashed/postgres/commit/062a652) Auto generate chart readme file
+- [ec94eac](https://github.com/stashed/postgres/commit/ec94eac) Correctly mark optional fields
+- [5656c62](https://github.com/stashed/postgres/commit/5656c62) Add openapi v3 schema for values file (#27)
+
+
+### [11.2-v1](https://github.com/stashed/postgres/releases/tag/11.2-v1)
+
+- [e4e7c2c](https://github.com/stashed/postgres/commit/e4e7c2c) Prepare for release 11.2-v1 (#168)
+- [342b6bb](https://github.com/stashed/postgres/commit/342b6bb) Prepare for release 11.2-rc.20200827 (#162)
+- [4688cde](https://github.com/stashed/postgres/commit/4688cde) [cherry-pick] Upload charts without updating index (#157)
+- [a8f414d](https://github.com/stashed/postgres/commit/a8f414d) Prepare for release 11.2-rc.20200826 (#151)
+- [f9020fb](https://github.com/stashed/postgres/commit/f9020fb) [cherry-pick] Update README.md (#146)
+- [cf876d3](https://github.com/stashed/postgres/commit/cf876d3) Prepare for release 11.2-beta.20200826 (#140)
+- [22d4f2c](https://github.com/stashed/postgres/commit/22d4f2c) [cherry-pick] Update Stash installation link (#131) (#135)
+- [462bf9f](https://github.com/stashed/postgres/commit/462bf9f) [cherry-pick] Update twitter handle (#125) (#129)
+- [baa8b56](https://github.com/stashed/postgres/commit/baa8b56) [cherry-pick] Use image tag same as the $APP_VERSION (#114) (#123)
+- [b09b460](https://github.com/stashed/postgres/commit/b09b460) [cherry-pick] Fix output format + Add PreBackupActions logic (#113) (#118)
+- [08ea901](https://github.com/stashed/postgres/commit/08ea901) [cherry-pick] Update chart icon (#111)
+- [a6b8c9e](https://github.com/stashed/postgres/commit/a6b8c9e) [cherry-pick] Make chart registry configurable (#102) (#106)
+- [a3efd1a](https://github.com/stashed/postgres/commit/a3efd1a) Prepare for release 11.2-beta.20200709 (#99)
+- [c0a32e5](https://github.com/stashed/postgres/commit/c0a32e5) [cherry-pick] Build docker images in release workflow (#90) (#94)
+- [5c4b396](https://github.com/stashed/postgres/commit/5c4b396) Prepare for release 11.2-beta.20200708 (#87)
+- [00c2f4e](https://github.com/stashed/postgres/commit/00c2f4e) [cherry-pick] Publish to testing dir for alpha/beta releases (#78) (#82)
+- [5d795f9](https://github.com/stashed/postgres/commit/5d795f9) [cherry-pick] Update License (#72) (#76)
+- [03fd7d3](https://github.com/stashed/postgres/commit/03fd7d3) Add commands to update chart version (#71)
+- [a48d053](https://github.com/stashed/postgres/commit/a48d053) [cherry-pick] Update update-release-tracker.sh (#69)
+- [7ac5c11](https://github.com/stashed/postgres/commit/7ac5c11) [cherry-pick] Update update-release-tracker.sh (#64)
+- [ecf236a](https://github.com/stashed/postgres/commit/ecf236a) [cherry-pick] Update release.yml (#55) (#59)
+- [013242e](https://github.com/stashed/postgres/commit/013242e) [cherry-pick] Add script to update release tracker on pr merge (#49) (#53)
+- [c8b360b](https://github.com/stashed/postgres/commit/c8b360b) [cherry-pick] Remove /cherry-pick from cherry picked prs (#43) (#47)
+- [2503240](https://github.com/stashed/postgres/commit/2503240) [cherry-pick] Add workflow to cherry pick commits to master (#37) (#41)
+- [3f7525c](https://github.com/stashed/postgres/commit/3f7525c) Fix chart release process (#36)
+- [4afcc41](https://github.com/stashed/postgres/commit/4afcc41) Update .kodiak.toml
+- [861eaa3](https://github.com/stashed/postgres/commit/861eaa3) Fix waitForDBReady() logic + Make timeout configurable (#35)
+- [85ea8d6](https://github.com/stashed/postgres/commit/85ea8d6) Create .kodiak.toml
+- [f240c25](https://github.com/stashed/postgres/commit/f240c25) Merge pull request Allow overriding secret keys from AppBinding #33
+- [4e5898f](https://github.com/stashed/postgres/commit/4e5898f) Fix typos (#32)
+- [b4b61cf](https://github.com/stashed/postgres/commit/b4b61cf) Update to Kubernetes v1.18.3 (#34)
+- [62f2714](https://github.com/stashed/postgres/commit/62f2714) Update crazy-max/ghaction-docker-buildx flag
+- [962df30](https://github.com/stashed/postgres/commit/962df30) function-args: add pg-back-cmd option
+- [55e792e](https://github.com/stashed/postgres/commit/55e792e) Trigger the workflow on push or pull request
+- [66b4a51](https://github.com/stashed/postgres/commit/66b4a51) Auto generate chart readme file
+- [dd606bf](https://github.com/stashed/postgres/commit/dd606bf) Correctly mark optional fields
+- [efe4799](https://github.com/stashed/postgres/commit/efe4799) Add openapi v3 schema for values file (#27)
+
+
+
+## [stashed/stash](https://github.com/stashed/stash)
+
+### [v0.10.0](https://github.com/stashed/stash/releases/tag/v0.10.0)
+
+- [e58a2267](https://github.com/stashed/stash/commit/e58a2267) Prepare for release v0.10.0 (#1182)
+- [485f80c6](https://github.com/stashed/stash/commit/485f80c6) Prepare for release v0.10.0-rc.2 (#1181)
+- [20d585f4](https://github.com/stashed/stash/commit/20d585f4) Prepare for release v0.10.0-rc.1 (#1180)
+- [76fe3ebd](https://github.com/stashed/stash/commit/76fe3ebd) Create GitHub release from release workflow
+- [f3e5cccc](https://github.com/stashed/stash/commit/f3e5cccc) Fix installation link
+- [3ebb7788](https://github.com/stashed/stash/commit/3ebb7788) Prepare for release v0.10.0-rc.0 (#1179)
+- [48e5c87e](https://github.com/stashed/stash/commit/48e5c87e) Update Kubernetes v1.18.3 dependencies (#1178)
+- [c269c8ed](https://github.com/stashed/stash/commit/c269c8ed) Port changes from enterprise version (#1176)
+- [0fea720b](https://github.com/stashed/stash/commit/0fea720b) Update Kubernetes v1.18.3 dependencies (#1174)
+- [c4b6013f](https://github.com/stashed/stash/commit/c4b6013f) Update Kubernetes v1.18.3 dependencies (#1173)
+- [77b3eab8](https://github.com/stashed/stash/commit/77b3eab8) Update Kubernetes v1.18.3 dependencies (#1169)
+- [64f7c292](https://github.com/stashed/stash/commit/64f7c292) Update Kubernetes v1.18.3 dependencies (#1168)
+- [2d6fd7da](https://github.com/stashed/stash/commit/2d6fd7da) Update Kubernetes v1.18.3 dependencies (#1167)
+- [378de04d](https://github.com/stashed/stash/commit/378de04d) Update Kubernetes v1.18.3 dependencies (#1159)
+- [20decffa](https://github.com/stashed/stash/commit/20decffa) Build images in e2e workflow
+- [4919cb03](https://github.com/stashed/stash/commit/4919cb03) Allow configuring k8s in e2e tests (#1155)
+- [6e71662a](https://github.com/stashed/stash/commit/6e71662a) Update to Kubernetes v1.18.3 (#1154)
+- [a83021fd](https://github.com/stashed/stash/commit/a83021fd) Trigger e2e tests on /ok-to-test command (#1150)
+- [6bf44ceb](https://github.com/stashed/stash/commit/6bf44ceb) Update to Kubernetes v1.18.3 (#1149)
+- [bcbb3a98](https://github.com/stashed/stash/commit/bcbb3a98) Update to Kubernetes v1.18.3 (#1148)
+- [3b717aac](https://github.com/stashed/stash/commit/3b717aac) Prepare for release v0.10.0-beta.1 (#1146)
+- [c8b81cf7](https://github.com/stashed/stash/commit/c8b81cf7) Prepare for release v0.10.0-beta.0 (#1145)
+- [2d145f47](https://github.com/stashed/stash/commit/2d145f47) Clarify Docker images are dually licensed
+- [693ab7df](https://github.com/stashed/stash/commit/693ab7df) Update License (#1144)
+- [e13d67eb](https://github.com/stashed/stash/commit/e13d67eb) Update to Kubernetes v1.18.3 (#1142)
+- [26ee605a](https://github.com/stashed/stash/commit/26ee605a) Update ci.yml
+- [9fa95666](https://github.com/stashed/stash/commit/9fa95666) Add workflow to update docs (#1136)
+- [95a62a95](https://github.com/stashed/stash/commit/95a62a95) Update update-release-tracker.sh
+- [379c90d5](https://github.com/stashed/stash/commit/379c90d5) Update update-release-tracker.sh
+- [cd0a70ee](https://github.com/stashed/stash/commit/cd0a70ee) Use GITHUB_BASE_REF to detect target branch
+- [e27c5f66](https://github.com/stashed/stash/commit/e27c5f66) Add script to update release tracker on pr merge (#1132)
+- [b0dd5051](https://github.com/stashed/stash/commit/b0dd5051) Update .kodiak.toml
+- [e87bad80](https://github.com/stashed/stash/commit/e87bad80) Parameterize installer namespace
+- [da8d8956](https://github.com/stashed/stash/commit/da8d8956) Format CI workflows
+- [bbde40a3](https://github.com/stashed/stash/commit/bbde40a3) Update to Kubernetes v1.18.3 (#1129)
+- [38eb3781](https://github.com/stashed/stash/commit/38eb3781) Update to Kubernetes v1.18.3
+- [197aa7bd](https://github.com/stashed/stash/commit/197aa7bd) Create .kodiak.toml
+- [181ca49e](https://github.com/stashed/stash/commit/181ca49e) Update coverage script
+- [26602c96](https://github.com/stashed/stash/commit/26602c96) Merge pull request #1125 from stashed/fix-ci-tests
+- [54f87b78](https://github.com/stashed/stash/commit/54f87b78) Increase wait timeout
+- [43428085](https://github.com/stashed/stash/commit/43428085) Remove unnecessary test codes + run test in parallel
+- [8a780e0c](https://github.com/stashed/stash/commit/8a780e0c) Fix clone-pvc tests
+- [7027c0f6](https://github.com/stashed/stash/commit/7027c0f6) Fix E2E test
+- [31de588a](https://github.com/stashed/stash/commit/31de588a) Change GCS test bucket name to stash-ci (#1122)
+- [30a490a6](https://github.com/stashed/stash/commit/30a490a6) Merge pull request #1121 from stashed/baseline-psp
+- [419a18e3](https://github.com/stashed/stash/commit/419a18e3) Use StringSlice type flag
+- [9dd3804d](https://github.com/stashed/stash/commit/9dd3804d) Make PSP names configurable through flag
+- [e4edef44](https://github.com/stashed/stash/commit/e4edef44) Always use baseline PSP
+- [cf1538a0](https://github.com/stashed/stash/commit/cf1538a0) Use filepath.Join to generate Repository prefix for BackupBatch (#1120)
+- [be189169](https://github.com/stashed/stash/commit/be189169) Go back to using engineerd/setup-kind
+- [ae2d74fa](https://github.com/stashed/stash/commit/ae2d74fa) Update dependencies (#1117)
+- [a93a5b4c](https://github.com/stashed/stash/commit/a93a5b4c) Remove defaults from CRD v1beta1 (#1116)
+- [40e65761](https://github.com/stashed/stash/commit/40e65761) Use CRD v1 for Kubernetes >= 1.16 (#1115)
+- [7d851e53](https://github.com/stashed/stash/commit/7d851e53) Merge pull request #1114 from stashed/x7
+- [352ddeed](https://github.com/stashed/stash/commit/352ddeed) Use preinstalled kind
+- [11c9e422](https://github.com/stashed/stash/commit/11c9e422) Pass context
+- [21053603](https://github.com/stashed/stash/commit/21053603) Update to Kubernetes 1.18.3
+- [f450e9cc](https://github.com/stashed/stash/commit/f450e9cc) Add wait for target logic + add conditions for BackupConfiguration + BackupBatch + RestoreSession (#1108)
+- [8f8ff87e](https://github.com/stashed/stash/commit/8f8ff87e) Fix volume snapshot job cleanup (#1090)
+- [a4a868b5](https://github.com/stashed/stash/commit/a4a868b5) Merge pull request #1111 from stashed/fix-interimVolume
+- [108d0252](https://github.com/stashed/stash/commit/108d0252) Set BackupSession as owner of the pvc created from interimVolumeTemplate
+- [fd136c53](https://github.com/stashed/stash/commit/fd136c53) Use Go 1.14.3
+- [74c71d22](https://github.com/stashed/stash/commit/74c71d22) Update crazy-max/ghaction-docker-buildx flag
+- [f783899b](https://github.com/stashed/stash/commit/f783899b) Trigger the workflow on push to master
+- [e7eceb30](https://github.com/stashed/stash/commit/e7eceb30) Trigger the workflow on push or pull request
+- [fe479e8c](https://github.com/stashed/stash/commit/fe479e8c) Use kind v0.8.0
+- [9fc4665a](https://github.com/stashed/stash/commit/9fc4665a) Merge pull request #1093 from robotinfra/master
+- [ef2d57e3](https://github.com/stashed/stash/commit/ef2d57e3) fix typo succesSfully
+- [d8d35c49](https://github.com/stashed/stash/commit/d8d35c49) fix event types mismatch
+- [53dfe8b0](https://github.com/stashed/stash/commit/53dfe8b0) Update stash labels in Makefile
+- [c8081c1d](https://github.com/stashed/stash/commit/c8081c1d) Pass image pull secrets to helm chart
+- [37b9b312](https://github.com/stashed/stash/commit/37b9b312) Use Go 1.14.2 (#1074)
+- [09621974](https://github.com/stashed/stash/commit/09621974) Update K8s version 1.14.6 to 1.14.10 (#1084)
+- [8a1ab32c](https://github.com/stashed/stash/commit/8a1ab32c) Give backup triggering CronJob all permissions for Stash crds (#1083)
+- [53b932b1](https://github.com/stashed/stash/commit/53b932b1) Use kubectl 1.17 (#1082)
+- [5cdeebee](https://github.com/stashed/stash/commit/5cdeebee) Fix nil pointer exception during VolumeSnapshot (#1073)
+- [30630d60](https://github.com/stashed/stash/commit/30630d60) Assign returned error properly crateRestoreSessoin() (#1069)
+- [3fcbe1b7](https://github.com/stashed/stash/commit/3fcbe1b7) Update README.md to reflect Stash's capability properly (#1060)
+- [53513cfe](https://github.com/stashed/stash/commit/53513cfe) Update README.md
+- [d615e2c0](https://github.com/stashed/stash/commit/d615e2c0) Add license scan report and status (#1031)
+- [473dab81](https://github.com/stashed/stash/commit/473dab81) Use stash.appscode.dev/apimachinery@v0.9.0-rc.6
+- [81be166a](https://github.com/stashed/stash/commit/81be166a) Use stash.appscode.dev/apimachinery (#1051)
+- [99dcf0a5](https://github.com/stashed/stash/commit/99dcf0a5) Add support for specifying "region" for S3 backend (#1050)
+- [deeaaafe](https://github.com/stashed/stash/commit/deeaaafe) Fix event message (#1048)
+- [7bb2ae55](https://github.com/stashed/stash/commit/7bb2ae55) Merge pull request #1047 from stashed/rm-fsgroup
+- [a7c3a60b](https://github.com/stashed/stash/commit/a7c3a60b) Remove defaulting FSGroup
+- [49bf689d](https://github.com/stashed/stash/commit/49bf689d) Fix Repository CRDs print column (#1046)
+- [feb204be](https://github.com/stashed/stash/commit/feb204be) Update README.md to v0.9.0-rc.4
+- [ba1733eb](https://github.com/stashed/stash/commit/ba1733eb) Don't check if target exist from BackupSession creating CronJob (#1028)
+- [ddc65ceb](https://github.com/stashed/stash/commit/ddc65ceb) Fix ServiceAccount name mitchmatch (#1025)
+- [013e5254](https://github.com/stashed/stash/commit/013e5254) Suspend CronJob but keep instant backup working while backup is paused (#1024)
+- [64f75bb7](https://github.com/stashed/stash/commit/64f75bb7) Add stash specific prefix to automatically created resources (#1023)
+- [d44e0ae2](https://github.com/stashed/stash/commit/d44e0ae2) Fix CronJob creation failure handling (#1021)
+- [b2640d36](https://github.com/stashed/stash/commit/b2640d36) Use Go 1.13.6
+- [1eb8da6e](https://github.com/stashed/stash/commit/1eb8da6e) Update gendocs command (#1016)
+- [6f7c8191](https://github.com/stashed/stash/commit/6f7c8191) Add hook tests for BackupBatch (#1014)
+- [84272af9](https://github.com/stashed/stash/commit/84272af9) check nil pointer error (#1015)
+- [36ef1d2b](https://github.com/stashed/stash/commit/36ef1d2b) Enable tests for K8s 1.11 (#1013)
+- [7c774d77](https://github.com/stashed/stash/commit/7c774d77) Fix backup-batch issues (#1004)
+- [5bf1e2c2](https://github.com/stashed/stash/commit/5bf1e2c2) Bring back support for k8s 1.11 (#1008)
+- [d6e0fe4b](https://github.com/stashed/stash/commit/d6e0fe4b) Remove creationTimestamp from PartialObjectMeta (#1006)
+- [6ae79134](https://github.com/stashed/stash/commit/6ae79134) Add BackupBatch support (#985)
+- [ed42b159](https://github.com/stashed/stash/commit/ed42b159) Update twitter account (#1003)
+- [c8513185](https://github.com/stashed/stash/commit/c8513185) Add Repository Validation for local backend `mountPath` (#947)
+- [11f4c5e2](https://github.com/stashed/stash/commit/11f4c5e2) Fix invalid flag name for PVC restorer job (#960)
+- [93358115](https://github.com/stashed/stash/commit/93358115) Add Backend e2e Test (#975)
+- [ca688540](https://github.com/stashed/stash/commit/ca688540) Update client-go to kubernetes-1.16.3 (#987)
+- [e18f30dd](https://github.com/stashed/stash/commit/e18f30dd) Use RWX for restic output.json (#1001)
+- [4d9cdbc8](https://github.com/stashed/stash/commit/4d9cdbc8) Run `chmod` on `output.json` only by owner container + Improve… (#1000)
+- [8378f141](https://github.com/stashed/stash/commit/8378f141) Add Backup and Restore hooks (#978)
+- [a4dd1a1d](https://github.com/stashed/stash/commit/a4dd1a1d) Use helm chart instead of script to install operator (#999)
+- [ec5c9efd](https://github.com/stashed/stash/commit/ec5c9efd) Update hack/fmt.sh script
+- [54dbef4c](https://github.com/stashed/stash/commit/54dbef4c) Add helper library for CRDs (#977)
+- [16483ce1](https://github.com/stashed/stash/commit/16483ce1) Use kubebuilder generated CRD yamls (#971)
+- [eacba300](https://github.com/stashed/stash/commit/eacba300) Fix typo (#976)
+- [dd500b08](https://github.com/stashed/stash/commit/dd500b08) Use controller-tools@v0.2.2 to generate structural schema (#974)
+- [53331837](https://github.com/stashed/stash/commit/53331837) Migrate Repository status.size, Recovery status.observedGeneration (#969)
+- [69ef388b](https://github.com/stashed/stash/commit/69ef388b) Generate protobuf files for api types (#967)
+- [decea34f](https://github.com/stashed/stash/commit/decea34f) Fix Repository returned error message (#961)
+- [5a9e0356](https://github.com/stashed/stash/commit/5a9e0356) Apply valid name functionality (#950)
+- [122ed35f](https://github.com/stashed/stash/commit/122ed35f) Test installer against multiple k8s version (#953)
+- [63cfc0f9](https://github.com/stashed/stash/commit/63cfc0f9) Format shell scripts (#952)
+- [c77dfcd4](https://github.com/stashed/stash/commit/c77dfcd4) Add missing license header
+- [780fd2cb](https://github.com/stashed/stash/commit/780fd2cb) Rename Dockerfiles (#946)
+- [dc34560a](https://github.com/stashed/stash/commit/dc34560a) Add AutoBackup e2e test (#939)
+- [6979ff8b](https://github.com/stashed/stash/commit/6979ff8b) Enable race detector (#944)
+- [69acf528](https://github.com/stashed/stash/commit/69acf528) Add license header to files (#943)
+- [b2636f8b](https://github.com/stashed/stash/commit/b2636f8b) Don't add AppBinding labels in metric when AppBinding is not available (#942)
+- [18e1ab7e](https://github.com/stashed/stash/commit/18e1ab7e) Fix BackupSession creation for ReplicaSet (#940)
+- [8ce4ab86](https://github.com/stashed/stash/commit/8ce4ab86) Fix klog flag parsing
+- [efd614f9](https://github.com/stashed/stash/commit/efd614f9) Revendor
+- [f3fa386f](https://github.com/stashed/stash/commit/f3fa386f) Use crazy-max/ghaction-docker-buildx@v1
+- [5cc99c53](https://github.com/stashed/stash/commit/5cc99c53) Show diff when files `make verify` fails (#937)
+- [d20892dd](https://github.com/stashed/stash/commit/d20892dd) Update make fmt
+- [fc827b84](https://github.com/stashed/stash/commit/fc827b84) Split imports into 3 blocks (#936)
+- [269527cf](https://github.com/stashed/stash/commit/269527cf) Volume e2e test github action (#933)
+- [926dcd20](https://github.com/stashed/stash/commit/926dcd20) Fix BackupSession additional print column (#932)
+- [f052f7a2](https://github.com/stashed/stash/commit/f052f7a2) Remove spec.backupConfiguration from BackupSession (#931)
+- [d378ef2d](https://github.com/stashed/stash/commit/d378ef2d) Update e2e tests to run on GitHub actions (#917)
+- [bc27645c](https://github.com/stashed/stash/commit/bc27645c) Enable make ci (#928)
+- [9ef3cfeb](https://github.com/stashed/stash/commit/9ef3cfeb) Don't restart workload on backup pause+Use ImagePullPolicy: "Always" for Function-Task model (#929)
+- [a5f00836](https://github.com/stashed/stash/commit/a5f00836) Add status.observedGeneration (#927)
+- [57eadd03](https://github.com/stashed/stash/commit/57eadd03) Implement RetentionPolicy for VolumeSnapshot (#926)
+- [db709fdc](https://github.com/stashed/stash/commit/db709fdc) Verify generated files are up to date (#925)
+- [5fb54194](https://github.com/stashed/stash/commit/5fb54194) Update and rename go.yml to ci.yml (#922)
+- [0be34c5e](https://github.com/stashed/stash/commit/0be34c5e) Add probe and BackupBatch api (#890)
+- [a55b6e84](https://github.com/stashed/stash/commit/a55b6e84) Use core package from k8s.io/api repo (#921)
+- [f5a271be](https://github.com/stashed/stash/commit/f5a271be) Bring back dependency to github.com/golang/protobuf@v1.2.0 (#918)
+- [5dfeecbc](https://github.com/stashed/stash/commit/5dfeecbc) Update tag pattern for release pipeline
+- [e31f5e9a](https://github.com/stashed/stash/commit/e31f5e9a) Run e2e tests using GitHub actions (#909)
+- [8bb3ef36](https://github.com/stashed/stash/commit/8bb3ef36) Add app=stash label to crd yamls
+- [b50b47c9](https://github.com/stashed/stash/commit/b50b47c9) Generate swagger.json for v1beta1 (#916)
+- [095a4a6c](https://github.com/stashed/stash/commit/095a4a6c) Add release pipeline (#915)
+- [66926055](https://github.com/stashed/stash/commit/66926055) Fix Restore PVC using Task Function method (#897)
+- [404840e4](https://github.com/stashed/stash/commit/404840e4) Fix VolumeSnapshot Issues (#912)
+- [7f3b2250](https://github.com/stashed/stash/commit/7f3b2250) Add Kubebuilder annotations (#911)
+- [0a499f13](https://github.com/stashed/stash/commit/0a499f13) Use kubebuilder to generate crd yamls (#843)
+- [4903508f](https://github.com/stashed/stash/commit/4903508f) Update go.yml
+- [23c44bc0](https://github.com/stashed/stash/commit/23c44bc0) Introduce InterimVolumeTemplate and BackupHistoryLimit field. (#907)
+- [4ee56d63](https://github.com/stashed/stash/commit/4ee56d63) Make RetentionPolicy required in v1beta1 api (#905)
+- [5476cd7a](https://github.com/stashed/stash/commit/5476cd7a) Enable GitHub actions (#903)
+- [fe87b789](https://github.com/stashed/stash/commit/fe87b789) Fix snapshot listing for local backend (#902)
+- [5f49f5d2](https://github.com/stashed/stash/commit/5f49f5d2) Improve Error Handling + Code refactor (#891)
+- [88c84275](https://github.com/stashed/stash/commit/88c84275) Add `NICE` and `IONICE` into distroless image (#883)
+- [f63d5c1a](https://github.com/stashed/stash/commit/f63d5c1a) Improve metrics handling + make update status uniform (#872)
+- [ea68de24](https://github.com/stashed/stash/commit/ea68de24) Use default fsGroup: 65535 (#874)
+- [9bbcabab](https://github.com/stashed/stash/commit/9bbcabab) Add DumpEnv func to Restic Config file (#870)
+- [ebde15db](https://github.com/stashed/stash/commit/ebde15db) Allow to specify subPath in auto-backup annotation (#871)
+- [6c127323](https://github.com/stashed/stash/commit/6c127323) Silence docker buildx command (#866)
+- [5c47abc3](https://github.com/stashed/stash/commit/5c47abc3) Update README.md (#865)
+- [50f69ffe](https://github.com/stashed/stash/commit/50f69ffe) Use docker buildx to build docker image (#864)
+- [d8c0b1d8](https://github.com/stashed/stash/commit/d8c0b1d8) Update version in gendocs script
+- [cb972a98](https://github.com/stashed/stash/commit/cb972a98) Use github.com/Azure/go-autorest/autorest@v0.7.0 (#862)
+- [ae5c1325](https://github.com/stashed/stash/commit/ae5c1325) Remove the `bs` short name for BackupSession (#859)
+- [1c01d69d](https://github.com/stashed/stash/commit/1c01d69d) Use github.com/golang/protobuf@v1.2.0 (#855)
+- [998fac02](https://github.com/stashed/stash/commit/998fac02) New variable from type field of AppBinding + Fix RoleBinding nam… (#845)
+- [b97b7622](https://github.com/stashed/stash/commit/b97b7622) Fix resolving Task if volumeClaimTemplate is set in RestoreSession(#852)
+- [4ec6caf8](https://github.com/stashed/stash/commit/4ec6caf8) Rename BackupConfigurationTemplate to BackupBlueprint (#847)
+- [d8efb120](https://github.com/stashed/stash/commit/d8efb120) Use POD_ORDINAL env var to restore using PVC template (#849)
+- [8df5be99](https://github.com/stashed/stash/commit/8df5be99) Pass replicas from RestoreSession to Function (#848)
+- [ae5eabd4](https://github.com/stashed/stash/commit/ae5eabd4) Use variable for version in BackupConfigurationTemplate name (#846)
+- [fe5b2049](https://github.com/stashed/stash/commit/fe5b2049) Fix Platforms Issue (#844)
+- [33fc37cd](https://github.com/stashed/stash/commit/33fc37cd) Add support to restore using volumeClaimTemplate in Function-Task model (#841)
+- [3de534ba](https://github.com/stashed/stash/commit/3de534ba) Add GetSnapshotSize() function (#839)
+- [6bc80ce2](https://github.com/stashed/stash/commit/6bc80ce2) Fix travis build (#837)
+- [1c51a7c5](https://github.com/stashed/stash/commit/1c51a7c5) Add support for parallel backup & restore (#833)
+- [e250bb62](https://github.com/stashed/stash/commit/e250bb62) Fix RestoreSession replicas logic (#835)
+- [37618091](https://github.com/stashed/stash/commit/37618091) Use cron.ParseStandard helper
+- [5015a60d](https://github.com/stashed/stash/commit/5015a60d) Update azure-sdk-for-go dependencies (#836)
+- [920dfaea](https://github.com/stashed/stash/commit/920dfaea) Update github.com/appscode/go@master
+- [ca2fad07](https://github.com/stashed/stash/commit/ca2fad07) Use robfig/cron@v3 (#834)
+- [95728126](https://github.com/stashed/stash/commit/95728126) Fix restore Job parallel execution (#832)
+- [94cbae13](https://github.com/stashed/stash/commit/94cbae13) Remove unused code (#829)
+- [4dc11263](https://github.com/stashed/stash/commit/4dc11263) Generate docs files inside docs repo (#828)
+- [6fb5bc7f](https://github.com/stashed/stash/commit/6fb5bc7f) Create default Functions and Tasks from operator (#824)
+- [bb675f67](https://github.com/stashed/stash/commit/bb675f67) Fix restore job RBAC (#821)
+- [f96852fc](https://github.com/stashed/stash/commit/f96852fc) Fixed volumeSnapshot Error Issue (#819)
+- [08b0f50f](https://github.com/stashed/stash/commit/08b0f50f) fix default securityContext passing to restore init-container/job + fix container name (#823)
+- [4aa94675](https://github.com/stashed/stash/commit/4aa94675) Add License notice to makefile (#825)
+- [955b1adb](https://github.com/stashed/stash/commit/955b1adb) Make --image-tag a required flag. (#817)
+- [9ca08aa6](https://github.com/stashed/stash/commit/9ca08aa6) Always attempt to pull a newer image for `make container` (#818)
+- [b88cb9dc](https://github.com/stashed/stash/commit/b88cb9dc) Update constants.go
+- [aa0c41f4](https://github.com/stashed/stash/commit/aa0c41f4) Add PusgatewayURL input for Functions (#816)
+- [0a45b44a](https://github.com/stashed/stash/commit/0a45b44a) Restore PVCs from templates using Restic (#809)
+- [0729ab19](https://github.com/stashed/stash/commit/0729ab19) Add TARGET_RESOURCE  variable for BackupConfigurationTemplate (#814)
+- [bab795c2](https://github.com/stashed/stash/commit/bab795c2) Add make install, uninstall, purge commands (#813)
+- [604af0d5](https://github.com/stashed/stash/commit/604af0d5) Move chart & deploy scripts to github.com/stashed/installer (#811)
+- [521f441b](https://github.com/stashed/stash/commit/521f441b) Use stashed/docs repo
+- [4c89667d](https://github.com/stashed/stash/commit/4c89667d) Move docs to github.com/stashed/docs repo (#810)
+- [e6614482](https://github.com/stashed/stash/commit/e6614482) Fix travis build (#804)
+- [d8f565f4](https://github.com/stashed/stash/commit/d8f565f4) Pass labels to offshoot + add generic offshoot labels (#801)
+- [eadca45d](https://github.com/stashed/stash/commit/eadca45d) Move HandleResticError to util package (#806)
+- [df42b83f](https://github.com/stashed/stash/commit/df42b83f) Remove canary support (#805)
+- [82614d32](https://github.com/stashed/stash/commit/82614d32) Update Version.go (#803)
+- [74453ad8](https://github.com/stashed/stash/commit/74453ad8) Added ARM64 support to the install script and manifest (#802)
+- [24ece6cc](https://github.com/stashed/stash/commit/24ece6cc) Load modules from vendor folder for linter
+- [2672ee05](https://github.com/stashed/stash/commit/2672ee05) Add Makefile (#800)
+- [ac829f30](https://github.com/stashed/stash/commit/ac829f30) VolumeSnapshot (#787)
+- [a8f3172f](https://github.com/stashed/stash/commit/a8f3172f) Remove importance of order of rule in RestoreSession (#795)
+- [886649ed](https://github.com/stashed/stash/commit/886649ed) Skip BackupSession creation if target does not exist + use timestamp … (#797)
+- [f038d86e](https://github.com/stashed/stash/commit/f038d86e) Use absolute path as aliases for reference docs. (#796)
+- [b9100307](https://github.com/stashed/stash/commit/b9100307) Support PSP enabled cluster (#729)
+- [e94399dc](https://github.com/stashed/stash/commit/e94399dc) Use restic 0.9.5 (#789)
+- [e962a1c4](https://github.com/stashed/stash/commit/e962a1c4) Fix: User and group creation of stash for mongodb and mysql (#786)
+- [228df5a3](https://github.com/stashed/stash/commit/228df5a3) Update concept doc (#739)
+- [de9536cd](https://github.com/stashed/stash/commit/de9536cd) Update backup manager (#782)
+- [739273a5](https://github.com/stashed/stash/commit/739273a5) Configure Env variables for Functions (#780)
+- [c49b24f6](https://github.com/stashed/stash/commit/c49b24f6) Add support for backup cluster resources YAML (#721)
+- [91bce2fd](https://github.com/stashed/stash/commit/91bce2fd) Add "Supported Backends" doc to new guides (#756)
+- [a8ef2d36](https://github.com/stashed/stash/commit/a8ef2d36) Fix rest backend for workloads + add more authentication method for swift backend (#778)
+- [775b6660](https://github.com/stashed/stash/commit/775b6660) Backup and restore Elasticsearch (#702)
+- [0fbb9c75](https://github.com/stashed/stash/commit/0fbb9c75) Add guides template for new design (#755)
+- [03689414](https://github.com/stashed/stash/commit/03689414) Update package path to stash.appscode.dev/stash (#776)
+- [639d499f](https://github.com/stashed/stash/commit/639d499f) Update to k8s 1.14.0 client libraries using go.mod (#775)
+- [9ba906d8](https://github.com/stashed/stash/commit/9ba906d8) MutatingWebhooks must be without side-effect (#773)
+- [937012d5](https://github.com/stashed/stash/commit/937012d5) Introduce VolumeSnapshot APIs (#772)
+- [2b0f0560](https://github.com/stashed/stash/commit/2b0f0560) Use osm pkg from kmodules/objectstore-api (#770)
+- [cd9f6ad6](https://github.com/stashed/stash/commit/cd9f6ad6) Remove --rbac flag (#761)
+- [09af5d31](https://github.com/stashed/stash/commit/09af5d31) Skip creating/processing backup-session when backup-config is paused (#759)
+- [99753f73](https://github.com/stashed/stash/commit/99753f73) Fix go fmt
+- [64bb9bdd](https://github.com/stashed/stash/commit/64bb9bdd) Stash v1beta1 E2E test for PVC (#753)
+- [bcf8b90d](https://github.com/stashed/stash/commit/bcf8b90d) Implement snapshots for v1beta1 api (#749)
+- [3f0ae2d4](https://github.com/stashed/stash/commit/3f0ae2d4) Run restic commands using docker (#754)
+- [17feb41c](https://github.com/stashed/stash/commit/17feb41c) Update Kubernetes client libraries to 1.13.5 (#752)
+- [2d413ee0](https://github.com/stashed/stash/commit/2d413ee0) Stash v1beta1 E2E test for ReplicaSet  (#747)
+- [80b2b3d9](https://github.com/stashed/stash/commit/80b2b3d9) Enable pipefail and update restore yamls (#750)
+- [c908df9f](https://github.com/stashed/stash/commit/c908df9f) Stash v1beta1 E2E test for ReplicationController (#742)
+- [82c17eaf](https://github.com/stashed/stash/commit/82c17eaf) Fixed scratch-dir, output-dir and hostname in functions/tasks yamls (#744)
+- [d113b24f](https://github.com/stashed/stash/commit/d113b24f) Add Stash CLI (#734)
+- [286792a6](https://github.com/stashed/stash/commit/286792a6) Stash v1beta1 E2E test for DaemonSet (#741)
+- [62960e5b](https://github.com/stashed/stash/commit/62960e5b) Apply nice/ionice settings from env (#746)
+- [a2534c97](https://github.com/stashed/stash/commit/a2534c97) Stash V1beta1 E2E test for StatefulSet (#737)
+- [37087b38](https://github.com/stashed/stash/commit/37087b38) Stash V1beta1 E2E test for Deployment (#710)
+- [c08f04e4](https://github.com/stashed/stash/commit/c08f04e4) Attach local backend (#736)
+- [7a282d91](https://github.com/stashed/stash/commit/7a282d91) Fix openapi path prefixes for validators and mutators (#732)
+- [a8aef590](https://github.com/stashed/stash/commit/a8aef590) Add max-connections for GCS, Azure, B2 backend (#730)
+- [dd3f459c](https://github.com/stashed/stash/commit/dd3f459c) Rename admission webhooks to avoid name collision (#725)
+- [a32ceff5](https://github.com/stashed/stash/commit/a32ceff5) Apply EmptyDir settings to TmpDir (#719)
+- [36fdb9ae](https://github.com/stashed/stash/commit/36fdb9ae) Use FailurePolicy ignore for K8s resource webhooks (#726)
+- [4cab69a0](https://github.com/stashed/stash/commit/4cab69a0) Don't write secret data inside temp dir (#724)
+- [e2bcc4a8](https://github.com/stashed/stash/commit/e2bcc4a8) Use ionice and nice with Restic CMD (#716)
+- [bf91db4e](https://github.com/stashed/stash/commit/bf91db4e) Use cleanup-cache flag (#717)
+- [f2669f17](https://github.com/stashed/stash/commit/f2669f17) Add TempDir and PSP settings for Function (#720)
+- [dfc3fbd6](https://github.com/stashed/stash/commit/dfc3fbd6) Add support for rest backend (#713)
+- [47cf2dd4](https://github.com/stashed/stash/commit/47cf2dd4) Add support for OpenShift DeploymentConfig (#714)
+- [8c2b81b0](https://github.com/stashed/stash/commit/8c2b81b0) Backup and restore Mongo DB (#699)
+- [2849319a](https://github.com/stashed/stash/commit/2849319a) Backup and restore MySQL DB (#696)
+- [49fe8404](https://github.com/stashed/stash/commit/49fe8404) Backup and restore Postgres DB (#695)
+- [dbff05f6](https://github.com/stashed/stash/commit/dbff05f6) Backup from stdin and dump to stdout (#694)
+- [08ff2fa5](https://github.com/stashed/stash/commit/08ff2fa5) Add BackupSession Controller for Sidecar (#701)
+- [83f1c6e5](https://github.com/stashed/stash/commit/83f1c6e5) Update workload controller for new design (#675)
+- [13fb68bd](https://github.com/stashed/stash/commit/13fb68bd)  Post backup/restore status update (#691)
+- [30993c08](https://github.com/stashed/stash/commit/30993c08) Backup and restore PVC (#676)
+- [7bdf0752](https://github.com/stashed/stash/commit/7bdf0752) Resolve tasks for backup/restore sessions (#674)
+- [6a74602a](https://github.com/stashed/stash/commit/6a74602a) Add restic wrapper library (#673)
+- [7b8309a5](https://github.com/stashed/stash/commit/7b8309a5) Add BackupConfiguration Controller (#671)
+- [6f6c25d1](https://github.com/stashed/stash/commit/6f6c25d1) Use ContainerRuntimeSettings in Function spec (#689)
+- [4d80cf6b](https://github.com/stashed/stash/commit/4d80cf6b) Update Kubernetes client libraries to 1.13.0 (#687)
+- [361d4ad3](https://github.com/stashed/stash/commit/361d4ad3) Fix v1beta1 api for BackupConfigurationTemplate (#688)
+- [302311af](https://github.com/stashed/stash/commit/302311af) Introduce v1beta1 api (#647)
+
+
+
+
