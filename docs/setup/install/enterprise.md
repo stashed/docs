@@ -81,7 +81,7 @@ $ helm search repo appscode/stash-enterprise --version {{< param "info.enterpris
 NAME                       CHART VERSION         APP VERSION         DESCRIPTION
 appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash Enterprise by AppsCode - Enterprise features for Stash
 
-$ helm install stash appscode/stash-enterprise  \
+$ helm install stash-enterprise appscode/stash-enterprise  \
   --version {{< param "info.enterprise" >}}                  \
   --namespace kube-system                       \
   --set-file license=/path/to/the/license.txt
@@ -103,7 +103,7 @@ $ helm search appscode/stash-enterprise --version {{< param "info.enterprise" >}
 NAME                      CHART VERSION APP      VERSION             DESCRIPTION
 appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm install appscode/stash-enterprise --name stash   \
+$ helm install appscode/stash-enterprise --name stash-enterprise   \
   --version {{< param "info.enterprise" >}}                          \
   --namespace kube-system                               \
   --set-file license=/path/to/the/license.txt
@@ -125,7 +125,7 @@ $ helm search repo appscode/stash-enterprise --version {{< param "info.enterpris
 NAME                       CHART VERSION         APP VERSION         DESCRIPTION
 appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm template stash appscode/stash-enterprise \
+$ helm template stash-enterprise appscode/stash-enterprise \
   --version {{< param "info.enterprise" >}}                  \
   --namespace kube-system                       \
   --set-file license=/path/to/the/license.txt   \
