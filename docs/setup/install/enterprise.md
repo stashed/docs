@@ -72,44 +72,44 @@ Stash operator can be installed as a Helm chart or simply as Kubernetes manifest
 
 ## Using Helm 3
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.stash-enterprise" >}}/charts/stash-enterprise) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-enterprise`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-enterprise`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash-enterprise --version {{< param "info.stash-enterprise" >}}
+$ helm search repo appscode/stash-enterprise --version {{< param "info.enterprise" >}}
 NAME                       CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash-enterprise  {{< param "info.stash-enterprise" >}}    {{< param "info.stash-enterprise" >}}  Stash Enterprise by AppsCode - Enterprise features for Stash
+appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash Enterprise by AppsCode - Enterprise features for Stash
 
 $ helm install stash appscode/stash-enterprise  \
-  --version {{< param "info.stash-enterprise" >}}                  \
+  --version {{< param "info.enterprise" >}}                  \
   --namespace kube-system                       \
   --set-file license=/path/to/the/license.txt
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.stash-enterprise" >}}/charts/stash-enterprise).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise).
 
 </div>
 <div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
 
 ## Using Helm 2
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.stash-enterprise" >}}/charts/stash-enterprise) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search appscode/stash-enterprise --version {{< param "info.stash-enterprise" >}}
+$ helm search appscode/stash-enterprise --version {{< param "info.enterprise" >}}
 NAME                      CHART VERSION APP      VERSION             DESCRIPTION
-appscode/stash-enterprise  {{< param "info.stash-enterprise" >}}    {{< param "info.stash-enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
 $ helm install appscode/stash-enterprise --name stash   \
-  --version {{< param "info.stash-enterprise" >}}                          \
+  --version {{< param "info.enterprise" >}}                          \
   --namespace kube-system                               \
   --set-file license=/path/to/the/license.txt
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.stash-enterprise" >}}/charts/stash-enterprise).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise).
 
 </div>
 <div class="tab-pane fade" id="script" role="tabpanel" aria-labelledby="script-tab">
@@ -121,18 +121,18 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and deplo
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash-enterprise --version {{< param "info.stash-enterprise" >}}
+$ helm search repo appscode/stash-enterprise --version {{< param "info.enterprise" >}}
 NAME                       CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash-enterprise  {{< param "info.stash-enterprise" >}}    {{< param "info.stash-enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
 $ helm template stash appscode/stash-enterprise \
-  --version {{< param "info.stash-enterprise" >}}                  \
+  --version {{< param "info.enterprise" >}}                  \
   --namespace kube-system                       \
   --set-file license=/path/to/the/license.txt   \
   --no-hooks | kubectl apply -f -
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.stash-enterprise" >}}/charts/stash-enterprise).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise).
 
 </div>
 </div>
