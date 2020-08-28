@@ -25,21 +25,13 @@ This guide will give you an overview of which Elasticsearch versions are support
 
 Stash supports backup and restore of the following Elasticsearch versions:
 
-- [5.6](/docs/addons/elasticsearch/guides/5.6-v1/elasticsearch.md)
 - [5.6.4](/docs/addons/elasticsearch/guides/5.6.4-v1/elasticsearch.md)
-- [6.2](/docs/addons/elasticsearch/guides/6.2-v1/elasticsearch.md)
 - [6.2.4](/docs/addons/elasticsearch/guides/6.2.4-v1/elasticsearch.md)
-- [6.3](/docs/addons/elasticsearch/guides/6.3-v1/elasticsearch.md)
 - [6.3.0](/docs/addons/elasticsearch/guides/6.3.0-v1/elasticsearch.md)
-- [6.4](/docs/addons/elasticsearch/guides/6.4-v1/elasticsearch.md)
 - [6.4.0](/docs/addons/elasticsearch/guides/6.4.0-v1/elasticsearch.md)
-- [6.5](/docs/addons/elasticsearch/guides/6.5-v1/elasticsearch.md)
 - [6.5.3](/docs/addons/elasticsearch/guides/6.5.3-v1/elasticsearch.md)
-- [6.8](/docs/addons/elasticsearch/guides/6.8-v1/elasticsearch.md)
 - [6.8.0](/docs/addons/elasticsearch/guides/6.8.0-v1/elasticsearch.md)
-- [7.2](/docs/addons/elasticsearch/guides/7.2-v1/elasticsearch.md)
 - [7.2.0](/docs/addons/elasticsearch/guides/7.2.0-v1/elasticsearch.md)
-- [7.3](/docs/addons/elasticsearch/guides/7.3-v1/elasticsearch.md)
 - [7.3.2](/docs/addons/elasticsearch/guides/7.3.2-v1/elasticsearch.md)
 
 >Version **M.M** actually represents the latest patch of **M.M.P** series. For example, version **7.3** actually represents **7.3.2** as it is the latest supported patch of **7.3** series. Now, if **7.3.3** is released then **7.3** will represents **7.3.3**.
