@@ -31,14 +31,14 @@ CoreOS [prometheus-operator](https://github.com/coreos/prometheus-operator) prov
 
 ## Enable Monitoring in Stash
 
-Enable Prometheus monitoring using `prometheus.io/coreos-operator` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/latest/monitoring/overview.md#how-to-enable-monitoring).
+Enable Prometheus monitoring using `prometheus.io/operator` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/latest/monitoring/overview.md#how-to-enable-monitoring).
 
 Here, we are going to enable monitoring for both `backup`, `restore` and `operator` metrics using Helm 3.
 
 ```bash
 $ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
   --namespace kube-system \
-  --set monitoring.agent=prometheus.io/coreos-operator \
+  --set monitoring.agent=prometheus.io/operator \
   --set monitoring.backup=true \
   --set monitoring.operator=true \
   --set monitoring.prometheus.namespace=monitoring \
