@@ -38,6 +38,6 @@ A `Function` is fundamentally a container specification and `Task` specifies the
 
 ## Available Addons
 
-The following addons are available for Stash:
+The following addons are available for [Stash Enterprise Edition](/docs/setup/install/enterprise.md):
 
 {{< catalogtable "elasticsearch" "mongodb" "mysql" "percona-xtradb" "postgres" >}}
