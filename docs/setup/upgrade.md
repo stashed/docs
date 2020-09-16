@@ -23,42 +23,55 @@ Stash support updating license without requiring any re-installation or restart.
 Follow the below instructions to update the license:
 
 - Get a new license and save it into a file.
-- Encode the license file content in `base64` format. Make sure that the encoded content is not wrapped. Here is a Linux instruction to encode the license file into `base64` format.
+- Then, run the following upgrade command based on your installation.
+
+<ul class="nav nav-tabs" id="installerTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="helm3-tab" data-toggle="tab" href="#helm3" role="tab" aria-controls="helm3" aria-selected="true">Helm 3</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="helm2-tab" data-toggle="tab" href="#helm2" role="tab" aria-controls="helm2" aria-selected="false">Helm 2</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="script-tab" data-toggle="tab" href="#script" role="tab" aria-controls="script" aria-selected="false">YAML</a>
+  </li>
+</ul>
+<div class="tab-content" id="installerTabContent">
+  <div class="tab-pane fade show active" id="helm3" role="tabpanel" aria-labelledby="helm3-tab">
+
+## Using Helm 3
 
 ```bash
-$ cat /path/to/the/license.txt | base64 -w 0
+$ helm upgrade stash-enterprise -n kube-system appscode/stash-enterprise  \
+    --reuse-values                                                        \
+    --set-file license=/path/to/new/license.txt
 ```
 
-- Now, find out the license secret.
+</div>
+<div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
+
+## Using Helm 2
 
 ```bash
-$ kubectl get Secret -n kube-system | grep license
-stash-license        Opaque           1      2m43s
+$ helm upgrade stash-enterprise appscode/stash-enterprise  \
+    --reuse-values                                         \
+    --set-file license=/path/to/new/license.txt
 ```
 
-- Finally, update the value of `key.txt` in the `data` section of the Secret with your new `base64` encoded license.
+</div>
+<div class="tab-pane fade" id="script" role="tabpanel" aria-labelledby="script-tab">
 
-```yaml
-$ kubectl edit secret/stash-license -n kube-system
-apiVersion: v1
-data:
-  key.txt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURTRENDQWpDZ0F3SUJBZ0lJUFRHNDh2SlhZSVV3RFFZSktvWklodmNOQVFFTEJRQXdKVEVXTUJRR0ExVUUKQ2hNTlFYQndjME52WkdVZ1NXNWpMakVMTUFrR0ExVUVBeE1DWTJFd0hoY05NakF3T0RBNU1URXhPRE15V2hjTgpNakV3T0RJeE1EazBOakl6V2pCSk1SZ3dGZ1lEVlFRS0V3OXpkR0Z6YUMxamIyMXRkVzVwZEhreExUQXJCZ05WCkJBTVRKREE1WWpsaE5qY3hMVFExTXpFdE5EZzNOeTFpTlRreExUUm1NMll5T1RZeFpXVm1aRENDQVNJd0RRWUoKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTTJFSEtXM2hwYUVkZ3ZJZ0prcDJJVVV4b2dWK3pyYgp6dCsvTGZWc3lkdC9KNGd1R0RNTExtT016WHFXWjViK21sOUZ4ZGdaai9GVnp6emxwK1ZCR2V6VEZpWWlUMnlQCkdRSk8xRnRDdmVkeGJUWXV4Y2p1T2dtRyt3WEwraCt5RFpHckNycUpEN3IxblFwbzZMVml5alZhcXRFU1hIYjkKT1VMTXNDazBaSTJlc2h1Q3FkWXBKSEt0c1dlUmlFL0ZHamJ5anUyMnd0VE80eDNtb2JReE9zSUsrSlh2Y25YcApaRWpIaU1OVFJEN3BlNWl0cnRYR1p5c0EyN3lNVVhmRWdrQUUybU1BVTlJN0R4d1AyUzc0NHdxTEtUbUNRcWsxCnV3bThxNWZHZEdFbXdvem5zM0hWb05raGw0Ukp3TnpyU3R0SFBvT0ZSUDNNT3JEN21uSEozenNDQXdFQUFhTlkKTUZZd0RnWURWUjBQQVFIL0JBUURBZ1dnTUJNR0ExVWRKUVFNTUFvR0NDc0dBUVVGQndNQ01DOEdBMVVkRVFRbwpNQ2FDSkRBNVlqbGhOamN4TFRRMU16RXRORGczTnkxaU5Ua3hMVFJtTTJZeU9UWXhaV1ZtWkRBTkJna3Foa2lHCjl3MEJBUXNGQUFPQ0FRRUFIb1RBRk03OExGbmlpbDNJZlpxb1l4N0l4M0YyWVZjU0dMQ2hYaG13T0Uyd1hIeFUKSndlMm9FcjBOeEtBOStjVFhkWmsvR1RZU3lwdnJOSDdLbVh3RXlEZWJGNVdmZG0yQTQyT0ZSeEFOU1Q0bGxjWApaakdqbjRUYzNqWHUvMDhhaUJheDhaTlcvT3BFRUxYNDI1cEZsdGc2dG1FTDI3cVhHQ1RFK2xZQXllRlpPRW5nCldsdHlvM21URzV0RHVTZXBkYXFyMUhJUDZjM0dKNnptS1lBRnB4YXJYdVhOa284L1Q3QkF0UU5KMWEvM1hRcGMKelRZbGpLS2dBOTRGMGZYZjdkeFhYNTFtWWZNM1FDclJTM05yQllEbCtOYUZpWWlsdXA1cmNxNTlwNzk2S080QgorM0hpSGZtcDFxUEJIS2hqL2ZYMk1xcU5od2RkWDJ6enlHbWRNZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-kind: Secret
-metadata:
-  creationTimestamp: "2020-08-25T05:23:20Z"
-  labels:
-    app.kubernetes.io/instance: stash
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: stash
-    app.kubernetes.io/version: v0.10.0-beta.1
-    helm.sh/chart: stash-v0.10.0-beta.1
-  name: stash-license
-  namespace: kube-system
-  resourceVersion: "111192"
-  selfLink: /api/v1/namespaces/kube-system/secrets/stash-license
-  uid: b5acd352-e9e6-4358-8fb9-90f58c162ce9
-type: Opaque
+## Using YAML (with helm 3)
+
+```bash
+$ helm template stash-enterprise appscode/stash-enterprise  \
+    --set-file license=/path/to/new/license.txt             \
+    --show-only templates/license.yaml                      \
+    --no-hooks | kubectl apply -f -
 ```
+
+</div>
+</div>
 
 ## Upgrading Between Community Edition and Enterprise Edition
 
