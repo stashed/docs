@@ -79,6 +79,7 @@ stash run [flags]
       --image-pull-secrets strings                              List of image pull secrets for pulling image from private registries
       --image-tag string                                        Image tag for sidecar, init-container, check-job and recovery-job
       --kubeconfig string                                       kubeconfig file pointing at the 'core' kubernetes server.
+      --license-apiservice string                               Name of the ApiService to use by the addons to identify the respective service and certificate for license verification request
       --license-file string                                     Path to license file
       --profiling                                               Enable profiling via web interface host:port/debug/pprof/ (default true)
       --qps float                                               The maximum QPS to the master from this client (default 100)
