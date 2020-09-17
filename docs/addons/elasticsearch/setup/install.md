@@ -12,6 +12,8 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
+
 # Install Elasticsearch Addon for Stash
 
 Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extend its capability via addons. In order to backup Elasticsearch databases, you have to install Elasticsearch addon (`stash-elasticsearch`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore Elasticsearch database.

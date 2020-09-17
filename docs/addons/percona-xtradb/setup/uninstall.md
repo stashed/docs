@@ -12,6 +12,8 @@ menu_name: product_stash_{{ .version }}
 section_menu_id: stash-addons
 ---
 
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
+
 # Uninstall Percona XtraDB addon for Stash
 
 In order to uninstall Percona XtraDB addon, follow the instruction given below.

@@ -15,6 +15,8 @@ aliases:
   - /docs/{{ .version }}/addons/mongodb/README/
 ---
 
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
+
 # Stash MongoDB Addon
 
 Stash 0.9.0+ supports extending its functionality through addons. Stash MongoDB addon enables Stash to backup and restore MongoDB databases.
