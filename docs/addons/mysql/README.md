@@ -15,6 +15,8 @@ aliases:
   - /docs/{{ .version }}/addons/mysql/README/
 ---
 
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
+
 # Stash MySQL Addon
 
 Stash 0.9.0+ supports extending its functionality through addons. Stash MySQL addon enables Stash to backup and restore MySQL databases.

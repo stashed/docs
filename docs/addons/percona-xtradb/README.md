@@ -15,6 +15,8 @@ aliases:
   - /products/stash/{{ .version }}/addons/percona-xtradb/README/
 ---
 
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
+
 # Stash Percona XtraDB Addon
 
 Stash 0.9.0+ supports extending its functionality through addons. Stash Percona XtraDB addon enables Stash to backup and restore Percona XtraDB databases.
