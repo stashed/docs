@@ -1,27 +1,62 @@
 ---
-title: Kubectl-Stash
+title: Completion
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash
-    name: Kubectl-Stash
+    identifier: kubectl-stash-completion
+    name: Completion
     parent: reference-cli
-    weight: 0
-
 menu_name: docs_{{ .version }}
 section_menu_id: reference
-url: /docs/{{ .version }}/reference/cli/
-aliases:
-- /docs/{{ .version }}/reference/cli/kubectl-stash/
 ---
-## kubectl-stash
+## kubectl-stash completion
 
-kubectl plugin for Stash by AppsCode
+Generate completion script
 
 ### Synopsis
 
-kubectl plugin for Stash by AppsCode. For more information, visit here: https://appscode.com/products/stash
+To load completions:
+
+Bash:
+
+$ source <(kubectl-stash completion bash)
+
+# To load completions for each session, execute once:
+Linux:
+  $ kubectl-stash completion bash > /etc/bash_completion.d/kubectl-stash
+MacOS:
+  $ kubectl-stash completion bash > /usr/local/etc/bash_completion.d/kubectl-stash
+
+Zsh:
+
+# If shell completion is not already enabled in your environment you will need
+# to enable it.  You can execute the following once:
+
+$ echo "autoload -U compinit; compinit" >> ~/.zshrc
+
+# To load completions for each session, execute once:
+$ kubectl-stash completion zsh > "${fpath[1]}/_kubectl-stash"
+
+# You will need to start a new shell for this setup to take effect.
+
+Fish:
+
+$ kubectl-stash completion fish | source
+
+# To load completions for each session, execute once:
+$ kubectl-stash completion fish > ~/.config/fish/completions/kubectl-stash.fish
+
+
+```
+kubectl-stash completion [bash|zsh|fish|powershell]
+```
 
 ### Options
+
+```
+  -h, --help   help for completion
+```
+
+### Options inherited from parent commands
 
 ```
       --alsologtostderr                  log to standard error as well as files
@@ -34,7 +69,6 @@ kubectl plugin for Stash by AppsCode. For more information, visit here: https://
       --cluster string                   The name of the kubeconfig cluster to use
       --context string                   The name of the kubeconfig context to use
       --enable-analytics                 Send analytical events to Google Analytics (default true)
-  -h, --help                             help for kubectl-stash
       --insecure-skip-tls-verify         If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
       --kubeconfig string                Path to the kubeconfig file to use for CLI requests.
       --log-backtrace-at traceLocation   when logging hits line file:N, emit a stack trace (default :0)
@@ -56,13 +90,5 @@ kubectl plugin for Stash by AppsCode. For more information, visit here: https://
 
 ### SEE ALSO
 
-* [kubectl-stash clone](/docs/reference/cli/kubectl-stash_clone.md)	 - Clone Kubernetes resources
-* [kubectl-stash completion](/docs/reference/cli/kubectl-stash_completion.md)	 - Generate completion script
-* [kubectl-stash cp](/docs/reference/cli/kubectl-stash_cp.md)	 - Copy stash resources from one namespace to another namespace
-* [kubectl-stash create](/docs/reference/cli/kubectl-stash_create.md)	 - create stash resources
-* [kubectl-stash delete](/docs/reference/cli/kubectl-stash_delete.md)	 - Delete stash resources
-* [kubectl-stash download](/docs/reference/cli/kubectl-stash_download.md)	 - Download snapshots
-* [kubectl-stash trigger](/docs/reference/cli/kubectl-stash_trigger.md)	 - Trigger a backup
-* [kubectl-stash unlock](/docs/reference/cli/kubectl-stash_unlock.md)	 - Unlock Restic Repository
-* [kubectl-stash version](/docs/reference/cli/kubectl-stash_version.md)	 - Prints binary version number.
+* [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
 
