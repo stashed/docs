@@ -66,7 +66,7 @@ Stash operator can be installed as a Helm chart or simply as Kubernetes manifest
 
 ## Using Helm 3
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.community" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
@@ -81,14 +81,14 @@ $ helm install stash appscode/stash           \
   --set-file license=/path/to/the/license.txt
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.community" >}}/charts/stash).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash).
 
 </div>
 <div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
 
 ## Using Helm 2
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.community" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
@@ -103,7 +103,7 @@ $ helm install appscode/stash --name stash    \
   --set-file license=/path/to/the/license.txt
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.community" >}}/charts/stash).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash).
 
 </div>
 <div class="tab-pane fade" id="script" role="tabpanel" aria-labelledby="script-tab">
@@ -126,7 +126,7 @@ $ helm template stash appscode/stash          \
   --no-hooks | kubectl apply -f -
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.community" >}}/charts/stash).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash).
 
 </div>
 </div>
