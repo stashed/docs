@@ -34,4 +34,5 @@ The setup section contains instructions for installing the Stash and its various
 - **Uninstall Stash:** Uninstallation instructions for Stash and its various components.
   - [Community Edition](/docs/setup/uninstall/community.md): Uninstallation instructions for Stash Community Edition.
   - [Enterprise Edition](/docs/setup/uninstall/enterprise.md): Uninstallation instructions for Stash Enterprise Edition.
+  - [Stash kubectl Plugin](/docs/setup/uninstall/kubectl_plugin.md): Uninstallation instructions for Stash `kubectl` plugin.
 - [Upgrading Stash](/docs/setup/upgrade.md): Instruction for updating Stash license and upgrading between various Stash versions.
