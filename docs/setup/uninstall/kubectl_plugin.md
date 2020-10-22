@@ -3,7 +3,7 @@ title: Uninstall Stash kubectl Plugin
 description: Uninstallation guide for Stash kubectl Plugin
 menu:
   docs_{{ .version }}:
-  identifier: uninstall-stash-kubectl-plugin
+    identifier: uninstall-stash-kubectl-plugin
     name: Stash kubectl Plugin
     parent: uninstallation-guide
     weight: 30
