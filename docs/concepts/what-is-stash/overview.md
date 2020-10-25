@@ -20,7 +20,7 @@ section_menu_id: concepts
 
 | Features                                                                                | Community Edition | Enterprise Edition | Scope                                                                                                                                                               |
 | --------------------------------------------------------------------------------------- | :---------------: | :----------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Backup & Restore Workload Data                                                          |     &#10003;      |      &#10003;      | Deployment, DaemonSet, StatefulSet, ReplicaSet, ReplicationController, OpenShift DeploymentConfig                                                                   |
+|  | Open source Stash Free for everyone | Open Core Stash for production Enterprise workloads |  |
 | Backup & Restore Stand-alone Volume (PVC)                                               |     &#10003;      |      &#10003;      | PersistentVolumeClaim, PersistentVolume                                                                                                                             |
 | Schedule Backup, Instant Backup                                                         |     &#10003;      |      &#10003;      | Schedule through [cron expression](https://en.wikipedia.org/wiki/Cron) or trigger instant backup using Stash Kubernetes plugin                                      |
 | Pause Backup                                                                            |     &#10003;      |      &#10003;      | No new backup when paused.                                                                                                                                          |
@@ -39,3 +39,8 @@ section_menu_id: concepts
 | Auto Backup                                                                             |     &#10007;      |      &#10003;      | Share backup configuration across workloads using templates. Enable backup for a target application via annotation.                                                 |
 | Batch Backup & Batch Restore                                                            |     &#10007;      |      &#10003;      | Backup and restore co-related applications (eg, WordPress server and its database) together                                                                         |
 | Point-In-Time Recovery (PITR)                                                           |     &#10007;      |      Planned       | Restore a set of files from a time in the past.                                                                                                                     |
+| Role Based Access Control (RBAC)                                                        |     &#10003;      |      &#10003;      | |
+| Open Policy Agent (OPA)                                                                 |     &#10003;      |      &#10003;      | |
+| Pod Security Policy (PSP)                                                               |     &#10003;      |      &#10003;      | |
+| Network Policy                                                                          |     &#10003;      |      &#10003;      | |
+| GDPR                                                                                    |     &#10007;      |      Planned       | |
