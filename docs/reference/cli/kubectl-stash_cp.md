@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Copy stash resources from one namespace to another namespace
 
-### Synopsis
-
-Copy stash resources from one namespace to another namespace
-
 ### Options
 
 ```

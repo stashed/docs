@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Delete stash resources
 
-### Synopsis
-
-Delete stash resources
-
 ### Options
 
 ```
