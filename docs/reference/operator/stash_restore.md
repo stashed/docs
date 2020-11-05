@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Restore from backup
 
-### Synopsis
-
-Restore from backup
-
 ```
 stash restore [flags]
 ```

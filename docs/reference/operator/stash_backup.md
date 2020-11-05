@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Run Stash Backup
 
-### Synopsis
-
-Run Stash Backup
-
 ```
 stash backup [flags]
 ```

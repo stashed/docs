@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Take backup of workload paths
 
-### Synopsis
-
-Take backup of workload paths
-
 ```
 stash run-backup [flags]
 ```

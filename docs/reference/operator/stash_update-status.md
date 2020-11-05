@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Update status of Repository, Backup/Restore Session
 
-### Synopsis
-
-Update status of Repository, Backup/Restore Session
-
 ```
 stash update-status [flags]
 ```

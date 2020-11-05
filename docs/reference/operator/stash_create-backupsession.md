@@ -12,10 +12,6 @@ section_menu_id: reference
 
 create a BackupSession
 
-### Synopsis
-
-create a BackupSession
-
 ```
 stash create-backupsession [flags]
 ```

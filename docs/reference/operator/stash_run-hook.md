@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Execute Backup or Restore Hooks
 
-### Synopsis
-
-Execute Backup or Restore Hooks
-
 ```
 stash run-hook [flags]
 ```

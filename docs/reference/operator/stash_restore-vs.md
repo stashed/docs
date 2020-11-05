@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Restore PVC from VolumeSnapshot
 
-### Synopsis
-
-Restore PVC from VolumeSnapshot
-
 ```
 stash restore-vs [flags]
 ```

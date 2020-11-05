@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Get snapshots of restic repo
 
-### Synopsis
-
-Get snapshots of restic repo
-
 ```
 stash snapshots [snapshotID ...] [flags]
 ```
