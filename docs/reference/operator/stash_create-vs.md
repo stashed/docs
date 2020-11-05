@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Take snapshot of PersistentVolumeClaims
 
-### Synopsis
-
-Take snapshot of PersistentVolumeClaims
-
 ```
 stash create-vs [flags]
 ```

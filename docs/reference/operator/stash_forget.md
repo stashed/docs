@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Delete snapshots from a restic repository
 
-### Synopsis
-
-Delete snapshots from a restic repository
-
 ```
 stash forget [snapshotID ...] [flags]
 ```

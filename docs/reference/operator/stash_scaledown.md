@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Scale down workload
 
-### Synopsis
-
-Scale down workload
-
 ```
 stash scaledown [flags]
 ```

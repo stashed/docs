@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Takes a backup of Persistent Volume Claim
 
-### Synopsis
-
-Takes a backup of Persistent Volume Claim
-
 ```
 stash backup-pvc [flags]
 ```

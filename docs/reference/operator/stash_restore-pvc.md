@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Takes a restore of Persistent Volume Claim
 
-### Synopsis
-
-Takes a restore of Persistent Volume Claim
-
 ```
 stash restore-pvc [flags]
 ```

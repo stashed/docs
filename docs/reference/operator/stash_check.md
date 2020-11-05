@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Check restic backup
 
-### Synopsis
-
-Check restic backup
-
 ```
 stash check [flags]
 ```

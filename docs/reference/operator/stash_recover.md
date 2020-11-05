@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Recover restic backup
 
-### Synopsis
-
-Recover restic backup
-
 ```
 stash recover [flags]
 ```
