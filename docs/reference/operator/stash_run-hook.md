@@ -31,7 +31,6 @@ stash run-hook [flags]
       --metrics-labels strings           Labels to apply in exported metrics
       --metrics-pushgateway-url string   Pushgateway URL where the metrics will be pushed
       --output-dir string                Directory where output.json file will be written (keep empty if you don't need to write output in file)
-      --prom-job-name string             Metrics job name (default "stash-prom-metrics")
       --target-kind string               Kind of the Target
       --target-name string               Name of the Target
 ```
