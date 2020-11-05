@@ -12,10 +12,6 @@ section_menu_id: reference
 
 Clone Kubernetes resources
 
-### Synopsis
-
-Clone Kubernetes resources
-
 ### Options
 
 ```

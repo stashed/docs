@@ -12,10 +12,6 @@ section_menu_id: reference
 
 create stash resources
 
-### Synopsis
-
-create stash resources
-
 ### Options
 
 ```
