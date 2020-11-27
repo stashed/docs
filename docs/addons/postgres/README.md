@@ -29,9 +29,9 @@ Stash supports backup and restore of the following PostgreSQL versions:
 
 {{< versionlist "postgres" "/docs/addons/postgres/guides/%s/standalone.md" >}}
 
-Here, the addon follows **M.M.P-vX** versioning scheme where **M.M.P** (Major.Minor.Patch) represents the respective database version and an optional `-vX` (here, `X` is a monotonically increasing integer) is added if there is any breaking change in the addon image compared to the previous release.
+Here, the addon follows `M.M.P-vX` versioning scheme where `M.M.P` (Major.Minor.Patch) represents the respective database version and an optional `-vX` (here, `X` is a monotonically increasing integer) is added if there is any breaking change in the addon image compared to the previous release.
 
-{{< notice type="danger" message="If you update Stash operator to a newer release and the supported addon versions in the newer release has different `-vX` suffix, you have to update the old addons too. Otherwise, backup may not work. In this case, just uninstall the old addons and install the new addons." >}}
+{{< notice type="warning" message="If you update Stash operator to a newer release and the supported addon versions in the newer release has different `-vX` suffix, you have to update the old addons too. Otherwise, backup may not work. In this case, just uninstall the old addons and install the new addons." >}}
 
 ## Addon Version Compatibility
 
