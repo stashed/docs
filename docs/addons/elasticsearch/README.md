@@ -29,7 +29,13 @@ Stash supports backup and restore of the following Elasticsearch versions:
 
 {{< versionlist "elasticsearch" "/docs/addons/elasticsearch/guides/%s/elasticsearch.md" >}}
 
->Version **M.M** actually represents the latest patch of **M.M.P** series. For example, version **7.3** actually represents **7.3.2** as it is the latest supported patch of **7.3** series. Now, if **7.3.3** is released then **7.3** will represents **7.3.3**.
+Here, the addon follows **M.M.P-vX** versioning scheme where **M.M.P** (Major.Minor.Patch) represents the respective database version and an optional `-vX` (here, `X` is a monotonically increasing integer) is added if there is any breaking change in the addon image compared to the previous release.
+
+{{< notice type="danger" message="If you update Stash operator to a newer release and the supported addon versions in the newer release has different `-vX` suffix, you have to update the old addons too. Otherwise, backup may not work. In this case, just uninstall the old addons and install the new addons." >}}
+
+## Addon Version Compatibility
+
+Any addon with matching major version with the database version should be able to take backup of that database. For example, Elasticsearch addon with version `7.x.x-vX` should be able take backup of any Elasticsearch of `7.x.x` series. However, this might not be true for some versions. In that case, we will have separate addon for that version.
 
 ## Documentation Overview
 
@@ -37,4 +43,4 @@ Stash Elasticsearch documentations are organized as below:
 
 - [How does it works?](/docs/addons/elasticsearch/overview.md) gives an overview of how backup and restore process for Elasticsearch database works in Stash.
 - [Setup](/docs/addons/elasticsearch/setup/install.md) shows how to install and uninstall Elasticsearch addon for Stash.
-- [Guides](/docs/addons/elasticsearch/guides/6.5/elasticsearch.md) contains step by step guides to backup and restore different versions of Elasticsearch databases.
+- **Guides** contains step by step guides to backup and restore different versions of Elasticsearch databases.
