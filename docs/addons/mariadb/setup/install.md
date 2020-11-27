@@ -75,27 +75,23 @@ After installation is completed, this addon will create `mariadb-backup-*` and `
 
 ```bash
 $ kubectl get functions.stash.appscode.com
-NAME                    AGE
-mariadb-backup-8.0.14     20s
-mariadb-backup-5.7        20s
-mariadb-restore-8.0.14    20s
-mariadb-restore-5.7       20s
-pvc-backup              7h6m
-pvc-restore             7h6m
-update-status           7h6m
+NAME                     AGE
+mariadb-backup-10.5.8    25s
+mariadb-restore-10.5.8   25s
+pvc-backup               3m14s
+pvc-restore              3m14s
+update-status            3m14s
 ```
 
 Also, verify that the `Task` have been created.
 
 ```bash
 $ kubectl get tasks.stash.appscode.com
-NAME                    AGE
-mariadb-backup-8.0.14     2m7s
-mariadb-backup-5.7        2m7s
-mariadb-restore-8.0.14    2m7s
-mariadb-restore-5.7       2m7s
-pvc-backup              7h7m
-pvc-restore             7h7m
+NAME                     AGE
+mariadb-backup-10.5.8    101s
+mariadb-restore-10.5.8   101s
+pvc-backup               4m30s
+pvc-restore              4m30s
 ```
 
 Now, Stash is ready to backup MariaDB databases.
@@ -105,16 +101,16 @@ Now, Stash is ready to backup MariaDB databases.
 In order to install `Function` and `Task` only for a specific MariaDB version, use `--version` flag to specify the desired database version.
 
 ```bash
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mariadb --version=8.0.14
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mariadb --version=10.5.8
 ```
 
 The flowing flags are available for customizing MariaDB addon installation:
 
-| Flag                | Usage                                                                                                                                                                                                                                                                                       |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                              |
-| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                               |
-| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                          |
-| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                            |
-| `--my-backup-args`  | Specify optional arguments to pass to `mariadbdump` command during backup. These arguments apply to all MariaDB instances in this cluster. To set arguments for a specific MariaDB database instance, set `myArgs` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
-| `--my-restore-args` | Specify optional arguments to pass to `mariadb` command during restore. These arguments apply to all MariaDB instances in this cluster. To set arguments for a specific MariaDB database instance, set `myArgs` parameter in `spec.task.params` field of the respective `RestoreSession`.         |
+| Flag                | Usage                                                                                                                                                                                                                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--version`         | Specify a specific version of a specific addon to install. Use it along with `--catalog` flag.                                                                                                                                                                                                |
+| `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                                 |
+| `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                            |
+| `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                              |
+| `--backup-args`     | Specify optional arguments to pass to `mysqldump` command during backup. These arguments apply to all MariaDB instances in this cluster. To set arguments for a specific MariaDB database instance, set `args` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
+| `--restore-args`    | Specify optional arguments to pass to `mysql` command during restore. These arguments apply to all MariaDB instances in this cluster. To set arguments for a specific MariaDB database instance, set `args` parameter in `spec.task.params` field of the respective `RestoreSession`.         |

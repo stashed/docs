@@ -14,17 +14,21 @@ section_menu_id: stash-addons
 
 {{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
-# How Stash Backup & Restore MariaDB Database
+# How Stash Backups & Restores MariaDB Database
 
 Stash 0.9.0+ supports backup and restore operation of many databases. This guide will give you an overview of how MariaDB database backup and restore process works in Stash.
 
-## How Backup Works
+## Logical Backup
 
-The following diagram shows how Stash takes backup of a MariaDB database. Open the image in a new tab to see the enlarged version.
+Stash supports taking [logical backup](https://mariadb.com/kb/en/backup-and-restore-overview/#logical-vs-physical-backups) of MariaDB databases using [mysqldump](https://mariadb.com/kb/en/mysqldump/). It is the most flexible way to perform a backup and restore, and a good choice when the data size is relatively small.
+
+### How Logical Backup Works
+
+The following diagram shows how Stash takes logical backup of a MariaDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="MariaDB Backup Overview" src="/docs/images/addons/mariadb/backup_overview.svg">
-  <figcaption align="center">Fig: MariaDB Backup Overview</figcaption>
+  <img alt="MariaDB Backup Overview" src="/docs/images/addons/mariadb/mariadb-logical-backup.svg">
+  <figcaption align="center">Fig: MariaDB Logical Backup Overview</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -53,13 +57,13 @@ The backup process consists of the following steps:
 
 12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
-## How Restore Process Works
+### How Restore from Logical Backup Works
 
-The following diagram shows how Stash restores backed up data into a MariaDB database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash restores a MariaDB database from a logical backup. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/addons/mariadb/restore_overview.svg">
-  <figcaption align="center">Fig: MariaDB Restore Process Overview</figcaption>
+  <img alt="Database Restore Overview" src="/docs/images/addons/mariadb/mariadb-logical-restore.svg">
+  <figcaption align="center">Fig: MariaDB Logical Restore Process Overview</figcaption>
 </figure>
 
 The restore process consists of the following steps:

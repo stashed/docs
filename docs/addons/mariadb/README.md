@@ -35,4 +35,4 @@ Stash MariaDB documentations are organized as below:
 
 - [How does it works?](/docs/addons/mariadb/overview.md) gives an overview of how backup and restore process for MariaDB database works in Stash.
 - [Setup](/docs/addons/mariadb/setup/install.md) shows how to install and uninstall MariaDB addon for Stash.
-- [Guides](/docs/addons/mariadb/guides/10.5.8/mariadb.md) contains step by step guides to backup and restore different versions of MariaDB databases.
+- **Guides** contains step by step guides to backup and restore different versions of MariaDB databases.

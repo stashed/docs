@@ -70,5 +70,5 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 In order to uninstall MariaDB addon only for a specific database version, use `--version` flag to specify the desired version.
 
 ```bash
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --uninstall --catalog=stash-mariadb --version=8.0.14
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --uninstall --catalog=stash-mariadb --version=10.5.8
 ```
