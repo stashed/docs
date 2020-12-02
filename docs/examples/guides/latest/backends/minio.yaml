@@ -1,13 +1,12 @@
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
-  name: s3-repo
+  name: minio-repo
   namespace: demo
 spec:
   backend:
     s3:
-      endpoint: s3.amazonaws.com # use server URL for s3 compatible other storage service
+      endpoint: https://my-minio-service.minio-namespace.svc
       bucket: stash-demo
-      region: us-west-1
       prefix: /backup/demo/deployment/stash-demo
-    storageSecretName: s3-secret
+    storageSecretName: minio-secret
