@@ -6,7 +6,7 @@ menu:
     identifier: monitoring-builtin
     name: Builtin Prometheus
     parent: monitoring
-    weight: 20
+    weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
@@ -32,12 +32,11 @@ namespace/monitoring created
 Enable Prometheus monitoring using `prometheus.io/builtin` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/v1alpha1/monitoring/overview.md#how-to-enable-monitoring). Here, we are going to enable monitoring for `backup`, `restore` and `operator` metrics using Helm 3.
 
 ```bash
-$ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
+$ helm install stash appscode/stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/builtin \
   --set monitoring.backup=true \
-  --set monitoring.operator=true \
-  --set monitoring.prometheus.namespace=monitoring
+  --set monitoring.operator=true
 ```
 
 This will add necessary annotations to `stash-operator` service. Prometheus server will scrape metrics using those annotations. Let's check which annotations are added to the service,

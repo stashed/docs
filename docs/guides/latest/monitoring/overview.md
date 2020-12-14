@@ -16,18 +16,22 @@ section_menu_id: guides
 
 # Monitoring Stash
 
-Stash has native support for monitoring via [Prometheus](https://prometheus.io/). You can use builtin [Prometheus](https://github.com/prometheus/prometheus) scraper or [CoreOS Prometheus Operator](https://github.com/coreos/prometheus-operator) to monitor Stash. This tutorial will show you how this monitoring works with Stash and how to enable them.
+Stash has native support for monitoring via [Prometheus](https://prometheus.io/). You can use builtin [Prometheus](https://github.com/prometheus/prometheus) scraper or [prometheus-operator](prometheus-operator/prometheus-operator) to monitor Stash. This tutorial will show you how Prometheus monitoring works with Stash, what metrics Stash exports, and how to enable monitoring.
 
-## Overview
+## How Prometheus monitoring works
 
 Stash uses [Prometheus PushGateway](https://github.com/prometheus/pushgateway) to export the metrics for backup & restore operations. Following diagram shows the logical structure of Stash monitoring flow.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/guides/latest/monitoring/stash-monitoring-structure.svg">
+  <img alt="Stash Monitoring Flow" src="images/monitoring-structure.svg">
 <figcaption align="center">Fig: Monitoring process in Stash</figcaption>
 </figure>
 
-Stash operator runs two containers. The `operator` container runs controller and other necessary stuffs and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads pushes its metrics to this pushgateway. Then Prometheus server scrapes these metrics through `stash-operator` service. Stash operator itself also provides some metrics at `/metrics` path of `:8443` port.
+Stash operator runs two containers. The `operator` container runs controllers and other necessary stuffs and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads and backup/restore jobs pushes its metrics to this pushgateway. The pushgateway exposes the metrics at `/metrics` path of `:56789` port. Then, a Prometheus server scrapes these metrics through `stash` or `stash-enterprise` Service and acts as a data source of [Grafana](https://grafana.com/) dashboard.  Stash operator itself also provides some valuable metrics at `/metrics` path of `:8443` port.
+
+## Available Metrics
+
+Stash exports metrics for backup process, restore process, repository status, operator requests handling etc. This section will list the metrics exported by Stash for different process.
 
 ### Backup Metrics
 
@@ -141,7 +145,6 @@ You can enable monitoring through some flags while installing or upgrading or up
 | `--monitoring-agent`     | `monitoring.agent`                 | `prometheus.io/builtin` or `prometheus.io/operator` | `none`                                                                                                                  | Specify which monitoring agent to use for monitoring Stash.                                                                                                         |
 | `--monitoring-backup`    | `monitoring.backup`                | `true` or `false`                                   | `false`                                                                                                                 | Specify whether to monitor Stash backup and restore.                                                                                                                |
 | `--monitoring-operator`  | `monitoring.operator`              | `true` or `false`                                   | `false`                                                                                                                 | Specify whether to monitor Stash operator.                                                                                                                          |
-| `--prometheus-namespace` | `monitoring.prometheus.namespace`  | any namespace                                       | same namespace as Stash operator                                                                                        | Specify the namespace where Prometheus server is running or will be deployed                                                                                        |
 | `--servicemonitor-label` | `monitoring.serviceMonitor.labels` | any label                                           | For Helm installation, `app: <generated app name>` and `release: <release name>`. For script installation, `app: stash` | Specify the labels for ServiceMonitor. Prometheus crd will select ServiceMonitor using these labels. Only usable when monitoring agent is `prometheus.io/operator`. |
 
 You have to provides these flags while installing or upgrading or updating Stash. Here, are examples for both script and Helm installation process are given which enable monitoring with `prometheus.io/operator` Prometheuse server for `backup`, `restore` and `operator` metrics.
@@ -154,19 +157,17 @@ $ helm install stash-operator appscode/stash --version {{< param "info.version" 
   --set monitoring.agent=prometheus.io/operator \
   --set monitoring.backup=true \
   --set monitoring.operator=true \
-  --set monitoring.prometheus.namespace=monitoring \
   --set monitoring.serviceMonitor.labels.k8s-app=prometheus
 ```
 
 **Helm 2:**
 
 ```bash
-$ helm install appscode/stash --name stash-operator --version {{< param "info.version" >}} \
+$ helm install appscode/stash --name stash --version {{< param "info.version" >}} \
   --namespace kube-system \
   --set monitoring.agent=prometheus.io/operator \
   --set monitoring.backup=true \
   --set monitoring.operator=true \
-  --set monitoring.prometheus.namespace=monitoring \
   --set monitoring.serviceMonitor.labels.k8s-app=prometheus
 ```
 
@@ -179,7 +180,6 @@ $ helm template stash-operator appscode/stash --version {{< param "info.version"
   --set monitoring.agent=prometheus.io/operator \
   --set monitoring.backup=true \
   --set monitoring.operator=true \
-  --set monitoring.prometheus.namespace=monitoring \
   --set monitoring.serviceMonitor.labels.k8s-app=prometheus | kubectl apply -f -
 ```
 
