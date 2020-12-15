@@ -14,13 +14,9 @@ section_menu_id: guides
 
 # Monitoring Stash with builtin Prometheus
 
-This tutorial will show you how to configure builtin [Prometheus](https://github.com/prometheus/prometheus) scraper to monitor Stash backup and restore operations as well as Stash operator.
+This tutorial will show you how to configure builtin [Prometheus](https://github.com/prometheus/prometheus) scraper to monitor Stash backup and restore operations as well as the Stash operator.
 
-## Before You Begin
-
-At first, you need to have a Kubernetes cluster, and the kubectl command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
-
-To keep Prometheus resources isolated, we are going to use a separate namespace to deploy Prometheus server.
+To keep Prometheus resources isolated, we are going to use a separate namespace called `monitoring` to deploy the Prometheus server and its respective resources. Create the namespace as below you haven't done already.
 
 ```bash
 $ kubectl create ns monitoring
@@ -29,26 +25,67 @@ namespace/monitoring created
 
 ## Enable Monitoring in Stash
 
-Enable Prometheus monitoring using `prometheus.io/builtin` agent while installing Stash. To know details about how to enable monitoring see [here](/docs/guides/v1alpha1/monitoring/overview.md#how-to-enable-monitoring). Here, we are going to enable monitoring for `backup`, `restore` and `operator` metrics using Helm 3.
+At first, we have to enable Prometheus monitoring in Stash during installation. We have to use `prometheus.io/builtin` as the agent for monitoring via built-in Prometheus.
+
+Here, we are going to enable monitoring for both backup metrics and operator metrics using Helm 3.
+
+<ul class="nav nav-tabs" id="installerTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="new-installer-tab" data-toggle="tab" href="#new-installation" role="tab" aria-controls="new-installation" aria-selected="true">New Installation</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="existing-installation" data-toggle="tab" href="#existing-installation" role="tab" aria-controls="existing-installation" aria-selected="false">Existing Installation</a>
+  </li>
+</ul>
+<div class="tab-content" id="installerTabContent">
+  <div class="tab-pane fade show active" id="new-installation" role="tabpanel" aria-labelledby="new-installer-tab">
+
+### New Installation
+
+If you haven't installed Stash yet, run the following command to enable Prometheus monitoring during installation
 
 ```bash
-$ helm install stash appscode/stash --version {{< param "info.version" >}} \
-  --namespace kube-system \
-  --set monitoring.agent=prometheus.io/builtin \
-  --set monitoring.backup=true \
-  --set monitoring.operator=true
+$ helm install stash appscode/stash -n kube-system \
+--version {{< param "info.version" >}} \
+--set monitoring.agent=prometheus.io/builtin \
+--set monitoring.backup=true \
+--set monitoring.operator=true \
+--set-file license=/path/to/license-file.txt
 ```
 
-This will add necessary annotations to `stash-operator` service. Prometheus server will scrape metrics using those annotations. Let's check which annotations are added to the service,
+</div>
+<div class="tab-pane fade" id="existing-installation" role="tabpanel" aria-labelledby="existing-installation">
+
+### Existing Installation
+
+If you have installed Stash already in your cluster but didn't enable monitoring during installation, you can use `helm upgrade` command to enable monitoring in the existing installation.
+
+```bash
+$ helm upgrade stash appscode/stash -n kube-system \
+--reuse-values \
+--set monitoring.agent=prometheus.io/builtin \
+--set monitoring.backup=true \
+--set monitoring.operator=true
+```
+
+</div>
+</div>
+
+This will add the necessary annotations to `stash` Service. Prometheus server will discover the respective endpoints using those annotations.
+
+Let's verify the annotations has been added to the Service,
+
+```bash
+$ kubectl get service -n kube-system stash -o yaml
+```
 
 ```yaml
-$ kubectl get service -n kube-system stash-operator -o yaml
 apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"stash"},"name":"stash-operator","namespace":"kube-system"},"spec":{"ports":[{"name":"api","port":443,"targetPort":8443},{"name":"pushgateway","port":56789,"targetPort":56789}],"selector":{"app":"stash"}}}
+    meta.helm.sh/release-name: stash
+    meta.helm.sh/release-namespace: kube-system
     prometheus.io/operator_path: /metrics
     prometheus.io/operator_port: "8443"
     prometheus.io/operator_scheme: https
@@ -56,16 +93,16 @@ metadata:
     prometheus.io/pushgateway_port: "56789"
     prometheus.io/pushgateway_scheme: http
     prometheus.io/scrape: "true"
-  creationTimestamp: 2018-11-07T04:10:26Z
   labels:
-    app: stash
-  name: stash-operator
+    app.kubernetes.io/instance: stash
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: stash
+    app.kubernetes.io/version: v0.11.7
+    helm.sh/chart: stash-v0.11.7
+  name: stash
   namespace: kube-system
-  resourceVersion: "1649"
-  selfLink: /api/v1/namespaces/kube-system/services/stash-operator
-  uid: 0e73664a-e243-11e8-a768-080027767ca3
 spec:
-  clusterIP: 10.105.200.228
+  clusterIP: 10.110.53.2
   ports:
   - name: api
     port: 443
@@ -76,16 +113,21 @@ spec:
     protocol: TCP
     targetPort: 56789
   selector:
-    app: stash
+    app.kubernetes.io/instance: stash
+    app.kubernetes.io/name: stash
   sessionAffinity: None
   type: ClusterIP
 status:
   loadBalancer: {}
 ```
 
+The `stash` Service has two endpoints. The `pushgateway` endpoint exports backup, restore, and repository metrics and the `api` endpoint exports Stash operator metrics.
+
+If you look at the annotations section of the above Service, you should see that Stash has added Prometheus specific annotations (prefixed with `prometheus.io`) to the Service.
+
 Here, `prometheus.io/scrape: "true"` annotation indicates that Prometheus should scrape metrics for this service.
 
-The following three annotations point to `pushgateway` endpoints which provides backup and restore metrics.
+The following three annotations point to `pushgateway` endpoint which provides backup and restore metrics.
 
 ```ini
 prometheus.io/pushgateway_path: /metrics
@@ -93,34 +135,55 @@ prometheus.io/pushgateway_port: "56789"
 prometheus.io/pushgateway_scheme: http
 ```
 
-The following three annotations point to `api` endpoints which provides operator specific metrics.
+The following three annotations point to `api` endpoint which provides operator metrics.
 
 ```ini
-prometheus.io/operator_path: /metrics
-prometheus.io/operator_port: "8443"
-prometheus.io/operator_scheme: https
+prometheus.io/builtin_path: /metrics
+prometheus.io/builtin_port: "8443"
+prometheus.io/builtin_scheme: https
 ```
 
 Now, we are ready to configure our Prometheus server to scrape those metrics.
 
 ## Deploy Prometheus Server
 
-We have deployed Stash in `kube-system` namespace. Stash exports operator metrics via TLS secured `api` endpoint. So, Prometheus server need to provide certificate while scraping metrics from this endpoint. Stash has created a secret named `stash-apiserver-certs` with this certificate in `monitoring` namespace as we have specified that we are going to deploy Prometheus in that namespace through `--prometheus-namespace` flag. We have to mount this secret in Prometheus deployment.
+In this section, we are going to configure & deploy a Prometheus server to scrape Stash metrics using the `stash` Service. We are going to deploy the Prometheus server in `monitoring` namespace.
 
-Let's check `stash-apiserver-cert` certificate has been created in `monitoring` namespace.
+**Copy Certificate Secret:**
+
+We have deployed Stash in `kube-system` namespace. Stash exports operator metrics via TLS secured `api` endpoint. So, the Prometheus server needs to provide the respective certificate during scraping the metrics from this endpoint. Stash should create a secret named `stash-apiserver-certs` with the certificate in `kube-system`.
+
+Let's verify that the Secret has been created in `kube-system` namespace.
 
 ```bash
-$ kubectl get secret -n monitoring -l=app=stash
-NAME                   TYPE                DATA   AGE
-stash-apiserver-cert   kubernetes.io/tls   2      2m21s
+$ kubectl get secret -n kube-system -l app.kubernetes.io/instance=stash
+NAME                   TYPE     DATA   AGE
+stash-apiserver-cert   Opaque   2      6m
+stash-license          Opaque   1      6m
+```
+
+Now, we have to copy this Secret in `monitoring` namespace so that we can mount the certificate into our Prometheus server.
+
+Let's copy the `stash-apiserver-cert` Secret into `monitoring` namespace using the following command,
+
+```bash
+kubectl get secret stash-apiserver-cert --namespace=kube-system -oyaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=monitoring -f -
+```
+
+Verify that the Secret has been copied successfully in the `monitoring` namespace,
+
+```bash
+$ kubectl get secret -n monitoring -l app.kubernetes.io/instance=stash
+NAME                   TYPE     DATA   AGE
+stash-apiserver-cert   Opaque   2      109s
 ```
 
 **Create RBAC:**
 
-If you are using a RBAC enabled cluster, you have to give necessary RBAC permissions for Prometheus. Let's create necessary RBAC stuffs for Prometheus,
+Now, let's create the necessary RBAC stuffs for the Prometheus server,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/monitoring/builtin/prom-rbac.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/examples/prom-rbac.yaml
 clusterrole.rbac.authorization.k8s.io/stash-prometheus-server created
 serviceaccount/stash-prometheus-server created
 clusterrolebinding.rbac.authorization.k8s.io/stash-prometheus-server created
@@ -128,7 +191,7 @@ clusterrolebinding.rbac.authorization.k8s.io/stash-prometheus-server created
 
 **Create ConfigMap:**
 
-Now, create a ConfigMap with necessary scraping configuration. Bellow, the YAML of ConfigMap that we are going to create in this tutorial.
+Now, create a ConfigMap with the necessary scraping configuration. Bellow, the YAML of the ConfigMap that we are going to create for scrapping metrics from Stash.
 
 ```yaml
 apiVersion: v1
@@ -154,8 +217,8 @@ data:
       kubernetes_sd_configs:
       - role: endpoints
       relabel_configs:
-      - source_labels: [__meta_kubernetes_service_label_app]
-        regex: stash # default label for stash-operator service is "app: stash". customize this field according to label of stash-operator service of your setup.
+      - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_instance]
+        regex: stash # default label for stash Service is "app.kubernetes.io/instance: stash". customize this field according to label of stash Service of your setup.
         action: keep
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
         regex: true
@@ -198,10 +261,10 @@ data:
       bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       tls_config:
         ca_file: /etc/prometheus/secret/stash-apiserver-cert/tls.crt
-        server_name: stash-operator.kube-system.svc
+        server_name: stash.kube-system.svc
       relabel_configs:
-      - source_labels: [__meta_kubernetes_service_label_app]
-        regex: stash # default label for stash-operator service is "app: stash". customize this field according to label of stash-operator service of your setup.
+      - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_instance]
+        regex: stash # default label for stash Service is "app.kubernetes.io/instance: stash". customize this field according to label of stash Service of your setup.
         action: keep
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
         regex: true
@@ -236,22 +299,22 @@ data:
         action: replace
 ```
 
-Here, we have two scraping job. One is `stash-pushgateway` that scrapes backup and restore metrics and another is `stash-operator` which scrapes operator metrics.
+Here, we have two scraping jobs. The `stash-pushgateway` job scrapes the backup and restore metrics and the `stash-operator` job scrapes operator metrics.
 
-Look at the `tls_config` field of `stash-operator` job. We have provided certificate file through `ca_file` field. This certificate comes from `stash-apiserver-cert` that we are going to mount in Prometheus deployment. Here, `server_name` is used to verify hostname. In our case, the certificate is valid for hostname `server` and `stash-operator.kube-system.svc`.
+Notice the `tls_config` field of `stash-operator` job. We have provided the certificate file through `ca_file` field. This certificate comes from `stash-apiserver-cert` that we are going to mount in the Prometheus Deployment. Here, `server_name` is used to verify hostname. In our case, the certificate is valid for hostname `server` and `stash.kube-system.svc`.
 
-Also note that, we have provided a bearer-token file through `bearer_token_file` field. This file is token for `stash-prometheus-server` serviceaccount that we have created while creating RBAC stuffs. This is required for authorizing Prometheus to Stash API Server.
+Also, note that we have provided a bearer-token file through `bearer_token_file` field. This file is a token for `stash-prometheus-server` ServiceAccount that we have created during creating the RBAC stuffs. This is required for authorizing Prometheus to Stash API Server.
 
 Let's create the ConfigMap we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/monitoring/builtin/prom-config.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/examples/prom-config.yaml
 configmap/stash-prometheus-server-conf created
 ```
 
 **Deploy Prometheus:**
 
-Now, we are ready to deploy Prometheus server. YAML for the deployment that we are going to create for Prometheus is shown below.
+Now, we are ready to deploy our Prometheus server. YAML for the Deployment that we are going to create is shown below.
 
 ```yaml
 apiVersion: apps/v1
@@ -272,7 +335,7 @@ spec:
       serviceAccountName: stash-prometheus-server
       containers:
       - name: prometheus
-        image: prom/prometheus:v2.4.3
+        image: prom/prometheus:v2.23.0
         args:
         - "--config.file=/etc/prometheus/prometheus.yml"
         - "--storage.tsdb.path=/prometheus/"
@@ -301,42 +364,45 @@ spec:
             path: tls.crt
 ```
 
-Notice that, we have mounted `stash-apiserver-cert` secret as a volume at `/etc/prometheus/secret/stash-apiserver-cert` directory.
+Notice that, we have mounted `stash-apiserver-cert` secret as a volume at `/etc/prometheus/secret/stash-apiserver-cert` directory. We have also mounted the ConfigMap `stash-prometheus-server-conf` that we have created earlier with the necessary configuration to scrape metrics from Stash.
 
-Now, let's create the deployment,
+Let's create the Deployment we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/monitoring/builtin/prom-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/examples/prom-deployment.yaml
 deployment.apps/stash-prometheus-server created
 ```
 
-### Verify Monitoring Metrics
-
-Prometheus server is running on port `9090`. We are going to use [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) to access Prometheus dashboard. Run following command on a separate terminal,
+Now, wait for the Prometheus server to go into `Running` state,
 
 ```bash
-$ kubectl port-forward -n monitoring stash-prometheus-server-9ddbf79b6-8l6hk 9090
+$ kubectl get pods -n monitoring
+NAME                                       READY   STATUS    RESTARTS   AGE
+stash-prometheus-server-77d6bc8b68-wtxlt   1/1     Running   0          66s
+```
+
+Once the Prometheus server Pod goes into the `Running` state, it should automatically discover the Stash endpoints using the configuration we have provided in the ConfigMap.
+
+### Verify Monitoring Metrics
+
+Now, we are going to verify whether the Prometheus server has discovered the Stash endpoints or not. The Prometheus server we have deployed above is running on port `9090`. We are going to use [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) to access the Prometheus web UI.
+
+Run following command on a separate terminal to port-forward the Prometheus server Pod,
+
+```bash
+$ kubectl port-forward -n monitoring stash-prometheus-server-77d6bc8b68-wtxlt 9090
 Forwarding from 127.0.0.1:9090 -> 9090
 Forwarding from [::1]:9090 -> 9090
 ```
 
-Now, we can access the dashboard at `localhost:9090`. Open [http://localhost:9090](http://localhost:9090) in your browser. You should see `pushgateway` and `api` endpoints of `stash-operator` service as targets.
+Now, we can access the web UI at `localhost:9090`. Open [http://localhost:9090/targets](http://localhost:9090/targets) in your browser. You should see `pushgateway` and `api` endpoints of `stash` service as targets.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/guides/latest/monitoring/prom-builtin-target.png">
+  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/images/prom_builtin_target.png">
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 
-**Backup and Restore Metrics:**
-
-When you perform a backup or restore using Stash, it will send respective Prometheus metrics. You can check if the metrics have been sent successfully by performing backup and restore as described [here](/docs/guides/latest/workloads/deployment.md).
-
-A screenshot that shows Prometheus metrics send by Stash backup and restore process is given below,
-
-<figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/images/guides/latest/monitoring/prometheus_backup_restore_met.png">
-<figcaption align="center">Fig: Stash Backup and Restore metrics</figcaption>
-</figure>
+As you can see from the above image that the Prometheus server has successfully discovered the Stash endpoints. Now, if you perform backup and restore operations, you should see the respective metrics have been scrapped by the Prometheus server.
 
 ## Cleanup
 
@@ -355,8 +421,3 @@ kubectl delete ns monitoring
 ```
 
 To uninstall Stash follow this [guide](/docs/setup/README.md).
-
-## Next Steps
-
-- Learn how monitoring in Stash works from [here](/docs/guides/latest/monitoring/overview.md).
-- Learn how to monitor Stash using Prometheus operator from [here](/docs/guides/latest/monitoring/coreos.md).
