@@ -20,170 +20,285 @@ Stash has native support for monitoring via [Prometheus](https://prometheus.io/)
 
 ## How Prometheus monitoring works
 
-Stash uses [Prometheus PushGateway](https://github.com/prometheus/pushgateway) to export the metrics for backup & restore operations. Following diagram shows the logical structure of Stash monitoring flow.
+Stash Usage [Prometheus PushGateway](https://github.com/prometheus/pushgateway) to export the metrics for backup & restore operations. The following diagram shows the logical structure of the Stash monitoring flow.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="images/monitoring-structure.svg">
+  <img alt="Stash Monitoring Flow" src="images/monitoring-structure.svg">
 <figcaption align="center">Fig: Monitoring process in Stash</figcaption>
 </figure>
 
-Stash operator runs two containers. The `operator` container runs controllers and other necessary stuffs and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads and backup/restore jobs pushes its metrics to this pushgateway. The pushgateway exposes the metrics at `/metrics` path of `:56789` port. Then, a Prometheus server scrapes these metrics through `stash` or `stash-enterprise` Service and acts as a data source of [Grafana](https://grafana.com/) dashboard.  Stash operator itself also provides some valuable metrics at `/metrics` path of `:8443` port.
+Stash operator runs two containers. The `operator` container runs controllers and other necessary stuff and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads and backup/restore jobs pushes its metrics to this pushgateway. The pushgateway exposes the metrics at `/metrics` path of `:56789` port. Then, a Prometheus server scrapes these metrics through `stash` or `stash-enterprise` Service and acts as a data source of [Grafana](https://grafana.com/) dashboard.  Stash operator itself also provides some valuable metrics at `/metrics` path of `:8443` port.
 
 ## Available Metrics
 
-Stash exports metrics for backup process, restore process, repository status, operator requests handling etc. This section will list the metrics exported by Stash for different process.
+Stash exports metrics for the backup process, restore process, repository status, etc. This section will list the metrics exported by Stash for different processes.
 
 ### Backup Metrics
 
-Following metrics available for backup process:
+This section lists the metrics Stash exports for the backup process.
 
-| Metric                                        | Uses                                                                 |
-| --------------------------------------------- | -------------------------------------------------------------------- |
-| `stash_backup_setup_success`                  | Indicates whether backup was successfully setup for the target       |
-| `stash_backup_session_success`                | Indicates whether the current backup session succeeded or not        |
-| `stash_backup_session_duration_total_seconds` | Total time taken to complete the backup session                      |
-| `stash_backup_data_size_bytes`                | Total size of the target data to backup (in bytes)                   |
-| `stash_backup_data_uploaded_bytes`            | Amount of data uploaded to the repository in this session (in bytes) |
-| `stash_backup_data_processing_time_seconds`   | Total time taken to backup the target data                           |
-| `stash_backup_files_total`                    | Total number of files that has been backed up                        |
-| `stash_backup_files_new`                      | Total number of new files that has been created since last backup    |
-| `stash_backup_files_modified`                 | Total number of files that has been modified since last backup       |
-| `stash_backup_files_unmodified`               | Total number of files that has not been changed since last backup    |
+**Backup Session Metrics:**
+
+A backup session represents a backup run. Stash exports the following metrics regarding the overall backup session.
+
+| Metric Name                              | Usage                                                                            |
+| ---------------------------------------- | -------------------------------------------------------------------------------- |
+| `stash_backup_session_success`           | Indicates whether the entire backup session was succeeded or not                 |
+| `stash_backup_target_count_total`        | Indicates the total number of targets that were backed up in this backup session |
+| `stash_backup_session_duration_seconds`  | Indicates total time taken to complete the entire backup session                 |
+| `stash_backup_last_success_time_seconds` | Indicates the time(in Unix epoch) when the last backup session was succeeded     |
+
+**Backup Target Metrics:**
+In each backup session, Stash takes backup of one or more targets. Stash exports the following metrics for the individual backup target.
+
+| Metric Name                                     | Usage                                                                                  |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `stash_backup_target_success`                   | Indicates whether the backup for a target has succeeded or not                         |
+| `stash_backup_target_host_count_total`          | Indicates the total number of hosts that was backed up for this target                 |
+| `stash_backup_target_last_success_time_seconds` | Indicates the time (in Unix epoch) when the last backup was successful for this target |
+
+**Backup Host Metrics:**
+
+Stash may take a backup of multiple hosts for a single target. The following metrics are available for the individual backup hosts.
+
+| Metric Name                                      | Usage                                                                        |
+| ------------------------------------------------ | ---------------------------------------------------------------------------- |
+| `stash_backup_host_backup_success`               | Indicates whether the backup for a host succeeded or not                     |
+| `stash_backup_host_data_size_bytes`              | Total size of the target data to backup for a host (in bytes)                |
+| `stash_backup_host_data_uploaded_bytes`          | Amount of data uploaded to the repository for a host (in bytes)              |
+| `stash_backup_host_files_total`                  | Total number of files that has been backed up for a host                     |
+| `stash_backup_host_files_new`                    | Total number of new files that has been created since last backup for a host |
+| `stash_backup_host_files_modified`               | Total number of files that has been modified since last backup for a host    |
+| `stash_backup_host_files_unmodified`             | Total number of files that has not been changed since last backup for a host |
+| `stash_backup_host_backup_duration_seconds`      | Indicates total time taken to complete the backup process for a host         |
+| `stash_backup_host_data_processing_time_seconds` | Total time taken to process the target data for a host                       |
 
 ### Repository Metrics
 
-Following metrics are available for backup repository:
+Stash exports the following metrics for a repository.
 
-| Metric                              | Uses                                                                                              |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `stash_repository_integrity`        | Result of repository integrity check after last backup                                            |
-| `stash_repository_size_bytes`       | Indicates size of repository after last backup (in bytes)                                         |
-| `stash_repository_snapshot_count`   | Indicates number of snapshots stored in the repository                                            |
-| `stash_repository_snapshot_cleaned` | Indicates number of old snapshots cleaned up according to retention policy on last backup session |
+| Metric Name                         | Usage                                                                                                 |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `stash_repository_integrity`        | Result of repository integrity check after the last backup                                            |
+| `stash_repository_size_bytes`       | Indicates size of repository after last backup (in bytes)                                             |
+| `stash_repository_snapshot_count`   | Indicates the number of snapshots stored in the repository                                            |
+| `stash_repository_snapshot_cleaned` | Indicates the number of old snapshots cleaned up according to retention policy on last backup session |
 
 ### Restore Metrics
 
-Following metrics are available for restore process:
+This section lists the metrics Stash exports for the restore process.
 
-| Metric                                         | Uses                                                      |
-| ---------------------------------------------- | --------------------------------------------------------- |
-| `stash_restore_session_success`                | Result of repository integrity check after last backup    |
-| `stash_restore_session_duration_total_seconds` | Indicates size of repository after last backup (in bytes) |
+**Restore Session Metrics:**
+
+A restore session represents a restore run. Stash exports the following metrics regarding the overall restore process.
+
+| Metric Name                              | Usage                                                                            |
+| ---------------------------------------- | -------------------------------------------------------------------------------- |
+| `stash_restore_session_success`          | Indicates whether the entire restore session was succeeded or not                |
+| `stash_restore_session_duration_seconds` | Indicates the total time taken to complete the entire restore session            |
+| `stash_restore_target_count_total`       | Indicates the total number of targets that were restored in this restore session |
+
+**Restore Target Metrics:**
+
+Stash restore one or more targets in each restore run. Stash exports the following metrics regarding a restore target.
+
+| Metric Name                             | Usage                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------ |
+| `stash_restore_target_success`          | Indicates whether the restore for a target has succeeded or not                |
+| `stash_restore_target_host_count_total` | Indicates the total number of hosts that were restored for this restore target |
+
+**Restore Host Metrics:**
+
+Stash may restore multiple hosts for a single target. The following metrics are available for the individual restore host.
+
+| Metric Name                                   | Usage                                                                     |
+| --------------------------------------------- | ------------------------------------------------------------------------- |
+| `stash_restore_host_restore_success`          | Indicates whether the restore process was succeeded for a host            |
+| `stash_restore_host_restore_duration_seconds` | Indicates the total time taken to complete the restore process for a host |
 
 ### Operator Metrics
 
-Following metrics are available for Stash operator. These metrics are accessible through `api` endpoint of `stash-operator` service.
+Following metrics are available for the Stash operator. These metrics are accessible through `api` endpoint of `stash` service.
 
-**API Server Metrics:**
+| Metric Name                                       | Usage                                                                                                                 |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `apiserver_audit_event_total`                     | Counter of audit events generated and sent to the audit backend.                                                      |
+| `apiserver_client_certificate_expiration_seconds` | Distribution of the remaining lifetime on the certificate used to authenticate a request.                             |
+| `apiserver_current_inflight_requests`             | Maximal number of currently used inflight request limit of this apiserver per request kind in last second.            |
+| `apiserver_request_count`                         | Counter of apiserver requests broken out for each verb, API resource, client, and HTTP response contentType and code. |
+| `apiserver_request_latencies`                     | Response latency distribution in microseconds for each verb, resource, and subresource.                               |
+| `apiserver_request_latencies_summary`             | Response latency summary in microseconds for each verb, resource, and subresource.                                    |
+| `authenticated_user_requests`                     | Counter of authenticated requests broken out by username.                                                             |
 
-| Metric Name                                     | Uses                                                                                                                  |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| apiserver_audit_event_total                     | Counter of audit events generated and sent to the audit backend.                                                      |
-| apiserver_client_certificate_expiration_seconds | Distribution of the remaining lifetime on the certificate used to authenticate a request.                             |
-| apiserver_current_inflight_requests             | Maximal number of currently used inflight request limit of this apiserver per request kind in last second.            |
-| apiserver_request_count                         | Counter of apiserver requests broken out for each verb, API resource, client, and HTTP response contentType and code. |
-| apiserver_request_latencies                     | Response latency distribution in microseconds for each verb, resource and subresource.                                |
-| apiserver_request_latencies_summary             | Response latency summary in microseconds for each verb, resource and subresource.                                     |
-| authenticated_user_requests                     | Counter of authenticated requests broken out by username.                                                             |
+### Pushgateway Metrics
 
-**Go Metrics:**
+The Pushgateway itself also exports some metrics related to Pushgateway build info, HTTP requests handled by it, Go process that running inside it, and CPU &  Memory consumed by it, etc.
 
-| Metric Name                           | Uses                                                               |
-| ------------------------------------- | ------------------------------------------------------------------ |
-| go_gc_duration_seconds                | A summary of the GC invocation durations.                          |
-| go_goroutines                         | Number of goroutines that currently exist.                         |
-| go_memstats_alloc_bytes               | Number of bytes allocated and still in use.                        |
-| go_memstats_alloc_bytes_total         | Total number of bytes allocated, even if freed.                    |
-| go_memstats_buck_hash_sys_bytes       | Number of bytes used by the profiling bucket hash table.           |
-| go_memstats_frees_total               | Total number of frees.                                             |
-| go_memstats_gc_sys_bytes              | Number of bytes used for garbage collection system metadata.       |
-| go_memstats_heap_alloc_bytes          | Number of heap bytes allocated and still in use.                   |
-| go_memstats_heap_idle_bytes           | Number of heap bytes waiting to be used.                           |
-| go_memstats_heap_inuse_bytes          | Number of heap bytes that are in use.                              |
-| go_memstats_heap_objects              | Number of allocated objects.                                       |
-| go_memstats_heap_released_bytes_total | Total number of heap bytes released to OS.                         |
-| go_memstats_heap_sys_bytes            | Number of heap bytes obtained from system.                         |
-| go_memstats_last_gc_time_seconds      | Number of seconds since 1970 of last garbage collection.           |
-| go_memstats_lookups_total             | Total number of pointer lookups.                                   |
-| go_memstats_mallocs_total             | Total number of mallocs.                                           |
-| go_memstats_mcache_inuse_bytes        | Number of bytes in use by mcache structures.                       |
-| go_memstats_mcache_sys_bytes          | Number of bytes used for mcache structures obtained from system.   |
-| go_memstats_mspan_inuse_bytes         | Number of bytes in use by mspan structures.                        |
-| go_memstats_mspan_sys_bytes           | Number of bytes used for mspan structures obtained from system.    |
-| go_memstats_next_gc_bytes             | Number of heap bytes when next garbage collection will take place. |
-| go_memstats_other_sys_bytes           | Number of bytes used for other system allocations.                 |
-| go_memstats_stack_inuse_bytes         | Number of bytes in use by the stack allocator.                     |
-| go_memstats_stack_sys_bytes           | Number of bytes obtained from system for stack allocator.          |
-| go_memstats_sys_bytes                 | Number of bytes obtained by system. Sum of all system allocations. |
+**Build and Last Activity:**
 
-**HTTP Metrics:**
+| Metric Name              | Usage                                                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `pushgateway_build_info` | A metric with a constant '1' value labeled by version, revision, branch, and goversion from which pushgateway was built. |
+| `push_time_seconds`      | Last Unix time when this group was changed in the Pushgateway.                                                           |
 
-| Metrics                            | Uses                                        |
-| ---------------------------------- | ------------------------------------------- |
-| http_request_duration_microseconds | The HTTP request latencies in microseconds. |
-| http_request_size_bytes            | The HTTP request sizes in bytes.            |
-| http_requests_total                | Total number of HTTP requests made.         |
-| http_response_size_bytes           | The HTTP response sizes in bytes.           |
+**CPU & Memory Related Metrics:**
 
-**Process Metrics:**
+| Metric Name                     | Usage                                                  |
+| ------------------------------- | ------------------------------------------------------ |
+| `process_cpu_seconds_total`     | Total user and system CPU time spent in seconds.       |
+| `process_max_fds`               | Maximum number of open file descriptors.               |
+| `process_open_fds`              | Number of open file descriptors.                       |
+| `process_resident_memory_bytes` | Resident memory size in bytes.                         |
+| `process_start_time_seconds`    | Start time of the process since unix epoch in seconds. |
+| `process_virtual_memory_bytes`  | Virtual memory size in bytes.                          |
 
-| Metric Name                   | Uses                                                   |
-| ----------------------------- | ------------------------------------------------------ |
-| process_cpu_seconds_total     | Total user and system CPU time spent in seconds.       |
-| process_max_fds               | Maximum number of open file descriptors.               |
-| process_open_fds              | Number of open file descriptors.                       |
-| process_resident_memory_bytes | Resident memory size in bytes.                         |
-| process_start_time_seconds    | Start time of the process since unix epoch in seconds. |
-| process_virtual_memory_bytes  | Virtual memory size in bytes.                          |
+**Go Environment Related Metrics:**
+
+| Metric Name                             | Usage                                                                                       |
+| --------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `go_gc_duration_seconds`                | A summary of the GC invocation durations.                                                   |
+| `go_goroutines`                         | Number of goroutines that currently exist.                                                  |
+| `go_info`                               | Information about the Go environment.                                                       |
+| `go_memstats_alloc_bytes`               | Number of bytes allocated and still in use.                                                 |
+| `go_memstats_alloc_bytes_total`         | Total number of bytes allocated, even if freed.                                             |
+| `go_memstats_buck_hash_sys_bytes`       | Number of bytes used by the profiling bucket hash table.                                    |
+| `go_memstats_frees_total`               | Total number of frees.                                                                      |
+| `go_memstats_gc_cpu_fraction`           | The fraction of this program's available CPU time used by the GC since the program started. |
+| `go_memstats_gc_sys_bytes`              | Number of bytes used for garbage collection system metadata.                                |
+| `go_memstats_heap_alloc_bytes`          | Number of heap bytes allocated and still in use.                                            |
+| `go_memstats_heap_idle_bytes`           | Number of heap bytes waiting to be used.                                                    |
+| `go_memstats_heap_inuse_bytes`          | Number of heap bytes that are in use.                                                       |
+| `go_memstats_heap_objects`              | Number of allocated objects.                                                                |
+| `go_memstats_heap_released_bytes_total` | Total number of heap bytes released to OS.                                                  |
+| `go_memstats_heap_sys_bytes`            | Number of heap bytes obtained from system.                                                  |
+| `go_memstats_last_gc_time_seconds`      | Number of seconds since 1970 of last garbage collection.                                    |
+| `go_memstats_lookups_total`             | Total number of pointer lookups.                                                            |
+| `go_memstats_mallocs_total`             | Total number of mallocs.                                                                    |
+| `go_memstats_mcache_inuse_bytes`        | Number of bytes in use by mcache structures.                                                |
+| `go_memstats_mcache_sys_bytes`          | Number of bytes used for mcache structures obtained from system.                            |
+| `go_memstats_mspan_inuse_bytes`         | Number of bytes in use by mspan structures.                                                 |
+| `go_memstats_mspan_sys_bytes`           | Number of bytes used for mspan structures obtained from system.                             |
+| `go_memstats_next_gc_bytes`             | Number of heap bytes when next garbage collection will take place.                          |
+| `go_memstats_other_sys_bytes`           | Number of bytes used for other system allocations.                                          |
+| `go_memstats_stack_inuse_bytes`         | Number of bytes in use by the stack allocator.                                              |
+| `go_memstats_stack_sys_bytes`           | Number of bytes obtained from system for stack allocator.                                   |
+| `go_memstats_sys_bytes`                 | Number of bytes obtained by system. Sum of all system allocations.                          |
+| `go_threads`                            | Number of OS threads created.                                                               |
+
+**HTTP Request Related Metrics:**
+
+| Metric Name                          | Usage                                       |
+| ------------------------------------ | ------------------------------------------- |
+| `http_request_duration_microseconds` | The HTTP request latencies in microseconds. |
+| `http_request_size_bytes`            | The HTTP request sizes in bytes.            |
+| `http_requests_total`                | Total number of HTTP requests made.         |
+| `http_response_size_bytes`           | The HTTP response sizes in bytes.           |
 
 ## How to Enable Monitoring
 
-You can enable monitoring through some flags while installing or upgrading or updating Stash. You can also chose which monitoring agent to use for monitoring. Stash will configure respective resources accordingly. Here, are the list of available flags and their uses,
+You have to enable Prometheus monitoring during installing / upgrading Stash. The following parameters are available to configure monitoring in Stash.
 
-| Script Flag              | Helm Values                        | Acceptable Values                                   | Default                                                                                                                 | Uses                                                                                                                                                                |
-| ------------------------ | ---------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--monitoring-agent`     | `monitoring.agent`                 | `prometheus.io/builtin` or `prometheus.io/operator` | `none`                                                                                                                  | Specify which monitoring agent to use for monitoring Stash.                                                                                                         |
-| `--monitoring-backup`    | `monitoring.backup`                | `true` or `false`                                   | `false`                                                                                                                 | Specify whether to monitor Stash backup and restore.                                                                                                                |
-| `--monitoring-operator`  | `monitoring.operator`              | `true` or `false`                                   | `false`                                                                                                                 | Specify whether to monitor Stash operator.                                                                                                                          |
-| `--servicemonitor-label` | `monitoring.serviceMonitor.labels` | any label                                           | For Helm installation, `app: <generated app name>` and `release: <release name>`. For script installation, `app: stash` | Specify the labels for ServiceMonitor. Prometheus crd will select ServiceMonitor using these labels. Only usable when monitoring agent is `prometheus.io/operator`. |
+| Helm Values                        | Acceptable Values                                   | Default                                                    | Usage                                                                                                                                                               |
+| ---------------------------------- | --------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `monitoring.agent`                 | `prometheus.io/builtin` or `prometheus.io/operator` | `none`                                                     | Specify which monitoring agent to use for monitoring Stash.                                                                                                         |
+| `monitoring.backup`                | `true` or `false`                                   | `false`                                                    | Specify whether to monitor Stash backup and restore.                                                                                                                |
+| `monitoring.operator`              | `true` or `false`                                   | `false`                                                    | Specify whether to monitor Stash operator.                                                                                                                          |
+| `monitoring.serviceMonitor.labels` | any label                                           | `app: <generated app name>` and `release: <release name>`. | Specify the labels for ServiceMonitor. Prometheus crd will select ServiceMonitor using these labels. Only usable when monitoring agent is `prometheus.io/operator`. |
 
-You have to provides these flags while installing or upgrading or updating Stash. Here, are examples for both script and Helm installation process are given which enable monitoring with `prometheus.io/operator` Prometheuse server for `backup`, `restore` and `operator` metrics.
+You can enable monitoring in Stash as below,
+
+<ul class="nav nav-tabs" id="installerTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="new-installer-tab" data-toggle="tab" href="#new-installation" role="tab" aria-controls="new-installation" aria-selected="true">New Installation</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="existing-installation" data-toggle="tab" href="#existing-installation" role="tab" aria-controls="existing-installation" aria-selected="false">Existing Installation</a>
+  </li>
+</ul>
+<div class="tab-content" id="installerTabContent">
+  <div class="tab-pane fade show active" id="new-installation" role="tabpanel" aria-labelledby="new-installer-tab">
+
+### New Installation
+
+If you haven't installed Stash yet, run the following command to enable Prometheus monitoring during installation
 
 **Helm 3:**
 
 ```bash
-$ helm install stash-operator appscode/stash --version {{< param "info.version" >}} \
-  --namespace kube-system \
-  --set monitoring.agent=prometheus.io/operator \
-  --set monitoring.backup=true \
-  --set monitoring.operator=true \
-  --set monitoring.serviceMonitor.labels.k8s-app=prometheus
+$ helm install stash appscode/stash -n kube-system \
+--version {{< param "info.version" >}} \
+--set monitoring.agent=prometheus.io/operator \
+--set monitoring.backup=true \
+--set monitoring.operator=true \
+--set monitoring.serviceMonitor.labels.k8s-app=prometheus \
+--set-file license=/path/to/license-file.txt
 ```
 
 **Helm 2:**
 
 ```bash
-$ helm install appscode/stash --name stash --version {{< param "info.version" >}} \
-  --namespace kube-system \
-  --set monitoring.agent=prometheus.io/operator \
-  --set monitoring.backup=true \
-  --set monitoring.operator=true \
-  --set monitoring.serviceMonitor.labels.k8s-app=prometheus
+$ helm install appscode/stash --name stash -n kube-system \
+--version {{< param "info.version" >}} \
+--set monitoring.agent=prometheus.io/operator \
+--set monitoring.backup=true \
+--set monitoring.operator=true \
+--set monitoring.serviceMonitor.labels.k8s-app=prometheus \
+--set-file license=/path/to/license-file.txt
 ```
 
 **YAML (with Helm 3):**
 
 ```bash
-$ helm template stash-operator appscode/stash --version {{< param "info.version" >}} \
-  --namespace kube-system \
-  --no-hooks \
-  --set monitoring.agent=prometheus.io/operator \
-  --set monitoring.backup=true \
-  --set monitoring.operator=true \
-  --set monitoring.serviceMonitor.labels.k8s-app=prometheus | kubectl apply -f -
+$ helm install stash appscode/stash -n kube-system \
+--no-hooks \
+--version {{< param "info.version" >}} \
+--set monitoring.agent=prometheus.io/operator \
+--set monitoring.backup=true \
+--set monitoring.operator=true \
+--set monitoring.serviceMonitor.labels.k8s-app=prometheus \
+--set-file license=/path/to/license-file.txt | kubectl apply -f -
 ```
 
-## Next Steps
+</div>
+<div class="tab-pane fade" id="existing-installation" role="tabpanel" aria-labelledby="existing-installation">
 
-- Learn how to monitor Stash using built-in Prometheus from [here](/docs/guides/latest/monitoring/builtin.md).
-- Learn how to monitor Stash using Prometheus operator from [here](/docs/guides/latest/monitoring/coreos.md).
+### Existing Installation
+
+If you have installed Stash already in your cluster but didn't enable monitoring during installation, you can use `helm upgrade` command to enable monitoring in the existing installation.
+
+**Helm 3:**
+
+```bash
+$ helm upgrade stash appscode/stash -n kube-system \
+--reuse-values \
+--set monitoring.agent=prometheus.io/operator \
+--set monitoring.backup=true \
+--set monitoring.operator=true \
+--set monitoring.serviceMonitor.labels.k8s-apps=prometheus
+```
+
+**Helm 2:**
+
+```bash
+$ helm upgrade appscode/stash --name stash -n kube-system \
+--reuse-values \
+--set monitoring.agent=prometheus.io/operator \
+--set monitoring.backup=true \
+--set monitoring.operator=true \
+--set monitoring.serviceMonitor.labels.k8s-apps=prometheus
+```
+
+**YAML (with Helm 3):**
+
+```bash
+$ helm upgrade stash appscode/stash -n kube-system \
+--no-hooks \
+--reuse-values \
+--set monitoring.agent=prometheus.io/operator \
+--set monitoring.backup=true \
+--set monitoring.operator=true \
+--set monitoring.serviceMonitor.labels.k8s-apps=prometheus | kubectl apply -f -
+```
+
+</div>
+</div>
