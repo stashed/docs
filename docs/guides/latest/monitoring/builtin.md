@@ -52,7 +52,6 @@ $ helm install stash appscode/stash -n kube-system \
 --set monitoring.operator=true \
 --set-file license=/path/to/license-file.txt
 ```
-
 </div>
 <div class="tab-pane fade" id="existing-installation-tab" role="tabpanel" aria-labelledby="existing-installation-tab">
 
@@ -67,7 +66,6 @@ $ helm upgrade stash appscode/stash -n kube-system \
 --set monitoring.backup=true \
 --set monitoring.operator=true
 ```
-
 </div>
 </div>
 
