@@ -6,7 +6,7 @@ menu:
     identifier: monitoring-builtin
     name: Builtin Prometheus
     parent: monitoring
-    weight: 10
+    weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
@@ -31,14 +31,14 @@ Here, we are going to enable monitoring for both backup metrics and operator met
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="new-installer-tab" data-toggle="tab" href="#new-installation" role="tab" aria-controls="new-installation" aria-selected="true">New Installation</a>
+    <a class="nav-link active" id="new-installer-tab" data-toggle="tab" href="#new-installation-tab" role="tab" aria-controls="new-installation-tab" aria-selected="true">New Installation</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="existing-installation" data-toggle="tab" href="#existing-installation" role="tab" aria-controls="existing-installation" aria-selected="false">Existing Installation</a>
+    <a class="nav-link" id="existing-installation" data-toggle="tab" href="#existing-installation-tab" role="tab" aria-controls="existing-installation-tab" aria-selected="false">Existing Installation</a>
   </li>
 </ul>
 <div class="tab-content" id="installerTabContent">
-  <div class="tab-pane fade show active" id="new-installation" role="tabpanel" aria-labelledby="new-installer-tab">
+  <div class="tab-pane fade show active" id="new-installation-tab" role="tabpanel" aria-labelledby="new-installation-tab">
 
 ### New Installation
 
@@ -54,7 +54,7 @@ $ helm install stash appscode/stash -n kube-system \
 ```
 
 </div>
-<div class="tab-pane fade" id="existing-installation" role="tabpanel" aria-labelledby="existing-installation">
+<div class="tab-pane fade" id="existing-installation-tab" role="tabpanel" aria-labelledby="existing-installation-tab">
 
 ### Existing Installation
 
