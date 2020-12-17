@@ -3,9 +3,9 @@ title: Install Percona XtraDB Addon | Stash
 description: An guide on how to install Percona XtraDB addon for Stash
 menu:
   product_stash_{{ .version }}:
-    identifier: stash-percona-install
+    identifier: stash-percona-xtradb-install
     name: Install
-    parent: stash-percona-setup
+    parent: stash-percona-xtradb-setup
     weight: 10
 product_name: stash
 menu_name: product_stash_{{ .version }}
