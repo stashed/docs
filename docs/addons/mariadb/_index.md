@@ -1,11 +1,10 @@
 ---
-title: Stash MongoDB Addon
+title: Stash MariaDB Addon
 menu:
   docs_{{ .version }}:
-    identifier: stash-mongodb
-    name: MongoDB
+    identifier: stash-mariadb
+    name: MariaDB
     parent: stash-addons
-    weight: 30
+    weight: 60
 menu_name: docs_{{ .version }}
 ---
-

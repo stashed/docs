@@ -1,11 +1,11 @@
 ---
-title: Install MongoDB Addon | Stash
-description: An guide on how to install MongoDB addon for Stash
+title: Install MariaDB Addon | Stash
+description: An guide on how to install MariaDB addon for Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-mongodb-install
+    identifier: stash-mariadb-install
     name: Install
-    parent: stash-mongodb-setup
+    parent: stash-mariadb-setup
     weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -14,9 +14,9 @@ section_menu_id: stash-addons
 
 {{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
-# Install MongoDB Addon for Stash
+# Install MariaDB Addon for Stash
 
-Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extend its capability via addons. In order to backup MongoDB databases, you have to install MongoDB addon (`stash-mongodb`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore MongoDB database.
+Stash uses `Function-Task` model to backup databases. This `Function-Task` model enables Stash to extend its capability via addons. In order to backup MariaDB databases, you have to install MariaDB addon (`stash-mariadb`) for Stash. This addon creates necessary `Function` and `Task` definitions to backup/restore MariaDB database.
 
 You can install the addon either as a helm chart or you can create only the YAMLs of the respective resources.
 
@@ -36,10 +36,10 @@ You can install the addon either as a helm chart or you can create only the YAML
 
 ## Using Helm 3
 
-Run the following script to install `stash-mongodb` addon as a Helm chart using Helm 3.
+Run the following script to install `stash-mariadb` addon as a Helm chart using Helm 3.
 
 ```bash
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mongodb
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mariadb
 ```
 
 </div>
@@ -47,10 +47,10 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 ## Using Helm 2
 
-Run the following script to install `stash-mongodb` addon as a Helm chart using Helm 2.
+Run the following script to install `stash-mariadb` addon as a Helm chart using Helm 2.
 
 ```bash
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm2.sh | bash -s -- --catalog=stash-mongodb
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm2.sh | bash -s -- --catalog=stash-mariadb
 ```
 
 </div>
@@ -58,10 +58,10 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 ## Using YAML
 
-Run the following script to install `stash-mongodb` addon as Kubernetes YAMLs.
+Run the following script to install `stash-mariadb` addon as Kubernetes YAMLs.
 
 ```bash
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/script.sh | bash -s -- --catalog=stash-mongodb
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/script.sh | bash -s -- --catalog=stash-mariadb
 ```
 
 >The above script uses Helm 3 for rendering the charts to generate the YAMLs.
@@ -71,52 +71,40 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 ## Verify Installation
 
-After installation is completed, this addon will create `mongodb-backup-*` and `mongodb-restore-*` Functions and Tasks for all supported MongoDB versions. To verify, run the following command:
+After installation is completed, this addon will create `mariadb-backup-*` and `mariadb-restore-*` Functions and Tasks for all supported MariaDB versions. To verify, run the following command:
 
 ```bash
 $ kubectl get functions.stash.appscode.com
-NAME                    AGE
-mongodb-backup-4.1      20s
-mongodb-backup-4.0      20s
-mongodb-backup-3.6      19s
-mongodb-backup-3.4      20s
-mongodb-restore-4.1     20s
-mongodb-restore-4.0     20s
-mongodb-restore-3.6     19s
-mongodb-restore-3.4     20s
-pvc-backup              7h6m
-pvc-restore             7h6m
-update-status           7h6m
+NAME                     AGE
+mariadb-backup-10.5.8    25s
+mariadb-restore-10.5.8   25s
+pvc-backup               3m14s
+pvc-restore              3m14s
+update-status            3m14s
 ```
 
 Also, verify that the `Task` have been created.
 
 ```bash
 $ kubectl get tasks.stash.appscode.com
-NAME                    AGE
-mongodb-backup-4.1      2m7s
-mongodb-backup-4.0      2m7s
-mongodb-backup-3.6      2m6s
-mongodb-backup-3.4      2m7s
-mongodb-restore-4.1     2m7s
-mongodb-restore-4.0     2m7s
-mongodb-restore-3.6     2m6s
-mongodb-restore-3.4     2m7s
-pvc-backup              7h7m
-pvc-restore             7h7m
+NAME                     AGE
+mariadb-backup-10.5.8    101s
+mariadb-restore-10.5.8   101s
+pvc-backup               4m30s
+pvc-restore              4m30s
 ```
 
-Now, Stash is ready to backup MongoDB databases.
+Now, Stash is ready to backup MariaDB databases.
 
 ## Customizing Installation
 
-In order to install `Function` and `Task` only for a specific MongoDB version, use `--version` flag to specify the desired database version.
+In order to install `Function` and `Task` only for a specific MariaDB version, use `--version` flag to specify the desired database version.
 
 ```bash
-curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mongodb --version=3.6
+curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/deploy/helm3.sh | bash -s -- --catalog=stash-mariadb --version=10.5.8
 ```
 
-The flowing flags are available for customizing MongoDB addon installation:
+The flowing flags are available for customizing MariaDB addon installation:
 
 | Flag                | Usage                                                                                                                                                                                                                                                                                         |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -124,5 +112,5 @@ The flowing flags are available for customizing MongoDB addon installation:
 | `--docker-registry` | Specify the docker registry to use to pull respective addon images. Default Value: `stashed`.                                                                                                                                                                                                 |
 | `--image`           | Specify the name of the docker image to use for respective addons.                                                                                                                                                                                                                            |
 | `--image-tag`       | Specify the tag of the docker image to use for respective addon.                                                                                                                                                                                                                              |
-| `--backup-args`     | Specify optional arguments to pass to `mongodump` command during backup. These arguments apply to all MongoDB instances in this cluster. To set arguments for a specific MongoDB database instance, set `args` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
-| `--restore-args`    | Specify optional arguments to pass to `mongorestore` command during restore. These arguments apply to all MongoDB instances in this cluster. To set arguments for a specific MongoDB database instance, set `args` parameter in `spec.task.params` field of the respective `RestoreSession`.  |
+| `--backup-args`     | Specify optional arguments to pass to `mysqldump` command during backup. These arguments apply to all MariaDB instances in this cluster. To set arguments for a specific MariaDB database instance, set `args` parameter in `spec.task.params` field of the respective `BackupConfiguration`. |
+| `--restore-args`    | Specify optional arguments to pass to `mysql` command during restore. These arguments apply to all MariaDB instances in this cluster. To set arguments for a specific MariaDB database instance, set `args` parameter in `spec.task.params` field of the respective `RestoreSession`.         |
