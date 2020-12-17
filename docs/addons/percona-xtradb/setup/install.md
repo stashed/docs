@@ -71,13 +71,13 @@ curl -fsSL https://github.com/stashed/catalog/raw/{{< param "info.catalog" >}}/d
 
 ## Verify Installation
 
-After installation is completed, this addon will create `percona-backup-*` and `percona-restore-*` Functions and Tasks for all supported Percona XtraDB versions. To verify, run the following command:
+After installation is completed, this addon will create `percona-xtradb-backup-*` and `percona-xtradb-restore-*` Functions and Tasks for all supported Percona XtraDB versions. To verify, run the following command:
 
 ```bash
 $ kubectl get functions.stash.appscode.com
 NAME                        AGE
-percona-backup-5.7   20s
-percona-restore-5.7  20s
+percona-xtradb-backup-5.7   20s
+percona-xtradb-restore-5.7  20s
 pvc-backup                  7h6m
 pvc-restore                 7h6m
 update-status               7h6m
@@ -88,8 +88,8 @@ Also, verify that the `Task` have been created.
 ```bash
 $ kubectl get tasks.stash.appscode.com
 NAME                        AGE
-percona-backup-5.7   2m7s
-percona-restore-5.7  2m7s
+percona-xtradb-backup-5.7   2m7s
+percona-xtradb-restore-5.7  2m7s
 pvc-backup                  7h7m
 pvc-restore                 7h7m
 ```
