@@ -27,7 +27,7 @@ Stash uses [Prometheus PushGateway](https://github.com/prometheus/pushgateway) t
 <figcaption align="center">Fig: Monitoring process in Stash</figcaption>
 </figure>
 
-Stash operator runs two containers. The `operator` container runs controllers and other necessary stuff and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads and backup/restore jobs pushes its metrics to this pushgateway. The pushgateway exposes the metrics at `/metrics` path of `:56789` port. Then, a Prometheus server scrapes these metrics through `stash` or `stash-enterprise` Service and acts as a data source of [Grafana](https://grafana.com/) dashboard.  Stash operator itself also provides some valuable metrics at `/metrics` path of `:8443` port.
+Stash operator runs two containers. The `operator` container runs controllers and other necessary stuff and the `pushgateway` container runs [prom/pushgateway](https://hub.docker.com/r/prom/pushgateway) image. Stash sidecar from different workloads and backup/restore jobs pushes its metrics to this pushgateway. The pushgateway exposes the metrics at `/metrics` path of `:56789` port. Then, a Prometheus server scrapes these metrics through `stash` or `stash-enterprise` Service and acts as a data source of [Grafana](https://grafana.com/) dashboard. Stash operator itself also provides some valuable metrics at `/metrics` path of `:8443` port.
 
 ## Available Metrics
 
@@ -132,7 +132,7 @@ Following metrics are available for the Stash operator. These metrics are access
 
 ### Pushgateway Metrics
 
-The Pushgateway itself also exports some metrics related to Pushgateway build info, HTTP requests handled by it, Go process that running inside it, and CPU &  Memory consumed by it, etc.
+The Pushgateway itself also exports some metrics related to Pushgateway build info, HTTP requests handled by it, Go process that running inside it, and CPU & Memory consumed by it, etc.
 
 **Build and Last Activity:**
 

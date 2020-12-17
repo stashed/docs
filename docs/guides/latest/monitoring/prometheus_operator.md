@@ -177,6 +177,7 @@ $ helm install stash appscode/stash -n kube-system \
 --set monitoring.serviceMonitor.labels.release=prometheus-stack \
 --set-file license=/path/to/license-file.txt
 ```
+
 </div>
 <div class="tab-pane fade" id="existing-installation-tab" role="tabpanel" aria-labelledby="existing-installation-tab">
 
@@ -192,6 +193,7 @@ $ helm upgrade stash appscode/stash -n kube-system \
 --set monitoring.operator=true \
 --set monitoring.serviceMonitor.labels.release=prometheus-stack
 ```
+
 </div>
 </div>
 
@@ -245,7 +247,7 @@ spec:
       app.kubernetes.io/name: stash
 ```
 
-Here, we have two endpoints in `spec.endpoints` section. The `pushgateway` endpoint exports backup and recovery metrics and the  `api` endpoint exports the operator metrics.
+Here, we have two endpoints in `spec.endpoints` section. The `pushgateway` endpoint exports backup and recovery metrics and the `api` endpoint exports the operator metrics.
 
 ## Verify Monitoring
 
