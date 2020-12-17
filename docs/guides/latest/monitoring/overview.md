@@ -20,7 +20,7 @@ Stash has native support for monitoring via [Prometheus](https://prometheus.io/)
 
 ## How Prometheus monitoring works
 
-Stash Usage [Prometheus PushGateway](https://github.com/prometheus/pushgateway) to export the metrics for backup & restore operations. The following diagram shows the logical structure of the Stash monitoring flow.
+Stash uses [Prometheus PushGateway](https://github.com/prometheus/pushgateway) to export the metrics for backup & restore operations. The following diagram shows the logical structure of the Stash monitoring flow.
 
 <figure align="center">
   <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/images/monitoring-structure.svg">

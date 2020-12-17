@@ -16,7 +16,7 @@ section_menu_id: guides
 
 This tutorial will show you how to configure builtin [Prometheus](https://github.com/prometheus/prometheus) scraper to monitor Stash backup and restore operations as well as the Stash operator.
 
-To keep Prometheus resources isolated, we are going to use a separate namespace called `monitoring` to deploy the Prometheus server and its respective resources. Create the namespace as below you haven't done already.
+To keep Prometheus resources isolated, we are going to use a separate namespace called `monitoring` to deploy the Prometheus server and its respective resources. Create the namespace as below if you haven't done already.
 
 ```bash
 $ kubectl create ns monitoring
