@@ -16,7 +16,7 @@ spec:
       serviceAccountName: stash-prometheus-server
       containers:
       - name: prometheus
-        image: prom/prometheus:v2.4.3
+        image: prom/prometheus:v2.23.0
         args:
         - "--config.file=/etc/prometheus/prometheus.yml"
         - "--storage.tsdb.path=/prometheus/"
