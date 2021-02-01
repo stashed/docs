@@ -123,7 +123,7 @@ $ helm template stash appscode/stash          \
   --version {{< param "info.community" >}}                \
   --namespace kube-system                     \
   --set-file license=/path/to/the/license.txt \
-  --no-hooks | kubectl apply -f -
+  --set cleaner.skip=true | kubectl apply -f -
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash).
