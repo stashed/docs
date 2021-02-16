@@ -16,11 +16,11 @@ section_menu_id: setup
 
 Stash Enterprise edition is the open core version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview.md).
 
-If you are willing to try Stash Enterprise Edition, you can grab a **14 days trial** license from [here](https://license-issuer.appscode.com/).
+If you are willing to try Stash Enterprise Edition, you can grab a **30 days trial** license from [here](https://license-issuer.appscode.com/).
 
 ## Get a Trial License
 
-In this section, we are going to show you how you can get a **14 days trial** license for Stash Enterprise edition. You can get a license for your Kubernetes cluster by going through the following steps:
+In this section, we are going to show you how you can get a **30 days trial** license for Stash Enterprise edition. You can get a license for your Kubernetes cluster by going through the following steps:
 
 - At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
 - Provide your name and email address. **You must provide your work email address**.
