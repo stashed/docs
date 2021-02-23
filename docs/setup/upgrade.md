@@ -14,11 +14,11 @@ section_menu_id: setup
 
 # Upgrading Stash
 
-This guide will show you how to upgrade Stash operator. Here, we are going to show how to update the license and how to upgrade between two Stash versions.
+This guide will show you how to upgrade the Stash operator. Here, we are going to show how to update the license and how to upgrade between two Stash versions.
 
 ## Upgrading Operator
 
-If you are using Stash `v202X.X.X`, you can easily upgrade to latest version. At first, make sure that you have read the changelog of your desired version from [here](https://github.com/stashed/CHANGELOG). Then, follow the following steps.
+If you are using Stash `v202X.X.X`, you can easily upgrade to the latest version. At first, make sure that you have read the changelog of your desired version from [here](https://github.com/stashed/CHANGELOG). Then, follow the following steps.
 
 #### 1. Update Operator
 
@@ -64,7 +64,7 @@ $ helm upgrade stash-enterprise appscode/stash-enterprise  \
 $ helm template stash-enterprise appscode/stash-enterprise  \
     --set-file license=/path/to/new/license.txt             \
     --show-only templates/license.yaml                      \
-    --no-hooks | kubectl apply -f -
+    --set cleaner.skip=true | kubectl apply -f -
 ```
 
 </div>
@@ -72,7 +72,13 @@ $ helm template stash-enterprise appscode/stash-enterprise  \
 
 #### 2. Update Addons
 
+Once you have updated the operator successfully, you might need to update the addons too. Go to the respective addon documentation and check whether the suffix of the addons has changed or not. If the addon suffix does not match with the installed ones, then you have to upgrade them.
+
+In this case, uninstall the old addons by following their respective uninstallation guide. Then, reinstall the new versions.
+
 #### 3. Update Existing Backup Resources
+
+When you have updated the addons to the new version, you have to update the `Task` name in  `spec.task.name` filed of `BackupConfiguration` or `BackupBlueprint` to point to the right addon version. Otherwise, the subsequent backup runs may fail.
 
 ## Updating License
 
@@ -125,7 +131,7 @@ $ helm upgrade stash-enterprise appscode/stash-enterprise  \
 $ helm template stash-enterprise appscode/stash-enterprise  \
     --set-file license=/path/to/new/license.txt             \
     --show-only templates/license.yaml                      \
-    --no-hooks | kubectl apply -f -
+    --set cleaner.skip=true | kubectl apply -f -
 ```
 
 </div>
@@ -133,7 +139,7 @@ $ helm template stash-enterprise appscode/stash-enterprise  \
 
 ## Upgrading Between Community Edition and Enterprise Edition
 
-Stash uses two different binaries for Community edition and Enterprise edition. So, it is not possible to upgrade between the Community edition and Enterprise edition without re-installation. However, it is possible to re-install Stash without losing the existing backup resources.
+Stash uses two different binaries for Community edition and Enterprise edition. So, it is not possible to upgrade between the Community Edition and Enterprise edition without re-installation. However, it is possible to re-install Stash without losing the existing backup resources.
 
 Follow the below instructions to re-install Stash:
 
@@ -142,9 +148,9 @@ Follow the below instructions to re-install Stash:
 
 ## Upgrading from 0.9.x to v2020.x.x
 
-If you are upgrading from `0.9.x` which did not use license verification to new `v2020.x.x`, you have to first uninstall the old version. Then, you have to re-install the new version.
+If you are upgrading from `0.9.x` which did not use license verification to the new `v2020.x.x`, you have to first uninstall the old version. Then, you have to re-install the new version.
 
-If you are upgrading from `0.9.x` to `v2020.x.x` Community edition, please note that following features are only available in Enterprise edition:
+If you are upgrading from `0.9.x` to `v2020.x.x` Community edition, please note that the following features are only available in Enterprise edition:
 
 - **Auto-Backup:** Auto-backup is now an enterprise feature. You won't be able to setup any new backup using auto-backup. However, your existing auto-backup resources should keep functioning.
 - **Batch Backup:** Batch backup and restore is also now an enterprise feature. You won't be able to create any new backup using batch-backup. However, your existing backup should continue to work and you would be able to restore the data that were backed up using BatchBackup.
