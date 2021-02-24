@@ -4,7 +4,7 @@ metadata:
   name: quick-postgres
   namespace: demo
   labels:
-    kubedb.com/kind: Postgres
+    app.kubernetes.io/name: postgreses.kubedb.com
     kubedb.com/name: quick-postgres
   annotations:
     stash.appscode.com/backup-template: pg-backup

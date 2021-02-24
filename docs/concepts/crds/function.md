@@ -65,15 +65,14 @@ spec:
   - name: ${secretVolume}
     mountPath: /etc/repository/secret
   runtimeSettings:
-    container:
-      resources:
-        requests:
-          memory: 256M
-        limits:
-          memory: 256M
-      securityContext:
-        runAsUser: 5000
-        runAsGroup: 5000
+    resources:
+      requests:
+        memory: 256M
+      limits:
+        memory: 256M
+    securityContext:
+      runAsUser: 5000
+      runAsGroup: 5000
 ```
 
 A sample `Function` that updates `BackupSession` and `Repository`  status and sends metrics to Prometheus pushgateway is shown below,

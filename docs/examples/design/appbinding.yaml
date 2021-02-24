@@ -4,8 +4,7 @@ metadata:
   name: quick-postgres
   namespace: demo
   labels:
-    kubedb.com/kind: Postgres
-    kubedb.com/name: quick-postgres
+    app.kubernetes.io/name: postgreses.kubedb.com
 spec:
   clientConfig:
     insecureSkipTLSVerify: true

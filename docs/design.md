@@ -250,7 +250,7 @@ metadata:
   name: quick-postgres
   namespace: demo
   labels:
-    kubedb.com/kind: Postgres
+    app.kubernetes.io/name: postgreses.kubedb.com
     kubedb.com/name: quick-postgres
 spec:
   clientConfig:
@@ -548,7 +548,7 @@ metadata:
   name: quick-postgres
   namespace: demo
   labels:
-    kubedb.com/kind: Postgres
+    app.kubernetes.io/name: postgreses.kubedb.com
     kubedb.com/name: quick-postgres
     # if stash find bellow annotations, it will take backup of it.
     annotations:
