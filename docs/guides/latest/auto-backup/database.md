@@ -1,6 +1,6 @@
 ---
 title: Auto Backup Databases | Stash
-description: An step by step guide on how to configure automatic backup for Databases.
+description: Stash auto-backup for databases.
 menu:
   docs_{{ .version }}:
     identifier: auto-backup-database
@@ -16,105 +16,25 @@ section_menu_id: guides
 
 # Auto Backup for Database
 
-This tutorial will show you how to configure automatic backup for PostgreSQL database using Stash. Here, we are going to backup two different PostgreSQL databases of two different version using a common blueprint.
+This tutorial will give you an overview of how you can configure Stash auto-backup of the databases and the available configurable options for database auto-backup.
 
-## Before You Begin
+## Configuring auto-backup for databases
 
-- At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
-- Install Stash in your cluster following the steps [here](/docs/setup/README.md).
-- Install PostgreSQL addon for Stash following the steps [here](/docs/addons/postgres/setup/install.md).
-- Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running a production grade databases on private and public clouds.
-- If you are not familiar with how Stash backup and restore PostgreSQL databases, please check the following guide [here](/docs/addons/postgres/overview.md).
+To configure auto-backup for a database, you have to follow the following steps:
 
-You should be familiar with the following `Stash` concepts:
+- **Create BackupBlueprint:** At first, you have to create a `BackupBlueprint` with the template for `Repository` and `BackupConfiguration`. Use the appropriate `Task` in the `task` section.
+- **Create Storage Secret:** Then, you have to create a storage Secret in the same namespace as your database with the access credential to your backend. You can re-use this secret to backup the other databases in that namespace.
+- **Add auto-backup annotations:** Finally, add the auto-backup annotations to your database object or the respective `AppBinding` object.
 
-- [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [Repository](/docs/concepts/crds/repository.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
+## Where to put auto-backup annotations
 
-To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
+If you are using KubeDB to manage your databases, you can add the annotations to your database object. KubeDB will automatically pass those annotations to the respective `AppBinding`.
 
-```bash
-$ kubectl create ns demo
-namespace/demo created
-```
+If you are not managing your database using KubeDB, you have to add the annotation in the respective `AppBinding` that you have created for your database.
 
-> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/latest/auto-backup/database](/docs/examples/guides/latest/auto-backup/database) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+## Available Auto-Backup Annotations for Database
 
-## Prepare Backup Blueprint
-
-We are going to use [GCS Backend](/docs/guides/latest/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupBlueprint` to match with your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/latest/backends/overview.md).
-
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/latest/backends/gcs.md).
-
-**Create Storage Secret:**
-
-At first, let's create a Storage Secret for the GCS backend,
-
-```bash
-$ echo -n 'changeit' > RESTIC_PASSWORD
-$ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ mv downloaded-sa-json.key GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-$ kubectl create secret generic -n demo gcs-secret \
-    --from-file=./RESTIC_PASSWORD \
-    --from-file=./GOOGLE_PROJECT_ID \
-    --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-secret/gcs-secret created
-```
-
-**Create BackupBlueprint:**
-
-Now, we have to create a `BackupBlueprint` crd with a blueprint for `Repository` and `BackupConfiguration` object.
-
-Below is the YAML of the `BackupBlueprint` object that we are going to create,
-
-```yaml
-apiVersion: stash.appscode.com/v1beta1
-kind: BackupBlueprint
-metadata:
-  name: postgres-backup-blueprint
-spec:
-  # ============== Blueprint for Repository ==========================
-  backend:
-    gcs:
-      bucket: appscode-qa
-      prefix: stash-backup/${TARGET_NAMESPACE}/${TARGET_APP_RESOURCE}/${TARGET_NAME}
-    storageSecretName: gcs-secret
-  # ============== Blueprint for BackupConfiguration =================
-  task:
-    name: postgres-backup-${TARGET_APP_VERSION}
-  schedule: "*/5 * * * *"
-  retentionPolicy:
-    name: 'keep-last-5'
-    keepLast: 5
-    prune: true
-```
-
-Here,
-
-- `spec.task.name` specifies the `Task` crd name that will be used to backup the targeted database. We have used a variable `${TARGET_APP_VERSION}` as task name suffix. This variable will be substituted by the respective database version. This allows to backup multiple database versions with a common blueprint.
-
-Note that we have used some variables (format: `${<variable name>}`) in `spec.backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. To learn which variables you can use in the `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-blueprint).
-
-Let's create the `BackupBlueprint` that we have shown above,
-
-```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/latest/auto-backup/database/backupblueprint.yaml
-backupblueprint.stash.appscode.com/postgres-backup-blueprint created
-```
-
-Now, automatic backup is configured for PostgreSQL database. We just have to add a annotation to the `AppBinding` of the targeted database.
-
-> Note: `BackupBlueprint` is a non-namespaced crd. So, you can use a `BackupBlueprint` to backup targets in multiple namespaces. However, Storage Secret is a namespaced object. So, you have to manually create the secret in each namespace where you have a target for backup. Please give us your feedback on how to improve the ux of this aspect of Stash on [GitHub](https://github.com/stashed/stash/issues/842).
-
-**Available Auto-Backup Annotations for Database:**
-
-You have to add the auto-backup annotations to the `AppBinding` CR of the targeted database. If you are using KubeDB, you can add these annotations to the respective database CR. KubeDB will pass the annotations into the respective `AppBinding`.
-
-The following auto-backup annotations are available for databases:
+The following auto-backup annotations are available for the databases:
 
 - **BackupBlueprint Name:** You have to specify the `BackupBlueprint` name that holds the template for `Repository` and `BackupConfiguration` in the following annotation:
 
@@ -122,13 +42,13 @@ The following auto-backup annotations are available for databases:
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
-- **Schedule:** You can specify a schedule to backup this target through this annotation. If you don't specify this annotation, schedule from the `BackupBlueprint` will be used.
+- **Schedule:** You can specify a custom schedule for a target to overwrite the schedule of the BackupBlueprint through this annotation.
 
 ```yaml
  stash.appscode.com/schedule: <Cron Expression>
 ```
 
-- **Task Parameters:** You can also pass some parameters to the respective backup Task through annotations. Use following format to pass parameters via annotations:
+- **Task Parameters:** You can also pass some parameters to the respective backup `Task` through annotations. Use following format to pass parameters via annotations:
 
 ```yaml
 params.stash.appscode.com/key1: value1
@@ -136,13 +56,7 @@ params.stash.appscode.com/key2: value2,value3
 params.stash.appscode.com/key3: ab=123,bc=234
 ```
 
-## Prepare Databases
-
-Now, we are going to deploy two sample PostgreSQL databases of two different versions using KubeDB. We are going to backup these two databases using auto-backup.
-
-**Deploy First PostgreSQL Sample:**
-
-Below is the YAML of the first `Postgres` crd,
+The above parameters will be added in the `spec.task.params` section as bellow,
 
 ```yaml
 apiVersion: kubedb.com/v1alpha2
@@ -550,4 +464,5 @@ kubectl delete -n demo repository/postgres-sample-postgres-2
 kubectl delete -n demo backupblueprint/postgres-backup-blueprint
 ```
 
-If you would like to uninstall Stash operator, please follow the steps [here](/docs/setup/README.md).
+- [Backup PostgreSQL using Stash Auto-Backup](/docs/addons/postgres/guides/auto-backup/index.md)
+- [Backup Elasticsearch using Stash Auto-Backup](/docs/addons/elasticsearch/guides/auto-backup/index.md)
