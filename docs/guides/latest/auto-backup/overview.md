@@ -45,6 +45,24 @@ The automatic backup process consists of the following steps:
 
 > Note: `BackupBlueprint` is a non-namespaced crd. So, you can use a `BackupBlueprint` to backup targets in multiple namespaces. However, Storage Secret is a namespaced object. So, you have to manually create the secret in each namespace where you have a target for backup. Please give us your feedback on how to improve the ux of this aspect of Stash on [GitHub](https://github.com/stashed/stash/issues/842).
 
+## Frequently Asked Question regarding Auto-backup
+
+In this guide, we are going to answer some frequently asked questions regarding Stash auto-backup. If your query isn't answer here, feel free to open an issue [here](https://github.com/stashed/stash/issues).
+
+#### What will happen if I remove the auto-backup annotations?
+
+If you remove the auto-backup annotation, the respective `BackupConfiguration` will be deleted. If you are taking backup of workload volume, the respective sidecar will be removed and your workload will restart. The backup will stop immediately. If there is any running `BackupSession`, it will be deleted and the backup may terminate in incomplete state.
+
+The respective `Repository` object will be preserved as well as the backed up data. If you add the auto-backup annotation again, the previous `Repository` will be used until you modify/change the respective `BackupBlueprint`.
+
+#### What if different target require different runtime settings?
+
+Currently, you can't pass runtime settings via annotation. So, if different target needs different runtime settings, you have to create separate `BackupBlueprint` for them.
+
+#### What if I want to have different retention policy for different targets?
+
+Currently, you can't pass retention policy via annotation. So, if different target needs different retention policy, you have to create separate `BackupBlueprint` for them.
+
 ## Next Step
 
 - Learn how to configure automatic backup for workloads from [here](/docs/guides/latest/auto-backup/workload.md).
