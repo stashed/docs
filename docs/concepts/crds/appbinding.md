@@ -39,10 +39,7 @@ metadata:
     app.kubernetes.io/component: database
     app.kubernetes.io/instance: quick-postgres
     app.kubernetes.io/managed-by: kubedb.com
-    app.kubernetes.io/name: postgres
-    app.kubernetes.io/version: 10.2-v2
-    kubedb.com/kind: Postgres
-    kubedb.com/name: quick-postgres
+    app.kubernetes.io/name: postgreses.kubedb.com
 spec:
   type: kubedb.com/postgres
   secret:
@@ -54,7 +51,7 @@ spec:
       port: 5432
       query: sslmode=disable
       scheme: postgresql
-  version: 10.2
+  version: "10.2"
 ```
 
 Here, we are going to describe the sections of an `AppBinding` crd that are relevant to Stash.

@@ -382,7 +382,7 @@ $ kubectl get repository -n demo persistentvolumeclaim-nfs-pvc -o yaml
 ```
 
 ```yaml
-apiVersion: stash.appscode.com/v1beta1
+apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   creationTimestamp: "2019-08-19T09:18:55Z"

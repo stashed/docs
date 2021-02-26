@@ -154,8 +154,8 @@ $ kubectl get secret -n demo gcs-secret -o yaml
 ```yaml
 apiVersion: v1
 data:
-  GOOGLE_PROJECT_ID: <base64 encoded google project id>
-  GOOGLE_SERVICE_ACCOUNT_JSON_KEY: <base64 encoded google service account json key>
+  GOOGLE_PROJECT_ID: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded google project id>
+  GOOGLE_SERVICE_ACCOUNT_JSON_KEY: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded google service account json key>
   RESTIC_PASSWORD: Y2hhbmdlaXQ=
 kind: Secret
 metadata:

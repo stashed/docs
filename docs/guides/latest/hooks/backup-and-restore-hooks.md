@@ -53,7 +53,7 @@ At first, let's deploy a MySQL database. Here, we are going to deploy MySQL `8.0
 Below is the `MySQL` CR(Custom Resource) that we are going to create,
 
 ```yaml
-apiVersion: kubedb.com/v1alpha1
+apiVersion: kubedb.com/v1alpha2
 kind: MySQL
 metadata:
   name: sample-mysql

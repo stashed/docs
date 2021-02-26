@@ -33,15 +33,14 @@ spec:
   - name: ${secretVolume}
     mountPath: /etc/repository/secret
   runtimeSettings:
-    container:
-      resources:
-        requests:
-          memory: 256M
-        limits:
-          memory: 256M
-      securityContext:
-        runAsUser: 5000
-        runAsGroup: 5000
+    resources:
+      requests:
+        memory: 256M
+      limits:
+        memory: 256M
+    securityContext:
+      runAsUser: 5000
+      runAsGroup: 5000
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: Function

@@ -2,11 +2,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: deployment-demo
+  namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: deployment-demo
+  namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16,7 +18,7 @@ subjects:
   name: deployment-demo
   namespace: default
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -25,6 +27,9 @@ metadata:
   namespace: default
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-demo
   template:
     metadata:
       labels:

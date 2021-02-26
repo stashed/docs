@@ -223,7 +223,7 @@ $ kubectl get repository -n demo deployment-stash-demo -o yaml
 ```
 
 ```yaml
-apiVersion: stash.appscode.com/v1beta1
+apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   name: deployment-stash-demo
@@ -432,7 +432,7 @@ $ kubectl get repository -n demo statefulset-sts-demo -o yaml
 ```
 
 ```yaml
-apiVersion: stash.appscode.com/v1beta1
+apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   name: statefulset-sts-demo
@@ -616,7 +616,7 @@ $ kubectl get repository -n demo daemonset-dmn-demo -o yaml
 ```
 
 ```yaml
-apiVersion: stash.appscode.com/v1beta1
+apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   name: daemonset-dmn-demo

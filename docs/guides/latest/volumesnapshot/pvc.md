@@ -52,13 +52,13 @@ storageclass.storage.k8s.io/standard created
 We also need a `VolumeSnapshotClass`. We are going to use the following `VolumeSnapshotClass` for this tutorial,
 
 ```yaml
-apiVersion: snapshot.storage.k8s.io/v1alpha1
+apiVersion: snapshot.storage.k8s.io/v1beta1
 kind: VolumeSnapshotClass
 metadata:
-  annotations:
-    snapshot.storage.kubernetes.io/is-default-class: "true"
-  name: default-snapshot-class
-snapshotter: pd.csi.storage.gke.io
+  name: csi-gce-pd-snapshot-class
+driver: pd.csi.storage.gke.io
+deletionPolicy: Delete
+
 ```
 
 Here,
@@ -260,7 +260,7 @@ kubectl get volumesnapshot source-data-1563186667  -n demo -o yaml
 ```
 
 ```yaml
-apiVersion: snapshot.storage.k8s.io/v1alpha1
+apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
   creationTimestamp: "2019-07-15T10:31:09Z"
@@ -270,16 +270,14 @@ metadata:
   name: source-data-1563186667
   namespace: demo
   resourceVersion: "32098"
-  selfLink: /apis/snapshot.storage.k8s.io/v1alpha1/namespaces/demo/volumesnapshots/source-data-1563186667
+  selfLink: /apis/snapshot.storage.k8s.io/v1/namespaces/demo/volumesnapshots/source-data-1563186667
   uid: a8e8faeb-a6eb-11e9-9f3a-42010a800050
 spec:
-  snapshotClassName: default-snapshot-class
-  snapshotContentName: snapcontent-a8e8faeb-a6eb-11e9-9f3a-42010a800050
   source:
-    apiGroup: null
-    kind: PersistentVolumeClaim
-    name: source-data
+    persistentVolumeClaimName: source-data
+  volumeSnapshotClassName: default-snapshot-class
 status:
+  boundVolumeSnapshotContentName: snapcontent-a8e8faeb-a6eb-11e9-9f3a-42010a800050
   creationTime: "2019-07-15T10:31:10Z"
   readyToUse: true
   restoreSize: 1Gi

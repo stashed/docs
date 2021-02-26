@@ -36,7 +36,7 @@ Kubernetes does not support adding sidecar to a StatefulSet after it is created.
 If you don't want to enable **mutating webhook** then you have to add Stash sidecar container to your StatefulSet manually. You can see the relevant portions of a working example below:
 
 ```yaml
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
@@ -46,6 +46,9 @@ metadata:
 spec:
   replicas: 1
   serviceName: headless
+  selector:
+    matchLabels:
+      app: statefulset-demo
   template:
     metadata:
       labels:

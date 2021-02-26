@@ -250,8 +250,8 @@ metadata:
   name: quick-postgres
   namespace: demo
   labels:
-    kubedb.com/kind: Postgres
-    kubedb.com/name: quick-postgres
+    app.kubernetes.io/name: postgreses.kubedb.com
+    app.kubernetes.io/instance: quick-postgres
 spec:
   clientConfig:
     insecureSkipTLSVerify: true
@@ -548,8 +548,8 @@ metadata:
   name: quick-postgres
   namespace: demo
   labels:
-    kubedb.com/kind: Postgres
-    kubedb.com/name: quick-postgres
+    app.kubernetes.io/name: postgreses.kubedb.com
+    app.kubernetes.io/instance: quick-postgres
     # if stash find bellow annotations, it will take backup of it.
     annotations:
       stash.appscode.com/backuptemplate: "pgdb-backup-template"

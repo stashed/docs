@@ -145,7 +145,7 @@ Now, we are going to deploy two sample PostgreSQL databases of two different ver
 Below is the YAML of the first `Postgres` crd,
 
 ```yaml
-apiVersion: kubedb.com/v1alpha1
+apiVersion: kubedb.com/v1alpha2
 kind: Postgres
 metadata:
   name: sample-postgres-1
@@ -221,7 +221,7 @@ spec:
 Below is the YAML of second `Postgres` object,
 
 ```yaml
-apiVersion: kubedb.com/v1alpha1
+apiVersion: kubedb.com/v1alpha2
 kind: Postgres
 metadata:
   name: sample-postgres-2
@@ -329,7 +329,7 @@ $ kubectl get repository -n demo postgres-sample-postgres-1 -o yaml
 ```
 
 ```yaml
-apiVersion: stash.appscode.com/v1beta1
+apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   creationTimestamp: "2019-08-01T13:54:48Z"
@@ -474,7 +474,7 @@ $ kubectl get repository -n demo postgres-sample-postgres-2 -o yaml
 ```
 
 ```yaml
-apiVersion: stash.appscode.com/v1beta1
+apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   creationTimestamp: "2019-08-01T14:37:22Z"

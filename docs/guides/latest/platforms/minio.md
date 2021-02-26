@@ -181,7 +181,7 @@ apiVersion: v1
 data:
   AWS_ACCESS_KEY_ID: YWRtaW4=
   AWS_SECRET_ACCESS_KEY: Y2hhbmdlaXQ=
-  CA_CERT_DATA: <base64 endoded ca.crt data>
+  CA_CERT_DATA: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 endoded ca.crt data>
   RESTIC_PASSWORD: Y2hhbmdlaXQ=
 kind: Secret
 metadata:
