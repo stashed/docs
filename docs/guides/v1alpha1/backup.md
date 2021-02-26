@@ -379,19 +379,19 @@ spec:
       secretName: default-token-6dqgm
 status:
   conditions:
-  - lastProbeTime: null
+  - lastProbeTime: 2018-12-07T06:23:00Z
     lastTransitionTime: 2018-12-07T06:23:00Z
     status: "True"
     type: Initialized
-  - lastProbeTime: null
+  - lastProbeTime: 2018-12-07T06:23:00Z
     lastTransitionTime: 2018-12-07T06:23:02Z
     status: "True"
     type: Ready
-  - lastProbeTime: null
+  - lastProbeTime: 2018-12-07T06:23:00Z
     lastTransitionTime: 2018-12-07T06:23:02Z
     status: "True"
     type: ContainersReady
-  - lastProbeTime: null
+  - lastProbeTime: 2018-12-07T06:23:00Z
     lastTransitionTime: 2018-12-07T06:23:00Z
     status: "True"
     type: PodScheduled

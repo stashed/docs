@@ -52,13 +52,13 @@ storageclass.storage.k8s.io/standard created
 We also need a `VolumeSnapshotClass`. We are going to use the following `VolumeSnapshotClass` for this tutorial,
 
 ```yaml
-apiVersion: snapshot.storage.k8s.io/v1alpha1
+apiVersion: snapshot.storage.k8s.io/v1beta1
 kind: VolumeSnapshotClass
 metadata:
-  annotations:
-    snapshot.storage.kubernetes.io/is-default-class: "true"
-  name: default-snapshot-class
-snapshotter: pd.csi.storage.gke.io
+  name: csi-gce-pd-snapshot-class
+driver: pd.csi.storage.gke.io
+deletionPolicy: Delete
+
 ```
 
 Here,
@@ -290,7 +290,7 @@ kubectl get volumesnapshot source-data-stash-demo-0-1563177551 -n demo -o yaml
 ```
 
 ```yaml
-apiVersion: snapshot.storage.k8s.io/v1alpha1
+apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
   creationTimestamp: "2019-07-15T07:59:13Z"
@@ -300,16 +300,14 @@ metadata:
   name: source-data-stash-demo-0-1563177551
   namespace: demo
   resourceVersion: "18764"
-  selfLink: /apis/snapshot.storage.k8s.io/v1alpha1/namespaces/demo/volumesnapshots/source-data-stash-demo-0-1563177551
+  selfLink: /apis/snapshot.storage.k8s.io/v1/namespaces/demo/volumesnapshots/source-data-stash-demo-0-1563177551
   uid: 6f3b49a9-a6d6-11e9-9f3a-42010a800050
 spec:
-  snapshotClassName: default-snapshot-class
-  snapshotContentName: snapcontent-6f3b49a9-a6d6-11e9-9f3a-42010a800050
   source:
-    apiGroup: null
-    kind: PersistentVolumeClaim
-    name: source-data-stash-demo-0
+    persistentVolumeClaimName: source-data-stash-demo-0
+  volumeSnapshotClassName: default-snapshot-class
 status:
+  boundVolumeSnapshotContentName: snapcontent-6f3b49a9-a6d6-11e9-9f3a-42010a800050
   creationTime: "2019-07-15T07:59:14Z"
   readyToUse: true
   restoreSize: 1Gi
@@ -562,7 +560,7 @@ spec:
       apiVersion: apps/v1
       kind: StatefulSet
       name: stash-demo
-      replicas : 1
+    replicas : 1
     snapshotClassName: default-snapshot-class
   retentionPolicy:
     name: 'keep-last-5'
@@ -632,7 +630,7 @@ kubectl get volumesnapshot source-data-stash-demo-0-1563181264 -n demo -o yaml
 ```
 
 ```yaml
-apiVersion: snapshot.storage.k8s.io/v1alpha1
+apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
   creationTimestamp: "2019-07-15T09:01:06Z"
@@ -642,16 +640,14 @@ metadata:
   name: source-data-stash-demo-0-1563181264
   namespace: demo
   resourceVersion: "24310"
-  selfLink: /apis/snapshot.storage.k8s.io/v1alpha1/namespaces/demo/volumesnapshots/source-data-stash-demo-0-1563181264
+  selfLink: /apis/snapshot.storage.k8s.io/v1/namespaces/demo/volumesnapshots/source-data-stash-demo-0-1563181264
   uid: 14984cd3-a6df-11e9-9f3a-42010a800050
 spec:
-  snapshotClassName: default-snapshot-class
-  snapshotContentName: snapcontent-14984cd3-a6df-11e9-9f3a-42010a800050
   source:
-    apiGroup: null
-    kind: PersistentVolumeClaim
-    name: source-data-stash-demo-0
+    persistentVolumeClaimName: source-data-stash-demo-0
+  volumeSnapshotClassName: default-snapshot-class
 status:
+  boundVolumeSnapshotContentName: snapcontent-14984cd3-a6df-11e9-9f3a-42010a800050
   creationTime: "2019-07-15T09:01:07Z"
   readyToUse: true
   restoreSize: 1Gi

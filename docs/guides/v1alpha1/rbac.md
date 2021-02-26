@@ -23,16 +23,16 @@ Sidecar container added to workloads makes various calls to Kubernetes api. Serv
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: <statefulset-name>-stash-sidecar
-  namespace: <statefulset-namespace>
+  name: statefulset-name-stash-sidecar
+  namespace: statefulset-namespace
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: stash-sidecar
 subjects:
 - kind: ServiceAccount
-  name: <statefulset-sa>
-  namespace: <statefulset-namespace>
+  name: statefulset-sa
+  namespace: statefulset-namespace
 ```
 
 You can find full working examples [here](/docs/guides/v1alpha1/workloads.md).

@@ -297,6 +297,7 @@ spec:
       kind: PersistentVolumeClaim
       name: nfs-pvc
   retentionPolicy:
+    name: keep-last-5
     keepLast: 5
     prune: true
 ```

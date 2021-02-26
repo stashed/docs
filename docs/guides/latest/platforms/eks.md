@@ -177,8 +177,8 @@ $ kubectl get secret -n demo s3-secret -o yaml
 ```yaml
 apiVersion: v1
 data:
-  AWS_ACCESS_KEY_ID: <base64 encoded AWS_ACCESS_KEY_ID>
-  AWS_SECRET_ACCESS_KEY: <base64 encoded AWS_SECRET_ACCESS_KEY>
+  AWS_ACCESS_KEY_ID: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded AWS_ACCESS_KEY_ID>
+  AWS_SECRET_ACCESS_KEY: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded AWS_SECRET_ACCESS_KEY>
   RESTIC_PASSWORD: Y2hhbmdlaXQ=
 kind: Secret
 metadata:

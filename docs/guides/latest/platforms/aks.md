@@ -177,8 +177,8 @@ $ kubectl get secret -n demo azure-secret -o yaml
 ```yaml
 apiVersion: v1
 data:
-  AZURE_ACCOUNT_KEY: <base64 encoded AZURE_ACCOUNT_KEY>
-  AZURE_ACCOUNT_NAME: <base64 encoded AZURE_ACCOUNT_NAME>
+  AZURE_ACCOUNT_KEY: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded AZURE_ACCOUNT_KEY>
+  AZURE_ACCOUNT_NAME: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded AZURE_ACCOUNT_NAME>
   RESTIC_PASSWORD: Y2hhbmdlaXQ=
 kind: Secret
 metadata:

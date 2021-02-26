@@ -59,7 +59,7 @@ Here, we are using KubeDB to deploy MySQL `8.0.14`. You can deploy the database 
 Below is the YAML of the `MySQL` CR that we are going to create.
 
 ```yaml
-apiVersion: kubedb.com/v1alpha1
+apiVersion: kubedb.com/v1alpha2
 kind: MySQL
 metadata:
   name: wordpress-mysql

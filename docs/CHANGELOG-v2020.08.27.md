@@ -726,10 +726,10 @@ aliases:
 - [3868041c](https://github.com/appscode/stash-enterprise/commit/3868041c) Fix e2e tests (#183)
 - [94c7d2d4](https://github.com/appscode/stash-enterprise/commit/94c7d2d4) Rename injector methods
 - [755e28bc](https://github.com/appscode/stash-enterprise/commit/755e28bc) Use workqueue (#182)
-- [2d41478f](https://github.com/appscode/stash-enterprise/commit/2d41478f) Use Deployment from apps/v1beta1 (#181)
+- [2d41478f](https://github.com/appscode/stash-enterprise/commit/2d41478f) Use Deployment from apps/v1 (#181)
 - [a5229147](https://github.com/appscode/stash-enterprise/commit/a5229147) Delete *.generated.go files for ugorji (#180)
 - [05abff50](https://github.com/appscode/stash-enterprise/commit/05abff50) Use WaitForCRDReady from kutil (#179)
-- [096e1410](https://github.com/appscode/stash-enterprise/commit/096e1410) Only watch apps/v1beta1 Deployment (#178)
+- [096e1410](https://github.com/appscode/stash-enterprise/commit/096e1410) Only watch apps/v1 Deployment (#178)
 - [ade40c61](https://github.com/appscode/stash-enterprise/commit/ade40c61) Move kutil to client package (#177)
 - [226ffe83](https://github.com/appscode/stash-enterprise/commit/226ffe83) Generate ugorji stuff (#176)
 - [030e7b32](https://github.com/appscode/stash-enterprise/commit/030e7b32) Remove kubernetes/code-generator from builddeps
@@ -1578,10 +1578,10 @@ aliases:
 - [8cac1df7](https://github.com/stashed/apimachinery/commit/8cac1df7) Rename LastAppliedConfiguration
 - [d8ed50dc](https://github.com/stashed/apimachinery/commit/d8ed50dc) Fix e2e tests (#183)
 - [9dcef9ef](https://github.com/stashed/apimachinery/commit/9dcef9ef) Use workqueue (#182)
-- [c37c155b](https://github.com/stashed/apimachinery/commit/c37c155b) Use Deployment from apps/v1beta1 (#181)
+- [c37c155b](https://github.com/stashed/apimachinery/commit/c37c155b) Use Deployment from apps/v1 (#181)
 - [7f4653e9](https://github.com/stashed/apimachinery/commit/7f4653e9) Delete *.generated.go files for ugorji (#180)
 - [f98e1f7e](https://github.com/stashed/apimachinery/commit/f98e1f7e) Use WaitForCRDReady from kutil (#179)
-- [003980d8](https://github.com/stashed/apimachinery/commit/003980d8) Only watch apps/v1beta1 Deployment (#178)
+- [003980d8](https://github.com/stashed/apimachinery/commit/003980d8) Only watch apps/v1 Deployment (#178)
 - [1e5eb1ba](https://github.com/stashed/apimachinery/commit/1e5eb1ba) Move kutil to client package (#177)
 - [87b78d76](https://github.com/stashed/apimachinery/commit/87b78d76) Generate ugorji stuff (#176)
 - [a92313c0](https://github.com/stashed/apimachinery/commit/a92313c0) Remove kubernetes/code-generator from builddeps
@@ -2441,7 +2441,7 @@ aliases:
 - [e28c13f](https://github.com/stashed/mongodb/commit/e28c13f) Use workqueue for scheduler (#194)
 - [2719cbd](https://github.com/stashed/mongodb/commit/2719cbd) Fix e2e tests (#183)
 - [9c1cc43](https://github.com/stashed/mongodb/commit/9c1cc43) Use workqueue (#182)
-- [b3ee076](https://github.com/stashed/mongodb/commit/b3ee076) Only watch apps/v1beta1 Deployment (#178)
+- [b3ee076](https://github.com/stashed/mongodb/commit/b3ee076) Only watch apps/v1 Deployment (#178)
 - [4f92ca6](https://github.com/stashed/mongodb/commit/4f92ca6) Use Namespace() method from kutil.
 - [78f1e7f](https://github.com/stashed/mongodb/commit/78f1e7f) Update kutil (#170)
 - [29a8a1f](https://github.com/stashed/mongodb/commit/29a8a1f) Use apis/v1alpha1 instead of internal version (#167)
