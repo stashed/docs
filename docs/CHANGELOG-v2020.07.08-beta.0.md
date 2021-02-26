@@ -247,7 +247,7 @@ aliases:
 - [e28c13f](https://github.com/stashed/elasticsearch/commit/e28c13f) Use workqueue for scheduler (#194)
 - [2719cbd](https://github.com/stashed/elasticsearch/commit/2719cbd) Fix e2e tests (#183)
 - [9c1cc43](https://github.com/stashed/elasticsearch/commit/9c1cc43) Use workqueue (#182)
-- [b3ee076](https://github.com/stashed/elasticsearch/commit/b3ee076) Only watch apps/v1 Deployment (#178)
+- [b3ee076](https://github.com/stashed/elasticsearch/commit/b3ee076) Only watch apps/v1beta1 Deployment (#178)
 - [4f92ca6](https://github.com/stashed/elasticsearch/commit/4f92ca6) Use Namespace() method from kutil.
 - [78f1e7f](https://github.com/stashed/elasticsearch/commit/78f1e7f) Update kutil (#170)
 - [29a8a1f](https://github.com/stashed/elasticsearch/commit/29a8a1f) Use apis/v1alpha1 instead of internal version (#167)
@@ -494,7 +494,7 @@ aliases:
 - [e28c13f](https://github.com/stashed/mongodb/commit/e28c13f) Use workqueue for scheduler (#194)
 - [2719cbd](https://github.com/stashed/mongodb/commit/2719cbd) Fix e2e tests (#183)
 - [9c1cc43](https://github.com/stashed/mongodb/commit/9c1cc43) Use workqueue (#182)
-- [b3ee076](https://github.com/stashed/mongodb/commit/b3ee076) Only watch apps/v1 Deployment (#178)
+- [b3ee076](https://github.com/stashed/mongodb/commit/b3ee076) Only watch apps/v1beta1 Deployment (#178)
 - [4f92ca6](https://github.com/stashed/mongodb/commit/4f92ca6) Use Namespace() method from kutil.
 - [78f1e7f](https://github.com/stashed/mongodb/commit/78f1e7f) Update kutil (#170)
 - [29a8a1f](https://github.com/stashed/mongodb/commit/29a8a1f) Use apis/v1alpha1 instead of internal version (#167)
@@ -699,7 +699,7 @@ aliases:
 - [e28c13f](https://github.com/stashed/mysql/commit/e28c13f) Use workqueue for scheduler (#194)
 - [2719cbd](https://github.com/stashed/mysql/commit/2719cbd) Fix e2e tests (#183)
 - [9c1cc43](https://github.com/stashed/mysql/commit/9c1cc43) Use workqueue (#182)
-- [b3ee076](https://github.com/stashed/mysql/commit/b3ee076) Only watch apps/v1 Deployment (#178)
+- [b3ee076](https://github.com/stashed/mysql/commit/b3ee076) Only watch apps/v1beta1 Deployment (#178)
 - [4f92ca6](https://github.com/stashed/mysql/commit/4f92ca6) Use Namespace() method from kutil.
 - [78f1e7f](https://github.com/stashed/mysql/commit/78f1e7f) Update kutil (#170)
 - [29a8a1f](https://github.com/stashed/mysql/commit/29a8a1f) Use apis/v1alpha1 instead of internal version (#167)
@@ -863,7 +863,7 @@ aliases:
 - [e28c13f](https://github.com/stashed/percona-xtradb/commit/e28c13f) Use workqueue for scheduler (#194)
 - [2719cbd](https://github.com/stashed/percona-xtradb/commit/2719cbd) Fix e2e tests (#183)
 - [9c1cc43](https://github.com/stashed/percona-xtradb/commit/9c1cc43) Use workqueue (#182)
-- [b3ee076](https://github.com/stashed/percona-xtradb/commit/b3ee076) Only watch apps/v1 Deployment (#178)
+- [b3ee076](https://github.com/stashed/percona-xtradb/commit/b3ee076) Only watch apps/v1beta1 Deployment (#178)
 - [4f92ca6](https://github.com/stashed/percona-xtradb/commit/4f92ca6) Use Namespace() method from kutil.
 - [78f1e7f](https://github.com/stashed/percona-xtradb/commit/78f1e7f) Update kutil (#170)
 - [29a8a1f](https://github.com/stashed/percona-xtradb/commit/29a8a1f) Use apis/v1alpha1 instead of internal version (#167)
@@ -1038,7 +1038,7 @@ aliases:
 - [e28c13f](https://github.com/stashed/postgres/commit/e28c13f) Use workqueue for scheduler (#194)
 - [2719cbd](https://github.com/stashed/postgres/commit/2719cbd) Fix e2e tests (#183)
 - [9c1cc43](https://github.com/stashed/postgres/commit/9c1cc43) Use workqueue (#182)
-- [b3ee076](https://github.com/stashed/postgres/commit/b3ee076) Only watch apps/v1 Deployment (#178)
+- [b3ee076](https://github.com/stashed/postgres/commit/b3ee076) Only watch apps/v1beta1 Deployment (#178)
 - [4f92ca6](https://github.com/stashed/postgres/commit/4f92ca6) Use Namespace() method from kutil.
 - [78f1e7f](https://github.com/stashed/postgres/commit/78f1e7f) Update kutil (#170)
 - [29a8a1f](https://github.com/stashed/postgres/commit/29a8a1f) Use apis/v1alpha1 instead of internal version (#167)
