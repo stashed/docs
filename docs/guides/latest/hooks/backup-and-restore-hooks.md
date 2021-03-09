@@ -59,7 +59,7 @@ metadata:
   name: sample-mysql
   namespace: demo
 spec:
-  version: "8.0.14"
+  version: 8.0.14-v2
   replicas: 1
   storageType: Durable
   storage:
