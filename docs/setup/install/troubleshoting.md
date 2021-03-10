@@ -43,7 +43,7 @@ To detect Stash version, exec into the operator pod and run `stash version` comm
 
 ```bash
 $ POD_NAMESPACE=kube-system
-$ POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=stash -o jsonpath={.items[0].metadata.name})
+$ POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=stash-community -o jsonpath={.items[0].metadata.name})
 $ kubectl exec $POD_NAME -c operator -n $POD_NAMESPACE -- /stash version
 
 Version = {{< param "info.version" >}}

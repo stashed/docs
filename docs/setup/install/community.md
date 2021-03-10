@@ -136,7 +136,7 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 To check if Stash operator pods have started, run the following command:
 
 ```bash
-$ kubectl get pods --all-namespaces -l app.kubernetes.io/name=stash --watch
+$ kubectl get pods --all-namespaces -l app.kubernetes.io/name=stash-community --watch
 
 NAMESPACE     NAME                     READY     STATUS    RESTARTS   AGE
 kube-system   stash-859d6bdb56-m9br5   2/2       Running   2          5s
