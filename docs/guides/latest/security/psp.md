@@ -141,7 +141,7 @@ spec:
 You can use your own PodSecurityPolicy with Stash. In this case, you have to create the PSP manually and provide the PSP names during installation. You can provide the custom PSP names during installation as below,
 
 ```bash
-$ helm install stash appscode/stash   \
+$ helm install stash appscode/stash-community   \
     -n kube-system                    \
     --set podSecurityPolicies[0]=abc  \
     --set podSecurityPolicies[1]=xyz
