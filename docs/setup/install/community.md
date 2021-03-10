@@ -71,11 +71,11 @@ Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://gi
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash --version {{< param "info.community" >}}
+$ helm search repo appscode/stash-community --version {{< param "info.community" >}}
 NAME            CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash-community  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm install stash appscode/stash           \
+$ helm install stash appscode/stash-community           \
   --version {{< param "info.community" >}}                \
   --namespace kube-system                     \
   --set-file license=/path/to/the/license.txt
@@ -93,11 +93,11 @@ Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://gi
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search appscode/stash --version {{< param "info.community" >}}
+$ helm search appscode/stash-community --version {{< param "info.community" >}}
 NAME            CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash-community  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm install appscode/stash --name stash    \
+$ helm install appscode/stash-community --name stash    \
   --version {{< param "info.community" >}}                \
   --namespace kube-system                     \
   --set-file license=/path/to/the/license.txt
@@ -115,11 +115,11 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and deplo
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash --version {{< param "info.community" >}}
+$ helm search repo appscode/stash-community --version {{< param "info.community" >}}
 NAME            CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash-community  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
 
-$ helm template stash appscode/stash          \
+$ helm template stash appscode/stash-community          \
   --version {{< param "info.community" >}}                \
   --namespace kube-system                     \
   --set-file license=/path/to/the/license.txt \

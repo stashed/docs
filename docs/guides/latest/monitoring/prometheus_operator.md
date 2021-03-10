@@ -169,7 +169,7 @@ Here, we are going to enable monitoring for both backup metrics and operator met
 If you haven't installed Stash yet, run the following command to enable Prometheus monitoring during installation
 
 ```bash
-$ helm install stash appscode/stash -n kube-system \
+$ helm install stash appscode/stash-community -n kube-system \
 --version {{< param "info.version" >}} \
 --set monitoring.agent=prometheus.io/operator \
 --set monitoring.backup=true \
@@ -186,7 +186,7 @@ $ helm install stash appscode/stash -n kube-system \
 If you have installed Stash already in your cluster but didn't enable monitoring during installation, you can use `helm upgrade` command to enable monitoring in the existing installation.
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system \
+$ helm upgrade stash appscode/stash-community -n kube-system \
 --reuse-values \
 --set monitoring.agent=prometheus.io/operator \
 --set monitoring.backup=true \

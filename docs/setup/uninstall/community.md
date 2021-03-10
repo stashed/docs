@@ -55,7 +55,7 @@ $ helm delete stash
 If you prefer to not use Helm, you can generate YAMLs from Stash chart and uninstall using `kubectl`.
 
 ```bash
-$ helm template stash appscode/stash --namespace kube-system | kubectl delete -f -
+$ helm template stash appscode/stash-community --namespace kube-system | kubectl delete -f -
 ```
 
 </div>

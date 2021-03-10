@@ -225,7 +225,7 @@ If you haven't installed Stash yet, run the following command to enable Promethe
 **Helm 3:**
 
 ```bash
-$ helm install stash appscode/stash -n kube-system \
+$ helm install stash appscode/stash-community -n kube-system \
 --version {{< param "info.version" >}} \
 --set monitoring.agent=prometheus.io/operator \
 --set monitoring.backup=true \
@@ -237,7 +237,7 @@ $ helm install stash appscode/stash -n kube-system \
 **Helm 2:**
 
 ```bash
-$ helm install appscode/stash --name stash -n kube-system \
+$ helm install appscode/stash-community --name stash -n kube-system \
 --version {{< param "info.version" >}} \
 --set monitoring.agent=prometheus.io/operator \
 --set monitoring.backup=true \
@@ -249,7 +249,7 @@ $ helm install appscode/stash --name stash -n kube-system \
 **YAML (with Helm 3):**
 
 ```bash
-$ helm install stash appscode/stash -n kube-system \
+$ helm install stash appscode/stash-community -n kube-system \
 --no-hooks \
 --version {{< param "info.version" >}} \
 --set monitoring.agent=prometheus.io/operator \
@@ -269,7 +269,7 @@ If you have installed Stash already in your cluster but didn't enable monitoring
 **Helm 3:**
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system \
+$ helm upgrade stash appscode/stash-community -n kube-system \
 --reuse-values \
 --set monitoring.agent=prometheus.io/operator \
 --set monitoring.backup=true \
@@ -280,7 +280,7 @@ $ helm upgrade stash appscode/stash -n kube-system \
 **Helm 2:**
 
 ```bash
-$ helm upgrade appscode/stash --name stash -n kube-system \
+$ helm upgrade appscode/stash-community --name stash -n kube-system \
 --reuse-values \
 --set monitoring.agent=prometheus.io/operator \
 --set monitoring.backup=true \
@@ -291,7 +291,7 @@ $ helm upgrade appscode/stash --name stash -n kube-system \
 **YAML (with Helm 3):**
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system \
+$ helm upgrade stash appscode/stash-community -n kube-system \
 --no-hooks \
 --reuse-values \
 --set monitoring.agent=prometheus.io/operator \
