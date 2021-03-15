@@ -30,7 +30,7 @@ To uninstall Stash Community edition, run the following command:
 <div class="tab-content" id="installerTabContent">
   <div class="tab-pane fade show active" id="helm3" role="tabpanel" aria-labelledby="helm3-tab">
 
-## Using Helm 3
+### Using Helm 3
 
 In Helm 3, release names are [scoped to a namespace](https://v3.helm.sh/docs/faq/#release-names-are-now-scoped-to-the-namespace). So, provide the namespace you used to install the operator when installing.
 
@@ -41,7 +41,7 @@ $ helm uninstall stash --namespace kube-system
 </div>
 <div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
 
-## Using Helm 2
+### Using Helm 2
 
 ```bash
 $ helm delete stash
@@ -50,13 +50,30 @@ $ helm delete stash
 </div>
 <div class="tab-pane fade" id="script" role="tabpanel" aria-labelledby="script-tab">
 
-## Using YAML (with helm 3)
+### Using YAML (with helm 3)
 
 If you prefer to not use Helm, you can generate YAMLs from Stash chart and uninstall using `kubectl`.
 
 ```bash
-$ helm template stash appscode/stash-community --namespace kube-system | kubectl delete -f -
+$ helm template stash appscode/stash \
+--namespace kube-system              \
+--set features.community=true        \
+--set global.skipCleaner=true | kubectl delete -f -
 ```
 
 </div>
 </div>
+
+## Delete CRDs
+
+The above uninstallation process will uninstall the Stash operator. However, it will keep the Stash registered CRDs so that you don't lose your Stash objects i.e. `BackupConfiguration`, `Repository`, etc. during re-installation. If you want to remove the Stash CRDs too, please run the following command.
+
+```bash
+kubectl delete crd -l=app.kubernetes.io/name=stash
+```
+
+If you wan't to delete the `AppBinding` CRD, run the following command.
+
+```bash
+ kubectl delete crd -l=app.kubernetes.io/name=catalog
+```
