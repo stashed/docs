@@ -27,7 +27,7 @@ Stash supports taking [logical backup](https://mariadb.com/kb/en/backup-and-rest
 The following diagram shows how Stash takes logical backup of a MariaDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="MariaDB Backup Overview" src="/docs/images/addons/mariadb/mariadb-logical-backup.svg">
+  <img alt="MariaDB Backup Overview" src="/docs/addons/mariadb/overview/images/mariadb-logical-backup.svg">
   <figcaption align="center">Fig: MariaDB Logical Backup Overview</figcaption>
 </figure>
 
@@ -62,7 +62,7 @@ The backup process consists of the following steps:
 The following diagram shows how Stash restores a MariaDB database from a logical backup. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/addons/mariadb/mariadb-logical-restore.svg">
+  <img alt="Database Restore Overview" src="/docs/addons/mariadb/overview/images/mariadb-logical-restore.svg">
   <figcaption align="center">Fig: MariaDB Logical Restore Process Overview</figcaption>
 </figure>
 
