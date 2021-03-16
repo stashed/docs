@@ -23,7 +23,7 @@ Stash 0.9.0+ supports backup and restore operation of many databases. This guide
 The following diagram shows how Stash takes backup of a MySQL database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="MySQL Backup Overview" src="/docs/images/addons/mysql/backup_overview.svg">
+  <img alt="MySQL Backup Overview" src="/docs/addons/mysql/overview/images/backup_overview.svg">
   <figcaption align="center">Fig: MySQL Backup Overview</figcaption>
 </figure>
 
@@ -58,7 +58,7 @@ The backup process consists of the following steps:
 The following diagram shows how Stash restores backed up data into a MySQL database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/addons/mysql/restore_overview.svg">
+  <img alt="Database Restore Overview" src="/docs/addons/mysql/overview/images/restore_overview.svg">
   <figcaption align="center">Fig: MySQL Restore Process Overview</figcaption>
 </figure>
 
