@@ -23,7 +23,7 @@ Stash 0.9.0+ supports backup and restore operation of many databases. This guide
 The following diagram shows how Stash takes backup of a Percona XtraDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Percona XtraDB Backup Overview" src="/docs/images/addons/percona-xtradb/backup_overview.svg">
+  <img alt="Percona XtraDB Backup Overview" src="/docs/addons/percona-xtradb/overview/images/backup_overview.svg">
   <figcaption align="center">Fig: Percona XtraDB Backup Overview</figcaption>
 </figure>
 
@@ -62,7 +62,7 @@ This section will show you how backup works for different Percona XtraDB Configu
 For a standalone Percona XtraDB database, the backup job directly dumps the database using `mysqldump` and pipe the output to the backup process.
 
 <figure align="center">
- <img alt="Standalone Percona XtraDB Backup Overview" src="/docs/images/addons/percona-xtradb/standalone_backup.png">
+ <img alt="Standalone Percona XtraDB Backup Overview" src="/docs/addons/percona-xtradb/overview/images/standalone_backup.png">
   <figcaption align="center">Fig: Standalone Percona XtraDB Backup</figcaption>
 </figure>
 
@@ -71,7 +71,7 @@ For a standalone Percona XtraDB database, the backup job directly dumps the data
 For a standalone Percona XtraDB database, the backup Job runs the backup procedure to take the backup of the targeted databases and uploads the output to the backend. In backup procedure, the Job runs a process called `garbd` ([Galera Arbitrator](https://galeracluster.com/library/documentation/arbitrator.html)) which uses `xtrabackup-v2` script during State Snapshot Transfer (SST). Basically this Job takes a full copy of the data stored in  the data directory (`/var/lib/mysql`) and pipes the output of the backup procedure to the uploading process. Hence, backup Job does not require a large volume to hold the entire backed up data.
 
 <figure align="center">
- <img alt="Percona XtraDB Cluster Backup Overview" src="/docs/images/addons/percona-xtradb/cluster_backup.png">
+ <img alt="Percona XtraDB Cluster Backup Overview" src="/docs/addons/percona-xtradb/overview/images/cluster_backup.png">
   <figcaption align="center">Fig: Percona XtraDB Cluster Backup</figcaption>
 </figure>
 
@@ -80,7 +80,7 @@ For a standalone Percona XtraDB database, the backup Job runs the backup procedu
 The following diagram shows how Stash restores backed up data into a Percona XtraDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Percona XtraDB Restore Overview" src="/docs/images/addons/percona-xtradb/restore_overview.svg">
+  <img alt="Percona XtraDB Restore Overview" src="/docs/addons/percona-xtradb/overview/images/restore_overview.svg">
   <figcaption align="center">Fig: Percona XtraDB Restore Process Overview</figcaption>
 </figure>
 
@@ -109,7 +109,7 @@ This section will show you how restore works for different Percona XtraDB Config
 For a standalone Percona XtraDB database, the restore Job downloads the backed up data from the backend and pipe the downloaded data to `mysql` command which inserts the data into the desired database.
 
 <figure align="center">
- <img alt="Standalone Percona XtraDB Restore Overview" src="/docs/images/addons/percona-xtradb/standalone_restore.png">
+ <img alt="Standalone Percona XtraDB Restore Overview" src="/docs/addons/percona-xtradb/overview/images/standalone_restore.png">
   <figcaption align="center">Fig: Standalone Percona XtraDB Restore</figcaption>
 </figure>
 
@@ -118,7 +118,7 @@ For a standalone Percona XtraDB database, the restore Job downloads the backed u
 For a Percona XtraDB Cluster, the Stash operator creates a number (equal to the value of `.spec.target.replicas` of `RestoreSession` object) of Jobs to restore. Each of these Jobs requires a PVC to store the previously backed up data of the data directory `/var/lib/mysql` from the backend. Then each Job downloads the backed up data from the backend and injects into the associated PVC.
 
 <figure align="center">
- <img alt="Percona XtraDB Cluster Restore Overview" src="/docs/images/addons/percona-xtradb/cluster_restore.png">
+ <img alt="Percona XtraDB Cluster Restore Overview" src="/docs/addons/percona-xtradb/overview/images/cluster_restore.png">
   <figcaption align="center">Fig: Percona XtraDB Cluster Restore</figcaption>
 </figure>
 
