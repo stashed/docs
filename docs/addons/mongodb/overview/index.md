@@ -23,7 +23,7 @@ Stash 0.9.0+ supports backup and restore operation of many databases. This guide
 The following diagram shows how Stash takes backup of a MongoDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
- <img alt="MongoDB Backup Overview" src="/docs/images/addons/mongodb/backup_overview.svg">
+ <img alt="MongoDB Backup Overview" src="/docs/addons/mongodb/overview/images/backup_overview.svg">
   <figcaption align="center">Fig: MongoDB Backup Overview</figcaption>
 </figure>
 
@@ -62,7 +62,7 @@ This section will show you how backup works for different MongoDB configurations
 For a standalone MongoDB database, the backup job directly dumps the database using `mongodump` and pipe the output to the backup process.
 
 <figure align="center">
- <img alt="Standalone MongoDB Backup Overview" src="/docs/images/addons/mongodb/standalone_backup.svg">
+ <img alt="Standalone MongoDB Backup Overview" src="/docs/addons/mongodb/overview/images/standalone_backup.svg">
   <figcaption align="center">Fig: Standalone MongoDB Backup</figcaption>
 </figure>
 
@@ -76,7 +76,7 @@ For MongoDB ReplicaSet cluster, Stash takes backup from one of the secondary rep
 4. Unlock the secondary replica.
 
 <figure align="center">
- <img alt="MongoDB ReplicaSet Cluster Backup Overview" src="/docs/images/addons/mongodb/replicaset_backup.svg">
+ <img alt="MongoDB ReplicaSet Cluster Backup Overview" src="/docs/addons/mongodb/overview/images/replicaset_backup.svg">
   <figcaption align="center">Fig: MongoDB ReplicaSet Cluster Backup</figcaption>
 </figure>
 
@@ -94,7 +94,7 @@ For MongoDB sharded cluster, Stash takes backup of the individual shards as well
 8. Enable balancer.
 
 <figure align="center">
- <img alt="MongoDB Sharded Cluster Backup Overview" src="/docs/images/addons/mongodb/sharded_backup.svg">
+ <img alt="MongoDB Sharded Cluster Backup Overview" src="/docs/addons/mongodb/overview/images/sharded_backup.svg">
   <figcaption align="center">Fig: MongoDB Sharded Cluster Backup</figcaption>
 </figure>
 
@@ -103,7 +103,7 @@ For MongoDB sharded cluster, Stash takes backup of the individual shards as well
 The following diagram shows how Stash restores backed up data into a MongoDB database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
- <img alt="Database Restore Overview" src="/docs/images/addons/mongodb/restore_overview.svg">
+ <img alt="Database Restore Overview" src="/docs/addons/mongodb/overview/images/restore_overview.svg">
   <figcaption align="center">Fig: MongoDB Restore Process Overview</figcaption>
 </figure>
 
@@ -132,7 +132,7 @@ This section will show you restore process works for different MongoDB configura
 For a standalone MongoDB database, the restore job downloads the backed up data from the backend and pipe the downloaded data to `mongorestore` command which inserts the data into the desired MongoDB database.
 
 <figure align="center">
- <img alt="Standalone MongoDB Restore Overview" src="/docs/images/addons/mongodb/standalone_restore.svg">
+ <img alt="Standalone MongoDB Restore Overview" src="/docs/addons/mongodb/overview/images/standalone_restore.svg">
   <figcaption align="center">Fig: Standalone MongoDB Restore</figcaption>
 </figure>
 
@@ -141,7 +141,7 @@ For a standalone MongoDB database, the restore job downloads the backed up data 
 For MongoDB ReplicaSet cluster, Stash identifies the primary replica and restore into it.
 
 <figure align="center">
- <img alt="MongoDB ReplicaSet Cluster Restore Overview" src="/docs/images/addons/mongodb/replicaset_restore.svg">
+ <img alt="MongoDB ReplicaSet Cluster Restore Overview" src="/docs/addons/mongodb/overview/images/replicaset_restore.svg">
   <figcaption align="center">Fig: MongoDB ReplicaSet Cluster Restore</figcaption>
 </figure>
 
@@ -150,7 +150,7 @@ For MongoDB ReplicaSet cluster, Stash identifies the primary replica and restore
 For MongoDB sharded cluster, Stash identifies the primary replica of each shard as well as the config server and restore respective backed up data into them.
 
 <figure align="center">
- <img alt="MongoDB Sharded Cluster Restore" src="/docs/images/addons/mongodb/sharded_restore.svg">
+ <img alt="MongoDB Sharded Cluster Restore" src="/docs/addons/mongodb/overview/images/sharded_restore.svg">
   <figcaption align="center">Fig: MongoDB Sharded Cluster Restore</figcaption>
 </figure>
 
