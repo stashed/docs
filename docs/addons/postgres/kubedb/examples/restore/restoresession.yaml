@@ -1,0 +1,19 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: sample-postgres-restore
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: postgreses.kubedb.com # this label is mandatory if you are using KubeDB to deploy the database.Otherwise your database will stuck in "Provisioning" state
+spec:
+  task:
+    name: postgres-restore-11.9.0-v4
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: restored-postgres
+  rules:
+  - snapshots: [latest]

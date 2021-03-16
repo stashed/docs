@@ -23,7 +23,7 @@ Stash 0.9.0+ supports backup and restore operation of many databases. This guide
 The following diagram shows how Stash takes backup of a PostgreSQL database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="PostgreSQL Backup Overview" src="/docs/images/addons/postgres/backup_overview.svg">
+  <img alt="PostgreSQL Backup Overview" src="/docs/addons/postgres/overview/images/backup_overview.svg">
   <figcaption align="center">Fig: PostgreSQL Backup Overview</figcaption>
 </figure>
 
@@ -58,7 +58,7 @@ The backup process consists of the following steps:
 The following diagram shows how Stash restores backed up data into a PostgreSQL database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/images/addons/postgres/restore_overview.svg">
+  <img alt="Database Restore Overview" src="/docs/addons/postgres/overview/images/restore_overview.svg">
   <figcaption align="center">Fig: PostgreSQL Restore Process Overview</figcaption>
 </figure>
 
