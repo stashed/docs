@@ -42,7 +42,7 @@ Here is a screenshot of the license form.
   <figcaption align="center">Fig: Stash License Form</figcaption>
 </figure>
 
-You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
+You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade/index.md#upgrading-license).
 
 > Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
 
