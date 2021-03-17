@@ -42,7 +42,7 @@ Here is a screenshot of the license form.
   <figcaption align="center">Fig: Stash License Form</figcaption>
 </figure>
 
-You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
+You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade/index.md#upgrading-license).
 
 > Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
 
@@ -71,14 +71,15 @@ Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://gi
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash-community --version {{< param "info.community" >}}
+$ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash-community  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
 
-$ helm install stash appscode/stash-community           \
-  --version {{< param "info.community" >}}                \
+$ helm install stash appscode/stash          \
+  --version {{< param "info.version" >}}                \
   --namespace kube-system                     \
-  --set-file license=/path/to/the/license.txt
+  --set features.community=true               \
+  --set-file global.license=/path/to/the/license.txt
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash).
@@ -93,14 +94,15 @@ Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://gi
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search appscode/stash-community --version {{< param "info.community" >}}
+$ helm search appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash-community  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
 
-$ helm install appscode/stash-community --name stash    \
-  --version {{< param "info.community" >}}                \
+$ helm install appscode/stash --name stash    \
+  --version {{< param "info.version" >}}                \
   --namespace kube-system                     \
-  --set-file license=/path/to/the/license.txt
+  --set features.community=true               \
+  --set-file global.license=/path/to/the/license.txt
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash).
@@ -115,15 +117,16 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and deplo
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash-community --version {{< param "info.community" >}}
+$ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME            CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash-community  {{< param "info.community" >}}    {{< param "info.community" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
 
-$ helm template stash appscode/stash-community          \
-  --version {{< param "info.community" >}}                \
+$ helm template stash appscode/stash          \
+  --version {{< param "info.version" >}}                \
   --namespace kube-system                     \
-  --set-file license=/path/to/the/license.txt \
-  --set cleaner.skip=true | kubectl apply -f -
+  --set features.community=true               \
+  --set global.skipCleaner=true               \
+  --set-file global.license=/path/to/the/license.txt | kubectl apply -f -
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash).
@@ -136,10 +139,9 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 To check if Stash operator pods have started, run the following command:
 
 ```bash
-$ kubectl get pods --all-namespaces -l app.kubernetes.io/name=stash-community --watch
-
-NAMESPACE     NAME                     READY     STATUS    RESTARTS   AGE
-kube-system   stash-859d6bdb56-m9br5   2/2       Running   2          5s
+$ ❯ kubectl get pods --all-namespaces -l app.kubernetes.io/name=stash-community --watch
+NAMESPACE     NAME                                     READY   STATUS    RESTARTS   AGE
+kube-system   stash-stash-community-66b86d9647-kcncc   2/2     Running   0          2m6s
 ```
 
 Once the operator pod is running, you can cancel the above command by typing `Ctrl+C`.
