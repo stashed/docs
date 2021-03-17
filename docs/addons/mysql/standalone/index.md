@@ -92,11 +92,11 @@ sample-mysql   8.0.14    Running   4m22s
 The database is `Running`. Verify that KubeDB has created a Secret and a Service for this database using the following commands,
 
 ```bash
-$ kubectl get secret -n demo -l=kubedb.com/name=sample-mysql
+$ kubectl get secret -n demo -l=app.kubernetes.io/instance=sample-mysql
 NAME                TYPE     DATA   AGE
 sample-mysql-auth   Opaque   2      4m58s
 
-$ kubectl get service -n demo -l=kubedb.com/name=sample-mysql
+$ kubectl get service -n demo -l=app.kubernetes.io/instance=sample-mysql
 NAME               TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
 sample-mysql       ClusterIP   10.101.2.138   <none>        3306/TCP   5m33s
 sample-mysql-gvr   ClusterIP   None           <none>        3306/TCP   5m33s
@@ -186,7 +186,7 @@ You have to replace the `<...>` quoted part with proper values in the above YAML
 Now, we are going to exec into the database pod and create some sample data. At first, find out the database Pod using the following command,
 
 ```bash
-$ kubectl get pods -n demo --selector="kubedb.com/name=sample-mysql"
+$ kubectl get pods -n demo --selector="app.kubernetes.io/instance=sample-mysql"
 NAME             READY   STATUS    RESTARTS   AGE
 sample-mysql-0   1/1     Running   0          33m
 ```
@@ -561,7 +561,7 @@ restored-mysql   8.0.14    Running   34m
 Now, find out the database Pod by the following command,
 
 ```bash
-$ kubectl get pods -n demo --selector="kubedb.com/name=restored-mysql"
+$ kubectl get pods -n demo --selector="app.kubernetes.io/instance=restored-mysql"
 NAME               READY   STATUS    RESTARTS   AGE
 restored-mysql-0   1/1     Running   0          39m
 ```

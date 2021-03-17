@@ -106,7 +106,7 @@ wordpress-mysql   8.0.14    Running   3m10s
 Verify that KubeDB has created a Secret for the database.
 
 ```bash
-$ kubectl get secret -n demo -l=kubedb.com/name=wordpress-mysql
+$ kubectl get secret -n demo -l=app.kubernetes.io/instance=wordpress-mysql
 NAME                   TYPE     DATA   AGE
 wordpress-mysql-auth   Opaque   2      4m1s
 ```
@@ -116,7 +116,7 @@ wordpress-mysql-auth   Opaque   2      4m1s
 KubeDB creates an `AppBinding` CR that holds the necessary information to connect with the database. Verify that the `AppBinding` has been created for the above database:
 
 ```bash
-$ kubectl get appbindings -n demo -l=kubedb.com/name=wordpress-mysql
+$ kubectl get appbindings -n demo -l=app.kubernetes.io/instance=wordpress-mysql
 NAME              TYPE               VERSION   AGE
 wordpress-mysql   kubedb.com/mysql   8.0.14    2m10s
 ```

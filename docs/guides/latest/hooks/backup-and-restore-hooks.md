@@ -94,7 +94,7 @@ sample-mysql   8.0.14    Running   2m7s
 Verify that KubeDB has created a Secret for the database.
 
 ```bash
-$ kubectl get secret -n demo -l=kubedb.com/name=sample-mysql
+$ kubectl get secret -n demo -l=app.kubernetes.io/instance=sample-mysql
 NAME                TYPE     DATA   AGE
 sample-mysql-auth   Opaque   2      5m7s
 ```
@@ -104,7 +104,7 @@ sample-mysql-auth   Opaque   2      5m7s
 KubeDB creates an `AppBinding`  CR that holds the necessary information to connect with the database. Verify that the `AppBinding` has been created for the above database:
 
 ```bash
-$ kubectl get appbindings -n demo -l=kubedb.com/name=sample-mysql
+$ kubectl get appbindings -n demo -l=app.kubernetes.io/instance=sample-mysql
 NAME           TYPE               VERSION   AGE
 sample-mysql   kubedb.com/mysql   8.0.14    66s
 ```
@@ -128,7 +128,7 @@ metadata:
     app.kubernetes.io/name: mysql
     app.kubernetes.io/version: 8.0.14
     kubedb.com/kind: MySQL
-    kubedb.com/name: sample-mysql
+    app.kubernetes.io/instance: sample-mysql
   name: sample-mysql
   namespace: demo
 spec:
@@ -170,7 +170,7 @@ CWg2hru8b0Yu7dzS
 Now, let's identify the database pod,
 
 ```bash
-$ kubectl get pods -n demo --selector="kubedb.com/name=sample-mysql"
+$ kubectl get pods -n demo --selector="app.kubernetes.io/instance=sample-mysql"
 NAME             READY   STATUS    RESTARTS   AGE
 sample-mysql-0   1/1     Running   0          6m50s
 ```

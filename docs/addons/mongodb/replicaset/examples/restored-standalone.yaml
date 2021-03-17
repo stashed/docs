@@ -6,8 +6,6 @@ metadata:
 spec:
   version: "4.2.3"
   storageType: Durable
-  authSecret:
-    name: sample-mgo-rs-auth
   storage:
     storageClassName: "standard"
     accessModes:
