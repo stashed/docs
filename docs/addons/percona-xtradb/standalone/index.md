@@ -331,7 +331,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: percona-xtradb-backup-5.7
+    name: percona-xtradb-backup-5.7.0
   repository:
     name: gcs-repo-sample-xtradb
   target:
@@ -429,7 +429,7 @@ Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that th
 ```console
 $ kkubectl get backupconfiguration -n demo sample-xtradb-backup
 NAME                   TASK                        SCHEDULE      PAUSED   AGE
-sample-xtradb-backup   percona-xtradb-backup-5.7   */5 * * * *   true     13m
+sample-xtradb-backup   percona-xtradb-backup-5.7.0   */5 * * * *   true     13m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
@@ -507,7 +507,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: percona-xtradb-restore-5.7
+    name: percona-xtradb-restore-5.7.0
   repository:
     name: gcs-repo-sample-xtradb
   target:
