@@ -80,4 +80,4 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-- Install PostgreSQL addon for Stash following the guide from [here](/docs/addons/postgres/setup/install.md).
+- Backup standalone PostgreSQL database using Stash following the guides from  [here](/docs/addons/postgres/standalone/index.md).

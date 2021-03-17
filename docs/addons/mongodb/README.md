@@ -42,4 +42,4 @@ Stash MongoDB documentations are organized as below:
 - [How does it works?](/docs/addons/mongodb/overview/index.md) gives an overview of how backup and restore process for MongoDB database works in Stash.
 - [Standalone MongoDB](/docs/addons/mongodb/standalone/index.md) shows how to backup and restore a standalone MongoDB database.
 - [MongoDB ReplicaSet](/docs/addons/mongodb/replicaset/index.md) shows how to backup & restore  a MongoDB ReplicaSet.
-- [Sharded MongoDB Cluster](/docs/addons/mongodb/sharded/index.md) shows how to backup & restore a sharded MongoDB cluster.
+- [Sharded MongoDB Cluster](/docs/addons/mongodb/sharding/index.md) shows how to backup & restore a sharded MongoDB cluster.

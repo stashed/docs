@@ -155,7 +155,7 @@ spec:
     prune: true
 ```
 
-To know more about the available options for retention policies, please visit [here](/docs/concepts/crds/backupconfiguration/#specretentionpolicy).
+To know more about the available options for retention policies, please visit [here](/docs/concepts/crds/backupconfiguration.md#specretentionpolicy).
 
 ## Customizing Restore Process
 

@@ -98,7 +98,7 @@ Let's create the `BackupBlueprint` we have shown above,
 backupblueprint.stash.appscode.com/mariadb-backup-template created
 ```
 
-Now, we are ready to backup our MariaDB databases using few annotations. You can check available auto-backup annotations for a databases from [here](/docs/guides/latest/auto-backup/database/#available-auto-backup-annotations-for-database).
+Now, we are ready to backup our MariaDB databases using few annotations. You can check available auto-backup annotations for a databases from [here](/docs/guides/latest/auto-backup/database.md#available-auto-backup-annotations-for-database).
 
 ## Auto-backup with default configurations
 

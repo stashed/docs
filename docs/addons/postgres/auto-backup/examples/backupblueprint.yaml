@@ -11,7 +11,7 @@ spec:
     storageSecretName: gcs-secret
   # ============== Blueprint for BackupConfiguration =================
   task:
-    name: postgres-backup-11.9.0-v4
+    name: postgres-backup-11.9
   schedule: "*/5 * * * *"
   retentionPolicy:
     name: 'keep-last-5'
