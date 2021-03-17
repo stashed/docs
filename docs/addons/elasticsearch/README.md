@@ -27,7 +27,7 @@ This guide will give you an overview of which Elasticsearch versions are support
 
 Stash has the following addon versions for Elasticsearch:
 
-{{< versionlist "elasticsearch" "/docs/addons/elasticsearch/guides/%s/elasticsearch.md" >}}
+{{< versionlist "elasticsearch">}}
 
 Here, the addon follows `M.M.P` versioning scheme where `M.M.P` (Major.Minor.Patch) represents the respective database version.
 

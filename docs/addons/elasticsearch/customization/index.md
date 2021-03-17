@@ -281,7 +281,7 @@ gcs-repo-9210ebb6   gcs-repo     host-0     2021-02-12T14:58:27Z
 gcs-repo-0aff8890   gcs-repo     host-0     2021-02-12T15:00:28Z
 ```
 
->You can also filter the snapshots as shown in the guide [here](https://stash.run/docs/v2021.01.21/concepts/crds/snapshot/#working-with-snapshot).
+>You can also filter the snapshots as shown in the guide [here](https://stash.run/docs/latest/concepts/crds/snapshot/#working-with-snapshot).
 
 Stash adds the Repository name as a prefix of the Snapshot. You have to remove the repository prefix and use only the last 8 characters as the snapshot name during restore.
 

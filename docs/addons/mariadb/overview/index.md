@@ -84,4 +84,4 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-- Install MariaDB addon for Stash following the guide from [here](/docs/addons/mariadb/setup/install.md).
+- Backup your MariaDB database using Stash following the guide from [here](/docs/addons/mariadb/helm/index.md).

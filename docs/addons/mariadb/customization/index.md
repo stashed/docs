@@ -16,7 +16,7 @@ section_menu_id: stash-addons
 
 Stash provides rich customization supports for the backup and restore process to meet the requirements of various cluster configurations. This guide will show you some examples of these customizations.
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/mariadb/tree/{{< param "info.subproject_version" >}}/docs/customization/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/mariadb/customization/examples).
 
 ## Customizing Backup Process
 
@@ -203,7 +203,7 @@ gcs-repo-9210ebb6   gcs-repo     host-0     2021-02-12T14:58:27Z
 gcs-repo-0aff8890   gcs-repo     host-0     2021-02-12T15:00:28Z
 ```
 
->You can also filter the snapshots as shown in the guide [here](https://stash.run/docs/v2021.01.21/concepts/crds/snapshot/#working-with-snapshot).
+>You can also filter the snapshots as shown in the guide [here](https://stash.run/docs/latest/concepts/crds/snapshot/#working-with-snapshot).
 
 Stash adds the Repository name as a prefix of the Snapshot. You have to remove the repository prefix and use only the last 8 characters as the snapshot name during restore.
 

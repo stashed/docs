@@ -80,4 +80,4 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-- Install Elasticsearch addon for Stash following the guide from [here](/docs/addons/elasticsearch/setup/install.md).
+- Backup your Elasticsearch databases using Stash by following the guide from [here](/docs/addons/elasticsearch/kubedb/index.md).
