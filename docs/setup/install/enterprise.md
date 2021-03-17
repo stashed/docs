@@ -221,8 +221,8 @@ mysql-restore-5.7.25          5m8s
 mysql-restore-8.0.14          5m8s
 mysql-restore-8.0.21          5m8s
 mysql-restore-8.0.3           5m8s
-perconaxtradb-backup-5.7.0    5m8s
-perconaxtradb-restore-5.7.0   5m8s
+perconaxtradb-backup-5.7      5m8s
+perconaxtradb-restore-5.7     5m8s
 postgres-backup-10.14         5m8s
 postgres-backup-11.9          5m8s
 postgres-backup-12.4          5m8s
