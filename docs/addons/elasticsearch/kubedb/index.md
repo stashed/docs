@@ -22,7 +22,6 @@ Stash 0.9.0+ supports backup and restoration of Elasticsearch clusters. This gui
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash in your cluster following the steps [here](/docs/setup/README.md).
-- Install Elasticsearch addon for Stash following the steps [here](/docs/addons/elasticsearch/setup/install.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/install/).
 - If you are not familiar with how Stash backup and restore Elasticsearch databases, please check the following guide [here](/docs/addons/elasticsearch/overview.md).
 
@@ -42,7 +41,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/elasticsearch/tree/{{< param "info.subproject_version" >}}/docs/kubedb/examples).
+>Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/elasticsearch/kubedb/examples).
 
 ## Prepare Elasticsearch
 
@@ -59,7 +58,7 @@ metadata:
   name: sample-es
   namespace: demo
 spec:
-  version: 7.9.1-xpack
+  version: xpack-7.9.1-v1
   storageType: Durable
   topology:
     master:
@@ -97,7 +96,7 @@ spec:
 Let's create the above `Elasticsearch` object,
 
 ```console
-$ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/kubedb/examples/elasticsearch/sample_es.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/kubedb/examples/elasticsearch/sample_es.yaml
 elasticsearch.kubedb.com/sample-es created
 ```
 
@@ -105,9 +104,9 @@ KubeDB will create the necessary resources to deploy the Elasticsearch database 
 
 ```console
 ❯ kubectl get elasticsearch -n demo -w
-NAME        VERSION       STATUS         AGE
-sample-es   7.9.1-xpack   Provisioning   89s
-sample-es   7.9.1-xpack   Ready          5m26s
+NAME        VERSION          STATUS         AGE
+sample-es   xpack-7.9.1-v1   Provisioning   89s
+sample-es   xpack-7.9.1-v1   Ready          5m26s
 ```
 
 The database is in `Ready` state. It means the database is ready to accept connections.
@@ -296,29 +295,29 @@ In this section, we are going to prepare our cluster for backup.
 
 ### Ensure Elasticsearch Addons
 
-At first, make sure that you have installed the Stash Elasticsearch addon. If you haven’t installed the addon yet, please install it by following the setup guide from [here](/docs/addons/elasticsearch/setup/install.md).
+When you install Stash Enterprise version, it will automatically install the pre-build database addons. Make sure the addons for Elasticsearch has been installed using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep elasticsearch
-elasticsearch-backup-5.6.4-v6    3d2h
-elasticsearch-backup-6.2.4-v6    3d2h
-elasticsearch-backup-6.3.0-v6    3d2h
-elasticsearch-backup-6.4.0-v6    3d2h
-elasticsearch-backup-6.5.3-v6    3d2h
-elasticsearch-backup-6.8.0-v6    3d2h
-elasticsearch-backup-7.2.0-v6    3d2h
-elasticsearch-backup-{{< param "info.subproject_version" >}}    3d2h
-elasticsearch-restore-5.6.4-v6   3d2h
-elasticsearch-restore-6.2.4-v6   3d2h
-elasticsearch-restore-6.3.0-v6   3d2h
-elasticsearch-restore-6.4.0-v6   3d2h
-elasticsearch-restore-6.5.3-v6   3d2h
-elasticsearch-restore-6.8.0-v6   3d2h
-elasticsearch-restore-7.2.0-v6   3d2h
-elasticsearch-restore-{{< param "info.subproject_version" >}}   3d2h
+elasticsearch-backup-5.6.4    3d2h
+elasticsearch-backup-6.2.4    3d2h
+elasticsearch-backup-6.3.0    3d2h
+elasticsearch-backup-6.4.0    3d2h
+elasticsearch-backup-6.5.3    3d2h
+elasticsearch-backup-6.8.0    3d2h
+elasticsearch-backup-7.2.0    3d2h
+elasticsearch-backup-7.3.2    3d2h
+elasticsearch-restore-5.6.4   3d2h
+elasticsearch-restore-6.2.4   3d2h
+elasticsearch-restore-6.3.0   3d2h
+elasticsearch-restore-6.4.0   3d2h
+elasticsearch-restore-6.5.3   3d2h
+elasticsearch-restore-6.8.0   3d2h
+elasticsearch-restore-7.2.0   3d2h
+elasticsearch-restore-7.3.2   3d2h
 ```
 
-Any of these addon versions should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/elasticsearch/#addon-version-compatibility).
+Any of these addon versions should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/elasticsearch/README.md#addon-version-compatibility).
 
 ### Verify AppBinding
 
@@ -394,7 +393,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/mariadb/raw/{{< param "info.subproject_version" >}}/docs/kubedb/examples/backup/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/kubedb/examples/backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -417,7 +416,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -450,7 +449,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/kubedb/examples/backup/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/kubedb/examples/backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-es-backup created
 ```
 
@@ -495,7 +494,7 @@ gcs-repo   true        3.801 KiB   1                64s                      3m4
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/sample-es` directory as specified by the `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/guides/{{< param "info.subproject_version" >}}/kubedb/images/sample-es-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/kubedb/images/sample-es-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -526,7 +525,7 @@ Verify that the `BackupConfiguration` has been paused,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-es-backup
 NAME               TASK                            SCHEDULE      PAUSED   AGE
-sample-es-backup   elasticsearch-backup-{{< param "info.subproject_version" >}}   */5 * * * *   true     12m
+sample-es-backup   elasticsearch-backup-7.3.2   */5 * * * *   true     12m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -578,11 +577,9 @@ kind: RestoreSession
 metadata:
   name: sample-es-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com
 spec:
   task:
-    name: elasticsearch-restore-{{< param "info.subproject_version" >}}
+    name: elasticsearch-restore-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -611,12 +608,10 @@ Here,
 - `spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before injecting it into the database.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
->Notice the `app.kubernetes.io/name: elasticsearches.kubedb.com` label. KubeDB uses this label to watch the `RestoreSession` for the Elasticsearch databases. So, make sure you have added this label in the `RestoreSession`.
-
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/kubedb/examples/restore/restoresession.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/kubedb/examples/restore/restoresession.yaml
 restoresession.stash.appscode.com/sample-es-restore created
 ```
 
@@ -746,8 +741,8 @@ Verify that the `BackupConfiguration` has been resumed,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-es-backup
-NAME               TASK                            SCHEDULE      PAUSED   AGE
-sample-es-backup   elasticsearch-backup-{{< param "info.subproject_version" >}}   */5 * * * *   false    30m
+NAME               TASK                         SCHEDULE      PAUSED   AGE
+sample-es-backup   elasticsearch-backup-7.3.2   */5 * * * *   false    30m
 ```
 
 Here,  `false` in the `PAUSED` column means the backup has been resume successfully. The CronJob also should be resumed now.
@@ -838,7 +833,7 @@ metadata:
   name: init-sample
   namespace: restored
 spec:
-  version: 1.9.0-opendistro
+  version: opendistro-1.9.0-v1
   storageType: Durable
   init:
     waitForInitialRestore: true
@@ -875,12 +870,12 @@ spec:
             storage: 1Gi
 ```
 
-Notice that this time, we are using `1.9.0-opendistro` variant for Elasticsearch. Also, notice that we have added an `init` section in the `spec`. Here, `waitForInitialRestore: true` tells KubeDB to wait for the first restore to complete before marking this database as ready to use.
+Notice that this time, we are using `opendistro-1.9.0-v1` variant for Elasticsearch. Also, notice that we have added an `init` section in the `spec`. Here, `waitForInitialRestore: true` tells KubeDB to wait for the first restore to complete before marking this database as ready to use.
 
 Let's deploy the above Elasticsearch,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/kubedb/examples/elasticsearch/init_sample.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/kubedb/examples/elasticsearch/init_sample.yaml
 elasticsearch.kubedb.com/init-sample created
 ```
 
@@ -946,11 +941,9 @@ kind: RestoreSession
 metadata:
   name: init-sample-restore
   namespace: restored
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com
 spec:
   task:
-    name: elasticsearch-restore-{{< param "info.subproject_version" >}}
+    name: elasticsearch-restore-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -971,12 +964,10 @@ spec:
   - snapshots: [latest]
 ```
 
->Notice the `app.kubernetes.io/name: elasticsearches.kubedb.com` label. KubeDB uses this label to watch the `RestoreSession` of Elasticsearch databases. So, make sure you have added this label in the `RestoreSession`. Otherwise, your Elasticsearch database will get stuck in the `Provisioning` state even if the data has been restored properly.
-
 Let's create the above RestoreSession,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/kubedb/examples/restore/init_sample_restore.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/kubedb/examples/restore/init_sample_restore.yaml
 restoresession.stash.appscode.com/init-sample-restore created
 ```
 

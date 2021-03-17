@@ -3,8 +3,6 @@ kind: RestoreSession
 metadata:
   name: sample-elasticsearch-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com
 spec:
   task:
     name: elasticsearch-restore-7.3.2-v6

@@ -49,26 +49,26 @@ namespace/demo-2 created
 namespace/demo-3 created
 ```
 
-Make sure you have installed the Elasticsearch addon for Stash. If you haven't installed it already, please install the addon following the steps [here](/docs/addons/elasticsearch/setup/install.md).
+When you install Stash Enterprise version, it will automatically install the necessary addon to backup databases. Make sure you have installed the Elasticsearch addon for Stash.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep elasticsearch
-elasticsearch-backup-5.6.4-v6    4d4h
-elasticsearch-backup-6.2.4-v6    4d4h
-elasticsearch-backup-6.3.0-v6    4d4h
-elasticsearch-backup-6.4.0-v6    4d4h
-elasticsearch-backup-6.5.3-v6    4d4h
-elasticsearch-backup-6.8.0-v6    4d4h
-elasticsearch-backup-7.2.0-v6    4d4h
-elasticsearch-backup-7.3.2-v6    4d4h
-elasticsearch-restore-5.6.4-v6   4d4h
-elasticsearch-restore-6.2.4-v6   4d4h
-elasticsearch-restore-6.3.0-v6   4d4h
-elasticsearch-restore-6.4.0-v6   4d4h
-elasticsearch-restore-6.5.3-v6   4d4h
-elasticsearch-restore-6.8.0-v6   4d4h
-elasticsearch-restore-7.2.0-v6   4d4h
-elasticsearch-restore-7.3.2-v6   4d4h
+elasticsearch-backup-5.6.4    4d4h
+elasticsearch-backup-6.2.4    4d4h
+elasticsearch-backup-6.3.0    4d4h
+elasticsearch-backup-6.4.0    4d4h
+elasticsearch-backup-6.5.3    4d4h
+elasticsearch-backup-6.8.0    4d4h
+elasticsearch-backup-7.2.0    4d4h
+elasticsearch-backup-7.3.2    4d4h
+elasticsearch-restore-5.6.4   4d4h
+elasticsearch-restore-6.2.4   4d4h
+elasticsearch-restore-6.3.0   4d4h
+elasticsearch-restore-6.4.0   4d4h
+elasticsearch-restore-6.5.3   4d4h
+elasticsearch-restore-6.8.0   4d4h
+elasticsearch-restore-7.2.0   4d4h
+elasticsearch-restore-7.3.2   4d4h
 ```
 
 ## Prepare Backup Blueprint
@@ -93,7 +93,7 @@ spec:
     storageSecretName: gcs-secret
   # ============== Blueprint for BackupConfiguration =================
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
   schedule: "*/5 * * * *"
   interimVolumeTemplate:
     metadata:
@@ -119,7 +119,7 @@ We have also used some variables in `name` field of the `interimVolumeTemplate` 
 Let's create the `BackupBlueprint` we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/auto-backup/examples/backupblueprint.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/auto-backup/examples/backupblueprint.yaml
 backupblueprint.stash.appscode.com/elasticsearch-backup-template created
 ```
 
@@ -157,7 +157,7 @@ metadata:
   annotations:
     stash.appscode.com/backup-blueprint: elasticsearch-backup-template
 spec:
-  version: 7.9.1-xpack
+  version: xpack-7.9.1-v1
   replicas: 1
   storageType: Durable
   storage:
@@ -173,7 +173,7 @@ Notice the `annotations` section. We are pointing to the `BackupBlueprint` that 
 Let's create the above Elasticsearch CRO,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/auto-backup/examples/es-demo.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/auto-backup/examples/es-demo.yaml
 elasticsearch.kubedb.com/sample-elasticsearch created
 ```
 
@@ -217,8 +217,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Elas
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo
-NAME          TASK                            SCHEDULE      PAUSED   AGE
-app-es-demo   elasticsearch-backup-{{< param "info.subproject_version" >}}   */5 * * * *            12s
+NAME          TASK                         SCHEDULE      PAUSED   AGE
+app-es-demo   elasticsearch-backup-7.3.2   */5 * * * *            12s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -258,7 +258,7 @@ spec:
       kind: AppBinding
       name: es-demo
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
   tempDir: {}
 status:
   conditions:
@@ -304,7 +304,7 @@ app-es-demo-1613130605   BackupConfiguration   app-es-demo    Succeeded   46s
 Once the backup has been completed successfully, you should see the backed up data has been stored in the bucket at the directory pointed by the `prefix` field of the `Repository`.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/guides/{{< param "info.subproject_version" >}}/auto-backup/images/es-demo.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/auto-backup/images/es-demo.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -338,7 +338,7 @@ metadata:
     stash.appscode.com/backup-blueprint: elasticsearch-backup-template
     stash.appscode.com/schedule: "*/3 * * * *"
 spec:
-  version: 7.9.1-xpack
+  version: xpack-7.9.1-v1
   replicas: 1
   storageType: Durable
   storage:
@@ -354,7 +354,7 @@ Notice the `annotations` section. This time, we have passed a schedule via `stas
 Let's create the above Elasticsearch CRO,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/auto-backup/examples/es-demo-2.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/auto-backup/examples/es-demo-2.yaml
 elasticsearch.kubedb.com/es-demo-2 created
 ```
 
@@ -398,8 +398,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Elas
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-2
-NAME            TASK                            SCHEDULE      PAUSED   AGE
-app-es-demo-2   elasticsearch-backup-{{< param "info.subproject_version" >}}   */3 * * * *            77s
+NAME            TASK                         SCHEDULE      PAUSED   AGE
+app-es-demo-2   elasticsearch-backup-7.3.2   */3 * * * *            77s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -439,7 +439,7 @@ spec:
       kind: AppBinding
       name: es-demo-2
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
   tempDir: {}
 status:
   conditions:
@@ -485,7 +485,7 @@ app-es-demo-2-1613132831   BackupConfiguration   app-es-demo-2   Succeeded   41s
 Once the backup has been completed successfully, you should see that Stash has created a new directory as pointed by the `prefix` field of the new `Repository` and stored the backed up data there.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/guides/{{< param "info.subproject_version" >}}/auto-backup/images/es-demo-2.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/auto-backup/images/es-demo-2.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -519,7 +519,7 @@ metadata:
     stash.appscode.com/backup-blueprint: elasticsearch-backup-template
     params.stash.appscode.com/args: --ignoreType=settings,template
 spec:
-  version: 7.9.1-xpack
+  version: xpack-7.9.1-v1
   replicas: 1
   storageType: Durable
   storage:
@@ -535,7 +535,7 @@ Notice the `annotations` section. This time, we have passed an argument via `par
 Let's create the above Elasticsearch CRO,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/auto-backup/examples/es-demo-3.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/auto-backup/examples/es-demo-3.yaml
 elasticsearch.kubedb.com/es-demo-3 created
 ```
 
@@ -579,8 +579,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Elas
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3
-NAME            TASK                            SCHEDULE      PAUSED   AGE
-app-es-demo-3   elasticsearch-backup-{{< param "info.subproject_version" >}}   */5 * * * *            84s
+NAME            TASK                         SCHEDULE      PAUSED   AGE
+app-es-demo-3   elasticsearch-backup-7.3.2   */5 * * * *            84s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -620,7 +620,7 @@ spec:
       kind: AppBinding
       name: es-demo-3
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
     params:
     - name: args
       value: --ignoreType=settings,template
@@ -669,7 +669,7 @@ app-es-demo-3-1613133604   BackupConfiguration   app-es-demo-3   Succeeded   48s
 Once the backup has been completed successfully, you should see that Stash has created a new directory as pointed by the `prefix` field of the new `Repository` and stored the backed up data there.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/guides/{{< param "info.subproject_version" >}}/auto-backup/images/es-demo-3.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/elasticsearch/auto-backup/images/es-demo-3.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -678,7 +678,7 @@ Once the backup has been completed successfully, you should see that Stash has c
 To cleanup the resources crated by this tutorial, run the following commands,
 
 ```bash
-❯ kubectl delete -f https://github.com/stashed/elasticsearch/raw/{{< param "info.subproject_version" >}}/docs/auto-backup/examples/
+❯ kubectl delete -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/elasticsearch/auto-backup/examples/
 backupblueprint.stash.appscode.com "elasticsearch-backup-template" deleted
 elasticsearch.kubedb.com "es-demo-2" deleted
 elasticsearch.kubedb.com "es-demo-3" deleted

@@ -4,7 +4,7 @@ metadata:
   name: init-sample
   namespace: restored
 spec:
-  version: 7.9.1-xpack
+  version: opendistro-1.9.0-v1
   storageType: Durable
   init:
     waitForInitialRestore: true

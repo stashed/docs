@@ -2,9 +2,7 @@ apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
   name: sample-elasticsearch-restore
-  namespace: demo
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com # this label is mandatory if you are using KubeDB to deploy the database. Otherwise, Elasticsearch crd will be stuck in `Provisioning` phase.
+  namespace: demo # this label is mandatory if you are using KubeDB to deploy the database. Otherwise, Elasticsearch crd will be stuck in `Provisioning` phase.
 spec:
   task:
     name: elasticsearch-restore-7.3.2-v6

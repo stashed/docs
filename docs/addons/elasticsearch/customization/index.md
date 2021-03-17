@@ -35,7 +35,7 @@ metadata:
 spec:
   schedule: "*/2 * * * *"
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
     params:
     - name: args
       value: --ignoreType=template,settings
@@ -74,10 +74,10 @@ metadata:
 spec:
   schedule: "*/2 * * * *"
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
     params:
     - name: args
-      value: --match=^(?!searchguard)([a-zA-Z0-9_-]+)$ --ignoreType=template
+      value: --match=^(?![.])(?!searchguard).+ --ignoreType=template
   repository:
     name: gcs-repo
   target:
@@ -113,7 +113,7 @@ metadata:
 spec:
   schedule: "*/2 * * * *"
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -154,7 +154,7 @@ metadata:
 spec:
   schedule: "*/2 * * * *"
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -199,7 +199,7 @@ metadata:
 spec:
   schedule: "*/2 * * * *"
   task:
-    name: elasticsearch-backup-{{< param "info.subproject_version" >}}
+    name: elasticsearch-backup-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -242,11 +242,9 @@ kind: RestoreSession
 metadata:
   name: sample-elasticsearch-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com
 spec:
   task:
-    name: elasticsearch-restore-{{< param "info.subproject_version" >}}
+    name: elasticsearch-restore-7.3.2
     params:
     - name: args
       value: --ignoreType=template,settings
@@ -295,11 +293,9 @@ kind: RestoreSession
 metadata:
   name: sample-elasticsearch-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com
 spec:
   task:
-    name: elasticsearch-restore-{{< param "info.subproject_version" >}}
+    name: elasticsearch-restore-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -332,11 +328,9 @@ kind: RestoreSession
 metadata:
   name: sample-elasticsearch-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com
 spec:
   task:
-    name: elasticsearch-restore-{{< param "info.subproject_version" >}}
+    name: elasticsearch-restore-7.3.2
   repository:
     name: gcs-repo
   target:
@@ -372,11 +366,9 @@ kind: RestoreSession
 metadata:
   name: sample-elasticsearch-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: elasticsearches.kubedb.com
 spec:
   task:
-    name: elasticsearch-restore-{{< param "info.subproject_version" >}}
+    name: elasticsearch-restore-7.3.2
   repository:
     name: gcs-repo
   target:
