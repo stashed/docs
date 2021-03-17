@@ -3,9 +3,9 @@ title: MariaDB Auto-Backup | Stash
 description: Backup MariaDB using Stash Auto-Backup
 menu:
   docs_{{ .version }}:
-    identifier: mariadb-guides-{{ .subproject_version }}-auto-backup
+    identifier: stash-mariadb-auto-backup
     name: Auto-Backup
-    parent: stash-mariadb-guides-{{ .subproject_version }}
+    parent: stash-mariadb
     weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}

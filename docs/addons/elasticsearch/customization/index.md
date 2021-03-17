@@ -3,10 +3,10 @@ title: Elasticsearch Backup Customization | Stash
 description: Customizing Elasticsearch Backup and Restore process with Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-elasticsearch-guides-{{ .subproject_version }}-customization
+    identifier: stash-elasticsearch-customization
     name: Customizing Backup & Restore Process
-    parent: stash-elasticsearch-guides-{{ .subproject_version }}
-    weight: 50
+    parent: stash-elasticsearch
+    weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons

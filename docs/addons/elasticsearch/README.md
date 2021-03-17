@@ -42,4 +42,4 @@ Stash Elasticsearch documentations are organized as below:
 - [How does it works?](/docs/addons/elasticsearch/overview/index.md) gives an overview of how backup and restore process for Elasticsearch database works in Stash.
 - [KubeDB managed Elasticsearch](/docs/addons/elasticsearch/kubedb/index.md) shows how to backup and restore a KubeDB managed Elasticsearch database.
 - [Auto-Backup](/docs/addons/elasticsearch/auto-backup/index.md) shows how to configure a generic backup template for all the Elasticsearch databases of a cluster.
-- [Customization](/docs/addons/elasticsearch/customization/index.md) shows how to customize the backup & restore process.
+- [Customizing Backup & Restore Process](/docs/addons/elasticsearch/customization/index.md) shows how to customize the backup & restore process.

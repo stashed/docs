@@ -3,10 +3,10 @@ title: Elasticsearch Auto-Backup | Stash
 description: Backup Elasticsearch using Stash Auto-Backup
 menu:
   docs_{{ .version }}:
-    identifier: stash-elasticsearch-guides-{{ .subproject_version }}-auto-backup
+    identifier: stash-elasticsearch-auto-backup
     name: Auto-Backup
-    parent: stash-elasticsearch-guides-{{ .subproject_version }}
-    weight: 60
+    parent: stash-elasticsearch
+    weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons

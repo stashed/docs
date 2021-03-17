@@ -3,10 +3,10 @@ title: Backup & Restore Sharded MongoDB Cluster| Stash
 description: Backup and restore sharded MongoDB cluster using Stash
 menu:
   docs_{{ .version }}:
-    identifier: sharded-mongodb-{{ .subproject_version }}
+    identifier: stash-mongodb-sharding
     name: MongoDB Sharded Cluster
-    parent: stash-mongodb-guides-{{ .subproject_version }}
-    weight: 30
+    parent: stash-mongodb
+    weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
@@ -22,7 +22,7 @@ Stash 0.9.0+ supports taking [backup](https://docs.mongodb.com/manual/tutorial/b
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using Minikube.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
-- Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/install/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running a production grade databases on private and public clouds.
+- Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running a production grade databases on private and public clouds.
 - If you are not familiar with how Stash backup and restore MongoDB databases, please check the following guide [here](/docs/addons/mongodb/overview/index.md).
 
 You have to be familiar with following custom resources:

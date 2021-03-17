@@ -3,9 +3,9 @@ title: MariaDB Backup Customization | Stash
 description: Customizing MariaDB Backup and Restore process with Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-mariadb-guides-{{ .subproject_version }}-customization
+    identifier: stash-mariadb-customization
     name: Customizing Backup & Restore Process
-    parent: stash-mariadb-guides-{{ .subproject_version }}
+    parent: stash-mariadb
     weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}

@@ -3,10 +3,10 @@ title: PostgreSQL | Stash
 description: Stash auto-backup for PostgreSQL database
 menu:
   docs_{{ .version }}:
-    identifier: standalone-postgres-{{ .subproject_version }}-auto-backup
+    identifier: stash-postgres-auto-backup
     name: Auto-Backup
-    parent: stash-postgres-guides-{{ .subproject_version }}
-    weight: 20
+    parent: stash-postgres
+    weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons

@@ -3,9 +3,9 @@ title: Logical Backup & Restore MariaDB | Stash
 description: Take logical backup of MariaDB database using Stash
 menu:
   docs_{{ .version }}:
-    identifier: mariadb-guide-{{ .subproject_version }}-helm
-    name: Logical Backup
-    parent: stash-mariadb-guides-{{ .subproject_version }}
+    identifier: stash-mariadb-helm
+    name: Helm managed MariaDB
+    parent: stash-mariadb
     weight: 20
 product_name: stash
 menu_name: docs_{{ .version }}
