@@ -74,5 +74,5 @@ task:
 
 You can find auto-backup examples for the databases here:
 
-- [Backup PostgreSQL using Stash Auto-Backup](/docs/addons/postgres/guides/auto-backup/index.md)
-- [Backup Elasticsearch using Stash Auto-Backup](/docs/addons/elasticsearch/guides/auto-backup/index.md)
+- [Backup PostgreSQL using Stash Auto-Backup](/docs/addons/postgres/auto-backup/index.md)
+- [Backup Elasticsearch using Stash Auto-Backup](/docs/addons/elasticsearch/auto-backup/index.md)

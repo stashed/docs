@@ -1,0 +1,23 @@
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: sample-mariadb
+  namespace: demo
+spec:
+  clientConfig:
+    service:
+      name: sample-mariadb
+      path: /
+      port: 3306
+      scheme: mysql
+  secret:
+    name: sample-mariadb
+  secretTransforms:
+  - addKey:
+      key: username
+      stringValue: root
+  - renameKey:
+      from: mariadb-root-password
+      to: password
+  type: mariadb
+  version: 10.5.8

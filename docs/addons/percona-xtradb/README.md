@@ -25,22 +25,21 @@ This guide will give you an overview of which Percona XtraDB versions are suppor
 
 ## Supported Percona XtraDB Versions
 
-Stash supports backup and restore of the following Percona XtraDB versions:
 
-{{< versionlist "percona-xtradb" "/docs/addons/percona-xtradb/guides/%s/clustered.md" >}}
+Stash has the following addon versions for Percona-XtraDB:
 
-Here, the addon follows `M.M.P-vX` versioning scheme where `M.M.P` (Major.Minor.Patch) represents the respective database version and an optional `-vX` (here, `X` is a monotonically increasing integer) is added if there is any breaking change in the addon image compared to the previous release.
+{{< versionlist "percona-xtradb">}}
 
-{{< notice type="warning" message="If you update Stash operator to a newer release and the supported addon versions in the newer release has different `-vX` suffix, you have to update the old addons too. Otherwise, backup may not work. In this case, just uninstall the old addons and install the new addons." >}}
+Here, the addon follows `M.M.P` versioning scheme where `M.M.P` (Major.Minor.Patch) represents the respective database version.
 
 ## Addon Version Compatibility
 
-Any addon with matching major version with the database version should be able to take backup of that database. For example, PerconaXtraDB addon with version `5.x.x-vX` should be able take backup of any PerconaXtraDB of `5.x.x` series. However, this might not be true for some versions. In that case, we will have separate addon for that version.
+Any addon with matching major version with the database version should be able to take backup of that database. For example, PerconaXtraDB addon with version `5.x.x` should be able take backup of any PerconaXtraDB of `5.x.x` series. However, this might not be true for some versions. In that case, we will have separate addon for that version.
 
 ## Documentation Overview
 
 Stash Percona XtraDB documentations are organized as below:
 
-- [How does it works?](/docs/addons/percona-xtradb/overview.md) gives an overview of how backup and restore process for Percona XtraDB database works in Stash.
-- [Setup](/docs/addons/percona-xtradb/setup/install.md) shows how to install and uninstall Percona XtraDB addon for Stash.
-- **Guides** contains step by step guides to backup and restore different versions of Percona XtraDB databases.
+- [How does it works?](/docs/addons/percona-xtradb/overview/index.md) gives an overview of how backup and restore process for Percona XtraDB database works in Stash.
+- [Standalone Percona-XtraDB](/docs/addons/percona-xtradb/standalone/index.md) shows how to backup and restore a standalone Percona-XtraDB database.
+- [Percona-XtraDB Cluster](/docs/addons/percona-xtradb/cluster/index.md) shows how to backup & restore  a Percona-XtraDB cluster.

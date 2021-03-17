@@ -24,10 +24,9 @@ Here, we are going to demonstrate how to send a notification to a Slack channel 
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
-- Install Stash in your cluster following the steps [here](/docs/setup/README.md).
-- Install MySQL addon for Stash following the steps [here](/docs/addons/mysql/setup/install.md).
+- Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running production-grade databases on private and public clouds.
-- If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview.md).
+- If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview/index.md).
 - Also, if you haven't read about how hooks work in Stash, please check it from [here](/docs/guides/latest/hooks/overview.md).
 
 You should be familiar with the following `Stash` concepts:
@@ -106,7 +105,7 @@ wordpress-mysql   8.0.14    Running   3m10s
 Verify that KubeDB has created a Secret for the database.
 
 ```bash
-$ kubectl get secret -n demo -l=kubedb.com/name=wordpress-mysql
+$ kubectl get secret -n demo -l=app.kubernetes.io/instance=wordpress-mysql
 NAME                   TYPE     DATA   AGE
 wordpress-mysql-auth   Opaque   2      4m1s
 ```
@@ -116,7 +115,7 @@ wordpress-mysql-auth   Opaque   2      4m1s
 KubeDB creates an `AppBinding` CR that holds the necessary information to connect with the database. Verify that the `AppBinding` has been created for the above database:
 
 ```bash
-$ kubectl get appbindings -n demo -l=kubedb.com/name=wordpress-mysql
+$ kubectl get appbindings -n demo -l=app.kubernetes.io/instance=wordpress-mysql
 NAME              TYPE               VERSION   AGE
 wordpress-mysql   kubedb.com/mysql   8.0.14    2m10s
 ```
