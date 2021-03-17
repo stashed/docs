@@ -124,4 +124,5 @@ For a Percona XtraDB Cluster, the Stash operator creates a number (equal to the 
 
 ## Next Steps
 
-- Install Percona XtraDB addon for Stash following the guide from [here](/docs/addons/percona-xtradb/setup/install.md).
+- Backup standalone Precona-XtraDB using Stash following the guide from [here](/docs/addons/percona-xtradb/standalone/index.md).
+- Backup Precona-XtraDB cluster using Stash following the guide from [here](/docs/addons/percona-xtradb/cluster/index.md).

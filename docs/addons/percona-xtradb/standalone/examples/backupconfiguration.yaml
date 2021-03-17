@@ -6,7 +6,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: percona-xtradb-backup-v2021.03.08
+    name: percona-xtradb-backup-5.7.0
   repository:
     name: gcs-repo-sample-xtradb
   target:
