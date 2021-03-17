@@ -486,7 +486,7 @@ spec:
         kind: AppBinding
         name: wordpress-db
     task:
-      name: mysql-backup-v2020.07.09-beta.0
+      name: mysql-backup-8.0.14
   - target:
       alias: app
       ref:
@@ -752,7 +752,7 @@ spec:
       rules:
       - snapshots: [latest]
     task:
-      name: mysql-restore-v2020.07.09-beta.0
+      name: mysql-restore-8.0.14
   - target:
       alias: app
       ref:
@@ -890,7 +890,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: mysql-restore-v2020.07.09-beta.0
+    name: mysql-restore-8.0.14
   repository:
     name: gcs-repo
   target:
