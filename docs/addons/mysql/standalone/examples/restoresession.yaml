@@ -3,11 +3,9 @@ kind: RestoreSession
 metadata:
   name: restore-sample-mysql
   namespace: demo
-  labels:
-    app.kubernetes.io/name: mysqls.kubedb.com # this label is mandatory if you are using KubeDB to deploy the database.
 spec:
   task:
-    name: mysql-restore-v2021.03.08
+    name: mysql-restore-8.0.21
   repository:
     name: gcs-repo
   target:

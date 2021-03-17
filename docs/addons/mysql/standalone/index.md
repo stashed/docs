@@ -20,9 +20,8 @@ Stash 0.9.0+ supports backup and restoration of MySQL databases. This guide will
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using Minikube.
 - Install Stash in your cluster following the steps [here](/docs/setup/README.md).
-- Install MySQL addon for Stash following the steps [here](/docs/addons/mysql/setup/install.md)
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/install/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running a production grade databases on private and public clouds.
-- If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview.md).
+- If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview/index.md).
 
 You have to be familiar with following custom resources:
 
@@ -39,7 +38,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/mysql/tree/{{< param "info.subproject_version" >}}/docs/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/mysql/standalone/examples).
 
 ## Backup MySQL
 
@@ -75,7 +74,7 @@ spec:
 Create the above `MySQL` CRD,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/mysql/raw/{{< param "info.subproject_version" >}}/docs/examples/backup/sample-mysql.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/mysql/standalone/examples/sample-mysql.yaml
 mysql.kubedb.com/sample-mysql created
 ```
 
@@ -86,10 +85,10 @@ Let's check if the database is ready to use,
 ```bash
 $ kubectl get my -n demo sample-mysql
 NAME           VERSION   STATUS    AGE
-sample-mysql   8.0.14    Running   4m22s
+sample-mysql   8.0.14    Ready     4m22s
 ```
 
-The database is `Running`. Verify that KubeDB has created a Secret and a Service for this database using the following commands,
+The database is `Ready`. Verify that KubeDB has created a Secret and a Service for this database using the following commands,
 
 ```bash
 $ kubectl get secret -n demo -l=app.kubernetes.io/instance=sample-mysql
@@ -301,7 +300,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/mysql/raw/{{< param "info.subproject_version" >}}/docs/examples/backup/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/mysql/standalone/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -324,7 +323,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: mysql-backup-{{< param "info.subproject_version" >}}
+    name: mysql-backup-8.0.21
   repository:
     name: gcs-repo
   target:
@@ -347,7 +346,7 @@ Here,
 Let's create the `BackupConfiguration` CRD we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/mysql/raw/{{< param "info.subproject_version" >}}/docs/examples/backup/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/mysql/standalone/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-mysql-backup created
 ```
 
@@ -395,7 +394,7 @@ gcs-repo   true        6.815 MiB   1                3m39s                    30m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/mysql/sample-mysql` directory as specified by `.spec.backend.gcs.prefix` field of Repository CRD.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="../images/sample-mysql-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/mysql/standalone/images/sample-mysql-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -421,7 +420,7 @@ Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that th
 ```console
 $ kubectl get backupconfiguration -n demo sample-mysql-backup
 NAME                 TASK                  SCHEDULE      PAUSED   AGE
-sample-mysql-backup  mysql-backup-{{< param "info.subproject_version" >}}   */5 * * * *   true     26m
+sample-mysql-backup  mysql-backup-8.0.21   */5 * * * *   true     26m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
@@ -430,8 +429,7 @@ Notice the `PAUSED` column. Value `true` for this field means that the BackupCon
 
 Now, we have to deploy the restored database similarly as we have deployed the original `sample-mysql` database. However, this time there will be the following differences:
 
-- We have to use the same secret that was used in the original database. We are going to specify it using `.spec.databaseSecret` field.
-- We have to specify `.spec.init` section to tell KubeDB that we are going to use Stash to initialize this database from backup. KubeDB will keep the database phase to **`Initializing`** until Stash finishes its initialization.
+- We are going to specify `spec.init.waitForInitialRestore: true` which will tell KubeDB to wait until the first restore to complete before marking this database as ready to use.
 
 Below is the YAML for `MySQL` CRD we are going deploy to initialize from backup,
 
@@ -443,8 +441,6 @@ metadata:
   namespace: demo
 spec:
   version: "8.0.21-v1"
-  authSecret:
-    name: sample-mysql-auth
   replicas: 1
   storageType: Durable
   storage:
@@ -458,23 +454,19 @@ spec:
   terminationPolicy: WipeOut
 ```
 
-Here,
-
-- `spec.init.waitForInitialRestore` tells KubeDB to wait for the first restore to complete before marking this database as ready to use.
-
 Let's create the above database,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/mysql/raw/{{< param "info.subproject_version" >}}/docs/examples/restore/restored-mysql.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/mysql/standalone/examples/restored-mysql.yaml
 mysql.kubedb.com/restored-mysql created
 ```
 
-If you check the database status, you will see it is stuck in **`Initializing`** state.
+If you check the database status, you will see it is stuck in **`Provisioning`** state.
 
 ```bash
 $ kubectl get my -n demo restored-mysql
 NAME             VERSION   STATUS         AGE
-restored-mysql   8.0.14    Initializing   61s
+restored-mysql   8.0.14    Provisioning   61s
 ```
 
 **Create RestoreSession:**
@@ -499,11 +491,9 @@ kind: RestoreSession
 metadata:
   name: sample-mysql-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: mysqls.kubedb.com # this label is mandatory if you are using KubeDB to deploy the database.
 spec:
   task:
-    name: mysql-restore-{{< param "info.subproject_version" >}}
+    name: mysql-restore-8.0.21
   repository:
     name: gcs-repo
   target:
@@ -517,18 +507,15 @@ spec:
 
 Here,
 
-- `.metadata.labels` specifies a `app.kubernetes.io/name: mysqls.kubedb.com` label that is used by KubeDB to watch this RestoreSession object.
 - `.spec.task.name` specifies the name of the Task CRD that specifies the necessary Functions and their execution order to restore a MySQL database.
 - `.spec.repository.name` specifies the Repository CRD that holds the backend information where our backed up data has been stored.
 - `.spec.target.ref` refers to the newly created AppBinding object for the `restored-mysql` MySQL object.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
-> **Warning:** Label `app.kubernetes.io/name: mysqls.kubedb.com` is mandatory if you are using KubeDB to deploy the database. Otherwise, the database will be stuck in **`Provisioning`** state.
-
 Let's create the RestoreSession CRD object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/mysql/raw/{{< param "info.subproject_version" >}}/docs/examples/restore/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/mysql/standalone/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-mysql-restore created
 ```
 
@@ -555,7 +542,7 @@ At first, check if the database has gone into **`Running`** state by the followi
 ```bash
 $ kubectl get my -n demo restored-mysql
 NAME             VERSION   STATUS    AGE
-restored-mysql   8.0.14    Running   34m
+restored-mysql   8.0.14    Ready     34m
 ```
 
 Now, find out the database Pod by the following command,

@@ -80,4 +80,4 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-- Install MySQL addon for Stash following the guide from [here](/docs/addons/mysql/setup/install.md).
+- Backup MySQL database using Stash following the guide from [here](/docs/addons/mysql/standalone/index.md).
