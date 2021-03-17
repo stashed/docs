@@ -136,7 +136,7 @@ helm upgrade stash -n kube-system appscode/stash \
 ```
 
 </div>
-<div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="mgr-helm2">
+<div class="tab-pane fade" id="mgr-helm2" role="tabpanel" aria-labelledby="mgr-helm2">
 
 **Using Helm 2**
 
@@ -165,7 +165,7 @@ helm upgrade stash appscode/stash \
 ```
 
 </div>
-<div class="tab-pane fade" id="script" role="tabpanel" aria-labelledby="mgr-yaml">
+<div class="tab-pane fade" id="mgr-yaml" role="tabpanel" aria-labelledby="mgr-yaml">
 
 **Using YAML (with helm 3)**
 
