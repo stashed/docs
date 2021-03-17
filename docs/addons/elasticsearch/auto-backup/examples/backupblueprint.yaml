@@ -11,7 +11,7 @@ spec:
     storageSecretName: gcs-secret
   # ============== Blueprint for BackupConfiguration =================
   task:
-    name: elasticsearch-backup-7.3.2-v6
+    name: elasticsearch-backup-7.3.2
   schedule: "*/5 * * * *"
   interimVolumeTemplate:
     metadata:

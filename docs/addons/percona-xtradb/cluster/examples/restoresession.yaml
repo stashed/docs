@@ -5,7 +5,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: percona-xtradb-restore-5.7.0
+    name: percona-xtradb-restore-5.7
   repository:
     name: gcs-repo-xtradb-cluster
   target:

@@ -5,7 +5,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: elasticsearch-restore-7.3.2-v6
+    name: elasticsearch-restore-7.3.2
   repository:
     name: gcs-repo
   target:
