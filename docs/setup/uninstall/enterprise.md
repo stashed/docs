@@ -35,7 +35,7 @@ To uninstall Stash Enterprise edition, run the following command:
 In Helm 3, release names are [scoped to a namespace](https://v3.helm.sh/docs/faq/#release-names-are-now-scoped-to-the-namespace). So, provide the namespace you used to install the operator when installing.
 
 ```bash
-$ helm uninstall stash-enterprise --namespace kube-system
+$ helm uninstall stash --namespace kube-system
 ```
 
 </div>
@@ -44,7 +44,7 @@ $ helm uninstall stash-enterprise --namespace kube-system
 ## Using Helm 2
 
 ```bash
-$ helm delete stash-enterprise
+$ helm delete stash
 ```
 
 </div>
@@ -55,8 +55,25 @@ $ helm delete stash-enterprise
 If you prefer to not use Helm, you can generate YAMLs from Stash chart and uninstall using `kubectl`.
 
 ```bash
-$ helm template stash-enterprise appscode/stash-enterprise --namespace kube-system | kubectl delete -f -
+$ helm template stash appscode/stash -n kube-system \
+--set features.enterprise=true                      \
+--set global.license="nothing"                      \
+--set global.skipCleaner=true | kubectl delete -f -
 ```
 
 </div>
 </div>
+
+## Delete CRDs
+
+The above uninstallation process will uninstall the Stash operator. However, it will keep the Stash registered CRDs so that you don't lose your Stash objects i.e. `BackupConfiguration`, `Repository`, etc. during re-installation. If you want to remove the Stash CRDs too, please run the following command.
+
+```bash
+kubectl delete crd -l=app.kubernetes.io/name=stash
+```
+
+If you wan't to delete the `AppBinding` CRD, run the following command.
+
+```bash
+ kubectl delete crd -l=app.kubernetes.io/name=catalog
+```

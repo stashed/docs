@@ -42,7 +42,7 @@ Here is a screenshot of the license form.
   <figcaption align="center">Fig: Stash License Form</figcaption>
 </figure>
 
-You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade.md#upgrading-license).
+You can create licenses for as many clusters as you want. You can upgrade your license any time without re-installing Stash by following the upgrading guide from [here](/docs/setup/upgrade/index.md#upgrading-license).
 
 >Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
 
@@ -72,44 +72,46 @@ Stash operator can be installed as a Helm chart or simply as Kubernetes manifest
 
 ## Using Helm 3
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash-enterprise`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash-enterprise --version {{< param "info.enterprise" >}}
+$ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME                       CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash Enterprise by AppsCode - Enterprise features for Stash
+appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
 
-$ helm install stash-enterprise appscode/stash-enterprise  \
-  --version {{< param "info.enterprise" >}}                  \
+$ helm install stash appscode/stash             \
+  --version {{< param "info.version" >}}                  \
   --namespace kube-system                       \
-  --set-file license=/path/to/the/license.txt
+  --set features.enterprise=true                \
+  --set-file global.license=/path/to/the/license.txt
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash).
 
 </div>
 <div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
 
 ## Using Helm 2
 
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search appscode/stash-enterprise --version {{< param "info.enterprise" >}}
+$ helm search appscode/stash --version {{< param "info.version" >}}
 NAME                      CHART VERSION APP      VERSION             DESCRIPTION
-appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
 
-$ helm install appscode/stash-enterprise --name stash-enterprise   \
-  --version {{< param "info.enterprise" >}}                          \
-  --namespace kube-system                               \
-  --set-file license=/path/to/the/license.txt
+$ helm install appscode/stash --name stash      \
+  --version {{< param "info.version" >}}                          \
+  --namespace kube-system                       \
+  --set features.enterprise=true                \
+  --set-file global.license=/path/to/the/license.txt
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash).
 
 </div>
 <div class="tab-pane fade" id="script" role="tabpanel" aria-labelledby="script-tab">
@@ -121,18 +123,19 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and deplo
 ```bash
 $ helm repo add appscode https://charts.appscode.com/stable/
 $ helm repo update
-$ helm search repo appscode/stash-enterprise --version {{< param "info.enterprise" >}}
+$ helm search repo appscode/stash --version {{< param "info.version" >}}
 NAME                       CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash-enterprise  {{< param "info.enterprise" >}}    {{< param "info.enterprise" >}}  Stash by AppsCode - Backup your Kubernetes Volumes
+appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
 
-$ helm template stash-enterprise appscode/stash-enterprise \
-  --version {{< param "info.enterprise" >}}                  \
-  --namespace kube-system                       \
-  --set-file license=/path/to/the/license.txt   \
-  --set cleaner.skip=true | kubectl apply -f -
+$ helm template stash appscode/stash     \
+  --version {{< param "info.version" >}}                     \
+  --namespace kube-system                \
+  --set features.enterprise=true         \
+  --set global.skipCleaner=true          \
+  --set-file global.license=/path/to/the/license.txt | kubectl apply -f -
 ```
 
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.enterprise" >}}/charts/stash-enterprise).
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.version" >}}/charts/stash).
 
 </div>
 </div>
@@ -142,10 +145,9 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 To check if Stash operator pods have started, run the following command:
 
 ```bash
-$ kubectl get pods --all-namespaces -l app.kubernetes.io/name=stash-enterprise --watch
-
-NAMESPACE     NAME                                READY   STATUS    RESTARTS   AGE
-kube-system   stash-enterprise-568c884795-hzbgg   2/2     Running   0          5h35m
+❯ kubectl get pods --all-namespaces -l app.kubernetes.io/name=stash-enterprise --watch
+NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
+kube-system   stash-stash-enterprise-678bcb6db4-267vk   2/2     Running   0          3m
 ```
 
 Once the operator pod is running, you can cancel the above command by typing `Ctrl+C`.
@@ -167,5 +169,74 @@ restorebatches.stash.appscode.com         2020-08-24T08:20:55Z
 restoresessions.stash.appscode.com        2020-08-24T08:20:55Z
 tasks.stash.appscode.com                  2020-08-24T08:20:55Z
 ```
+
+### Verify Catalogs
+
+Stash Enterprise edition automatically installs the necessary Addon catalogs for database backup. Verify that the Addon catalogs have been installed using the following command.
+
+```bash
+❯ kubectl get tasks.stash.appscode.com
+NAME                          AGE
+elasticsearch-backup-5.6.4    5m8s
+elasticsearch-backup-6.2.4    5m8s
+elasticsearch-backup-6.3.0    5m8s
+elasticsearch-backup-6.4.0    5m8s
+elasticsearch-backup-6.5.3    5m8s
+elasticsearch-backup-6.8.0    5m8s
+elasticsearch-backup-7.2.0    5m8s
+elasticsearch-backup-7.3.2    5m8s
+elasticsearch-restore-5.6.4   5m8s
+elasticsearch-restore-6.2.4   5m8s
+elasticsearch-restore-6.3.0   5m8s
+elasticsearch-restore-6.4.0   5m8s
+elasticsearch-restore-6.5.3   5m8s
+elasticsearch-restore-6.8.0   5m8s
+elasticsearch-restore-7.2.0   5m8s
+elasticsearch-restore-7.3.2   5m8s
+mariadb-backup-10.5.8         5m8s
+mariadb-restore-10.5.8        5m8s
+mongodb-backup-3.4.17         5m8s
+mongodb-backup-3.4.22         5m8s
+mongodb-backup-3.6.13         5m8s
+mongodb-backup-4.0.11         5m8s
+mongodb-backup-4.0.3          5m8s
+mongodb-backup-4.1.13         5m8s
+mongodb-backup-4.1.4          5m8s
+mongodb-backup-4.1.7          5m8s
+mongodb-backup-4.2.3          5m8s
+mongodb-restore-3.4.17        5m8s
+mongodb-restore-3.4.22        5m8s
+mongodb-restore-3.6.13        5m8s
+mongodb-restore-4.0.11        5m8s
+mongodb-restore-4.0.3         5m8s
+mongodb-restore-4.1.13        5m8s
+mongodb-restore-4.1.4         5m8s
+mongodb-restore-4.1.7         5m8s
+mongodb-restore-4.2.3         5m8s
+mysql-backup-5.7.25           5m8s
+mysql-backup-8.0.14           5m8s
+mysql-backup-8.0.21           5m8s
+mysql-backup-8.0.3            5m8s
+mysql-restore-5.7.25          5m8s
+mysql-restore-8.0.14          5m8s
+mysql-restore-8.0.21          5m8s
+mysql-restore-8.0.3           5m8s
+perconaxtradb-backup-5.7.0    5m8s
+perconaxtradb-restore-5.7.0   5m8s
+postgres-backup-10.14         5m8s
+postgres-backup-11.9          5m8s
+postgres-backup-12.4          5m8s
+postgres-backup-13.1          5m8s
+postgres-backup-9.6.19        5m8s
+postgres-restore-10.14        5m8s
+postgres-restore-11.9         5m8s
+postgres-restore-12.4         5m8s
+postgres-restore-13.1         5m8s
+postgres-restore-9.6.19       5m8s
+pvc-backup                    5m2s
+pvc-restore                   5m2s
+```
+
+As you can see from the above output that Stash has created `Task` objects for each supported databases.
 
 Now, you are ready to [take your first backup](/docs/guides/latest/README.md) using Stash.
