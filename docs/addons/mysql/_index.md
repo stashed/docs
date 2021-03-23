@@ -5,6 +5,6 @@ menu:
     identifier: stash-mysql
     name: MySQL
     parent: stash-addons
-    weight: 40
+    weight: 50
 menu_name: docs_{{ .version }}
 ---

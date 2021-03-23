@@ -1,13 +1,13 @@
 ---
 title: BackupBatch Overview
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: backupbatch-overview
     name: BackupBatch
     parent: crds
     weight: 15
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: concepts
 ---
 

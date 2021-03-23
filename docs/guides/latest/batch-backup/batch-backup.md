@@ -2,13 +2,13 @@
 title: Batch Backup | Stash
 description: A step by step guide showing how to backup and restore an application with multiple co-related components.
 menu:
-  product_stash_{{ .version }}: 
+  docs_{{ .version }}:
     identifier: batch-backup-guide
     name: Backup a WordPress Site
     parent: batch-backup
     weight: 20
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 

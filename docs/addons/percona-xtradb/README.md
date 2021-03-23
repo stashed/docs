@@ -2,13 +2,13 @@
 title: Percona XtraDB Addon Overview | Stash
 description: Percona XtraDB Addon Overview | Stash
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: stash-percona-xtradb-readme
     name: Readme
     parent: stash-percona-xtradb
     weight: -1
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 url: /products/stash/{{ .version }}/addons/percona-xtradb/
 aliases:
