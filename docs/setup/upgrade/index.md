@@ -20,7 +20,7 @@ This guide will show you how to upgrade various Stash components. Here, we are g
 
 In Stash `v0.11.x` and prior versions, Stash used separate charts for Stash community edition, Stash enterprise edition, and Stash Addons catalogs. In Stash `v0.12.x`, we have moved to a single combined chart for all the components for a better user experience. This enables seamless migration between the Stash community edition and Stash enterprise edition. It also removes the burden of installing individual database addons manually.
 
-I order to upgrade from Stash `v0.11.x` to `v0.12.x`, please follow the following steps.
+In order to upgrade from Stash `v0.11.x` to `v0.12.x`, please follow the following steps.
 
 #### 1. Pause Upcoming Backups
 
