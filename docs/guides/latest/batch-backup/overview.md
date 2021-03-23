@@ -2,13 +2,13 @@
 title: Batch Backup & Restore Overview | Stash
 description: An overview on how batch backup & restore works in Stash.
 menu:
-  product_stash_{{ .version }}:
+  docs_{{ .version }}:
     identifier: batch-backup-overview
     name: How Batch Backup & Restore works?
     parent: batch-backup
     weight: 10
 product_name: stash
-menu_name: product_stash_{{ .version }}
+menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
