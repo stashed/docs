@@ -58,11 +58,8 @@ Now, uninstall the Stash operator by following the appropriate uninstallation gu
  When you uninstall the Stash Operator, it does not remove the old CRDs. Upgrade them to the latest version using the following commands:
 
 ```bash
-# Update Stash CRDs
-$ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}stash-crds.yaml
-
 # Update Stash Catalog CRDs
-$ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}stash-catalog-crds.yaml
+$ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.installer" >}}/stash-catalog-crds.yaml
 ```
 
 #### 4. Reinstall new Stash Operator
