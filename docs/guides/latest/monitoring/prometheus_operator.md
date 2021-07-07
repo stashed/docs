@@ -169,13 +169,14 @@ Here, we are going to enable monitoring for both backup metrics and operator met
 If you haven't installed Stash yet, run the following command to enable Prometheus monitoring during installation
 
 ```bash
-$ helm install stash appscode/stash-community -n kube-system \
+$ helm install stash appscode/stash -n kube-system \
 --version {{< param "info.version" >}} \
---set monitoring.agent=prometheus.io/operator \
---set monitoring.backup=true \
---set monitoring.operator=true \
---set monitoring.serviceMonitor.labels.release=prometheus-stack \
---set-file license=/path/to/license-file.txt
+--set features.community=true               \
+--set stash-community.monitoring.agent=prometheus.io/operator \
+--set stash-community.monitoring.backup=true \
+--set stash-community.monitoring.operator=true \
+--set stash-community.monitoring.serviceMonitor.labels.release=prometheus-stack \
+--set-file global.license=/path/to/license-file.txt
 ```
 
 </div>
@@ -186,16 +187,18 @@ $ helm install stash appscode/stash-community -n kube-system \
 If you have installed Stash already in your cluster but didn't enable monitoring during installation, you can use `helm upgrade` command to enable monitoring in the existing installation.
 
 ```bash
-$ helm upgrade stash appscode/stash-community -n kube-system \
+$ helm upgrade stash appscode/stash -n kube-system \
 --reuse-values \
---set monitoring.agent=prometheus.io/operator \
---set monitoring.backup=true \
---set monitoring.operator=true \
---set monitoring.serviceMonitor.labels.release=prometheus-stack
+--set stash-community.monitoring.agent=prometheus.io/operator \
+--set stash-community.monitoring.backup=true \
+--set stash-community.monitoring.operator=true \
+--set stash-community.monitoring.serviceMonitor.labels.release=prometheus-stack
 ```
 
 </div>
 </div>
+
+>Use `stash-enterprise` instead of `stash-community` if you are using Stash Enterprise edition.
 
 This will create a `ServiceMonitor` object with the same name and namespace as the Stash operator. The `ServiceMonitor` will have the label `release: prometheus-stack` as we have provided it through the `--set monitoring.serviceMonitor.labels` parameter.
 
