@@ -59,7 +59,7 @@ Now, uninstall the Stash operator by following the appropriate uninstallation gu
 
 ```bash
 # Update Stash Catalog CRDs
-$ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.installer" >}}/stash-catalog-crds.yaml
+$ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.installer" >}}/crds/stash-catalog-crds.yaml
 ```
 
 #### 4. Reinstall new Stash Operator
