@@ -1,0 +1,15 @@
+apiVersion: kubedb.com/v1alpha2
+kind: Redis
+metadata:
+  name: sample-redis
+  namespace: demo
+spec:
+  version: "6.2.5"
+  replicas: 1
+  storageType: Durable
+  storage:
+    resources:
+      requests:
+        storage: 1Gi
+    storageClassName: standard
+  terminationPolicy: Delete
