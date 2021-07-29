@@ -24,9 +24,9 @@ In this section, we are going to show you how to customize the backup process. H
 
 ### Passing arguments to the backup process
 
-Stash Redis addon uses [mysqldump](https://redis.com/kb/en/mysqldump) for backup. You can pass arguments to the `mysqldump` through `args` param under `task.params` section.
+Stash Redis addon uses [redis-dump-go](https://github.com/yannh/redis-dump-go) for backup. You can pass arguments to the `redis-dump-go` through `args` param under `task.params` section.
 
-The below example shows how you can pass the `--databases testdb` to take backup for a specific redis databases named `testdb`.
+The below example shows how you can pass the `-db 1` to take backup only the database with index 1.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -35,12 +35,12 @@ metadata:
   name: sample-redis-backup
   namespace: demo
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "*/2 * * * *"
   task:
     name: redis-backup-6.2.5
     params:
     - name: args
-      value: --databases testdb
+      value: -db 1
   repository:
     name: gcs-repo
   target:
@@ -53,8 +53,6 @@ spec:
     keepLast: 5
     prune: true
 ```
-
-> **WARNING**: Make sure that you have the specific database created before taking backup. In this case, Database `testdb` should exist before the backup job starts.
 
 ### Running backup job as a specific user
 
@@ -159,11 +157,11 @@ To know more about the available options for retention policies, please visit [h
 
 ## Customizing Restore Process
 
-Stash also uses `mysql` during the restore process. In this section, we are going to show how you can pass arguments to the restore process, restore a specific snapshot, run restore job as a specific user, etc.
+Stash uses `redis-cli` during the restore process. In this section, we are going to show how you can pass arguments to the restore process, restore a specific snapshot, run restore job as a specific user, etc.
 
 ### Passing arguments to the restore process
 
-Similar to the backup process, you can pass arguments to the restore process through the `args` params under `task.params` section. This example will restore data from database `testdb` only.
+Similar to the backup process, you can pass arguments to the restore process through the `args` params under `task.params` section. Here, we have passed `--pipe-timeout` argument to the `redis-cli`.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -171,14 +169,12 @@ kind: RestoreSession
 metadata:
   name: sample-redis-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: redis.kubedb.com
 spec:
   task:
     name: redis-restore-6.2.5
     params:
     - name: args
-      value: --one-database testdb
+      value: --pipe-timeout 300
   repository:
     name: gcs-repo
   target:
@@ -215,8 +211,6 @@ kind: RestoreSession
 metadata:
   name: sample-redis-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: redis.kubedb.com
 spec:
   task:
     name: redis-restore-6.2.5
@@ -243,8 +237,6 @@ kind: RestoreSession
 metadata:
   name: sample-redis-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: redis.kubedb.com
 spec:
   task:
     name: redis-restore-6.2.5
@@ -274,8 +266,6 @@ kind: RestoreSession
 metadata:
   name: sample-redis-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: redis.kubedb.com
 spec:
   task:
     name: redis-restore-6.2.5

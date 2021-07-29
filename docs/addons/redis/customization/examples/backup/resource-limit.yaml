@@ -1,13 +1,12 @@
 apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
+kind: BackupConfiguration
 metadata:
-  name: sample-redis-restore
+  name: sample-redis-backup
   namespace: demo
-  labels:
-    app.kubernetes.io/name: redis.kubedb.com
 spec:
+  schedule: "*/2 * * * *"
   task:
-    name: redis-restore-6.2.5
+    name: redis-backup-6.2.5
   repository:
     name: gcs-repo
   target:
@@ -24,5 +23,7 @@ spec:
         limits:
           cpu: "200m"
           memory: "1Gi"
-  rules:
-  - snapshots: [latest]
+  retentionPolicy:
+    name: keep-last-5
+    keepLast: 5
+    prune: true

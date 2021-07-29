@@ -9,7 +9,7 @@ spec:
     name: redis-backup-6.2.5
     params:
     - name: args
-      value: --databases testdb
+      value: -db 1
   repository:
     name: gcs-repo
   target:

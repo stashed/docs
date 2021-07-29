@@ -3,8 +3,6 @@ kind: RestoreSession
 metadata:
   name: sample-redis-restore
   namespace: demo
-  labels:
-    app.kubernetes.io/name: redis.kubedb.com
 spec:
   task:
     name: redis-restore-6.2.5
