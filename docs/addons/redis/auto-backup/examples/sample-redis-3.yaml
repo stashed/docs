@@ -1,0 +1,23 @@
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: sample-redis-3
+  namespace: demo-3
+  annotations:
+    stash.appscode.com/backup-blueprint: redis-backup-template
+    params.stash.appscode.com/args: -db 0
+spec:
+  clientConfig:
+    service:
+      name: sample-redis-3-master
+      path: /
+      port: 6379
+      scheme: http
+  secret:
+    name: sample-redis-3
+  secretTransforms:
+  - renameKey:
+      from: redis-password
+      to: password
+  type: redis
+  version: 6.2.5
