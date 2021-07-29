@@ -16,11 +16,11 @@ section_menu_id: stash-addons
 
 # How Stash Backups & Restores Redis Database
 
-Stash 0.9.0+ supports backup and restore operation of many databases. This guide will give you an overview of how Redis database backup and restore process works in Stash.
+Stash `{{ .version }}` supports backup and restore operation of many databases. This guide will give you an overview of how Redis database backup and restore process works in Stash.
 
 ## Logical Backup
 
-Stash supports taking [logical backup](https://redis.com/kb/en/backup-and-restore-overview/#logical-vs-physical-backups) of Redis databases using [mysqldump](https://redis.com/kb/en/mysqldump/). It is the most flexible way to perform a backup and restore, and a good choice when the data size is relatively small.
+Stash supports taking logical backup of Redis databases using [redis-dump-go](https://github.com/yannh/redis-dump-go). It is the most flexible way to perform a backup and restore, and a good choice when the data size is relatively small.
 
 ### How Logical Backup Works
 
