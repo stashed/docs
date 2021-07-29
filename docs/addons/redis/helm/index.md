@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Take a logical backup of the Redis database using Stash
 
-Stash `v0.11.8+` supports backup and restoration of Redis databases. This guide will show you how you can take a logical backup of your Redis databases and restore them using Stash.
+Stash `{{ .version }}` supports backup and restoration of Redis databases. This guide will show you how you can take a logical backup of your Redis databases and restore them using Stash.
 
 ## Before You Begin
 
@@ -31,7 +31,7 @@ You have to be familiar with following custom resources:
 - [BackupSession](/docs/concepts/crds/backupsession.md)
 - [RestoreSession](/docs/concepts/crds/restoresession.md)
 
-To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create `demo` namespace if you haven't created it yet.
+To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create `demo` namespace if you haven't created already.
 
 ```bash
 $ kubectl create ns demo
@@ -143,7 +143,7 @@ type: Opaque
 
 ```
 
-Here, we are going to use the root user credential `redis-password` to insert the sample data.
+Here, we are going to use `redis-password` to authenticate and insert the sample data.
 
 At first, let's export the password as environment variables to make further commands re-usable.
 
@@ -222,10 +222,10 @@ spec:
 Here,
 
 - **.spec.clientConfig.service** specifies the Service information to use to connects with the database.
-- **.spec.secret** specifies the name of the Secret that holds necessary credentials to access the database. If your Redis is using authentication, then don't provide this field.
+- **.spec.secret** specifies the name of the Secret that holds necessary credentials to access the database. If your Redis is not using authentication, then don't provide this field.
 - **.spec.secretTransforms** specifies the transformations required to achieve the desired keys from the current Secret. You can apply the following transformations here:
   - **addKey**: If your database Secret does not have an equivalent key expected by Stash, you can add the key using `addKey` transformation.
-  - **renameKey**: If your database Secret does not have a key expected by Stash but it has an equivalent key that is used for the same purpose, you can use `renameKey` transformation to specify the mapping between the keys. For example, our Redis Secret didn't have `password` key but it has an equivalent `redis-password` key that contains password for the root user. Hence, we are telling Stash using `renameKey` transformation that the `redis-password` should be used as `password` key.
+  - **renameKey**: If your database Secret does not have a key expected by Stash but it has an equivalent key that is used for the same purpose, you can use `renameKey` transformation to specify the mapping between the keys. For example, our Redis Secret didn't have `password` key but it has an equivalent `redis-password` key that contains password for the database. Hence, we are telling Stash using `renameKey` transformation that the `redis-password` should be used as `password` key.
   - **addKeysFrom**: You can also merge keys from another Secret using `addKeysFrom` transformation. You have to specify the respective Secret name and namespace as below:
     ```yaml
     addKeysFrom:
@@ -324,7 +324,9 @@ Here,
 
 - `.spec.schedule` specifies that we want to backup the database at 5 minutes intervals.
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup a Redis database.
+- `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
 - `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted database.
+- `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
 
 Let's create the `BackupConfiguration` object we have shown above,
 
@@ -353,19 +355,10 @@ Now, wait for a schedule to appear. Run the following command to watch for a `Ba
 
 ```bash
 ❯ kubectl get backupsession -n demo -w
-NAME                             INVOKER-TYPE          INVOKER-NAME          PHASE   DURATION   AGE
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup                      0s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup                      0s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup                      0s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running              0s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running              19s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running              48s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running              77s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running              78s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running              78s
-sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running              78s
+NAME                             INVOKER-TYPE          INVOKER-NAME          PHASE       DURATION          AGE
+sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup                                 0s
+sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Running                       0s
 sample-redis-backup-1627490702   BackupConfiguration   sample-redis-backup   Succeeded   1m18.098555424s   78s
-
 ```
 
 Here, the phase `Succeeded` means that the backup process has been completed successfully.
@@ -428,7 +421,7 @@ stash-backup-sample-redis-backup   */5 * * * *   True      0        113s        
 
 #### Simulate Disaster
 
-Now, let's simulate an accidental deletion scenario. Here, we are going to exec into the database pod and delete the `company` database we had created earlier.
+Now, let's simulate an accidental deletion scenario. Here, we are going to exec into the database pod and delete the sample data we have inserted earlier.
 
 ```bash
 ❯ kubectl exec -it -n demo sample-redis-master-0 -- redis-cli -a $PASSWORD
@@ -488,10 +481,10 @@ Once, you have created the `RestoreSession` object, Stash will create a restore 
 
 ```bash
 ❯ kubectl get restoresession -n demo -w
-NAME                   REPOSITORY   PHASE     DURATION   AGE
-sample-redis-restore   gcs-repo     Running              6s
-sample-redis-restore   gcs-repo     Running              16s
-sample-redis-restore   gcs-repo     Succeeded              16s
+NAME                   REPOSITORY   PHASE     DURATION          AGE
+sample-redis-restore   gcs-repo     Running                     6s
+sample-redis-restore   gcs-repo     Running                     16s
+sample-redis-restore   gcs-repo     Succeeded                   16s
 sample-redis-restore   gcs-repo     Succeeded   16.324570911s   16s
 ```
 
@@ -499,7 +492,7 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 #### Verify Restored Data
 
-Now, let's exec into the database pod and verify whether data actual data was restored or not,
+Now, let's exec into the database pod and verify whether data actual data has been restored or not,
 
 ```bash
 ❯ kubectl exec -it -n demo sample-redis-master-0 -- redis-cli -a $PASSWORD

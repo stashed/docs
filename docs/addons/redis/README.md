@@ -19,7 +19,7 @@ aliases:
 
 # Stash Redis Addon
 
-Stash 0.9.0+ supports extending its functionality through addons. Stash Redis addon enables Stash to backup and restore Redis databases.
+Stash `{{ .version }}` supports extending its functionality through addons. Stash Redis addon enables Stash to backup and restore Redis databases.
 
 This guide will give you an overview of which Redis versions are supported and how the docs are organized.
 
@@ -33,7 +33,7 @@ Here, the addon follows `M.M.P` versioning scheme where `M.M.P` (Major.Minor.Pat
 
 ## Addon Version Compatibility
 
-Any addon with matching major version with the database version should be able to take backup of that database. For example, Redis addon with version `10.x.x` should be able take backup of any Redis of `10.x.x` series. However, this might not be true for some versions. In that case, we will have separate addon for that version.
+Any addon with matching major version with the database version should be able to take backup of that database. For example, Redis addon with version `6.x.x` should be able take backup of any Redis of `6.x.x` series. However, this might not be true for some versions. In that case, we will have separate addon for that version.
 
 ## Documentation Overview
 
