@@ -16,13 +16,13 @@ section_menu_id: setup
 
 Stash Enterprise edition is the open core version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview.md).
 
-If you are willing to try Stash Enterprise Edition, you can grab a **30 days trial** license from [here](https://license-issuer.appscode.com/).
+If you are willing to try Stash Enterprise Edition, you can grab a **30 days trial** license from [here](https://license-issuer.appscode.com/?p=stash-enterprise).
 
 ## Get a Trial License
 
 In this section, we are going to show you how you can get a **30 days trial** license for Stash Enterprise edition. You can get a license for your Kubernetes cluster by going through the following steps:
 
-- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
+- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/?p=stash-enterprise) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
 - Provide your name and email address. **You must provide your work email address**.
 - Then, select `Stash Enterprise Edition` in the product field.
 - Now, provide your cluster ID. You can get your cluster ID easily by running the following command:
@@ -61,9 +61,6 @@ Stash operator can be installed as a Helm chart or simply as Kubernetes manifest
     <a class="nav-link active" id="helm3-tab" data-toggle="tab" href="#helm3" role="tab" aria-controls="helm3" aria-selected="true">Helm 3 (Recommended)</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="helm2-tab" data-toggle="tab" href="#helm2" role="tab" aria-controls="helm2" aria-selected="false">Helm 2</a>
-  </li>
-  <li class="nav-item">
     <a class="nav-link" id="script-tab" data-toggle="tab" href="#script" role="tab" aria-controls="script" aria-selected="false">YAML</a>
   </li>
 </ul>
@@ -83,29 +80,6 @@ appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  St
 
 $ helm install stash appscode/stash             \
   --version {{< param "info.version" >}}                  \
-  --namespace kube-system                       \
-  --set features.enterprise=true                \
-  --set-file global.license=/path/to/the/license.txt
-```
-
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash-enterprise).
-
-</div>
-<div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
-
-## Using Helm 2
-
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
-
-```bash
-$ helm repo add appscode https://charts.appscode.com/stable/
-$ helm repo update
-$ helm search appscode/stash --version {{< param "info.version" >}}
-NAME                      CHART VERSION APP      VERSION             DESCRIPTION
-appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
-
-$ helm install appscode/stash --name stash      \
-  --version {{< param "info.version" >}}                          \
   --namespace kube-system                       \
   --set features.enterprise=true                \
   --set-file global.license=/path/to/the/license.txt

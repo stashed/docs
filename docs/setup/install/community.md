@@ -16,13 +16,13 @@ section_menu_id: setup
 
 Stash Community edition is available under [AppsCode-Community-1.0.0](https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Community-1.0.0.md) license and free to use for both commercial and non-commercial purposes. It comes with all the basic backup functionalities. However, it lacks some advanced features such as [Database Backup](/docs/guides/latest/addons/overview.md), [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. compared to the Enterprise edition. A full features comparison between the Stash Community edition and Enterprise edition can be found [here](/docs/concepts/what-is-stash/overview.md).
 
-To use Stash Community edition, you can grab **1 year** free license from [here](https://license-issuer.appscode.com/).
+To use Stash Community edition, you can grab **1 year** free license from [here](https://license-issuer.appscode.com/?p=stash-community).
 
 ## Get a License
 
 In this section, we are going to show you how you can get a **1 year** free license for Stash Community edition. You can get a license for your Kubernetes cluster by going through the following steps:
 
-- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
+- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/?p=stash-community) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
 - Provide your name and email address. You can provide your personal or work email address.
 - Then, select `Stash Community Edition` in the product field.
 - Now, provide your cluster ID. You can get your cluster ID easily by running the following command:
@@ -55,9 +55,6 @@ Stash operator can be installed as a Helm chart or simply as Kubernetes manifest
     <a class="nav-link active" id="helm3-tab" data-toggle="tab" href="#helm3" role="tab" aria-controls="helm3" aria-selected="true">Helm 3 (Recommended)</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="helm2-tab" data-toggle="tab" href="#helm2" role="tab" aria-controls="helm2" aria-selected="false">Helm 2</a>
-  </li>
-  <li class="nav-item">
     <a class="nav-link" id="script-tab" data-toggle="tab" href="#script" role="tab" aria-controls="script" aria-selected="false">YAML</a>
   </li>
 </ul>
@@ -76,29 +73,6 @@ NAME            CHART VERSION         APP VERSION         DESCRIPTION
 appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
 
 $ helm install stash appscode/stash          \
-  --version {{< param "info.version" >}}                \
-  --namespace kube-system                     \
-  --set features.community=true               \
-  --set-file global.license=/path/to/the/license.txt
-```
-
-To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash-community).
-
-</div>
-<div class="tab-pane fade" id="helm2" role="tabpanel" aria-labelledby="helm2-tab">
-
-## Using Helm 2
-
-Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
-
-```bash
-$ helm repo add appscode https://charts.appscode.com/stable/
-$ helm repo update
-$ helm search appscode/stash --version {{< param "info.version" >}}
-NAME            CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
-
-$ helm install appscode/stash --name stash    \
   --version {{< param "info.version" >}}                \
   --namespace kube-system                     \
   --set features.community=true               \
