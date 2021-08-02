@@ -16,6 +16,41 @@ section_menu_id: setup
 
 This guide will show you how to upgrade various Stash components. Here, we are going to show how to upgrade from an old Stash version to the new version, how to migrate between the enterprise edition and community edition, and how to update the license, etc.
 
+## Upgrading Stash from `v2021.xx.xx` to `{{< param "info.version" >}}`
+
+In order to upgrade from Stash `v2021.xx.xx` to `{{< param "info.version" >}}`, please follow the following steps.
+
+#### 1. Update Stash catalog CRDs
+
+Helm [does not upgrade the CRDs](https://github.com/helm/helm/issues/6581) bundled in a Helm chart if the CRDs already exist. So, to upgrade the Stash catalog CRDs, please run the following commands below:
+
+```bash
+kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/crds/stash-catalog-crds.yaml
+```
+
+#### 2. Upgrade Stash Operator
+
+Now, upgrade the Stash helm chart using the following command. You can find the latest installation guide [here](/docs/setup/README.md).
+
+```bash
+# Update the helm repositories
+$ helm repo update
+
+# Upgrade Stash Community operator chart
+$ helm upgrade stash appscode/stash \
+  --version {{< param "info.version" >}} \
+  --namespace kube-system \
+  --set features.community=true               \
+  --set-file global.license=/path/to/the/license.txt
+
+# Upgrade Stash Enterprise operator chart
+$ helm upgrade stash appscode/stash \
+    --version {{< param "info.version" >}} \
+    --namespace kube-system \
+    --set features.enterprise=true                \
+    --set-file global.license=/path/to/the/license.txt
+```
+
 ## Upgrading Stash from `v0.11.x` and older to `v0.12.x`
 
 In Stash `v0.11.x` and prior versions, Stash used separate charts for Stash community edition, Stash enterprise edition, and Stash Addons catalogs. In Stash `v0.12.x`, we have moved to a single combined chart for all the components for a better user experience. This enables seamless migration between the Stash community edition and Stash enterprise edition. It also removes the burden of installing individual database addons manually.
