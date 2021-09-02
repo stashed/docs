@@ -1,0 +1,20 @@
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: sample-redis
+  namespace: demo
+spec:
+  clientConfig:
+    service:
+      name: sample-redis-master
+      path: /
+      port: 6379
+      scheme: http
+  secret:
+    name: sample-redis
+  secretTransforms:
+  - renameKey:
+      from: redis-password
+      to: password
+  type: redis
+  version: 6.2.5
