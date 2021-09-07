@@ -1,10 +1,10 @@
 ---
-title: Token Authentication | Stash
-description: Backup and Restore of NATS streams using token authentication
+title: Nkey Authentication | Stash
+description: Backup and Restore of NATS streams using nkey authentication
 menu:
   docs_{{ .version }}:
-    identifier: token-auth
-    name: Token Authentication
+    identifier: nkey-auth
+    name: Nkey Authentication
     parent: stash-nats-auth
     weight: 15
 product_name: stash
@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Take a backup of NATS streams using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using token authentication with Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using nkey authentication with Stash.
 
 ## Before You Begin
 
@@ -42,7 +42,7 @@ namespace/demo created
 
 ## Prepare NATS
 
-In this section, we are going to deploy a NATS cluster with token authentication enabled. Then, we are going to create a stream and publish some messages into it.
+In this section, we are going to deploy a NATS cluster with nkey authentication enabled. Then, we are going to create a stream and publish some messages into it.
 
 ### Deploy NATS Cluster
 
@@ -62,7 +62,8 @@ $ helm install sample-nats nats/nats -n demo \
 --set cluster.enabled=true \
 --set cluster.recplicas=3 \
 --set auth.enabled=true \
---set-string auth.token="secret"
+--set-string auth.nkeys.users[0].nkey="UAWGGVEHXIEOWYVBN7RO7IIKIXHIOK6JWWUDJOWIUZ6L3XMIWM5IFGPD"
+
 ```
 
 This chart will create the necessary StatefulSet, Secret, Service etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
@@ -121,7 +122,7 @@ Let's exec into the nats-box pod,
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's export the username and password as environment variables to make further commands re-usable.
+# Let's export nkey file path as environment variables to make further commands re-usable.
 sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
 
 # Let's create a stream named "ORDERS"

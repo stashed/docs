@@ -122,7 +122,7 @@ Let's exec into the nats-box pod,
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's export the token as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.token}' | base64 -d)
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
 
 # Let's create a stream named "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream add ORDERS --subjects "ORDERS.*" --ack --max-msgs=-1 --max-bytes=-1 --max-age=1y --storage file --retention limits --max-msg-size=-1 --max-msgs-per-subject=-1 --discard old --dupe-window="0s" --replicas 1
@@ -133,7 +133,7 @@ Information for Stream ORDERS created 2021-09-03T07:12:07Z
 Configuration:
 
              Subjects: ORDERS.*
-     Acknowledgements: true
+     Acknowledgements: truee
             Retention: File - Limits
              Replicas: 1
        Discard Policy: Old
@@ -488,7 +488,7 @@ Now, let's simulate an accidental deletion scenario. Here, we are going to exec 
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's export the token as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.token}' | base64 -d)
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
 
 # delete the stream "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream rm ORDERS -f
@@ -567,7 +567,7 @@ Now, let's exec into the nats-box pod and verify whether data actual data has be
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's export the token as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.token}' | base64 -d)
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
 
 # Verify that the stream has been restored successfully
 sample-nats-box-785f8458d7-wtnfx:~#  nats stream ls
