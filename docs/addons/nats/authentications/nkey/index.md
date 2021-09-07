@@ -1,12 +1,12 @@
 ---
-title: Basic Authentication | Stash
-description: Backup and Restore of NATS streams using basic authentication
+title: Token Authentication | Stash
+description: Backup and Restore of NATS streams using token authentication
 menu:
   docs_{{ .version }}:
-    identifier: basic-auth
-    name: Basic Authentication
+    identifier: token-auth
+    name: Token Authentication
     parent: stash-nats-auth
-    weight: 10
+    weight: 15
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Take a backup of NATS streams using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using basic authentication with Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using token authentication with Stash.
 
 ## Before You Begin
 
@@ -38,11 +38,11 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/basic/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples).
 
 ## Prepare NATS
 
-In this section, we are going to deploy a NATS cluster with basic authentication enabled. Then, we are going to create a stream and publish some messages into it.
+In this section, we are going to deploy a NATS cluster with token authentication enabled. Then, we are going to create a stream and publish some messages into it.
 
 ### Deploy NATS Cluster
 
@@ -62,7 +62,7 @@ $ helm install sample-nats nats/nats -n demo \
 --set cluster.enabled=true \
 --set cluster.recplicas=3 \
 --set auth.enabled=true \
---set-string auth.basic.users[0].user="u2",auth.basic.users[0].password="222"
+--set-string auth.token="secret"
 ```
 
 This chart will create the necessary StatefulSet, Secret, Service etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
@@ -108,7 +108,7 @@ From the above log, we can see the NATS server is ready to accept connections.
 
 ### Create Stream and Publish Messages
 
-Now, we are going to exec into the nats-box pod, create a stream and publish some messages into the stream.
+Now, we are going to exec into the nats-box pod, create a stream and publish some messages into the stream. 
 
 ```bash
 ❯ kubectl get pod -n demo -l app=sample-nats-box
@@ -122,8 +122,7 @@ Let's exec into the nats-box pod,
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's export the username and password as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.username}' | base64 -d)
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_PASSWORD=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.password}' | base64 -d)
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
 
 # Let's create a stream named "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream add ORDERS --subjects "ORDERS.*" --ack --max-msgs=-1 --max-bytes=-1 --max-age=1y --storage file --retention limits --max-msg-size=-1 --max-msgs-per-subject=-1 --discard old --dupe-window="0s" --replicas 1
@@ -240,18 +239,14 @@ metadata:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
 data:
-  password: MjIy
-  username: dTI=
-
+  token: c2VjcmV0
 ```
 
 Let's create the `Secret` we have shown above,
-
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/basic/examples/secret.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/secret.yaml
 appbinding.appcatalog.appscode.com/sample-nats-auth created
 ```
-
 
 
 ### Create AppBinding
@@ -284,12 +279,12 @@ Here,
 
 - `.spec.clientConfig.service` specifies the Service information to use to connects with the server.
 - `.spec.secret` specifies the name of the Secret that holds necessary credentials to access the server.
-- `spec.type` specifies the type of the data. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of data.
+- `.spec.type` specifies the type of the data. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of data.
 
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/basic/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-nats created
 ```
 
@@ -333,7 +328,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/basic/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -397,7 +392,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/basic/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-nats-backup created
 ```
 
@@ -440,20 +435,21 @@ gcs-repo   true        1.382 KiB   1                9m4s                     24m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/nats/sample-nats` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/authentications/basic/images/sample-nats-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/authentications/token/images/sample-nats-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
+
 
 
 > Note: Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
 ## Restore
 
-If you have followed the previous sections properly, you should have a successful backup of your NATS streams. Now, we are going to show how you can restore the streams from the backed up data.
+If you have followed the previous sections properly, you should have a successful backup of your nats streams. Now, we are going to show how you can restore the streams from the backed up data.
 
 ### Restore Into the Same NATS Cluster
 
-You can restore your data into the same nats cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same nats cluster which may be necessary when you have accidentally deleted any data.
+You can restore your data into the same NATS cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same NATS cluster which may be necessary when you have accidentally deleted any data.
 
 #### Temporarily Pause Backup
 
@@ -491,9 +487,8 @@ Now, let's simulate an accidental deletion scenario. Here, we are going to exec 
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's export the username and password as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.username}' | base64 -d)
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_PASSWORD=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.password}' | base64 -d)
+# At first, let's export the username and password as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
 
 # delete the stream "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream rm ORDERS -f
@@ -543,14 +538,14 @@ Here,
 
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore NATS streams.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref`  refers to the AppBinding object that holds the connection information of our targeted NATS server.
+- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
 - `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before restoring the streams.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the streams.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/basic/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-nats-restore created
 ```
 
@@ -571,9 +566,8 @@ Now, let's exec into the nats-box pod and verify whether data actual data has be
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's export the username and password as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.username}' | base64 -d)
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_PASSWORD=$(kubectl get secrets -n demo sample-nats-auth -o jsonpath='{.data.password}' | base64 -d)
+# At first, let's export the username and password as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
 
 # Verify that the stream has been restored successfully
 sample-nats-box-785f8458d7-wtnfx:~#  nats stream ls
