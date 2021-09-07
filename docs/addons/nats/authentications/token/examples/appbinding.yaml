@@ -12,5 +12,7 @@ spec:
       name: sample-nats
       port: 4222
       scheme: nats
+  secret:
+    name: sample-nats-auth
   type: stash/nats
   version: 2.4.0

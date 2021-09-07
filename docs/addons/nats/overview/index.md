@@ -1,11 +1,11 @@
 ---
-title: Redis Backup & Restore Overview | Stash
-description: How Redis Backup & Restore Works in Stash
+title: NATS Backup & Restore Overview | Stash
+description: How NATS Backup & Restore Works in Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-redis-overview
+    identifier: stash-nats-overview
     name: How does it works?
-    parent: stash-redis
+    parent: stash-nats
     weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -14,21 +14,17 @@ section_menu_id: stash-addons
 
 {{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
-# How Stash Backups & Restores Redis Database
+# How Stash Backups & Restores NATS Streams
 
-Stash `{{< param "info.version" >}}` supports backup and restore operation of many databases. This guide will give you an overview of how Redis database backup and restore process works in Stash.
+Stash `{{< param "info.version" >}}` supports backup and restore operation of NATS streams. This guide will give you an overview of how NATS stream backup and restore process works in Stash.
 
-## Logical Backup
+## How Backup Works
 
-Stash supports taking logical backup of Redis databases using [redis-dump-go](https://github.com/yannh/redis-dump-go). It is the most flexible way to perform a backup and restore, and a good choice when the data size is relatively small.
-
-### How Logical Backup Works
-
-The following diagram shows how Stash takes logical backup of a Redis database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash takes a backup of NATS streams. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Redis Backup Overview" src="/docs/addons/redis/overview/images/redis-logical-backup.svg">
-  <figcaption align="center">Fig: Redis Logical Backup Overview</figcaption>
+ <img alt="NATS Backup Overview" src="/docs/addons/nats/overview/images/backup_overview.svg">
+  <figcaption align="center">Fig: NATS Backup Overview</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -37,7 +33,7 @@ The backup process consists of the following steps:
 
 2. Then, she creates a `Repository` crd that specifies the backend information along with the secret that holds the credentials to access the backend.
 
-3. Then, she creates a `BackupConfiguration` crd targeting the [AppBinding](/docs/concepts/crds/appbinding.md) crd of the desired database. The `BackupConfiguration` object also specifies the `Task` to use to backup the database.
+3. Then, she creates a `BackupConfiguration` crd targeting the [AppBinding](/docs/concepts/crds/appbinding.md) crd of the respective NATS server. The `BackupConfiguration` object also specifies the `Task` to use to backup the NATS streams.
 
 4. Stash operator watches for `BackupConfiguration` crd.
 
@@ -49,26 +45,26 @@ The backup process consists of the following steps:
 
 8. When it finds a `BackupSession` object, it resolves the respective `Task` and `Function` and prepares a Job definition to backup.
 
-9. Then, it creates the Job to backup the targeted database.
+9. Then, it creates the Job to backup the targeted NATS server.
 
-10. The backup Job reads necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
+10. The backup Job reads necessary information to connect with the NATS server from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-11. Then, the Job dumps the targeted database and uploads the output to the backend. Stash pipes the output of dump command to uploading process. Hence, backup Job does not require a large volume to hold the entire dump output.
+11. Then, the Job dumps the targeted streams and uploads the output to the backend. Stash stores the dumped files temporarily before uploading into the backend. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `BackupConfiguration` crd to use to store those dumped files temporarily. Make sure that the provided PVC size is capable of storing all (or, specified) the NATS streams.
 
-12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
+12. Finally, when the backup is completed, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
-### How Restore from Logical Backup Works
+## How Restore Process Works
 
-The following diagram shows how Stash restores a Redis database from a logical backup. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash restores backed up data into a NATS streaming server. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/addons/redis/overview/images/redis-logical-restore.svg">
-  <figcaption align="center">Fig: Redis Logical Restore Process Overview</figcaption>
+ <img alt="NATS Restore Overview" src="/docs/addons/nats/overview/images/restore_overview.svg">
+  <figcaption align="center">Fig: NATS Restore Process</figcaption>
 </figure>
 
 The restore process consists of the following steps:
 
-1. At first, a user creates a `RestoreSession` crd targeting the `AppBinding` of the desired database where the backed up data will be restored. It also specifies the `Repository` crd which holds the backend information and the `Task` to use to restore the target.
+1. At first, a user creates a `RestoreSession` crd targeting the `AppBinding` of the desired NATS server where the backed up data will be restored. It also specifies the `Repository` crd which holds the backend information and the `Task` to use to restore the target.
 
 2. Stash operator watches for `RestoreSession` object.
 
@@ -76,12 +72,12 @@ The restore process consists of the following steps:
 
 4. Then, it creates the Job to restore the target.
 
-5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
+5. The Job reads necessary information to connect with the NATS server from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up data from the backend and injects into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
+6. Then, the job downloads the backed up data from the backend and restore the streams. Stash stores the downloaded files temporarily before inserting into the targeted NATS server. Hence, you should provide a PVC template using `spec.interimVolumeTemplate` field of `RestoreSession` crd to use to store those restored files temporarily. Make sure that the provided PVC size is capable of storing all the backed up NATS streams.
 
-7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
+7. Finally, when the restore process is completed, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 
 ## Next Steps
 
-- Backup your Redis database using Stash following the guide from [here](/docs/addons/redis/helm/index.md).
+- Backup your NATS using Stash following the guide from [here](/docs/addons/nats/helm/index.md).

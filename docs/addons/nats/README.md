@@ -23,7 +23,7 @@ Stash `{{< param "info.version" >}}` supports extending its functionality throug
 
 This guide will give you an overview of which NATS versions are supported and how the docs are organized.
 
-## Supported Redis Versions
+## Supported NATS Versions
 
 Stash has the following addon versions for NATS:
 
@@ -37,7 +37,7 @@ This addon with matching major version with the NATS version should be able to t
 
 ## Documentation Overview
 
-Stash Redis documentations are organized as below:
+Stash NATS documentations are organized as below:
 
 - [How does it works?](/docs/addons/nats/overview/index.md) gives an overview of how backup and restore process for NATS works in Stash.
 - [Helm managed Redis](/docs/addons/nats/helm/index.md) shows how to backup and restore a Helm managed NATS.

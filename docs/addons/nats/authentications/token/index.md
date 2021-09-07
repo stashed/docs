@@ -1,12 +1,12 @@
 ---
-title: Backup & Restore NATS | Stash
-description: Take backup of NATS streams using Stash
+title: Token Authentication | Stash
+description: Backup and Restore of NATS streams using token authentication
 menu:
   docs_{{ .version }}:
-    identifier: stash-nats-helm
-    name: Helm managed NATS
-    parent: stash-nats
-    weight: 20
+    identifier: token-auth
+    name: Token Authentication
+    parent: stash-nats-auth
+    weight: 15
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Take a backup of NATS streams using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using token authentication with Stash.
 
 ## Before You Begin
 
@@ -38,17 +38,17 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/helm/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples).
 
 ## Prepare NATS
 
-In this section, we are going to deploy a NATS cluster. Then, we are going to insert some sample data into it.
+In this section, we are going to deploy a NATS cluster with token authentication enabled. Then, we are going to insert some sample data into it.
 
 ### Deploy NATS Cluster
 
 At first, let's deploy a NATS cluster. Here, we are going to use [NATS]( https://nats-io.github.io/k8s/helm/charts/)  chart from [nats.io](https://nats.io/).
 
-Let's deploy a nats cluster named `sample-nats` using Helm as below,
+Let's deploy a NATS cluster named `sample-nats` using Helm as below,
 
 ```bash
 # Add nats chart registry
@@ -61,6 +61,8 @@ $ helm install sample-nats nats/nats -n demo \
 --set nats.jetstream.fileStorage.enabled=true \
 --set cluster.enabled=true \
 --set cluster.recplicas=3 \
+--set auth.enabled=true \
+--set-string auth.token="secret"
 ```
 
 This chart will create the necessary StatefulSet, Secret, Service etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
@@ -92,7 +94,7 @@ sample-nats-1   3/3     Running   0          9m35s
 sample-nats-2   3/3     Running   0          9m12s
 ```
 
-Once the nats server pods are in `Running` state, verify that the nats servers are ready to accept the connections.
+Once the pods are in `Running` state, verify that the NATS servers are ready to accept the connections.
 
 ```bash
 ❯ kubectl logs -n demo sample-nats-0 -c nats
@@ -116,9 +118,12 @@ sample-nats-box-785f8458d7-wtnfx   1/1     Running   0          7m20s
 
 Now, let's exec into the nats-box pod and insert some sample data,
 
-```
+```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
+# Let's export the username and password as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+
 # Let's create a stream named "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream add ORDERS --subjects "ORDERS.*" --ack --max-msgs=-1 --max-bytes=-1 --max-age=1y --storage file --retention limits --max-msg-size=-1 --max-msgs-per-subject=-1 --discard old --dupe-window="0s" --replicas 1
 Stream ORDERS was created
@@ -221,9 +226,32 @@ nats-restore-2.4.0           24m
 
 This addon should be able to take backup of the NATS streams with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/nats/README.md#addon-version-compatibility).
 
+### Create Secret
+
+ Lets create a secret with access credentials.  Below is the YAML of `Secret` object we are going to create.
+
+```bash
+apiVersion: v1
+data:
+  token: c2VjcmV0
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: sample-nats
+  name: sample-nats-auth
+```
+
+Let's create the `Secret` we have shown above,
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/secret.yaml
+appbinding.appcatalog.appscode.com/sample-nats-auth created
+```
+
+
 ### Create AppBinding
 
-Stash needs to know how to connect with the nats server. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the server. You have to point to the respective `AppBinding` as a target of backup instead of the server itself.
+Stash needs to know how to connect with the NATS server. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the server. You have to point to the respective `AppBinding` as a target of backup instead of the server itself.
 
 Here, is the YAML of the `AppBinding` that we are going to create for the NATS servers we have deployed earlier.
 
@@ -241,19 +269,22 @@ spec:
       name: sample-nats
       port: 4222
       scheme: nats
+  secret:
+    name: sample-nats-auth
   type: stash/nats
   version: 2.4.0
 ```
 
 Here,
 
-- **.spec.clientConfig.service** specifies the Service information to use to connects with the server.
-- `spec.type` specifies the type of the data. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of data.
+- `.spec.clientConfig.service` specifies the Service information to use to connects with the server.
+- `.spec.secret` specifies the name of the Secret that holds necessary credentials to access the server.
+- `.spec.type` specifies the type of the data. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of data.
 
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/helm/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-nats created
 ```
 
@@ -297,7 +328,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/helm/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -361,7 +392,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/helm/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-nats-backup created
 ```
 
@@ -404,16 +435,17 @@ gcs-repo   true        1.382 KiB   1                9m4s                     24m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/nats/sample-nats` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/helm/images/sample-nats-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/authentications/token/images/sample-nats-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
+
 
 
 > Note: Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
 ## Restore
 
-If you have followed the previous sections properly, you should have a successful backup of your NATS streams. Now, we are going to show how you can restore the streams from the backed up data.
+If you have followed the previous sections properly, you should have a successful backup of your nats streams. Now, we are going to show how you can restore the streams from the backed up data.
 
 ### Restore Into the Same NATS Cluster
 
@@ -455,13 +487,15 @@ Now, let's simulate an accidental deletion scenario. Here, we are going to exec 
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
+# At first, let's export the username and password as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+
 # delete the stream "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream rm ORDERS -f
 
 # verify that the stream has been deleted
 sample-nats-box-785f8458d7-wtnfx:~# nats stream ls
 No Streams defined
-
 sample-nats-box-785f8458d7-wtnfx:~# exit
 ```
 
@@ -504,13 +538,14 @@ Here,
 
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore NATS streams.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `sample-nats` cluster.
+- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
+- `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before restoring the streams.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the streams.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/helm/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-nats-restore created
 ```
 
@@ -531,6 +566,9 @@ Now, let's exec into the nats-box pod and verify whether data actual data has be
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
+# At first, let's export the username and password as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+
 # Verify that the stream has been restored successfully
 sample-nats-box-785f8458d7-wtnfx:~#  nats stream ls
 Streams:
@@ -599,18 +637,6 @@ stash-backup-sample-nats-backup   */5 * * * *   False     0        3m24s        
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
-
-### Restore Into Different NATS Cluster of the Same Namespace
-
-If you want to restore the backed up data into a different NATS Cluster of the same namespace, you have to create another `AppBinding` pointing to the desired NATS Cluster. Then, you have to create the `RestoreSession` pointing to the new `AppBinding`.
-
-### Restore Into Different Namespace
-
-If you want to restore into a different namespace of the same cluster, you have to create the Repository, backend Secret, AppBinding, in the desired namespace. You can use [Stash kubectl plugin](https://stash.run/docs/latest/guides/latest/cli/cli/) to easily copy the resources into a new namespace. Then, you have to create the `RestoreSession` object in the desired namespace pointing to the Repository, AppBinding of that namespace.
-
-### Restore Into Different Cluster
-
-If you want to restore into a different cluster, you have to install Stash in the desired cluster. Then, you have to install Stash NATS addon in that cluster too. Then, you have to create the Repository, backend Secret, AppBinding, in the desired cluster. Finally, you have to create the `RestoreSession` object in the desired cluster pointing to the Repository, AppBinding of that cluster.
 
 ## Cleanup
 
