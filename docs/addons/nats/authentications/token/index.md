@@ -42,7 +42,7 @@ namespace/demo created
 
 ## Prepare NATS
 
-In this section, we are going to deploy a NATS cluster with token authentication enabled. Then, we are going to insert some sample data into it.
+In this section, we are going to deploy a NATS cluster with token authentication enabled. Then, we are going to create a stream and publish some messages into it.
 
 ### Deploy NATS Cluster
 
@@ -106,9 +106,9 @@ Once the pods are in `Running` state, verify that the NATS servers are ready to 
 
 From the above log, we can see the NATS server is ready to accept connections.
 
-### Insert Sample Data
+### Create Stream and Publish Messages
 
-Now, we are going to exec into the nats-box pod and and create some sample data.
+Now, we are going to exec into the nats-box pod, create a stream and publish some messages into it. 
 
 ```bash
 ❯ kubectl get pod -n demo -l app=sample-nats-box
@@ -116,7 +116,7 @@ NAME                               READY   STATUS    RESTARTS   AGE
 sample-nats-box-785f8458d7-wtnfx   1/1     Running   0          7m20s
 ```
 
-Now, let's exec into the nats-box pod and insert some sample data,
+Let's exec into the nats-box pod,
 
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
