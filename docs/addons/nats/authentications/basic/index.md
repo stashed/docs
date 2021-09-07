@@ -209,7 +209,7 @@ State:
 sample-nats-box-785f8458d7-wtnfx:~# exit
 ```
 
-We have successfully deployed a NATS cluster, created a stream and inserted some sample data into it. In the subsequent sections, we are going to backup these data using Stash.
+We have successfully deployed a NATS cluster, created a stream and publish some messages into the stream. In the subsequent sections, we are going to backup these data using Stash.
 
 ## Prepare for Backup
 
@@ -233,15 +233,16 @@ This addon should be able to take backup of the NATS streams with matching major
 
 ```bash
 apiVersion: v1
-data:
-  password: MjIy
-  username: dTI=
 kind: Secret
 metadata:
   labels:
     app.kubernetes.io/component: server
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
+data:
+  password: MjIy
+  username: dTI=
+
 ```
 
 Let's create the `Secret` we have shown above,
@@ -633,7 +634,7 @@ NAME                 TASK                SCHEDULE      PAUSED   AGE
 sample-nats-backup   nats-backup-2.4.0   */2 * * * *   true     2d19h
 ```
 
-Here,  `false` in the `PAUSED` column means the backup has been resume successfully. The CronJob also should be resumed now.
+Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
 
 ```bash
 ❯ kubectl get cronjob -n demo
