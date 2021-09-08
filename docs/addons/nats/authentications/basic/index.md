@@ -42,7 +42,7 @@ namespace/demo created
 
 ## Prepare NATS
 
-In this section, we are going to deploy a NATS cluster with basic authentication enabled. Then, we are going to create a stream and publish some messages into it.
+In this section, we are going to deploy a NATS cluster with Basic authentication enabled. Then, we are going to create a stream and publish some messages into it.
 
 ### Deploy NATS Cluster
 
