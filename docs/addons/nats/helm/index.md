@@ -1,6 +1,6 @@
 ---
-title: Backup & Restore NATS | Stash
-description: Take backup of NATS streams using Stash
+title: Helm managed NATS | Stash
+description: Backup Helm managed NATS using Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-nats-helm
@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Take a backup of NATS streams using Stash
+# Backup Helm managed NATS using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a Helm managed NATS server using Stash.
 
 ## Before You Begin
 
@@ -60,10 +60,10 @@ $ helm install sample-nats nats/nats -n demo \
 --set nats.jetstream.enabled=true \
 --set nats.jetstream.fileStorage.enabled=true \
 --set cluster.enabled=true \
---set cluster.recplicas=3 \
+--set cluster.recplicas=3 
 ```
 
-This chart will create the necessary StatefulSet, Secret, Service etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
+This chart will create the necessary StatefulSet, Service, PVCs etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
 
 ```bash
 ❯ kubectl get-all -n demo -l app.kubernetes.io/instance=sample-nats
@@ -92,7 +92,7 @@ sample-nats-1   3/3     Running   0          9m35s
 sample-nats-2   3/3     Running   0          9m12s
 ```
 
-Once the nats server pods are in `Running` state, verify that the nats servers are ready to accept the connections.
+Once the nats server pods are in `Running` state, verify that the NATS server is ready to accept the connections.
 
 ```bash
 ❯ kubectl logs -n demo sample-nats-0 -c nats
@@ -106,7 +106,7 @@ From the above log, we can see the NATS server is ready to accept connections.
 
 ### Insert Sample Data
 
-Now, we are going to exec into the nats-box pod and and create some sample data.
+The above Helm chart also deploy a pod with nats-box image which can be used to interact with the NATS server. Let's verify the nats-box pod has been created.
 
 ```bash
 ❯ kubectl get pod -n demo -l app=sample-nats-box
@@ -203,11 +203,11 @@ State:
 sample-nats-box-785f8458d7-wtnfx:~# exit
 ```
 
-We have successfully deployed a NATS cluster, created a stream and publish some messages into the stream. In the subsequent sections, we are going to backup these data using Stash.
+We have successfully deployed a NATS cluster, created a stream and publish some messages into the stream. In the subsequent sections, we are going to backup this sample data using Stash.
 
 ## Prepare for Backup
 
-In this section, we are going to prepare the necessary resources (i.e. server connection information, backend information, etc.) before backup.
+In this section, we are going to prepare the necessary resources (i.e. connection information, backend information, etc.) before backup.
 
 ### Ensure NATS Addon
 
@@ -223,16 +223,15 @@ This addon should be able to take backup of the NATS streams with matching major
 
 ### Create AppBinding
 
-Stash needs to know how to connect with the nats server. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the server. You have to point to the respective `AppBinding` as a target of backup instead of the server itself.
+Stash needs to know how to connect with the NATS server. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the NATS server. You have to point to the respective `AppBinding` as a target of backup instead of the NATS server itself.
 
-Here, is the YAML of the `AppBinding` that we are going to create for the NATS servers we have deployed earlier.
+Here, is the YAML of the `AppBinding` that we are going to create for the NATS server we have deployed earlier.
 
 ```yaml
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
 metadata:
   labels:
-    app.kubernetes.io/component: server
     app.kubernetes.io/instance: sample-nats
   name: sample-nats
 spec:
@@ -241,14 +240,14 @@ spec:
       name: sample-nats
       port: 4222
       scheme: nats
-  type: stash/nats
+  type: nats
   version: 2.4.0
 ```
 
 Here,
 
-- **.spec.clientConfig.service** specifies the Service information to use to connects with the server.
-- `spec.type` specifies the type of the data. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of data.
+- **.spec.clientConfig.service** specifies the Service information to use to connects with the NATS server.
+- `spec.type` specifies the type of the target. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of target.
 
 Let's create the `AppBinding` we have shown above,
 
@@ -305,11 +304,11 @@ Now, we are ready to backup our streams into our desired backend.
 
 ### Backup
 
-To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our NATS server. Then Stash will create a CronJob to periodically backup the streams.
+To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our NATS server. Then, Stash will create a CronJob to periodically backup the streams.
 
 #### Create BackupConfiguration
 
-Below is the YAML for `BackupConfiguration` object we are going to use to backup the streams of the NATS server we have created earlier,
+Below is the YAML for `BackupConfiguration` object that we are going to use to backup the streams of the NATS server we have created earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -381,7 +380,7 @@ stash-backup-sample-nats-backup   */5 * * * *   False     0        <none>       
 
 The `sample-nats-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
 
-Now, wait for a schedule to appear. Run the following command to watch for a `BackupSession` object,
+Now, wait for a schedule to appear. Run the following command to watch for `BackupSession` object,
 
 ```bash
 ❯ kubectl get backupsession -n demo -w
@@ -417,7 +416,7 @@ If you have followed the previous sections properly, you should have a successfu
 
 ### Restore Into the Same NATS Cluster
 
-You can restore your data into the same NATS cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same NATS cluster which may be necessary when you have accidentally deleted any data.
+You can restore your data into the same NATS cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same NATS cluster which may be necessary when you have accidentally lost any data.
 
 #### Temporarily Pause Backup
 
@@ -450,7 +449,7 @@ stash-backup-sample-nats-backup   */2 * * * *   True      0        56s          
 
 #### Simulate Disaster
 
-Now, let's simulate an accidental deletion scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
+Now, let's simulate a disaster scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
 
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
@@ -595,14 +594,14 @@ Here,  `false` in the `PAUSED` column means the backup has been resumed successf
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup   */5 * * * *   False     0        3m24s           4h54m
+stash-backup-sample-nats-backup    */5 * * * *   False     0        3m24s           4h54m
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
 
 ### Restore Into Different NATS Cluster of the Same Namespace
 
-If you want to restore the backed up data into a different NATS Cluster of the same namespace, you have to create another `AppBinding` pointing to the desired NATS Cluster. Then, you have to create the `RestoreSession` pointing to the new `AppBinding`.
+If you want to restore the backed up data into a different NATS cluster of the same namespace, you have to create another `AppBinding` pointing to the desired NATS cluster. Then, you have to create the `RestoreSession` pointing to the new `AppBinding`.
 
 ### Restore Into Different Namespace
 
@@ -610,7 +609,7 @@ If you want to restore into a different namespace of the same cluster, you have 
 
 ### Restore Into Different Cluster
 
-If you want to restore into a different cluster, you have to install Stash in the desired cluster. Then, you have to install Stash NATS addon in that cluster too. Then, you have to create the Repository, backend Secret, AppBinding, in the desired cluster. Finally, you have to create the `RestoreSession` object in the desired cluster pointing to the Repository, AppBinding of that cluster.
+If you want to restore into a different cluster, you have to install Stash in the desired cluster. Then, you have to create the Repository, backend Secret, AppBinding, in the desired cluster. Finally, you have to create the `RestoreSession` object in the desired cluster pointing to the Repository, AppBinding of that cluster.
 
 ## Cleanup
 

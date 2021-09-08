@@ -1,20 +1,20 @@
 ---
-title: Nkey Authentication | Stash
-description: Backup and Restore of NATS streams using nkey authentication
+title: Nkey authentication enabled NATS
+description: Backup Nkey authentication enabled NATS using Stash
 menu:
   docs_{{ .version }}:
     identifier: nkey-auth
     name: Nkey Authentication
     parent: stash-nats-auth
-    weight: 15
+    weight: 20
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Take a backup of NATS streams using Stash
+# Backup Nkey authentication enabled NATS using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can take a backup of your NATS streams and restore them using nkey authentication with Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a Nkey authentication enabled NATS server using Stash.
 
 ## Before You Begin
 
@@ -66,7 +66,7 @@ $ helm install sample-nats nats/nats -n demo \
 
 ```
 
-This chart will create the necessary StatefulSet, Secret, Service etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
+This chart will create the necessary StatefulSet, Service, PVCs etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
 
 ```bash
 ❯ kubectl get-all -n demo -l app.kubernetes.io/instance=sample-nats
@@ -95,7 +95,7 @@ sample-nats-1   3/3     Running   0          9m35s
 sample-nats-2   3/3     Running   0          9m12s
 ```
 
-Once the pods are in `Running` state, verify that the NATS servers are ready to accept the connections.
+Once the pods are in `Running` state, verify that the NATS server is ready to accept the connections.
 
 ```bash
 ❯ kubectl logs -n demo sample-nats-0 -c nats
@@ -107,9 +107,8 @@ Once the pods are in `Running` state, verify that the NATS servers are ready to 
 
 From the above log, we can see the NATS server is ready to accept connections.
 
-### Create Stream and Publish Messages
-
-Now, we are going to exec into the nats-box pod, create a stream and publish some messages into the stream. 
+### Insert Sample Data
+The above Helm chart also deploy a pod with nats-box image which can be used to interact with the NATS server. Let's verify the nats-box pod has been created.
 
 ```bash
 ❯ kubectl get pod -n demo -l app=sample-nats-box
@@ -122,8 +121,12 @@ Let's exec into the nats-box pod,
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's export nkey file path as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+# Let's create the nkey file for our user
+sample-nats-box-785f8458d7-wtnfx:~# echo "SUAD2QZPIAOZE7SBVGR2PKOXVA2L63UD5PEV6EUQ6OLGTKFIWJ4U3ZCSCA
+UAWGGVEHXIEOWYVBN7RO7IIKIXHIOK6JWWUDJOWIUZ6L3XMIWM5IFGPD" > /tmp/user.nk
+
+# Let's export the file path as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_NKEY=/tmp/user.nk
 
 # Let's create a stream named "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream add ORDERS --subjects "ORDERS.*" --ack --max-msgs=-1 --max-bytes=-1 --max-age=1y --storage file --retention limits --max-msg-size=-1 --max-msgs-per-subject=-1 --discard old --dupe-window="0s" --replicas 1
@@ -209,11 +212,11 @@ State:
 sample-nats-box-785f8458d7-wtnfx:~# exit
 ```
 
-We have successfully deployed a NATS cluster, created a stream and publish some messages into the stream. In the subsequent sections, we are going to backup these data using Stash.
+We have successfully deployed a NATS cluster, created a stream and publish some messages into the stream. In the subsequent sections, we are going to backup this sample data using Stash.
 
 ## Prepare for Backup
 
-In this section, we are going to prepare the necessary resources (i.e. server connection information, backend information, etc.) before backup.
+In this section, we are going to prepare the necessary resources (i.e. connection information, backend information, etc.) before backup.
 
 ### Ensure NATS Addon
 
@@ -252,16 +255,15 @@ appbinding.appcatalog.appscode.com/sample-nats-auth created
 
 ### Create AppBinding
 
-Stash needs to know how to connect with the NATS server. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the server. You have to point to the respective `AppBinding` as a target of backup instead of the server itself.
+Stash needs to know how to connect with the NATS server. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the NATS server. You have to point to the respective `AppBinding` as a target of backup instead of the NATS server itself.
 
-Here, is the YAML of the `AppBinding` that we are going to create for the NATS servers we have deployed earlier.
+Here, is the YAML of the `AppBinding` that we are going to create for the NATS server we have deployed earlier.
 
 ```yaml
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
 metadata:
   labels:
-    app.kubernetes.io/component: server
     app.kubernetes.io/instance: sample-nats
   name: sample-nats
 spec:
@@ -272,15 +274,15 @@ spec:
       scheme: nats
   secret:
     name: sample-nats-auth
-  type: stash/nats
+  type: nats
   version: 2.4.0
 ```
 
 Here,
 
-- `.spec.clientConfig.service` specifies the Service information to use to connects with the server.
+- `.spec.clientConfig.service` specifies the Service information to use to connects with the NATS server.
 - `.spec.secret` specifies the name of the Secret that holds necessary credentials to access the server.
-- `.spec.type` specifies the type of the data. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of data.
+- `.spec.type` specifies the type of the target. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of target.
 
 Let's create the `AppBinding` we have shown above,
 
@@ -337,11 +339,11 @@ Now, we are ready to backup our streams into our desired backend.
 
 ### Backup
 
-To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our NATS server. Then Stash will create a CronJob to periodically backup the streams.
+To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our NATS server. Then, Stash will create a CronJob to periodically backup the streams.
 
 #### Create BackupConfiguration
 
-Below is the YAML for `BackupConfiguration` object we are going to use to backup the streams of the NATS server we have created earlier,
+Below is the YAML for `BackupConfiguration` object that we are going to use to backup the streams of the NATS server we have created earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -413,7 +415,7 @@ stash-backup-sample-nats-backup   */5 * * * *   False     0        <none>       
 
 The `sample-nats-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
 
-Now, wait for a schedule to appear. Run the following command to watch for a `BackupSession` object,
+Now, wait for a schedule to appear. Run the following command to watch for `BackupSession` object,
 
 ```bash
 ❯ kubectl get backupsession -n demo -w
@@ -450,7 +452,7 @@ If you have followed the previous sections properly, you should have a successfu
 
 ### Restore Into the Same NATS Cluster
 
-You can restore your data into the same NATS cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same NATS cluster which may be necessary when you have accidentally deleted any data.
+You can restore your data into the same NATS cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same NATS cluster which may be necessary when you have accidentally lost any data.
 
 #### Temporarily Pause Backup
 
@@ -483,13 +485,17 @@ stash-backup-sample-nats-backup   */2 * * * *   True      0        56s          
 
 #### Simulate Disaster
 
-Now, let's simulate an accidental deletion scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
+Now, let's simulate a disaster scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
 
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# At first, let's export the username and password as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+# Let's create the nkey file for our user
+sample-nats-box-785f8458d7-wtnfx:~# echo "SUAD2QZPIAOZE7SBVGR2PKOXVA2L63UD5PEV6EUQ6OLGTKFIWJ4U3ZCSCA
+UAWGGVEHXIEOWYVBN7RO7IIKIXHIOK6JWWUDJOWIUZ6L3XMIWM5IFGPD" > /tmp/user.nk
+
+# Let's export the file path as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_NKEY=/tmp/user.nk
 
 # delete the stream "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream rm ORDERS -f
@@ -567,8 +573,12 @@ Now, let's exec into the nats-box pod and verify whether data actual data has be
 ```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# At first, let's export the username and password as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+# Let's create the nkey file for our user
+sample-nats-box-785f8458d7-wtnfx:~# echo "SUAD2QZPIAOZE7SBVGR2PKOXVA2L63UD5PEV6EUQ6OLGTKFIWJ4U3ZCSCA
+UAWGGVEHXIEOWYVBN7RO7IIKIXHIOK6JWWUDJOWIUZ6L3XMIWM5IFGPD" > /tmp/user.nk
+
+# Let's export the file path as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_NKEY=/tmp/user.nk
 
 # Verify that the stream has been restored successfully
 sample-nats-box-785f8458d7-wtnfx:~#  nats stream ls
@@ -634,7 +644,7 @@ Here,  `false` in the `PAUSED` column means the backup has been resumed successf
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup   */5 * * * *   False     0        3m24s           4h54m
+stash-backup-sample-nats-backup    */5 * * * *   False     0        3m24s           4h54m
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
