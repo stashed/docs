@@ -243,12 +243,12 @@ metadata:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
 data:
-  token: c2VjcmV0
+  nkey: U1VBRDJRWlBJQU9aRTdTQlZHUjJQS09YVkEyTDYzVUQ1UEVWNkVVUTZPTEdUS0ZJV0o0VTNaQ1NDQQpVQVdHR1ZFSFhJRU9XWVZCTjdSTzdJSUtJWEhJT0s2SldXVURKT1dJVVo2TDNYTUlXTTVJRkdQRAo=
 ```
 
 Let's create the `Secret` we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/secret.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/nkey/examples/secret.yaml
 appbinding.appcatalog.appscode.com/sample-nats-auth created
 ```
 
@@ -287,7 +287,7 @@ Here,
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/nkey/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-nats created
 ```
 
@@ -331,7 +331,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/nkey/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -395,7 +395,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/nkey/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-nats-backup created
 ```
 
@@ -552,7 +552,7 @@ Here,
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/nkey/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-nats-restore created
 ```
 
@@ -644,7 +644,7 @@ Here,  `false` in the `PAUSED` column means the backup has been resumed successf
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup    */5 * * * *   False     0        3m24s           4h54m
+stash-backup-sample-nats-backup    */2 * * * *   False     0        3m24s           4h54m
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
