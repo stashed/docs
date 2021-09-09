@@ -124,7 +124,7 @@ Let's exec into the nats-box pod,
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the creds file for our user
-sample-nats-box-785f8458d7-wtnfx:~# echo  "-----BEGIN NATS USER JWT-----
+sample-nats-box-785f8458d7-wtnfx:~# echo "-----BEGIN NATS USER JWT-----
 eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJIQUpKT1IyT0dPWEZaUFNCUURNNU9ZVzJaSUVTTEw1N1M1RFVFVVhRTlQ2STVFT1lEVzZBIiwiaWF0IjoxNjI5ODkzMjQxLCJpc3MiOiJBREZDM1lMQVU1Nk4yNkhHTjdUR1BXRFhRTlpTQlFFWktRWFBQUlAyNEhLNDZWSllRWDQ1UzJVSCIsIm5hbWUiOiJ4Iiwic3ViIjoiVUFYTEg0WTVSNk5MRlpOTlhCUU8yWUZZNzJSQlNDNk80VE5JQkJNS0NVTFpLMzYzN1FCNFNWMkYiLCJuYXRzIjp7InB1YiI6e30sInN1YiI6e30sInN1YnMiOi0xLCJkYXRhIjotMSwicGF5bG9hZCI6LTEsInR5cGUiOiJ1c2VyIiwidmVyc2lvbiI6Mn19.0Qrymu2-GuEXWxNiNL4dqsRLvRxTcWCn3DszQ2HmHG8IDmxpPohxdF0U7iD9XgPSlR1PNjBzmqq0xE0MeZdSDw
 ------END NATS USER JWT------
 -----BEGIN USER NKEY SEED-----
@@ -496,7 +496,7 @@ Now, let's simulate a disaster scenario. Here, we are going to exec into the nat
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the creds file for our user
-sample-nats-box-785f8458d7-wtnfx:~# echo  "-----BEGIN NATS USER JWT-----
+sample-nats-box-785f8458d7-wtnfx:~# echo "-----BEGIN NATS USER JWT-----
 eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJIQUpKT1IyT0dPWEZaUFNCUURNNU9ZVzJaSUVTTEw1N1M1RFVFVVhRTlQ2STVFT1lEVzZBIiwiaWF0IjoxNjI5ODkzMjQxLCJpc3MiOiJBREZDM1lMQVU1Nk4yNkhHTjdUR1BXRFhRTlpTQlFFWktRWFBQUlAyNEhLNDZWSllRWDQ1UzJVSCIsIm5hbWUiOiJ4Iiwic3ViIjoiVUFYTEg0WTVSNk5MRlpOTlhCUU8yWUZZNzJSQlNDNk80VE5JQkJNS0NVTFpLMzYzN1FCNFNWMkYiLCJuYXRzIjp7InB1YiI6e30sInN1YiI6e30sInN1YnMiOi0xLCJkYXRhIjotMSwicGF5bG9hZCI6LTEsInR5cGUiOiJ1c2VyIiwidmVyc2lvbiI6Mn19.0Qrymu2-GuEXWxNiNL4dqsRLvRxTcWCn3DszQ2HmHG8IDmxpPohxdF0U7iD9XgPSlR1PNjBzmqq0xE0MeZdSDw
 ------END NATS USER JWT------
 -----BEGIN USER NKEY SEED-----
@@ -583,7 +583,7 @@ Now, let's exec into the nats-box pod and verify whether data actual data has be
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the creds file for our user
-sample-nats-box-785f8458d7-wtnfx:~# echo  "-----BEGIN NATS USER JWT-----
+sample-nats-box-785f8458d7-wtnfx:~# echo "-----BEGIN NATS USER JWT-----
 eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJIQUpKT1IyT0dPWEZaUFNCUURNNU9ZVzJaSUVTTEw1N1M1RFVFVVhRTlQ2STVFT1lEVzZBIiwiaWF0IjoxNjI5ODkzMjQxLCJpc3MiOiJBREZDM1lMQVU1Nk4yNkhHTjdUR1BXRFhRTlpTQlFFWktRWFBQUlAyNEhLNDZWSllRWDQ1UzJVSCIsIm5hbWUiOiJ4Iiwic3ViIjoiVUFYTEg0WTVSNk5MRlpOTlhCUU8yWUZZNzJSQlNDNk80VE5JQkJNS0NVTFpLMzYzN1FCNFNWMkYiLCJuYXRzIjp7InB1YiI6e30sInN1YiI6e30sInN1YnMiOi0xLCJkYXRhIjotMSwicGF5bG9hZCI6LTEsInR5cGUiOiJ1c2VyIiwidmVyc2lvbiI6Mn19.0Qrymu2-GuEXWxNiNL4dqsRLvRxTcWCn3DszQ2HmHG8IDmxpPohxdF0U7iD9XgPSlR1PNjBzmqq0xE0MeZdSDw
 ------END NATS USER JWT------
 -----BEGIN USER NKEY SEED-----
