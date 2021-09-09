@@ -120,7 +120,7 @@ sample-nats-box-785f8458d7-wtnfx   1/1     Running   0          7m20s
 
 Let's exec into the nats-box pod,
 
-```bash
+```
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the creds file for our user
@@ -492,7 +492,7 @@ stash-backup-sample-nats-backup   */2 * * * *   True      0        56s          
 
 Now, let's simulate a disaster scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
 
-```bash
+```
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the creds file for our user
@@ -579,7 +579,7 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 Now, let's exec into the nats-box pod and verify whether data actual data has been restored or not,
 
-```bash
+```
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the creds file for our user
