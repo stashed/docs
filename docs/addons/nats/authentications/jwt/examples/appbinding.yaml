@@ -2,7 +2,6 @@ apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
 metadata:
   labels:
-    app.kubernetes.io/component: database
     app.kubernetes.io/instance: sample-nats
   name: sample-nats
   namespace: demo

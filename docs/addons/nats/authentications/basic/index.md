@@ -236,7 +236,6 @@ apiVersion: v1
 kind: Secret
 metadata:
   labels:
-    app.kubernetes.io/component: server
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
 data:
