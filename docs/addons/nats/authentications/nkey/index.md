@@ -118,7 +118,7 @@ sample-nats-box-785f8458d7-wtnfx   1/1     Running   0          7m20s
 
 Let's exec into the nats-box pod,
 
-```bash
+```
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the nkey file for our user
