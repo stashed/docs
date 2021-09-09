@@ -1,0 +1,18 @@
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: database
+    app.kubernetes.io/instance: sample-nats
+  name: sample-nats
+  namespace: demo
+spec:
+  clientConfig:
+    service:
+      name: sample-nats
+      port: 4222
+      scheme: nats
+  secret:
+    name: sample-nats-auth
+  type: stash/nats
+  version: 2.4.0

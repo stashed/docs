@@ -1,6 +1,6 @@
 ---
-title: Token authentication enabled NATS
-description: Backup token authentication enabled NATS using Stash
+title: Token authentication
+description: Backup NATS with Token authetication using Stash
 menu:
   docs_{{ .version }}:
     identifier: token-auth
@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup Token authentication enabled NATS using Stash
+# Backup NATS with Token authentication using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a Token authentication enabled NATS server using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a NATS server with Token authentication using Stash.
 
 ## Before You Begin
 

@@ -1,10 +1,10 @@
 ---
-title: Basic authentication enabled NATS
-description: Backup basic authentication enabled NATS using Stash
+title: Basic authentication
+description: Backup NATS with Basic authentication using Stash
 menu:
   docs_{{ .version }}:
     identifier: basic-auth
-    name: Basic Authentication
+    name: Basic authentication
     parent: stash-nats-auth
     weight: 10
 product_name: stash
@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup Basic authentication enabled NATS using Stash
+# Backup NATS with Basic authentication using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a Basic authentication enabled NATS server using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a NATS server with Basic authentication using Stash.
 
 ## Before You Begin
 

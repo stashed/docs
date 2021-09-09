@@ -1,10 +1,10 @@
 ---
-title: Nkey authentication enabled NATS
-description: Backup Nkey authentication enabled NATS using Stash
+title: NKey authentication
+description: Backup NATS with Nkey authentication using Stash
 menu:
   docs_{{ .version }}:
     identifier: nkey-auth
-    name: Nkey Authentication
+    name: Nkey authentication
     parent: stash-nats-auth
     weight: 20
 product_name: stash
@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup Nkey authentication enabled NATS using Stash
+# Backup NATS with Nkey authentication using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a Nkey authentication enabled NATS server using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a NATS server with Nkey authentication using Stash.
 
 ## Before You Begin
 
