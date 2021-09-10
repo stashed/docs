@@ -157,7 +157,7 @@ To know more about the available options for retention policies, please visit [h
 
 ## Customizing Restore Process
 
-Stash uses `redis-cli` during the restore process. In this section, we are going to show how you can pass arguments to the restore process, restore a specific snapshot, run restore job as a specific user, etc.
+In this section, we are going to show how you can overwrite existing streams, restore a specific snapshot, run restore job as a specific user, etc.
 
 ### Overwrite existing streams
 

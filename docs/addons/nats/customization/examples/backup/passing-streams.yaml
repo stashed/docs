@@ -7,6 +7,9 @@ spec:
   schedule: "*/2 * * * *"
   task:
     name: nats-backup-2.4.0
+    params:
+    - name: streams
+      value: "str1, str2"
   repository:
     name: gcs-repo
   target:
@@ -14,11 +17,6 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-nats
-  runtimeSettings:
-    pod:
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
