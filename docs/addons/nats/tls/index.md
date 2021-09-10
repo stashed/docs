@@ -1,25 +1,26 @@
 ---
-title: NATS with Token authentication
-description: Backup NATS with Token authetication using Stash
+title: TLS secured NATS
+description: Backup TLS secured NATS using Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-nats-token-auth
-    name: Token Authentication
-    parent: stash-nats-auth
-    weight: 15
+    identifier: tls-auth
+    name: TLS secured NATS
+    parent: stash-nats
+    weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup NATS with Token authentication using Stash
+# Backup TLS secured NATS using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a NATS server with Token authentication using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a TLS secured NATS server using Stash.
 
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
+- Install cert-manager in your cluster following the instruction [here](https://cert-manager.io/docs/installation/)
 - If you are not familiar with how Stash backup and restore NATS streams, please check the following guide [here](/docs/addons/nats/overview/index.md).
 
 You have to be familiar with following custom resources:
@@ -38,11 +39,92 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/tls/examples).
 
 ## Prepare NATS
 
-In this section, we are going to deploy a NATS cluster with Token authentication enabled. Then, we are going to create a stream and publish some messages into it.
+In this section, we are going to deploy a TLS secured NATS cluster. Then, we are going to create a stream and publish some messages into it.
+
+
+### Create Certificate
+To issue a CA certificate we have to create a `ClusterIssuer`. Below is the YAML of `ClusterIssuer` object we are going to create.
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigning
+  namespace: demo
+spec:
+  selfSigned: {}
+```
+Let's create the `ClusterIssuer` we have shown above,
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/tls/examples/clusterissuer.yaml
+clusterissuer.cert-manager.io/selfsigning created
+```
+
+Now we are going to create a CA certificate issued by the the `ClusterIssuer`. Below is the YAML of `Certificate` object we are going to create.
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-ca
+  namespace: demo
+spec:
+  secretName: nats-ca
+  duration: 8736h # 1 year
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: selfsigning
+    kind: ClusterIssuer
+  commonName: nats-ca
+  isCA: true
+```
+Let's create the `Certificate` we have shown above,
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/tls/examples/ca.yaml
+certificate.cert-manager.io/nats-ca
+```
+To issue a TLS certificate we have to create an `Issuer`. Below is the YAML of `Issuer` object we are going to create.
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: nats-ca
+spec:
+  ca:
+    secretName: nats-ca
+```
+Let's create the `Certificate` we have shown above,
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/tls/examples/issuer.yaml
+issuer.cert-manager.io/nats-ca created
+
+Now we are going to create a TLS certificate issued by the the `Issuer`. Below is the YAML of `Certificate` object we are going to create.
+```yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-tls
+  namespace: demo
+spec:
+  secretName: nats-client-tls
+  duration: 2160h # 90 days
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: nats-ca
+    kind: Issuer
+  commonName: sample-nats-client
+  dnsNames:
+  - sample-nats
+```
+Let's create the `Certificate` we have shown above,
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/tls/examples/cert.yaml
+certificate.cert-manager.io/nats-tls created
+```
 
 ### Deploy NATS Cluster
 
@@ -59,10 +141,14 @@ $ helm repo update
 $ helm install sample-nats nats/nats -n demo \
 --set nats.jetstream.enabled=true \
 --set nats.jetstream.fileStorage.enabled=true \
+--set nats.tls.secret.name=nats-tls \
+--set nats.tls.ca="ca.crt" \
+--set nats.tls.cert="tls.crt" \
+--set nats.tls.key="tls.key" \
+--set nats.tls.verify=true \
 --set cluster.enabled=true \
---set cluster.recplicas=3 \
---set auth.enabled=true \
---set-string auth.token="secret"
+--set cluster.recplicas=3 
+
 ```
 
 This chart will create the necessary StatefulSet, Service, PVCs etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
@@ -117,11 +203,14 @@ sample-nats-box-785f8458d7-wtnfx   1/1     Running   0          7m20s
 
 Let's exec into the nats-box pod,
 
-```bash
+```
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's export the token as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+
+# Let's export the ca.crt, tls.crt and tls.key file paths as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_CA=/etc/nats-certs/clients/nats-tls/ca.crt
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_CERT=/etc/nats-certs/clients/nats-tls/tls.crt
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_KEY=/etc/nats-certs/clients/nats-tls/tls.key
 
 # Let's create a stream named "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream add ORDERS --subjects "ORDERS.*" --ack --max-msgs=-1 --max-bytes=-1 --max-age=1y --storage file --retention limits --max-msg-size=-1 --max-msgs-per-subject=-1 --discard old --dupe-window="0s" --replicas 1
@@ -132,7 +221,7 @@ Information for Stream ORDERS created 2021-09-03T07:12:07Z
 Configuration:
 
              Subjects: ORDERS.*
-     Acknowledgements: truee
+     Acknowledgements: true
             Retention: File - Limits
              Replicas: 1
        Discard Policy: Old
@@ -229,7 +318,7 @@ This addon should be able to take backup of the NATS streams with matching major
 
  Lets create a secret with access credentials.  Below is the YAML of `Secret` object we are going to create.
 
-```yaml
+```bash
 apiVersion: v1
 kind: Secret
 metadata:
@@ -237,14 +326,16 @@ metadata:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
   namespace: demo
+
 data:
-  token: c2VjcmV0
+  crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURDRENDQWZDZ0F3SUJBZ0lRRVk3WGozMDJoVmkvSElRWnlzWVE0akFOQmdrcWhraUc5dzBCQVFzRkFEQVMKTVJBd0RnWURWUVFERXdkdVlYUnpMV05oTUI0WERUSXhNRGt4TURFd016Y3pNMW9YRFRJeE1USXdPVEV3TXpjegpNMW93RXpFUk1BOEdBMVVFQXhNSWJtRjBjeTEwYkhNd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3CmdnRUtBb0lCQVFEUytXRjNPaGVXSG5aR3EvdHNGWDRRU3ZMb2FzbjlSZE9lYjhnWHlnUTdacWFTR3BFbERURGsKbGxRc0NtNlh6UjloQythMnByaDI4ZEcyRnZLQXNObDI3WGFVbUpyaWpRMk5XTWxKS1dIMHpSOUtDZk9DZnFxcAp5Vzh4RW95ZkZ5dmdMS3FFckh1RDRWZmdrNEE5ZDBoS2huMEJFSzZKaHhKL082anUweXN0eEpwaXVkSWoyUWZZClB0Rmhyak5VUVRnd2lyTlpIV09Kc043eDUrM2h1aTdFekwrUXNMVnlwNlFVb1h1K3JQZThnVk5oYW1DY2tWNFoKc1pSUjEwYzB0VDhpd09YOERSM0dwOEgwYVVheHFHVWFYRGs5ejZ0d0s0a0k0ZGFXTmRGZVJNa0NhNXR0aEtvMgp2MDVFNEh2bHBSenR3ZkJBM3ZRWDg2M0xBdjQ5ZzR0ZEFnTUJBQUdqV1RCWE1BNEdBMVVkRHdFQi93UUVBd0lGCm9EQU1CZ05WSFJNQkFmOEVBakFBTUI4R0ExVWRJd1FZTUJhQUZCNWRuQWlUdDZMV1AxYVhGUHJZaVpFaldZOWwKTUJZR0ExVWRFUVFQTUEyQ0MzTmhiWEJzWlMxdVlYUnpNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUJvRWJ4MgoxNzNvTUpJNjNyWkdDazFVVWhLYm1QVngzbnE2Um50d1kzODYvNGtZcG4rejlkNExOelF1d0xnZ0NsU3NWZzU0Cjh1YndYM3JVckpXeEVXY2hLdG1YWGtHRDlhQkRFdmdrUlZwZE8wcDVyN05DKys4c25xSWVrdXk3M21tTjNidW0KR2dpdzIyVGREazg3K0ppUTdmeGs1LzY1UlFpb1BGOGs3VE5pajlKbG81OFJIaWFzaWJIM0xDLzgrZnNGc2l4bgpVK2gzOVBkeWtMTWQ4eHRBa1p6VG94ZGlZT3VCQlQxNjBUdTNaZTgwdCthUlU5VSsveEpTaGtBR2dubVRhS0VtCkRtUHFZTXpJUWlONi9tRzY3bXBVaU5GMlJMbTkxNzEyTHVuQ1FWRi8wak5MKzQzV0RCMzlqUHJLWlFSSm9sMWQKNWQ5VzkrZUZHYmY2RnJLTgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBMHZsaGR6b1hsaDUyUnF2N2JCVitFRXJ5NkdySi9VWFRubS9JRjhvRU8yYW1raHFSCkpRMHc1SlpVTEFwdWw4MGZZUXZtdHFhNGR2SFJ0aGJ5Z0xEWmR1MTJsSmlhNG8wTmpWakpTU2xoOU0wZlNnbnoKZ242cXFjbHZNUktNbnhjcjRDeXFoS3g3ZytGWDRKT0FQWGRJU29aOUFSQ3VpWWNTZnp1bzd0TXJMY1NhWXJuUwpJOWtIMkQ3UllhNHpWRUU0TUlxeldSMWppYkRlOGVmdDRib3V4TXkva0xDMWNxZWtGS0Y3dnF6M3ZJRlRZV3BnCm5KRmVHYkdVVWRkSE5MVS9Jc0RsL0EwZHhxZkI5R2xHc2FobEdsdzVQYytyY0N1SkNPSFdsalhSWGtUSkFtdWIKYllTcU5yOU9ST0I3NWFVYzdjSHdRTjcwRi9PdHl3TCtQWU9MWFFJREFRQUJBb0lCQVFDTm92cTZMbmZ6UXBRcApNZ0RqT1RLZkFaSStVcU0wdEJJMFJkdFJqVUIyR0o0dmJFS1JXMSs5dHViZmdrbHBCRDdTeWtpanl4NEFUS3g3CjBNQVJnYWtkWEtMRmRBWlhubGJBMUNDZVMzZ0YvMGZJVHhINlE4dVRuVFpXL1pzR20ybkxZSEZDRFFJSE1kdnIKVzFzMjZNUFJ0S1JyZUtXVWt1ZnFIMFYwd0xRMlRwVXU4SU9vM0ppQ2FxRjZEZGxtNWEvbFgwUEpGS0FWbnIyMApwbytIV0tobmlPMk1lazlDbmZLQ1h2RXYyaWRLQTArQlVLNzFEaGw4Y25QdzFaZWRQMXF6WlNTU1pUWEhNQm9sCkJOVjh6U2xVWEliekQ0NVAyZmpNSDhVOWF6eFU2NTRDRnFNeHp3U254YmEwMUNOL0dQK3ErVVV3a0pxampzTGcKUkR5VWFSREpBb0dCQU8zQXBab3ZGd2lrS3dMcW5idElZdjBLcVRCTXpWSFJpUUp4dU02b3VKY1JXSzg3T2NmSApVQmxmUXRmaFN0dDN6dzl6Y1lWWm85cnNTc3gvYVluZDY2bVZhdXRtWGkxVDNhZXhwUkdLcDhGZnlzdEJaYTBQClZ1SytGc3lUaDA3RS9DVHlNWFZBdE9aMlJPckg4OHo2cFdDNmRMVE9DZHJ5RTdsZjJTc2F2ZHRIQW9HQkFPTXEKbDljSk9jRjhzbE1yRVZWT1R2UDRkNDBmcHFFWW1QUGNDRkxTT21USjJMMXByYjFiOHJPY1BMaWIxaUtmQWJ5SwoxaGh6SWg2aHBJd0RNNXhYOGd2RVZTMFVjZjd2RzJuV3lESTEyTzhJclAxanl4S0FlenBaQ0lzMVBjQUhiVitHCkYrM2ZoNXo4R25hQzJyeS9QY3BOOGRqRXg5WTVKaVZlZVFKRjZ1NDdBb0dBSTlsNm53Y2V1QVRaSDNWMUZ6cFIKQXNyS3ZDZTRoZS9NY3Z2bTIvS0E4dmFBb3R1UldOaHE4WWgxc2N1YzEvNzJ6K09lYUhjZHgvTDlURnloODFIdApLUU1JdmpvUFZWSmlCOWszaEsrZG9BRHJ1VDVCTUpreGhyc1hBUDMxMXlESXpHRmdwOGQ3LzR3eDFCMFdYQUFuClU3Q0p6SUdNNXVDOXJLUVJRUGlsVEIwQ2dZRUEyRUV5L1VYT0VyRVh2ZTd3K0VtdEJicFNiU2xsWWxUZFBzRUgKdDNoa21KQkM0Y1paM0R0Tko4a2pVUWNoYWlIKzhETW5MMjFqWE0rNnFvTmR2WWRIYUFaR283eWo3UEpKSVkrVApVNkZKVy96aFdmT0hYWnlzTXRhUk9KeTlwVElzMzlQeXNjT3JBVHBLSXVuZE8vTys2ZmticzZWWkxFbUpVK2ZFCndQSTRmUU1DZ1lCTHZydWx3MGl6eDFkeStiN1JVaFp0d3R4bGtvVkxvdGdyVm5UTHFRY0VjNjJ0Q3ZOZW5hUVYKdHlKd0dOaTNaYkRUMW5WcEQ0UmhTcCswdjBJM0VTYURhUmcvUDlmNy9teUNoN3RyazlEcHduQ3J4N1lGWFhGTAp3M0F4RzJtV2NSb1dQbnhGN0dtRUpDOWlPQ2FzeW4wWHUyYnVIcXZNQkxIVUJ0VTZmbFFjakE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 ```
 
 Let's create the `Secret` we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/secret.yaml
-secret/sample-nats-auth created 
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/tls/examples/secret.yaml
+secret/sample-nats-auth created
 ```
 
 
@@ -264,6 +355,7 @@ metadata:
   namespace: demo
 spec:
   clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM4VENDQWRtZ0F3SUJBZ0lSQUptTUdvMzUyNHZHdWo4SkRVR05WUVl3RFFZSktvWklodmNOQVFFTEJRQXcKRWpFUU1BNEdBMVVFQXhNSGJtRjBjeTFqWVRBZUZ3MHlNVEE1TVRBeE1ETTNNamxhRncweU1qQTVNRGt4TURNMwpNamxhTUJJeEVEQU9CZ05WQkFNVEIyNWhkSE10WTJFd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3CmdnRUtBb0lCQVFEbjNDanFBaE94MG5SbGYrYmJaZXRQenJwSGFkOUdBUS9aa3ZHd2drMWFuY1hwclplVkZjaUYKTVJ5d0IvL3pvdXZGNm9WVTV5NXNlbzRoOU5CQ3NHRzFrRFU3Q1M3Q3dvaGhCNXR5MHBjb2xEaVhCVUVBQXVVMwpIL3ZEV0pGY04wdmpGbnFndWk3ZjFuOVluQzY4aGU1cTczYVdzNnArbEVuMVZOR2dZeHl6c1JUbTdCK2htV045CmJrSzFOd0JaNWN5b3dpVkl0UE5ES3ZRQ2lrT1hrNUZPMGxBL0FSRlA3K01mNFNleXBHM3Z6c2ZnR3k4eEZ2R08KRnJpUDI1VXUvTmNBREdnRW92SDBJWUpSd1VpZkJRVHUvbTAzVytmaVA1eWxQcEUxMVJvOXlFZk45cEd5T2RsYgp6R0xXRGZsNGh3OEhzdXQ2UW1zUTdNczg1c0pZLzBRVkFnTUJBQUdqUWpCQU1BNEdBMVVkRHdFQi93UUVBd0lDCnBEQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCUWVYWndJazdlaTFqOVdseFQ2MkltUkkxbVAKWlRBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQWw1WmFjWjhKVXNQWGNpU1hEU0U2OG4zR0VPSDl6UExYZUk3MQpnSk4rZjNWTXZzNVUzR3FjdGkvbjR6bXNIU3dDOUU4SDB4RmM4VnR0d2xRTEgrOWtwRnpMcHBaeEVYYXNtOEhhCi93SDdISzF4NEIzeEw3Tk9QemM3YVFKaVZ0S2pMSmNkQW95VGZwWGFnY2dya05OVWVUaUNucXpWUXcyLzFudzgKMWxMYWRpUXJPK0RHck5qcUxUYXB0RVR2anJwczhIMjlFWGJaZmhFWUhDRGtLd2pYMWdNSGJXNXEwWWFyWDFRNQpCTGplb3JVZEZkWTBzNytKeVlUWTRkcGhYTmdJeHMzdWFBdTdMWjMxUVRsd0RRZk5KWVV2cGtaa2RDemVwWDF6Cmo3NVI4Z3lUWno0WEdoTS8wdHFrU3JyWWMwWjU1QTdFR3h1dUg0Si9FcGRrMHJJcnV3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
     service:
       name: sample-nats
       port: 4222
@@ -276,6 +368,7 @@ spec:
 
 Here,
 
+- `.spec.clientConfig.caBundle` specifies a PEM encoded CA bundle which will be used to validate the serving certificate of the NATS server.
 - `.spec.clientConfig.service` specifies the Service information to use to connects with the NATS server.
 - `.spec.secret` specifies the name of the Secret that holds necessary credentials to access the server.
 - `.spec.type` specifies the type of the target. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of target.
@@ -283,7 +376,7 @@ Here,
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/tls/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-nats created
 ```
 
@@ -327,7 +420,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/tls/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -391,7 +484,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/tls/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-nats-backup created
 ```
 
@@ -483,11 +576,13 @@ stash-backup-sample-nats-backup   */2 * * * *   True      0        56s          
 
 Now, let's simulate a disaster scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
 
-```bash
+```
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's export the token as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+# Let's export the ca.crt, tls.crt and tls.key file paths as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_CA=/etc/nats-certs/clients/nats-tls/ca.crt
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_CERT=/etc/nats-certs/clients/nats-tls/tls.crt
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_KEY=/etc/nats-certs/clients/nats-tls/tls.key
 
 # delete the stream "ORDERS"
 sample-nats-box-785f8458d7-wtnfx:~# nats stream rm ORDERS -f
@@ -544,7 +639,7 @@ Here,
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/tls/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-nats-restore created
 ```
 
@@ -562,11 +657,13 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 Now, let's exec into the nats-box pod and verify whether data actual data has been restored or not,
 
-```bash
+```
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's export the token as environment variables to make further commands re-usable.
-sample-nats-box-785f8458d7-wtnfx:~# export NATS_USER=secret
+# Let's export the ca.crt, tls.crt and tls.key file paths as environment variables to make further commands re-usable.
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_CA=/etc/nats-certs/clients/nats-tls/ca.crt
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_CERT=/etc/nats-certs/clients/nats-tls/tls.crt
+sample-nats-box-785f8458d7-wtnfx:~# export NATS_KEY=/etc/nats-certs/clients/nats-tls/tls.key
 
 # Verify that the stream has been restored successfully
 sample-nats-box-785f8458d7-wtnfx:~#  nats stream ls

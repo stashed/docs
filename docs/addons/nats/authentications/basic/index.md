@@ -1,9 +1,9 @@
 ---
-title: Basic authentication
+title: NATS with Basic authentication
 description: Backup NATS with Basic authentication using Stash
 menu:
   docs_{{ .version }}:
-    identifier: basic-auth
+    identifier: stash-nats-basic-auth
     name: Basic authentication
     parent: stash-nats-auth
     weight: 10
@@ -231,13 +231,14 @@ This addon should be able to take backup of the NATS streams with matching major
 
  Lets create a secret with access credentials.  Below is the YAML of `Secret` object we are going to create.
 
-```bash
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
   labels:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
+  namespace: demo
 data:
   password: MjIy
   username: dTI=
@@ -248,7 +249,7 @@ Let's create the `Secret` we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/basic/examples/secret.yaml
-appbinding.appcatalog.appscode.com/sample-nats-auth created
+secret/sample-nats-auth created
 ```
 
 
@@ -266,6 +267,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats
+  namespace: demo
 spec:
   clientConfig:
     service:
@@ -312,7 +314,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, crete a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
+Now, create a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1

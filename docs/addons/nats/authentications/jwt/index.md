@@ -1,9 +1,9 @@
 ---
-title: JWT authentication
+title: NATS with JWT authentication
 description: Backup NATS with JWT authentication using Stash
 menu:
   docs_{{ .version }}:
-    identifier: jwt-auth
+    identifier: stash-nats-jwt-auth
     name: JWT authentication
     parent: stash-nats-auth
     weight: 25
@@ -241,13 +241,14 @@ This addon should be able to take backup of the NATS streams with matching major
 
  Lets create a secret with access credentials.  Below is the YAML of `Secret` object we are going to create.
 
-```bash
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
   labels:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
+  namespace: demo
 data:
   creds: LS0tLS1CRUdJTiBOQVRTIFVTRVIgSldULS0tLS0KZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKbFpESTFOVEU1TFc1clpYa2lmUS5leUpxZEdraU9pSklRVXBLVDFJeVQwZFBXRVphVUZOQ1VVUk5OVTlaVnpKYVNVVlRURXcxTjFNMVJGVkZWVmhSVGxRMlNUVkZUMWxFVnpaQklpd2lhV0YwSWpveE5qSTVPRGt6TWpReExDSnBjM01pT2lKQlJFWkRNMWxNUVZVMU5rNHlOa2hIVGpkVVIxQlhSRmhSVGxwVFFsRkZXa3RSV0ZCUVVsQXlORWhMTkRaV1NsbFJXRFExVXpKVlNDSXNJbTVoYldVaU9pSjRJaXdpYzNWaUlqb2lWVUZZVEVnMFdUVlNOazVNUmxwT1RsaENVVTh5V1VaWk56SlNRbE5ETms4MFZFNUpRa0pOUzBOVlRGcExNell6TjFGQ05GTldNa1lpTENKdVlYUnpJanA3SW5CMVlpSTZlMzBzSW5OMVlpSTZlMzBzSW5OMVluTWlPaTB4TENKa1lYUmhJam90TVN3aWNHRjViRzloWkNJNkxURXNJblI1Y0dVaU9pSjFjMlZ5SWl3aWRtVnljMmx2YmlJNk1uMTkuMFFyeW11Mi1HdUVYV3hOaU5MNGRxc1JMdlJ4VGNXQ24zRHN6UTJIbUhHOElEbXhwUG9oeGRGMFU3aUQ5WGdQU2xSMVBOakJ6bXFxMHhFME1lWmRTRHcKLS0tLS0tRU5EIE5BVFMgVVNFUiBKV1QtLS0tLS0KCi0tLS0tQkVHSU4gVVNFUiBOS0VZIFNFRUQtLS0tLQpTVUFCUlc0Sjc2RlpCTjVTMlZOR0MzWVdLRlRXR1FVNTI3TzVSQkdPTVRQNkRYRUpDSUZSS0NKSUtVCi0tLS0tLUVORCBVU0VSIE5LRVkgU0VFRC0tLS0tLQo=
 ```
@@ -255,7 +256,7 @@ data:
 Let's create the `Secret` we have shown above,
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt/examples/secret.yaml
-appbinding.appcatalog.appscode.com/sample-nats-auth created
+secret/sample-nats-auth created
 ```
 
 
@@ -272,6 +273,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats
+  namespace: demo
 spec:
   clientConfig:
     service:
@@ -318,7 +320,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, crete a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
+Now, create a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1

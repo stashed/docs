@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-ca
+  namespace: demo
+spec:
+  secretName: nats-ca
+  duration: 8736h # 1 year
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: selfsigning
+    kind: ClusterIssuer
+  commonName: nats-ca
+  isCA: true

@@ -234,6 +234,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats
+  namespace: demo
 spec:
   clientConfig:
     service:
@@ -277,7 +278,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, crete a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
+Now, create a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1

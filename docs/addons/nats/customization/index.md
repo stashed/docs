@@ -6,7 +6,7 @@ menu:
     identifier: stash-nats-customization
     name: Customizing Backup & Restore Process
     parent: stash-nats
-    weight: 40
+    weight: 50
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
@@ -26,7 +26,7 @@ In this section, we are going to show you how to customize the backup process. H
 
 By default stash will take backup of all the streams. If you want to take backup of specific streams, you can pass a list of streams through `streams` param under `task.params` section.
 
-The below example shows how you can pass the `"str1, str2"` to take backup of specific streams `str1` and ` str2`.
+The below example shows how you can pass the `"str1, str2"` to take backup of the streams `str1` and ` str2`.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1

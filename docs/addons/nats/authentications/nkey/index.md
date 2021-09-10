@@ -234,13 +234,14 @@ This addon should be able to take backup of the NATS streams with matching major
 
  Lets create a secret with access credentials.  Below is the YAML of `Secret` object we are going to create.
 
-```bash
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
   labels:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats-auth
+  namespace: demo
 data:
   nkey: U1VBRDJRWlBJQU9aRTdTQlZHUjJQS09YVkEyTDYzVUQ1UEVWNkVVUTZPTEdUS0ZJV0o0VTNaQ1NDQQpVQVdHR1ZFSFhJRU9XWVZCTjdSTzdJSUtJWEhJT0s2SldXVURKT1dJVVo2TDNYTUlXTTVJRkdQRAo=
 ```
@@ -248,7 +249,7 @@ data:
 Let's create the `Secret` we have shown above,
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/nkey/examples/secret.yaml
-appbinding.appcatalog.appscode.com/sample-nats-auth created
+secret/sample-nats-auth created
 ```
 
 
@@ -265,6 +266,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: sample-nats
   name: sample-nats
+  namespace: demo
 spec:
   clientConfig:
     service:
@@ -311,7 +313,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, crete a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
+Now, create a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
