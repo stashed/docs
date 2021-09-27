@@ -399,7 +399,7 @@ Forwarding from [::1]:9090 -> 9090
 Now, we can access the web UI at `localhost:9090`. Open [http://localhost:9090/targets](http://localhost:9090/targets) in your browser. You should see `pushgateway` and `api` endpoints of `stash` service as targets.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/images/prom_builtin_target.png">
+  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/prom-builtin/images/prom_builtin_target.png">
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 

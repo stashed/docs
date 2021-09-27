@@ -48,15 +48,15 @@ This chart will install [prometheus-operator/prometheus-operator](https://github
 The above chart will also deploy a Prometheus server. Verify that the Prometheus server has been deployed by the following command:
 
 ```bash
-$ kubectl get prometheus -n monitoring
+❯ kubectl get prometheus -n monitoring
 NAME                                    VERSION   REPLICAS   AGE
-prometheus-stack-kube-prom-prometheus   v2.22.1   1          3m
+prometheus-stack-kube-prom-prometheus   v2.28.1   1          69m
 ```
 
 Let's check the YAML of the above Prometheus object,
 
 ```bash
-$ kubectl get prometheus -n monitoring prometheus-stack-kube-prom-prometheus -o yaml
+❯ kubectl get prometheus -n monitoring prometheus-stack-kube-prom-prometheus -o yaml
 ```
 
 ```yaml
@@ -66,14 +66,21 @@ metadata:
   annotations:
     meta.helm.sh/release-name: prometheus-stack
     meta.helm.sh/release-namespace: monitoring
+  creationTimestamp: "2021-09-27T04:49:18Z"
+  generation: 1
   labels:
     app: kube-prometheus-stack-prometheus
+    app.kubernetes.io/instance: prometheus-stack
     app.kubernetes.io/managed-by: Helm
-    chart: kube-prometheus-stack-12.8.0
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 18.1.0
+    chart: kube-prometheus-stack-18.1.0
     heritage: Helm
     release: prometheus-stack
   name: prometheus-stack-kube-prom-prometheus
   namespace: monitoring
+  resourceVersion: "1406"
+  uid: e3100f51-1e17-41fd-81a3-a8f2fb7b6a70
 spec:
   alerting:
     alertmanagers:
@@ -84,7 +91,7 @@ spec:
       port: web
   enableAdminAPI: false
   externalUrl: http://prometheus-stack-kube-prom-prometheus.monitoring:9090
-  image: quay.io/prometheus/prometheus:v2.22.1
+  image: quay.io/prometheus/prometheus:v2.28.1
   listenLocal: false
   logFormat: logfmt
   logLevel: info
@@ -116,7 +123,8 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       release: prometheus-stack
-  version: v2.22.1
+  shards: 1
+  version: v2.28.1
 ```
 
 Notice the following ServiceMonitor related sections,
@@ -169,14 +177,26 @@ Here, we are going to enable monitoring for both backup metrics and operator met
 If you haven't installed Stash yet, run the following command to enable Prometheus monitoring during installation
 
 ```bash
-$ helm install stash appscode/stash -n kube-system \
---version {{< param "info.version" >}} \
---set features.community=true               \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.release=prometheus-stack \
+$ helm install stash appscode/stash -n kube-system             \
+--version {{< param "info.version" >}}                         \
+--set features.enterprise=true                                 \
+--set stash-enterprise.monitoring.agent=prometheus.io/operator \
+--set stash-enterprise.monitoring.backup=true                  \
+--set stash-enterprise.monitoring.operator=true                \
+--set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
 --set-file global.license=/path/to/license-file.txt
+```
+
+```bash
+helm install stash charts/stash -n kube-system \
+--set features.enterprise=true               \
+--set global.registry=appscodeci \
+--set stash-enterprise.operator.tag=metrics_linux_amd64 \
+--set stash-enterprise.monitoring.agent=prometheus.io/operator \
+--set stash-enterprise.monitoring.backup=true \
+--set stash-enterprise.monitoring.operator=true \
+--set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
+--set-file global.license=/home/emruz/Downloads/kubedb-enterprise-license-b99ef564-640a-46d2-80e1-ffcbc48b2fc9.txt
 ```
 
 </div>
@@ -187,33 +207,33 @@ $ helm install stash appscode/stash -n kube-system \
 If you have installed Stash already in your cluster but didn't enable monitoring during installation, you can use `helm upgrade` command to enable monitoring in the existing installation.
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system \
---reuse-values \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.release=prometheus-stack
+$ helm upgrade stash appscode/stash -n kube-system             \
+--reuse-values                                                 \
+--set stash-enterprise.monitoring.agent=prometheus.io/operator \
+--set stash-enterprise.monitoring.backup=true                  \
+--set stash-enterprise.monitoring.operator=true                \
+--set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack
 ```
 
 </div>
 </div>
 
->Use `stash-enterprise` instead of `stash-community` if you are using Stash Enterprise edition.
+>Use `stash-community` instead of `stash-enterprise` if you are using Stash Community edition.
 
 This will create a `ServiceMonitor` object with the same name and namespace as the Stash operator. The `ServiceMonitor` will have the label `release: prometheus-stack` as we have provided it through the `--set monitoring.serviceMonitor.labels` parameter.
 
 Let's verify that the ServiceMonitor has been created in the Stash operator namespace.
 
 ```bash
-$ kubectl get servicemonitor -n kube-system
-NAME    AGE
-stash   65s
+❯ kubectl get servicemonitor -n kube-system
+NAME                     AGE
+stash-stash-enterprise   94s
 ```
 
 Let's check the YAML of the `ServiceMonitor` object,
 
 ```bash
-$ kubectl get servicemonitor stash -n kube-system -o yaml
+❯ kubectl get servicemonitor -n kube-system stash-stash-enterprise -o yaml
 ```
 
 ```yaml
@@ -223,11 +243,15 @@ metadata:
   annotations:
     meta.helm.sh/release-name: stash
     meta.helm.sh/release-namespace: kube-system
+  creationTimestamp: "2021-09-27T05:49:05Z"
+  generation: 1
   labels:
     app.kubernetes.io/managed-by: Helm
     release: prometheus-stack
-  name: stash
+  name: stash-stash-enterprise
   namespace: kube-system
+  resourceVersion: "8312"
+  uid: 6b51920d-9cf2-4604-ba2b-b77c30d8f0d3
 spec:
   endpoints:
   - honorLabels: true
@@ -239,15 +263,15 @@ spec:
       ca:
         secret:
           key: tls.crt
-          name: stash-apiserver-cert
-      serverName: stash.kube-system.svc
+          name: stash-stash-enterprise-apiserver-cert
+      serverName: stash-stash-enterprise.kube-system.svc
   namespaceSelector:
     matchNames:
     - kube-system
   selector:
     matchLabels:
       app.kubernetes.io/instance: stash
-      app.kubernetes.io/name: stash
+      app.kubernetes.io/name: stash-enterprise
 ```
 
 Here, we have two endpoints in `spec.endpoints` section. The `pushgateway` endpoint exports backup and recovery metrics and the `api` endpoint exports the operator metrics.
@@ -267,7 +291,7 @@ Forwarding from [::1]:9090 -> 9090
 Now, you can access the Web UI at `localhost:9090`. Open [http://localhost:9090/targets](http://localhost:9090/targets) in your browser. You should see `pushgateway` and `api` endpoints of the Stash operator are among the targets. This verifies that the Prometheus server is scrapping Stash metrics.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/images/prom_operator_web_ui.png">
+  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/prom-operator/images/prom_operator_web_ui.png">
 <figcaption align="center">Fig: Prometheus Web UI</figcaption>
 </figure>
 

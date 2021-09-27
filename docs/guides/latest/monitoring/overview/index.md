@@ -23,7 +23,7 @@ Stash has native support for monitoring via [Prometheus](https://prometheus.io/)
 Stash uses [Prometheus PushGateway](https://github.com/prometheus/pushgateway) to export the metrics for backup & restore operations. The following diagram shows the logical structure of the Stash monitoring flow.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/images/monitoring-structure.svg">
+  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/overview/images/monitoring-structure.svg">
 <figcaption align="center">Fig: Monitoring process in Stash</figcaption>
 </figure>
 
@@ -237,19 +237,6 @@ $ helm install stash appscode/stash -n kube-system \
 --set-file global.license=/path/to/license-file.txt
 ```
 
-**Helm 2:**
-
-```bash
-$ helm install appscode/stash --name stash -n kube-system \
---version {{< param "info.version" >}} \
---set features.community=true               \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.k8s-app=prometheus \
---set-file global.license=/path/to/license-file.txt
-```
-
 **YAML (with Helm 3):**
 
 ```bash
@@ -275,17 +262,6 @@ If you have installed Stash already in your cluster but didn't enable monitoring
 
 ```bash
 $ helm upgrade stash appscode/stash -n kube-system \
---reuse-values \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.k8s-apps=prometheus
-```
-
-**Helm 2:**
-
-```bash
-$ helm upgrade appscode/stash --name stash -n kube-system \
 --reuse-values \
 --set stash-community.monitoring.agent=prometheus.io/operator \
 --set stash-community.monitoring.backup=true \
