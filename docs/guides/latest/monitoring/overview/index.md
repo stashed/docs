@@ -200,14 +200,14 @@ You have to enable Prometheus monitoring during installing / upgrading Stash. Th
 
 | Helm Values                                        | Acceptable Values                                   | Default                                                    | Usage                                                                                                                                                               |
 | -------------------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `stash-community.monitoring.agent`                 | `prometheus.io/builtin` or `prometheus.io/operator` | `none`                                                     | Specify which monitoring agent to use for monitoring Stash.                                                                                                         |
-| `stash-community.monitoring.backup`                | `true` or `false`                                   | `false`                                                    | Specify whether to monitor Stash backup and restore.                                                                                                                |
-| `stash-community.monitoring.operator`              | `true` or `false`                                   | `false`                                                    | Specify whether to monitor Stash operator.                                                                                                                          |
-| `stash-community.monitoring.serviceMonitor.labels` | any label                                           | `app: <generated app name>` and `release: <release name>`. | Specify the labels for ServiceMonitor. Prometheus crd will select ServiceMonitor using these labels. Only usable when monitoring agent is `prometheus.io/operator`. |
+| `stash-enterprise.monitoring.agent`                 | `prometheus.io/builtin` or `prometheus.io/operator` | `none`                                                     | Specify which monitoring agent to use for monitoring Stash.                                                                                                         |
+| `stash-enterprise.monitoring.backup`                | `true` or `false`                                   | `false`                                                    | Specify whether to monitor Stash backup and restore.                                                                                                                |
+| `stash-enterprise.monitoring.operator`              | `true` or `false`                                   | `false`                                                    | Specify whether to monitor Stash operator.                                                                                                                          |
+| `stash-enterprise.monitoring.serviceMonitor.labels` | any label                                           | `app: <generated app name>` and `release: <release name>`. | Specify the labels for ServiceMonitor. Prometheus crd will select ServiceMonitor using these labels. Only usable when monitoring agent is `prometheus.io/operator`. |
 
->Use `stash-enterprise` instead of `stash-community` if you are using Stash Enterprise edition.
+>Use `stash-community` instead of `stash-enterprise` if you are using Stash Community edition.
 
-You can enable monitoring in Stash as below,
+The following instruction show example of enabling monitoring in Stash for the Prometheus server deployed with Prometheus Operator. You can check the [Builtin Prometheus](/docs/guides/latest/monitoring/prom-builtin/index.md) scraper guide if you are managing your Prometheus server manually.
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">
@@ -229,11 +229,11 @@ If you haven't installed Stash yet, run the following command to enable Promethe
 ```bash
 $ helm install stash appscode/stash -n kube-system \
 --version {{< param "info.version" >}} \
---set features.community=true               \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community. monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.k8s-app=prometheus \
+--set features.enterprise=true               \
+--set stash-enterprise.monitoring.agent=prometheus.io/operator \
+--set stash-enterprise.monitoring.backup=true \
+--set stash-enterprise. monitoring.operator=true \
+--set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
 --set-file global.license=/path/to/license-file.txt
 ```
 
@@ -243,11 +243,11 @@ $ helm install stash appscode/stash -n kube-system \
 $ helm install stash appscode/stash -n kube-system \
 --no-hooks \
 --version {{< param "info.version" >}} \
---set features.community=true               \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.k8s-app=prometheus \
+--set features.enterprise=true               \
+--set stash-enterprise.monitoring.agent=prometheus.io/operator \
+--set stash-enterprise.monitoring.backup=true \
+--set stash-enterprise.monitoring.operator=true \
+--set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
 --set-file global.license=/path/to/license-file.txt | kubectl apply -f -
 ```
 
@@ -263,10 +263,10 @@ If you have installed Stash already in your cluster but didn't enable monitoring
 ```bash
 $ helm upgrade stash appscode/stash -n kube-system \
 --reuse-values \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.k8s-apps=prometheus
+--set stash-enterprise.monitoring.agent=prometheus.io/operator \
+--set stash-enterprise.monitoring.backup=true \
+--set stash-enterprise.monitoring.operator=true \
+--set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack
 ```
 
 **YAML (with Helm 3):**
@@ -275,10 +275,10 @@ $ helm upgrade stash appscode/stash -n kube-system \
 $ helm upgrade stash appscode/stash -n kube-system \
 --no-hooks \
 --reuse-values \
---set stash-community.monitoring.agent=prometheus.io/operator \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
---set stash-community.monitoring.serviceMonitor.labels.k8s-apps=prometheus | kubectl apply -f -
+--set stash-enterprise.monitoring.agent=prometheus.io/operator \
+--set stash-enterprise.monitoring.backup=true \
+--set stash-enterprise.monitoring.operator=true \
+--set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack | kubectl apply -f -
 ```
 
 </div>

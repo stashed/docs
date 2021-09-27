@@ -187,18 +187,6 @@ $ helm install stash appscode/stash -n kube-system             \
 --set-file global.license=/path/to/license-file.txt
 ```
 
-```bash
-helm install stash charts/stash -n kube-system \
---set features.enterprise=true               \
---set global.registry=appscodeci \
---set stash-enterprise.operator.tag=metrics_linux_amd64 \
---set stash-enterprise.monitoring.agent=prometheus.io/operator \
---set stash-enterprise.monitoring.backup=true \
---set stash-enterprise.monitoring.operator=true \
---set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
---set-file global.license=/home/emruz/Downloads/kubedb-enterprise-license-b99ef564-640a-46d2-80e1-ffcbc48b2fc9.txt
-```
-
 </div>
 <div class="tab-pane fade" id="existing-installation-tab" role="tabpanel" aria-labelledby="existing-installation-tab">
 
