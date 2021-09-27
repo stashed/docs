@@ -1,3 +1,17 @@
+---
+title: Stash Grafana Dashboard | Stash
+description: Using Stash Grafana Dashboard
+menu:
+  docs_{{ .version }}:
+    identifier: monitoring-grafana-dashboard
+    name: Grafana Dashboard
+    parent: monitoring
+    weight: 30
+product_name: stash
+menu_name: docs_{{ .version }}
+section_menu_id: guides
+---
+
 {{< notice type="warning" message="This is an Enterprise-only feature. You must be **Stash Enterprise** customer to use pre-built Stash Grafana dashboard." >}}
 
 # Stash Grafana Dashboard
@@ -88,4 +102,4 @@ Once, you have successfully imported the dashboard, you should see the Stash das
 
 The following video gives a tour of the different components of the Stash Grafana dashboard.
 
-{{< youtube VYx1OI1tgkE >}}
+{{< youtube b5r9PDwl--U >}}
