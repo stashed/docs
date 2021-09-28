@@ -6,6 +6,9 @@ metadata:
 spec:
   task:
     name: nats-restore-2.4.0
+    params:
+    - name: streams
+      value: "str1,str2"
   repository:
     name: gcs-repo
   target:
@@ -13,14 +16,5 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-nats
-  interimVolumeTemplate:
-    metadata:
-      name: nats-restore-tmp-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: 1Gi
   rules:
   - snapshots: [latest]

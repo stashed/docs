@@ -40,6 +40,11 @@ This addon with matching major version with the NATS version should be able to t
 Stash NATS documentations are organized as below:
 
 - [How does it works?](/docs/addons/nats/overview/index.md) gives an overview of how backup and restore process for NATS works in Stash.
-- [Helm managed Redis](/docs/addons/nats/helm/index.md) shows how to backup and restore a Helm managed NATS.
-- [Auto-Backup](/docs/addons/nats/auto-backup/index.md) shows how to configure a generic backup template for all the NATS streams of a cluster.
+- [Helm managed NATS](/docs/addons/nats/helm/index.md) shows how to backup and restore a Helm managed NATS.
+- **Different authentications:** shows how to backup and restore NATS using different authentication methods.
+  - [Basic Authentication](/docs/addons/nats/authentications/basic-auth/index.md)
+  - [Token Authentication](/docs/addons/nats/authentications/token-auth/index.md)
+  - [Nkey Authentication](/docs/addons/nats/authentications/nkey-auth/index.md)
+  - [JWT Authentication](/docs/addons/nats/authentications/jwt-auth/index.md)
+- [TLS secured NATS](/docs/addons/nats/tls/index.md) shows how to backup and restore TLS secured NATS.
 - [Customizing Backup & Restore Process](/docs/addons/nats/customization/index.md) shows how to customize the backup & restore process.

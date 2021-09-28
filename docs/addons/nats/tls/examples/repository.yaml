@@ -7,5 +7,5 @@ spec:
   backend:
     gcs:
       bucket: stash-testing
-      prefix: /demo/nats/sample-nats
+      prefix: /demo/nats/sample-nats-tls
     storageSecretName: gcs-secret

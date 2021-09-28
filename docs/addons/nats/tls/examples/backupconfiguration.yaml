@@ -1,33 +1,28 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: sample-nats-backup
+  name: sample-nats-backup-tls
   namespace: demo
 spec:
   task:
     name: nats-backup-2.4.0
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-nats
+      name: sample-nats-tls
   interimVolumeTemplate:
     metadata:
-      name: sample-nats-backup-tmp-storage
+      name: nats-backup-tmp-storage
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi  
-  runtimeSettings:
-    pod:
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0
+          storage: 1Gi
   retentionPolicy:
     name: keep-last-5
     keepLast: 5

@@ -1,8 +1,7 @@
-
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: sample-nats-restore
+  name: sample-nats-restore-tls
   namespace: demo
 spec:
   task:
@@ -13,7 +12,7 @@ spec:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-nats
+      name: sample-nats-tls
   interimVolumeTemplate:
     metadata:
       name: nats-restore-tmp-storage

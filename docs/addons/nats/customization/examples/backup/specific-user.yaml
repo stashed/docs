@@ -4,7 +4,7 @@ metadata:
   name: sample-nats-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   task:
     name: nats-backup-2.4.0
   repository:

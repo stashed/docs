@@ -4,7 +4,7 @@ description: Backup NATS with JWT authentication using Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-nats-jwt-auth
-    name: JWT authentication
+    name: JWT Authentication
     parent: stash-nats-auth
     weight: 25
 product_name: stash
@@ -12,7 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup NATS with JWT authentication using Stash
+# Backup NATS with JWT Authentication using Stash
 
 Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a NATS server with JWT authentication using Stash.
 
@@ -38,7 +38,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt-auth/examples).
 
 ## Prepare NATS
 
@@ -46,7 +46,7 @@ In this section, we are going to deploy a NATS cluster with JWT authentication e
 
 ### Deploy NATS Cluster
 
-At first, let's deploy a NATS cluster. Here, we are going to use [NATS]( https://nats-io.github.io/k8s/helm/charts/)  chart from [nats.io](https://nats.io/).
+At first, let's deploy a NATS cluster. Here, we are going to use [NATS](https://github.com/nats-io/k8s/tree/main/helm/charts/nats )  chart from [nats.io](https://nats.io/).
 
 Let's deploy a NATS cluster named `sample-nats` using Helm as below,
 
@@ -60,7 +60,7 @@ $ helm install sample-nats nats/nats -n demo \
 --set nats.jetstream.enabled=true \
 --set nats.jetstream.fileStorage.enabled=true \
 --set cluster.enabled=true \
---set cluster.recplicas=3 \
+--set cluster.replicas=3 \
 --set auth.enabled=true \
 --set auth.resolver.type=full \
 --set auth.resolver.operator=eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJhdWQiOiJPQU5US0NDTkFQTUdCNE9YRE1YT1ZON01DQUVKNVZGV1ZXVEFVVlVXQllBUFhMWlpHU1NZVTRLVCIsImV4cCI6MTk0NTQyNjA0MSwianRpIjoiWktRTllaTlNRTUhNQzNHREdVRVpDUFlDT0RNSjIyMzRPM0pGTjUzWlZYWEZBUFU3Qlg2QSIsImlhdCI6MTYyOTg5MzI0MSwiaXNzIjoiT0FOVEtDQ05BUE1HQjRPWERNWE9WTjdNQ0FFSjVWRldWV1RBVVZVV0JZQVBYTFpaR1NTWVU0S1QiLCJuYW1lIjoiS08iLCJuYmYiOjE2Mjk4OTMyNDEsInN1YiI6Ik9BTlRLQ0NOQVBNR0I0T1hETVhPVk43TUNBRUo1VkZXVldUQVVWVVdCWUFQWExaWkdTU1lVNEtUIiwibmF0cyI6eyJzaWduaW5nX2tleXMiOlsiT0FOVEtDQ05BUE1HQjRPWERNWE9WTjdNQ0FFSjVWRldWV1RBVVZVV0JZQVBYTFpaR1NTWVU0S1QiXSwidHlwZSI6Im9wZXJhdG9yIiwidmVyc2lvbiI6Mn19.jxs4znpE50PzRFfKOjENlFQTfsRHH5VqIplnTgAziUJuYBSNmBQeYsBDJTOgLJyADgtqIWkAQF_G5K7xuVXpCg \
@@ -121,16 +121,11 @@ sample-nats-box-785f8458d7-wtnfx   1/1     Running   0          7m20s
 
 Let's exec into the nats-box pod,
 
-```
+```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
 # Let's create the creds file for our user
-sample-nats-box-785f8458d7-wtnfx:~# echo "-----BEGIN NATS USER JWT-----
-eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJIQUpKT1IyT0dPWEZaUFNCUURNNU9ZVzJaSUVTTEw1N1M1RFVFVVhRTlQ2STVFT1lEVzZBIiwiaWF0IjoxNjI5ODkzMjQxLCJpc3MiOiJBREZDM1lMQVU1Nk4yNkhHTjdUR1BXRFhRTlpTQlFFWktRWFBQUlAyNEhLNDZWSllRWDQ1UzJVSCIsIm5hbWUiOiJ4Iiwic3ViIjoiVUFYTEg0WTVSNk5MRlpOTlhCUU8yWUZZNzJSQlNDNk80VE5JQkJNS0NVTFpLMzYzN1FCNFNWMkYiLCJuYXRzIjp7InB1YiI6e30sInN1YiI6e30sInN1YnMiOi0xLCJkYXRhIjotMSwicGF5bG9hZCI6LTEsInR5cGUiOiJ1c2VyIiwidmVyc2lvbiI6Mn19.0Qrymu2-GuEXWxNiNL4dqsRLvRxTcWCn3DszQ2HmHG8IDmxpPohxdF0U7iD9XgPSlR1PNjBzmqq0xE0MeZdSDw
-------END NATS USER JWT------
------BEGIN USER NKEY SEED-----
-SUABRW4J76FZBN5S2VNGC3YWKFTWGQU527O5RBGOMTP6DXEJCIFRKCJIKU
-------END USER NKEY SEED------" > /tmp/user.creds
+sample-nats-box-785f8458d7-wtnfx:~# echo LS0tLS1CRUdJTiBOQVRTIFVTRVIgSldULS0tLS0KZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKbFpESTFOVEU1TFc1clpYa2lmUS5leUpxZEdraU9pSklRVXBLVDFJeVQwZFBXRVphVUZOQ1VVUk5OVTlaVnpKYVNVVlRURXcxTjFNMVJGVkZWVmhSVGxRMlNUVkZUMWxFVnpaQklpd2lhV0YwSWpveE5qSTVPRGt6TWpReExDSnBjM01pT2lKQlJFWkRNMWxNUVZVMU5rNHlOa2hIVGpkVVIxQlhSRmhSVGxwVFFsRkZXa3RSV0ZCUVVsQXlORWhMTkRaV1NsbFJXRFExVXpKVlNDSXNJbTVoYldVaU9pSjRJaXdpYzNWaUlqb2lWVUZZVEVnMFdUVlNOazVNUmxwT1RsaENVVTh5V1VaWk56SlNRbE5ETms4MFZFNUpRa0pOUzBOVlRGcExNell6TjFGQ05GTldNa1lpTENKdVlYUnpJanA3SW5CMVlpSTZlMzBzSW5OMVlpSTZlMzBzSW5OMVluTWlPaTB4TENKa1lYUmhJam90TVN3aWNHRjViRzloWkNJNkxURXNJblI1Y0dVaU9pSjFjMlZ5SWl3aWRtVnljMmx2YmlJNk1uMTkuMFFyeW11Mi1HdUVYV3hOaU5MNGRxc1JMdlJ4VGNXQ24zRHN6UTJIbUhHOElEbXhwUG9oeGRGMFU3aUQ5WGdQU2xSMVBOakJ6bXFxMHhFME1lWmRTRHcKLS0tLS0tRU5EIE5BVFMgVVNFUiBKV1QtLS0tLS0KCi0tLS0tQkVHSU4gVVNFUiBOS0VZIFNFRUQtLS0tLQpTVUFCUlc0Sjc2RlpCTjVTMlZOR0MzWVdLRlRXR1FVNTI3TzVSQkdPTVRQNkRYRUpDSUZSS0NKSUtVCi0tLS0tLUVORCBVU0VSIE5LRVkgU0VFRC0tLS0tLQo= | base64 -d > user.creds
 
 # Let's export the file path as environment variables to make further commands re-usable.
 sample-nats-box-785f8458d7-wtnfx:~# export NATS_CREDS=/tmp/user.creds
@@ -227,7 +222,7 @@ In this section, we are going to prepare the necessary resources (i.e. connectio
 
 ### Ensure NATS Addon
 
-When you install Stash Enterprise version, it will automatically install all the official addons. Make sure that NATS addon was installed properly using the following command.
+When you install Stash Enterprise version, it will automatically install all the official addons. Make sure that NATS addon has been installed properly using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep nats
@@ -239,7 +234,7 @@ This addon should be able to take backup of the NATS streams with matching major
 
 ### Create Secret
 
- Lets create a secret with access credentials.  Below is the YAML of `Secret` object we are going to create.
+ Lets create a secret with JWT auth credentials.  Below is the YAML of `Secret` object we are going to create.
 
 ```yaml
 apiVersion: v1
@@ -255,7 +250,7 @@ data:
 
 Let's create the `Secret` we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt/examples/secret.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt-auth/examples/secret.yaml
 secret/sample-nats-auth created
 ```
 
@@ -282,7 +277,7 @@ spec:
       scheme: nats
   secret:
     name: sample-nats-auth
-  type: nats
+  type: nats.io/nats
   version: 2.4.0
 ```
 
@@ -295,7 +290,7 @@ Here,
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt-auth/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-nats created
 ```
 
@@ -339,7 +334,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt-auth/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -362,7 +357,7 @@ metadata:
 spec:
   task:
     name: nats-backup-2.4.0
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   repository:
     name: gcs-repo
   target:
@@ -378,12 +373,7 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi  
-  runtimeSettings:
-    pod:
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0
+          storage: 1Gi
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
@@ -397,13 +387,12 @@ Here,
 - `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
 - `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
 - `spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the dumped data temporarily before uploading it into the cloud bucket.
-- `spec.runtimeSettings.pod.securityContext` specifies security options that backup job’s pod should run with.
 - `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
 
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt-auth/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-nats-backup created
 ```
 
@@ -416,7 +405,7 @@ Verify that the CronJob has been created using the following command,
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup   */5 * * * *   False     0        <none>          14s
+stash-backup-sample-nats-backup    */5 * * * *   False     0        <none>          14s
 ```
 
 #### Wait for BackupSession
@@ -446,9 +435,10 @@ gcs-repo   true        1.382 KiB   1                9m4s                     24m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/nats/sample-nats` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/authentications/token/images/sample-nats-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/authentications/jwt-auth/images/sample-nats-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
+
 
 
 
@@ -478,7 +468,7 @@ Verify that the `BackupConfiguration` has been paused,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
 NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.4.0   */2 * * * *   true     2d18h
+sample-nats-backup   nats-backup-2.4.0   */5 * * * *   true     2d18h
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -488,25 +478,17 @@ Stash will also suspend the respective CronJob.
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                              SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup   */2 * * * *   True      0        56s             2d18h
+stash-backup-sample-nats-backup   */5 * * * *   True      0        56s             2d18h
 ```
 
 #### Simulate Disaster
 
 Now, let's simulate a disaster scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
 
-```
+```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's create the creds file for our user
-sample-nats-box-785f8458d7-wtnfx:~# echo "-----BEGIN NATS USER JWT-----
-eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJIQUpKT1IyT0dPWEZaUFNCUURNNU9ZVzJaSUVTTEw1N1M1RFVFVVhRTlQ2STVFT1lEVzZBIiwiaWF0IjoxNjI5ODkzMjQxLCJpc3MiOiJBREZDM1lMQVU1Nk4yNkhHTjdUR1BXRFhRTlpTQlFFWktRWFBQUlAyNEhLNDZWSllRWDQ1UzJVSCIsIm5hbWUiOiJ4Iiwic3ViIjoiVUFYTEg0WTVSNk5MRlpOTlhCUU8yWUZZNzJSQlNDNk80VE5JQkJNS0NVTFpLMzYzN1FCNFNWMkYiLCJuYXRzIjp7InB1YiI6e30sInN1YiI6e30sInN1YnMiOi0xLCJkYXRhIjotMSwicGF5bG9hZCI6LTEsInR5cGUiOiJ1c2VyIiwidmVyc2lvbiI6Mn19.0Qrymu2-GuEXWxNiNL4dqsRLvRxTcWCn3DszQ2HmHG8IDmxpPohxdF0U7iD9XgPSlR1PNjBzmqq0xE0MeZdSDw
-------END NATS USER JWT------
------BEGIN USER NKEY SEED-----
-SUABRW4J76FZBN5S2VNGC3YWKFTWGQU527O5RBGOMTP6DXEJCIFRKCJIKU
-------END USER NKEY SEED------" > /tmp/user.creds
-
-# Let's export the file path as environment variables to make further commands re-usable.
+# Let's export the file path of user.creds file as environment variable to make further commands re-usable.
 sample-nats-box-785f8458d7-wtnfx:~# export NATS_CREDS=/tmp/user.creds
 
 # delete the stream "ORDERS"
@@ -558,13 +540,13 @@ Here,
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore NATS streams.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
 - `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
-- `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before restoring the streams.
+- `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before injecting into the NATS server.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the streams.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt-auth/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-nats-restore created
 ```
 
@@ -582,18 +564,10 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 Now, let's exec into the nats-box pod and verify whether data actual data has been restored or not,
 
-```
+```bash
 ❯ kubectl exec -n demo -it sample-nats-box-785f8458d7-wtnfx -- sh -l
 ...
-# Let's create the creds file for our user
-sample-nats-box-785f8458d7-wtnfx:~# echo "-----BEGIN NATS USER JWT-----
-eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJIQUpKT1IyT0dPWEZaUFNCUURNNU9ZVzJaSUVTTEw1N1M1RFVFVVhRTlQ2STVFT1lEVzZBIiwiaWF0IjoxNjI5ODkzMjQxLCJpc3MiOiJBREZDM1lMQVU1Nk4yNkhHTjdUR1BXRFhRTlpTQlFFWktRWFBQUlAyNEhLNDZWSllRWDQ1UzJVSCIsIm5hbWUiOiJ4Iiwic3ViIjoiVUFYTEg0WTVSNk5MRlpOTlhCUU8yWUZZNzJSQlNDNk80VE5JQkJNS0NVTFpLMzYzN1FCNFNWMkYiLCJuYXRzIjp7InB1YiI6e30sInN1YiI6e30sInN1YnMiOi0xLCJkYXRhIjotMSwicGF5bG9hZCI6LTEsInR5cGUiOiJ1c2VyIiwidmVyc2lvbiI6Mn19.0Qrymu2-GuEXWxNiNL4dqsRLvRxTcWCn3DszQ2HmHG8IDmxpPohxdF0U7iD9XgPSlR1PNjBzmqq0xE0MeZdSDw
-------END NATS USER JWT------
------BEGIN USER NKEY SEED-----
-SUABRW4J76FZBN5S2VNGC3YWKFTWGQU527O5RBGOMTP6DXEJCIFRKCJIKU
-------END USER NKEY SEED------" > /tmp/user.creds
-
-# Let's export the file path as environment variables to make further commands re-usable.
+# Let's export the file path of user.creds file as environment variable to make further commands re-usable.
 sample-nats-box-785f8458d7-wtnfx:~# export NATS_CREDS=/tmp/user.creds
 
 # Verify that the stream has been restored successfully
@@ -652,7 +626,7 @@ Verify that the `BackupConfiguration` has been resumed,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
 NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.4.0   */2 * * * *   true     2d19h
+sample-nats-backup   nats-backup-2.4.0   */5 * * * *   false    2d19h
 ```
 
 Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
@@ -660,7 +634,7 @@ Here,  `false` in the `PAUSED` column means the backup has been resumed successf
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup    */2 * * * *   False     0        3m24s           4h54m
+stash-backup-sample-nats-backup    */5 * * * *   False     0        3m24s           4h54m
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.

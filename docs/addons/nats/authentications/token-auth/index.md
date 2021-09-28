@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup NATS with Token authentication using Stash
+# Backup NATS with Token Authentication using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a NATS server with Token authentication using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of NATS streams. This guide will show you how you can backup & restore a NATS server with token authentication using Stash.
 
 ## Before You Begin
 
@@ -38,15 +38,15 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token-auth/examples).
 
 ## Prepare NATS
 
-In this section, we are going to deploy a NATS cluster with Token authentication enabled. Then, we are going to create a stream and publish some messages into it.
+In this section, we are going to deploy a NATS cluster with token authentication enabled. Then, we are going to create a stream and publish some messages into it.
 
 ### Deploy NATS Cluster
 
-At first, let's deploy a NATS cluster. Here, we are going to use [NATS]( https://nats-io.github.io/k8s/helm/charts/)  chart from [nats.io](https://nats.io/).
+At first, let's deploy a NATS cluster. Here, we are going to use [NATS](https://github.com/nats-io/k8s/tree/main/helm/charts/nats )  chart from [nats.io](https://nats.io/).
 
 Let's deploy a NATS cluster named `sample-nats` using Helm as below,
 
@@ -60,9 +60,9 @@ $ helm install sample-nats nats/nats -n demo \
 --set nats.jetstream.enabled=true \
 --set nats.jetstream.fileStorage.enabled=true \
 --set cluster.enabled=true \
---set cluster.recplicas=3 \
+--set cluster.replicas=3 \
 --set auth.enabled=true \
---set-string auth.token="secret"
+--set auth.token="secret"
 ```
 
 This chart will create the necessary StatefulSet, Service, PVCs etc. for the NATS cluster. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
@@ -215,7 +215,7 @@ In this section, we are going to prepare the necessary resources (i.e. connectio
 
 ### Ensure NATS Addon
 
-When you install Stash Enterprise version, it will automatically install all the official addons. Make sure that NATS addon was installed properly using the following command.
+When you install Stash Enterprise version, it will automatically install all the official addons. Make sure that NATS addon has been installed properly using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep nats
@@ -227,7 +227,7 @@ This addon should be able to take backup of the NATS streams with matching major
 
 ### Create Secret
 
- Lets create a secret with access credentials.  Below is the YAML of `Secret` object we are going to create.
+ Lets create a secret with token auth credentials.  Below is the YAML of `Secret` object we are going to create.
 
 ```yaml
 apiVersion: v1
@@ -243,7 +243,7 @@ data:
 
 Let's create the `Secret` we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/secret.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token-auth/examples/secret.yaml
 secret/sample-nats-auth created 
 ```
 
@@ -270,7 +270,7 @@ spec:
       scheme: nats
   secret:
     name: sample-nats-auth
-  type: nats
+  type: nats.io/nats
   version: 2.4.0
 ```
 
@@ -283,7 +283,7 @@ Here,
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/nats/authentications/token-auth/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/sample-nats created
 ```
 
@@ -327,7 +327,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token-auth/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -350,7 +350,7 @@ metadata:
 spec:
   task:
     name: nats-backup-2.4.0
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   repository:
     name: gcs-repo
   target:
@@ -366,12 +366,7 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi  
-  runtimeSettings:
-    pod:
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0
+          storage: 1Gi
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
@@ -385,13 +380,12 @@ Here,
 - `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
 - `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
 - `spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the dumped data temporarily before uploading it into the cloud bucket.
-- `spec.runtimeSettings.pod.securityContext` specifies security options that backup job’s pod should run with.
 - `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
 
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token-auth/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-nats-backup created
 ```
 
@@ -404,7 +398,7 @@ Verify that the CronJob has been created using the following command,
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup   */5 * * * *   False     0        <none>          14s
+stash-backup-sample-nats-backup    */5 * * * *   False     0        <none>          14s
 ```
 
 #### Wait for BackupSession
@@ -434,9 +428,10 @@ gcs-repo   true        1.382 KiB   1                9m4s                     24m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/nats/sample-nats` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/authentications/token/images/sample-nats-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/authentications/token-auth/images/sample-nats-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
+
 
 
 
@@ -466,7 +461,7 @@ Verify that the `BackupConfiguration` has been paused,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
 NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.4.0   */2 * * * *   true     2d18h
+sample-nats-backup   nats-backup-2.4.0   */5 * * * *   true     2d18h
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -476,7 +471,7 @@ Stash will also suspend the respective CronJob.
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                              SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup   */2 * * * *   True      0        56s             2d18h
+stash-backup-sample-nats-backup   */5 * * * *   True      0        56s             2d18h
 ```
 
 #### Simulate Disaster
@@ -538,13 +533,13 @@ Here,
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore NATS streams.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
 - `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
-- `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before restoring the streams.
+- `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before injecting into the NATS server.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the streams.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/token-auth/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-nats-restore created
 ```
 
@@ -624,7 +619,7 @@ Verify that the `BackupConfiguration` has been resumed,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
 NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.4.0   */2 * * * *   true     2d19h
+sample-nats-backup   nats-backup-2.4.0   */5 * * * *   false    2d19h
 ```
 
 Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
@@ -632,7 +627,7 @@ Here,  `false` in the `PAUSED` column means the backup has been resumed successf
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup    */2 * * * *   False     0        3m24s           4h54m
+stash-backup-sample-nats-backup    */5 * * * *   False     0        3m24s           4h54m
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.

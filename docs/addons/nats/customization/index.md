@@ -20,13 +20,13 @@ Stash provides rich customization supports for the backup and restore process to
 
 ## Customizing Backup Process
 
-In this section, we are going to show you how to customize the backup process. Here, we are going to show some examples of providing arguments to the backup process, running the backup process as a specific user, ignoring some indexes during the backup process, etc.
+In this section, we are going to show you how to customize the backup process. Here, we are going to show some examples of providing arguments to the backup process, running the backup process as a specific user, taking backup of specific streams, etc.
 
-### Backup specific streams
+### Passing arguments to the backup process
+Stash NATS addon uses NATS CLI for backup. You can pass arguments to the backup command of the NATS CLI through `args` param under `task.params` section.
 
-By default stash will take backup of all the streams. If you want to take backup of specific streams, you can pass a list of streams through `streams` param under `task.params` section.
+The below example shows how you can pass the `--check` to check a stream for health prior to backup.
 
-The below example shows how you can pass the `"str1, str2"` to take backup of the streams `str1` and ` str2`.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -35,12 +35,44 @@ metadata:
   name: sample-nats-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
+  task:
+    name: nats-backup-2.4.0
+    params:
+    - name: args
+      value: --check
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-nats
+  retentionPolicy:
+    name: keep-last-5
+    keepLast: 5
+    prune: true
+```
+
+### Backup specific streams
+
+Stash takes backup of all the streams by default. If you want to take backup of specific streams, you can pass a list of streams through `streams` param under `task.params` section.
+
+The below example shows how you can pass the `"str1,str2"` to take backup of the streams `str1` and ` str2`.
+
+```yaml
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: sample-nats-backup
+  namespace: demo
+spec:
+  schedule: "*/5 * * * *"
   task:
     name: nats-backup-2.4.0
     params:
     - name: streams
-      value: "str1, str2"
+      value: "str1,str2"
   repository:
     name: gcs-repo
   target:
@@ -65,7 +97,7 @@ metadata:
   name: sample-nats-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   task:
     name: nats-backup-2.4.0
   repository:
@@ -97,7 +129,7 @@ metadata:
   name: sample-nats-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   task:
     name: nats-backup-2.4.0
   repository:
@@ -133,7 +165,7 @@ metadata:
   name: sample-nats-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   task:
     name: nats-backup-2.4.0
   repository:
@@ -159,9 +191,67 @@ To know more about the available options for retention policies, please visit [h
 
 In this section, we are going to show how you can overwrite existing streams, restore a specific snapshot, run restore job as a specific user, etc.
 
+### Passing arguments to the restore process
+Stash NATS addon uses NATS CLI for restore. You can pass arguments to the restore command of NATS CLI through `args` param under `task.params` section.
+
+The below example shows how you can pass the `--no-progress` to disable the progress using the terminal bar. It will then issue log lines instead.
+
+
+```yaml
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: sample-nats-restore
+  namespace: demo
+spec:
+  task:
+    name:nats-backup-2.4.0
+    params:
+    - name: args
+      value: --no-progress
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-nats
+  rules:
+  - snapshots: [latest]
+```
+
+### Restore specific streams
+
+Stash restores all the streams by default. If you want to restore specific streams, you can pass a list of streams through `streams` param under `task.params` section.
+
+The below example shows how you can pass the `"str1,str2"` to restore the streams `str1` and ` str2`.
+
+```yaml
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: sample-nats-restore
+  namespace: demo
+spec:
+  task:
+    name: nats-restore-2.4.0
+    params:
+    - name: streams
+      value: "str1,str2"
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-nats
+  rules:
+  - snapshots: [latest]
+```
+
 ### Overwrite existing streams
 
-By default stash will not overwrite any existing stream during the restore process. If you want to overwrite the existing streams with new ones,  you can pass `true` to the `overwrite` params under `task.params` section. 
+Stash doesn't overwrite any existing stream by default during the restore process. If you want to overwrite the existing streams, you can pass `true` to the `overwrite` params under `task.params` section. 
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -174,7 +264,7 @@ spec:
     name:nats-backup-2.4.0
     params:
     - name: overwrite
-      value: true
+      value: "true"
   repository:
     name: gcs-repo
   target:

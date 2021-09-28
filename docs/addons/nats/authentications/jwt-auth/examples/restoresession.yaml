@@ -1,4 +1,3 @@
-
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
