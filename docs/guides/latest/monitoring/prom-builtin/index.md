@@ -47,12 +47,13 @@ If you haven't installed Stash yet, run the following command to enable Promethe
 ```bash
 $ helm install stash appscode/stash -n kube-system \
 --version {{< param "info.version" >}} \
---set features.community=true               \
---set stash-community.monitoring.agent=prometheus.io/builtin \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true \
+--set features.enterprise=true               \
+--set stash-enterprise.monitoring.agent=prometheus.io/builtin \
+--set stash-enterprise.monitoring.backup=true \
+--set stash-enterprise.monitoring.operator=true \
 --set-file global.license=/path/to/license-file.txt
 ```
+
 </div>
 <div class="tab-pane fade" id="existing-installation-tab" role="tabpanel" aria-labelledby="existing-installation-tab">
 
@@ -63,21 +64,22 @@ If you have installed Stash already in your cluster but didn't enable monitoring
 ```bash
 $ helm upgrade stash appscode/stash -n kube-system \
 --reuse-values \
---set stash-community.monitoring.agent=prometheus.io/builtin \
---set stash-community.monitoring.backup=true \
---set stash-community.monitoring.operator=true
+--set stash-enterprise.monitoring.agent=prometheus.io/builtin \
+--set stash-enterprise.monitoring.backup=true \
+--set stash-enterprise.monitoring.operator=true
 ```
+
 </div>
 </div>
 
->Use `stash-enterprise` instead of `stash-community` if you are using Stash Enterprise edition.
+>Use `stash-community` instead of `stash-enterprise` if you are using Stash Community edition.
 
-This will add the necessary annotations to `stash` Service. Prometheus server will discover the respective endpoints using those annotations.
+This will add the necessary annotations to `stash-stash-enterprise` Service. Prometheus server will discover the respective endpoints using those annotations.
 
 Let's verify the annotations has been added to the Service,
 
 ```bash
-$ kubectl get service -n kube-system stash -o yaml
+$ kubectl get service -n kube-system stash-stash-enterprise -o yaml
 ```
 
 ```yaml
@@ -85,7 +87,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    meta.helm.sh/release-name: stash
+    meta.helm.sh/release-name: stash-stash-enterprise
     meta.helm.sh/release-namespace: kube-system
     prometheus.io/operator_path: /metrics
     prometheus.io/operator_port: "8443"
@@ -97,13 +99,18 @@ metadata:
   labels:
     app.kubernetes.io/instance: stash
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: stash
-    app.kubernetes.io/version: v0.11.7
-    helm.sh/chart: stash-v0.11.7
-  name: stash
+    app.kubernetes.io/name: stash-enterprise
+    app.kubernetes.io/version: v0.15.0
+    helm.sh/chart: stash-enterprise-v0.15.0
+  name: stash-stash-enterprise
   namespace: kube-system
 spec:
-  clusterIP: 10.110.53.2
+  clusterIP: 10.96.101.136
+  clusterIPs:
+  - 10.96.101.136
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
   ports:
   - name: api
     port: 443
@@ -115,14 +122,14 @@ spec:
     targetPort: 56789
   selector:
     app.kubernetes.io/instance: stash
-    app.kubernetes.io/name: stash
+    app.kubernetes.io/name: stash-enterprise
   sessionAffinity: None
   type: ClusterIP
 status:
   loadBalancer: {}
 ```
 
-The `stash` Service has two endpoints. The `pushgateway` endpoint exports backup, restore, and repository metrics and the `api` endpoint exports Stash operator metrics.
+The `stash-stash-enterprise` Service has two endpoints. The `pushgateway` endpoint exports backup, restore, and repository metrics and the `api` endpoint exports Stash operator metrics.
 
 If you look at the annotations section of the above Service, you should see that Stash has added Prometheus specific annotations (prefixed with `prometheus.io`) to the Service.
 
@@ -152,31 +159,31 @@ In this section, we are going to configure & deploy a Prometheus server to scrap
 
 **Copy Certificate Secret:**
 
-We have deployed Stash in `kube-system` namespace. Stash exports operator metrics via TLS secured `api` endpoint. So, the Prometheus server needs to provide the respective certificate during scraping the metrics from this endpoint. Stash should create a secret named `stash-apiserver-certs` with the certificate in `kube-system`.
+We have deployed Stash in `kube-system` namespace. Stash exports operator metrics via TLS secured `api` endpoint. So, the Prometheus server needs to provide the respective certificate during scraping the metrics from this endpoint. Stash should create a secret named `stash-stash-enterprise-apiserver-certs` with the certificate in `kube-system`.
 
 Let's verify that the Secret has been created in `kube-system` namespace.
 
 ```bash
-$ kubectl get secret -n kube-system -l app.kubernetes.io/instance=stash
-NAME                   TYPE     DATA   AGE
-stash-apiserver-cert   Opaque   2      6m
-stash-license          Opaque   1      6m
+❯ kubectl get secret -n kube-system -l app.kubernetes.io/instance=stash
+NAME                                    TYPE     DATA   AGE
+stash-stash-enterprise-apiserver-cert   Opaque   2      45m
+stash-stash-enterprise-license          Opaque   1      45m
 ```
 
 Now, we have to copy this Secret in `monitoring` namespace so that we can mount the certificate into our Prometheus server.
 
-Let's copy the `stash-apiserver-cert` Secret into `monitoring` namespace using the following command,
+Let's copy the `stash-stash-enterprise-apiserver-cert` Secret into `monitoring` namespace using the following command,
 
 ```bash
-kubectl get secret stash-apiserver-cert --namespace=kube-system -oyaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=monitoring -f -
+❯ kubectl get secret stash-stash-enterprise-apiserver-cert --namespace=kube-system -oyaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=monitoring -f -
 ```
 
 Verify that the Secret has been copied successfully in the `monitoring` namespace,
 
 ```bash
-$ kubectl get secret -n monitoring -l app.kubernetes.io/instance=stash
-NAME                   TYPE     DATA   AGE
-stash-apiserver-cert   Opaque   2      109s
+❯ kubectl get secret -n monitoring -l app.kubernetes.io/instance=stash
+NAME                                    TYPE     DATA   AGE
+stash-stash-enterprise-apiserver-cert   Opaque   2      21s
 ```
 
 **Create RBAC:**
@@ -184,7 +191,7 @@ stash-apiserver-cert   Opaque   2      109s
 Now, let's create the necessary RBAC stuffs for the Prometheus server,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/examples/prom-rbac.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/prom-builtin/examples/prom-rbac.yaml
 clusterrole.rbac.authorization.k8s.io/stash-prometheus-server created
 serviceaccount/stash-prometheus-server created
 clusterrolebinding.rbac.authorization.k8s.io/stash-prometheus-server created
@@ -261,8 +268,8 @@ data:
       - role: endpoints
       bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       tls_config:
-        ca_file: /etc/prometheus/secret/stash-apiserver-cert/tls.crt
-        server_name: stash.kube-system.svc
+        ca_file: /etc/prometheus/secret/stash-stash-enterprise-apiserver-cert/tls.crt
+        server_name: stash-stash-enterprise.kube-system.svc
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_instance]
         regex: stash # default label for stash Service is "app.kubernetes.io/instance: stash". customize this field according to label of stash Service of your setup.
@@ -302,14 +309,14 @@ data:
 
 Here, we have two scraping jobs. The `stash-pushgateway` job scrapes the backup and restore metrics and the `stash-operator` job scrapes operator metrics.
 
-Notice the `tls_config` field of `stash-operator` job. We have provided the certificate file through `ca_file` field. This certificate comes from `stash-apiserver-cert` that we are going to mount in the Prometheus Deployment. Here, `server_name` is used to verify hostname. In our case, the certificate is valid for hostname `server` and `stash.kube-system.svc`.
+Notice the `tls_config` field of `stash-operator` job. We have provided the certificate file through `ca_file` field. This certificate comes from `stash-stash-enterprise-apiserver-cert` that we are going to mount in the Prometheus Deployment. Here, `server_name` is used to verify hostname. In our case, the certificate is valid for hostname `server` and `stash-stash-enterprise.kube-system.svc`.
 
 Also, note that we have provided a bearer-token file through `bearer_token_file` field. This file is a token for `stash-prometheus-server` ServiceAccount that we have created during creating the RBAC stuffs. This is required for authorizing Prometheus to Stash API Server.
 
 Let's create the ConfigMap we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/examples/prom-config.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/prom-builtin/examples/prom-config.yaml
 configmap/stash-prometheus-server-conf created
 ```
 
@@ -347,8 +354,8 @@ spec:
           mountPath: /etc/prometheus/
         - name: prometheus-storage-volume
           mountPath: /prometheus/
-        - name: stash-apiserver-cert
-          mountPath: /etc/prometheus/secret/stash-apiserver-cert
+        - name: stash-stash-enterprise-apiserver-cert
+          mountPath: /etc/prometheus/secret/stash-stash-enterprise-apiserver-cert
       volumes:
       - name: prometheus-config-volume
         configMap:
@@ -356,21 +363,21 @@ spec:
           name: stash-prometheus-server-conf
       - name: prometheus-storage-volume
         emptyDir: {}
-      - name: stash-apiserver-cert
+      - name: stash-stash-enterprise-apiserver-cert
         secret:
           defaultMode: 420
-          secretName: stash-apiserver-cert
+          secretName: stash-stash-enterprise-apiserver-cert
           items: # avoid mounting private key
           - key: tls.crt
             path: tls.crt
 ```
 
-Notice that, we have mounted `stash-apiserver-cert` secret as a volume at `/etc/prometheus/secret/stash-apiserver-cert` directory. We have also mounted the ConfigMap `stash-prometheus-server-conf` that we have created earlier with the necessary configuration to scrape metrics from Stash.
+Notice that, we have mounted `stash-stash-enterprise-apiserver-cert` secret as a volume at `/etc/prometheus/secret/stash-stash-enterprise-apiserver-cert` directory. We have also mounted the ConfigMap `stash-prometheus-server-conf` that we have created earlier with the necessary configuration to scrape metrics from Stash.
 
 Let's create the Deployment we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/examples/prom-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/latest/monitoring/prom-builtin/examples/prom-deployment.yaml
 deployment.apps/stash-prometheus-server created
 ```
 
@@ -399,7 +406,7 @@ Forwarding from [::1]:9090 -> 9090
 Now, we can access the web UI at `localhost:9090`. Open [http://localhost:9090/targets](http://localhost:9090/targets) in your browser. You should see `pushgateway` and `api` endpoints of `stash` service as targets.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/images/prom_builtin_target.png">
+  <img alt="Stash Monitoring Flow" src="/docs/guides/latest/monitoring/prom-builtin/images/prom_builtin_target.png">
 <figcaption align="center">Fig: Prometheus dashboard</figcaption>
 </figure>
 
@@ -416,7 +423,7 @@ kubectl delete clusterrolebinding stash-prometheus-server
 kubectl delete serviceaccount/stash-prometheus-server -n monitoring
 kubectl delete configmap/stash-prometheus-server-conf -n monitoring
 kubectl delete deployment stash-prometheus-server -n monitoring
-kubectl delete secret stash-apiserver-cert -n monitoring
+kubectl delete secret stash-stash-enterprise-apiserver-cert -n monitoring
 
 kubectl delete ns monitoring
 ```
