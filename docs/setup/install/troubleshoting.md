@@ -26,15 +26,15 @@ In addition, if your GKE cluster is a [private cluster](https://cloud.google.com
 
 ## Configuring Network Volume Accessor
 
-For network volume such as NFS, Stash needs to deploy a helper deployment in the same namespace as the Repository that uses the NFS as backend to provide Snapshot listing facility. We call this helper deployment network volume accessor. You can configure its resources, user id, privileged permission etc. during installation as below,
+For network volume such as NFS, Stash needs to deploy a helper deployment in the same namespace as the Repository that uses the NFS as backend to provide Snapshot listing facility. We call this helper deployment network volume accessor. You can configure its resources, user id, privileged permission etc. Run the following command to enable network volume accessor,
 
 ```bash
-$ helm install stash-enterprise appscode/stash-enterprise \
-    -n kube-system                                        \
-    --set netVolAccessor.cpu=200m                         \
-    --set netVolAccessor.memory=128Mi                     \
-    --set netVolAccessor.runAsUser=0                      \
-    --set netVolAccessor.privileged=true
+$ helm upgrade stash appscode/stash -n kube-system        \
+    --reuse-values                                        \
+    --set stash-enterprise.netVolAccessor.cpu=200m        \
+    --set stash-enterprise.netVolAccessor.memory=128Mi    \
+    --set stash-enterprise.netVolAccessor.runAsUser=0     \
+    --set stash-enterprise.netVolAccessor.privileged=true
 ```
 
 ## Detect Stash version
