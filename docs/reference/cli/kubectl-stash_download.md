@@ -27,7 +27,7 @@ kubectl-stash download [flags]
       --docker-registry string   Docker image registry for restic cli (default "restic")
   -h, --help                     help for download
       --host string              Name of the source host machine (default "host-0")
-      --image-tag string         Restic docker image tag (default "0.9.5")
+      --image-tag string         Restic docker image tag (default "latest")
       --paths strings            List of directories to be restored
       --snapshots strings        List of snapshots to be restored
 ```
