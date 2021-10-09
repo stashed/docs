@@ -1,0 +1,20 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: sample-nats-restore
+  namespace: demo
+spec:
+  task:
+    name: nats-restore-2.6.1
+    params:
+    - name: streams
+      value: "str1,str2"
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-nats
+  rules:
+  - snapshots: [latest]

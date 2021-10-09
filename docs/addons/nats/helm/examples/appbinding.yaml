@@ -1,0 +1,15 @@
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: sample-nats
+  name: sample-nats
+  namespace: demo
+spec:
+  clientConfig:
+    service:
+      name: sample-nats
+      port: 4222
+      scheme: nats
+  type: nats.io/nats
+  version: 2.6.1
