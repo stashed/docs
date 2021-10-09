@@ -53,7 +53,6 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: selfsigning
-  namespace: demo
 spec:
   selfSigned: {}
 ```
@@ -101,6 +100,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: nats-ca
+  namespace: demo
 spec:
   ca:
     secretName: nats-ca
