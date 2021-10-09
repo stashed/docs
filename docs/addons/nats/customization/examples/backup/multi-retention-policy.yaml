@@ -6,7 +6,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   repository:
     name: gcs-repo
   target:

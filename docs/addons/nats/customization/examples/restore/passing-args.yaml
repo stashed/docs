@@ -5,7 +5,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: nats-restore-2.4.0
+    name: nats-restore-2.6.1
     params:
     - name: args
       value: --no-progress

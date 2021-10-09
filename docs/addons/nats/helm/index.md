@@ -97,7 +97,7 @@ Once the nats server pods are in `Running` state, verify that the NATS server is
 ```bash
 ❯ kubectl logs -n demo sample-nats-0 -c nats
 [7] 2021/09/06 08:33:53.111508 [INF] Starting nats-server
-[7] 2021/09/06 08:33:53.111560 [INF] Version:  2.4.0
+[7] 2021/09/06 08:33:53.111560 [INF] Version:  2.6.1
 ...
 [7] 2021/09/06 08:33:53.116004 [INF] Server is ready
 ```
@@ -215,8 +215,8 @@ When you install Stash Enterprise version, it will automatically install all the
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep nats
-nats-backup-2.4.0            24m
-nats-restore-2.4.0           24m
+nats-backup-2.6.1            24m
+nats-restore-2.6.1           24m
 ```
 
 This addon should be able to take backup of the NATS streams with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/nats/README.md#addon-version-compatibility).
@@ -242,7 +242,7 @@ spec:
       port: 4222
       scheme: nats
   type: nats.io/nats
-  version: 2.4.0
+  version: 2.6.1
 ```
 
 Here,
@@ -319,7 +319,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   schedule: "*/5 * * * *"
   repository:
     name: gcs-repo
@@ -429,7 +429,7 @@ Verify that the `BackupConfiguration` has been paused,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
 NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.4.0   */5 * * * *   true     2d18h
+sample-nats-backup   nats-backup-2.6.1   */5 * * * *   true     2d18h
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -473,7 +473,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: nats-restore-2.4.0
+    name: nats-restore-2.6.1
   repository:
     name: gcs-repo
   target:
@@ -582,7 +582,7 @@ Verify that the `BackupConfiguration` has been resumed,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
 NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.4.0   */5 * * * *   false    2d19h
+sample-nats-backup   nats-backup-2.6.1   */5 * * * *   false    2d19h
 ```
 
 Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.

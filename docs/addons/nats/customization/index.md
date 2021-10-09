@@ -37,7 +37,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
     params:
     - name: args
       value: --check
@@ -69,7 +69,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
     params:
     - name: streams
       value: "str1,str2"
@@ -99,7 +99,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   repository:
     name: gcs-repo
   target:
@@ -131,7 +131,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   repository:
     name: gcs-repo
   target:
@@ -167,7 +167,7 @@ metadata:
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   repository:
     name: gcs-repo
   target:
@@ -205,7 +205,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name:nats-backup-2.4.0
+    name:nats-backup-2.6.1
     params:
     - name: args
       value: --no-progress
@@ -234,7 +234,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: nats-restore-2.4.0
+    name: nats-restore-2.6.1
     params:
     - name: streams
       value: "str1,str2"
@@ -261,7 +261,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name:nats-backup-2.4.0
+    name:nats-backup-2.6.1
     params:
     - name: overwrite
       value: "true"
@@ -303,7 +303,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   repository:
     name: gcs-repo
   target:
@@ -329,7 +329,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   repository:
     name: gcs-repo
   target:
@@ -358,7 +358,7 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: nats-backup-2.4.0
+    name: nats-backup-2.6.1
   repository:
     name: gcs-repo
   target:
