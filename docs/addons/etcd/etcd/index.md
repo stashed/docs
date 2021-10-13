@@ -12,15 +12,15 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Take a logical backup of the Redis database using Stash
+# Take a logical backup of the Etcd database using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of Redis databases. This guide will show you how you can take a logical backup of your Redis databases and restore them using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd databases. This guide will show you how you can take a logical backup of your Etcd databases and restore them using Stash.
 
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
-- If you are not familiar with how Stash backup and restore Redis databases, please check the following guide [here](/docs/addons/redis/overview/index.md).
+- If you are not familiar with how Stash backup and restore Redis databases, please check the following guide [here](/docs/addons/etcd/overview/index.md).
 
 You have to be familiar with following custom resources:
 
@@ -38,66 +38,108 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/redis/helm/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples).
 
-## Prepare Redis
+## Prepare Etcd
 
-In this section, we are going to deploy a Redis database. Then, we are going to insert some sample data into it.
+In this section, we are going to deploy a Etcd database. Then, we are going to insert some sample data into it.
 
 ### Deploy Redis
 
-At first, let's deploy a Redis database. Here, we are going to use [bitnami/redis](https://artifacthub.io/packages/helm/bitnami/redis)  chart from [ArtifactHub](https://artifacthub.io/).
+At first, let's deploy a Etcd database. Here, we are going to use a statefulset and a service for deploying a Etcd database cluster consisting of three members. The service is used for handling peer communications and client requests.
 
-Let's deploy a Redis database named `sample-redis` using Helm as below,
+Let's deploy a Etcd database cluster named `etcd` using a statefulset and a service  from the YAML manifest file as below,
 
-```bash
-# Add bitnami chart registry
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-# Update helm registries
-$ helm repo update
-# Install bitnami/redis chart into demo namespace
-$ helm install sample-redis bitnami/redis -n demo
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: demo
+  name: etcd
+spec:
+  clusterIP: None
+  ports:
+    - port: 2379
+      name: client
+    - port: 2380
+      name: peer
+  selector:
+    app: etcd
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: etcd
+  namespace: demo
+  labels:
+    app: etcd
+spec:
+  serviceName: etcd
+  replicas: 3
+  selector:
+    matchLabels:
+      app: etcd
+  template:
+    metadata:
+      name: etcd
+      labels:
+        app: etcd
+    spec:
+      containers:
+        - name: etcd
+          image: gcr.io/etcd-development/etcd:v3.5.0
+          ports:
+            - containerPort: 2379
+              name: client
+            - containerPort: 2380
+              name: peer
+          volumeMounts:
+            - name: data
+              mountPath: /var/run/etcd
+          command:
+            - /bin/sh
+            - -c
+            - |
+              PEERS="etcd-0=http://etcd-0.etcd:2380,etcd-1=http://etcd-1.etcd:2380,etcd-2=http://etcd-2.etcd:2380"
+              exec etcd --name ${HOSTNAME} \
+                --listen-peer-urls http://0.0.0.0:2380 \
+                --listen-client-urls http://0.0.0.0:2379 \
+                --initial-cluster etcd-0=http://etcd-0.etcd:2380,etcd-1=http://etcd-1.etcd:2380,etcd-2=http://etcd-2.etcd:2380 \
+                --initial-cluster-token etcd-cluster-1 \
+                --advertise-client-urls http://${HOSTNAME}.etcd:2379 \
+                --initial-advertise-peer-urls http://${HOSTNAME}.etcd:2380 \
+                --data-dir /var/run/etcd
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        namespace: demo
+      spec:
+        storageClassName: standard
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
 ```
 
-This chart will create the necessary StatefulSet, Secret, Service etc. for the database. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
-
+Let's create the `Etcd cluster` we have shown above,
 ```bash
-❯ kubectl get-all -n demo -l app.kubernetes.io/instance=sample-redis
-NAME                                                        NAMESPACE  AGE
-configmap/sample-redis-configuration                        demo       117s  
-configmap/sample-redis-health                               demo       117s  
-configmap/sample-redis-scripts                              demo       117s  
-endpoints/sample-redis-headless                             demo       117s  
-endpoints/sample-redis-master                               demo       117s  
-endpoints/sample-redis-replicas                             demo       117s  
-persistentvolumeclaim/redis-data-sample-redis-master-0      demo       117s  
-persistentvolumeclaim/redis-data-sample-redis-replicas-0    demo       117s  
-persistentvolumeclaim/redis-data-sample-redis-replicas-1    demo       79s   
-persistentvolumeclaim/redis-data-sample-redis-replicas-2    demo       51s   
-pod/sample-redis-master-0                                   demo       117s  
-pod/sample-redis-replicas-0                                 demo       117s  
-pod/sample-redis-replicas-1                                 demo       79s   
-pod/sample-redis-replicas-2                                 demo       51s   
-secret/sample-redis                                         demo       117s  
-serviceaccount/sample-redis                                 demo       117s  
-service/sample-redis-headless                               demo       117s  
-service/sample-redis-master                                 demo       117s  
-service/sample-redis-replicas                               demo       117s  
-controllerrevision.apps/sample-redis-master-755dd8b64d      demo       117s  
-controllerrevision.apps/sample-redis-replicas-7b8c7694bf    demo       117s  
-statefulset.apps/sample-redis-master                        demo       117s  
-statefulset.apps/sample-redis-replicas                      demo       117s  
-endpointslice.discovery.k8s.io/sample-redis-headless-6bvt2  demo       117s  
-endpointslice.discovery.k8s.io/sample-redis-master-78wcv    demo       117s  
-endpointslice.discovery.k8s.io/sample-redis-replicas-vhc7z  demo       117s 
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd.yaml
+service/etcd created
+statefulset.apps/etcd created
 ```
 
-Now, wait for the database pod `sample-redis-master-0` to go into `Running` state,
+
+This YAML will create the necessary StatefulSet, Service for the database. 
+
+Now, wait for the database pods `etcd-0, etcd-1, etcd-2` to go into `Running` state,
 
 ```bash
-❯ kubectl get pod -n demo sample-redis-master-0
-NAME                    READY   STATUS    RESTARTS   AGE
-sample-redis-master-0   1/1     Running   0          2m57s
+❯ kc get pods -n demo --selector=app=etcd
+
+NAME     READY   STATUS    RESTARTS   AGE
+etcd-0   1/1     Running   0          11s
+etcd-1   1/1     Running   0          10s
+etcd-2   1/1     Running   0          9s
 ```
 
 Once the database pod is in `Running` state, verify that the database is ready to accept the connections.

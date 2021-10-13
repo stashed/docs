@@ -24,10 +24,10 @@ Stash supports taking logical backup of Etcd databases using [etcdctl](https://g
 
 ### How Logical Backup Works
 
-The following diagram shows how Stash takes logical backup of a Redis database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash takes logical backup of a Etcd database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Etcd Backup Overview" src="/docs/addons/etcd/overview/images/redis-logical-backup.svg">
+  <img alt="Etcd Backup Overview" src="/docs/addons/etcd/overview/images/etcd-logical-backup.svg">
   <figcaption align="center">Fig: Etcd Logical Backup Overview</figcaption>
 </figure>
 
@@ -84,4 +84,4 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-- Backup your Redis database using Stash following the guide from [here](/docs/addons/etcd/etcd/index.md).
+- Backup your Etcd database using Stash following the guide from [here](/docs/addons/etcd/etcd/index.md).
