@@ -1,11 +1,11 @@
 ---
-title: Redis Auto-Backup | Stash
-description: Backup Redis using Stash Auto-Backup
+title: TLS-secured-Etcd Backup | Stash
+description: Backup TLS-secured-Etcd using Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-redis-auto-backup
-    name: Auto-Backup
-    parent: stash-redis
+    identifier: tls-secured-etcd-backup
+    name: TLS-secured-etcd
+    parent: stash-etcd
     weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}

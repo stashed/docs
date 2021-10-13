@@ -40,6 +40,6 @@ Any addon with matching major version with the database version should be able t
 Stash Etcd documentations are organized as below:
 
 - [How does it works?](/docs/addons/etcd/overview/index.md) gives an overview of how backup and restore process for etcd database works in Stash.
-- [Etcd](/docs/addons/etcd/index.md) shows how to backup and restore a Helm managed Redis database.
-- [TLS-enabled-etcd](/docs/addons/redis/tls-enabled-etcd/index.md) shows how to configure a generic backup template for all the Redis databases of a cluster.
+- [Etcd](/docs/addons/etcd/etcd/index.md) shows how to backup and restore a Etcd database.
+- [TLS-secured-Etcd](/docs/addons/etcd/tls-secured-etcd/index.md) shows how to configure a backup and restore process for TLS secured Etcd database.
 - [Customizing Backup & Restore Process](/docs/addons/etcd/customization/index.md) shows how to customize the backup & restore process.

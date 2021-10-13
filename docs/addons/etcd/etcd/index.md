@@ -1,11 +1,11 @@
 ---
-title: Logical Backup & Restore Redis | Stash
-description: Take logical backup of Redis database using Stash
+title: Logical Backup & Restore Etcd | Stash
+description: Take logical backup of Etcd database using Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-redis-helm
-    name: Helm managed Redis
-    parent: stash-redis
+    identifier: stash-etcd
+    name: Etcd
+    parent: stash-etcd
     weight: 20
 product_name: stash
 menu_name: docs_{{ .version }}

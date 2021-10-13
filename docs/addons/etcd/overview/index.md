@@ -1,11 +1,11 @@
 ---
-title: Redis Backup & Restore Overview | Stash
-description: How Redis Backup & Restore Works in Stash
+title: Etcd Backup & Restore Overview | Stash
+description: How Etcd Backup & Restore Works in Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-redis-overview
+    identifier: stash-etcd-overview
     name: How does it works?
-    parent: stash-redis
+    parent: stash-etcd
     weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}

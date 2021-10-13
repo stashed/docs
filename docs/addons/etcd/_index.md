@@ -4,7 +4,7 @@ menu:
   docs_{{ .version }}:
     identifier: stash-etcd
     name: Etcd
-    parent: etcd-addons
+    parent: stash-addons
     weight: 90
 menu_name: docs_{{ .version }}
 ---

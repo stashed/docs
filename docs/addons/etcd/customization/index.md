@@ -1,11 +1,11 @@
 ---
-title: Redis Backup Customization | Stash
-description: Customizing Redis Backup and Restore process with Stash
+title: Etcd Backup Customization | Stash
+description: Customizing Etcd Backup and Restore process with Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-redis-customization
+    identifier: stash-etcd-customization
     name: Customizing Backup & Restore Process
-    parent: stash-redis
+    parent: stash-etcd
     weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}
