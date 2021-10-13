@@ -14,21 +14,21 @@ section_menu_id: stash-addons
 
 {{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
-# How Stash Backups & Restores Redis Database
+# How Stash Backups & Restores Etcd Database
 
-Stash `{{< param "info.version" >}}` supports backup and restore operation of many databases. This guide will give you an overview of how Redis database backup and restore process works in Stash.
+Stash `{{< param "info.version" >}}` supports backup and restore operation of many databases. This guide will give you an overview of how Etcd database backup and restore process works in Stash.
 
 ## Logical Backup
 
-Stash supports taking logical backup of Redis databases using [redis-dump-go](https://github.com/yannh/redis-dump-go). It is the most flexible way to perform a backup and restore, and a good choice when the data size is relatively small.
+Stash supports taking logical backup of Etcd databases using [etcdctl](https://github.com/etcd-io/etcd/tree/main/etcdctl). It is the most flexible way to perform a backup and restore, and a good choice when the data size is relatively small.
 
 ### How Logical Backup Works
 
 The following diagram shows how Stash takes logical backup of a Redis database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Redis Backup Overview" src="/docs/addons/redis/overview/images/redis-logical-backup.svg">
-  <figcaption align="center">Fig: Redis Logical Backup Overview</figcaption>
+  <img alt="Etcd Backup Overview" src="/docs/addons/etcd/overview/images/redis-logical-backup.svg">
+  <figcaption align="center">Fig: Etcd Logical Backup Overview</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -53,17 +53,17 @@ The backup process consists of the following steps:
 
 10. The backup Job reads necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-11. Then, the Job dumps the targeted database and uploads the output to the backend. Stash pipes the output of dump command to uploading process. Hence, backup Job does not require a large volume to hold the entire dump output.
+11. Then, the Job takes snapshot of the targeted database using etcdctl and uploads the snapshot to the backend. Stash stores the snapshot temporarily in a temporary directory before uploading into the backend. Hence, you can provide a tempdir template using `spec.TempDir` field of `BackupConfiguration` crd to use to store those dumped files temporarily.
 
 12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
 
 ### How Restore from Logical Backup Works
 
-The following diagram shows how Stash restores a Redis database from a logical backup. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash restores a Etcd database from a logical backup. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Database Restore Overview" src="/docs/addons/redis/overview/images/redis-logical-restore.svg">
-  <figcaption align="center">Fig: Redis Logical Restore Process Overview</figcaption>
+  <img alt="Etcd Database Restore Overview" src="/docs/addons/etcd/overview/images/etcd-logical-restore.svg">
+  <figcaption align="center">Fig: Etcd Logical Restore Process Overview</figcaption>
 </figure>
 
 The restore process consists of the following steps:
@@ -78,10 +78,10 @@ The restore process consists of the following steps:
 
 5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up data from the backend and injects into the desired database. Stash pipes the downloaded data to the respective database tool to inject into the database. Hence, restore job does not require a large volume to download entire backup data inside it.
+6. Then, the job downloads the backed up snapshot from the backend and insert into the desired database. Stash stores the downloaded files temporarily before inserting into the targeted database. Hence, you can provide a tempdir template using `spec.TempDir` field of `RestoreSession` crd to use to store those restored files temporarily.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 
 ## Next Steps
 
-- Backup your Redis database using Stash following the guide from [here](/docs/addons/redis/helm/index.md).
+- Backup your Redis database using Stash following the guide from [here](/docs/addons/etcd/etcd/index.md).
