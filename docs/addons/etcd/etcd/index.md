@@ -121,7 +121,7 @@ spec:
             storage: 1Gi
 ```
 
-Let's create the `Etcd cluster` we have shown above,
+Let's create the `Etcd database cluster` we have shown above,
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd.yaml
 service/etcd created
@@ -145,87 +145,52 @@ etcd-2   1/1     Running   0          9s
 Once the database pod is in `Running` state, verify that the database is ready to accept the connections.
 
 ```bash
-❯ kubectl logs -n demo sample-redis-master-0
-1:C 28 Jul 2021 13:03:28.191 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-1:C 28 Jul 2021 13:03:28.191 # Redis version=6.2.5, bits=64, commit=00000000, modified=0, pid=1, just started
-1:C 28 Jul 2021 13:03:28.191 # Configuration loaded
-1:M 28 Jul 2021 13:03:28.192 * monotonic clock: POSIX clock_gettime
-1:M 28 Jul 2021 13:03:28.192 * Running mode=standalone, port=6379.
-1:M 28 Jul 2021 13:03:28.192 # Server initialized
-1:M 28 Jul 2021 13:03:28.193 * Ready to accept connections
+❯ 
 ```
 
 From the above log, we can see the database is ready to accept connections.
 
 ### Insert Sample Data
 
-Now, we are going to exec into the database pod and create some sample data. The helm chart has created a secret with access credentials. Let's find out the credentials from the Secret,
+Now, we are going to exec into the database pod and create some sample data. To use basic-authentication from Stash, we need to create a secret containing access credentials. Here, we are going to use `Bob` as username and `etcd-password` as password to authenticate and insert the sample data into our Etcd database. We have to encode our username and  Let's create the secret containing the username and password of Etcd database from the following YAML,
 
 ```yaml
-❯ kubectl get secret -n demo sample-redis -o yaml
 apiVersion: v1
-data:
-  redis-password: WTFZTENrZmNpcw==
 kind: Secret
 metadata:
-  annotations:
-    meta.helm.sh/release-name: sample-redis
-    meta.helm.sh/release-namespace: demo
-  creationTimestamp: "2021-07-28T13:03:23Z"
-  labels:
-    app.kubernetes.io/instance: sample-redis
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    helm.sh/chart: redis-14.8.6
-  name: sample-redis
+  name: etcd-stash-auth
   namespace: demo
-  resourceVersion: "530037"
-  uid: a48ce23a-105d-4d92-9067-c80623cbe269
 type: Opaque
-
+data:
+  username: Qm9iCg==
+  password: ZXRjZC1wYXNzd29yZAo=
 ```
 
-Here, we are going to use `redis-password` to authenticate and insert the sample data.
-
-At first, let's export the password as environment variables to make further commands re-usable.
-
+Let's create the `Etcd database cluster` we have shown above,
 ```bash
-export PASSWORD=$(kubectl get secrets -n demo sample-redis -o jsonpath='{.data.\redis-password}' | base64 -d)
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd-secret.yaml
+secret/etcd-stash-auth created
 ```
 
 Now, let's exec into the database pod and insert some sample data,
-
 ```bash
-❯ kubectl exec -it -n demo sample-redis-master-0 -- redis-cli -a $PASSWORD
-Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
-# insert some key value pairs
-127.0.0.1:6379> set key1 value1
-OK
-127.0.0.1:6379> set key2 value2
-OK
-# check the inserted data
-127.0.0.1:6379> get key1
-"value1"
-127.0.0.1:6379> get key2
-"value2"
-# exit from redis-cli
-127.0.0.1:6379> exit
+❯ 
 ```
 
-We have successfully deployed a Redis database and inserted some sample data into it. In the subsequent sections, we are going to backup these data using Stash.
+We have successfully deployed a Etcd database and inserted some sample data into it. In the subsequent sections, we are going to backup these data using Stash.
 
 ## Prepare for Backup
 
 In this section, we are going to prepare the necessary resources (i.e. database connection information, backend information, etc.) before backup.
 
-### Ensure Redis Addon
+### Ensure Etcd Addon
 
-When you install Stash Enterprise version, it will automatically install all the official database addons. Make sure that Redis addon was installed properly using the following command.
+When you install Stash Enterprise version, it will automatically install all the official database addons. Make sure that Etcd addon was installed properly using the following command.
 
 ```bash
-❯ kubectl get tasks.stash.appscode.com | grep redis
-redis-backup-6.2.5            24m
-redis-restore-6.2.5           24m
+❯ kubectl get tasks.stash.appscode.com | grep etcd
+etcd-backup-3.5.0             18m
+etcd-restore-3.5.0            18m
 ```
 
 This addon should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/redis/README.md#addon-version-compatibility).

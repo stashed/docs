@@ -1,20 +1,15 @@
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
 metadata:
-  name: sample-redis
+  name: etcd-appbinding
   namespace: demo
 spec:
   clientConfig:
     service:
-      name: sample-redis-master
-      path: /
-      port: 6379
-      scheme: http
+      name: etcd-service
+      port: 2379
+      scheme: https
   secret:
-    name: sample-redis
-  secretTransforms:
-  - renameKey:
-      from: redis-password
-      to: password
-  type: redis
-  version: 6.2.5
+    name: etcd-stash-auth
+  type: etcd
+  version: 3.5.0

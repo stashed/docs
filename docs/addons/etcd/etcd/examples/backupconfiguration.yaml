@@ -1,19 +1,24 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: sample-redis-backup
+  name: sample-etcd-backup
   namespace: demo
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: redis-backup-6.2.5
+    name: etcd-backup-3.5.0
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding 
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
   retentionPolicy:
     name: keep-last-5
     keepLast: 5

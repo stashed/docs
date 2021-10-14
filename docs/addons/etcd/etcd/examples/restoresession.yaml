@@ -1,17 +1,34 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: sample-redis-restore
+  name: sample-etcd-restore
   namespace: demo
 spec:
   task:
-    name: redis-restore-6.2.5
+    name: etcd-restore-3.5.0 
+    params:
+      - name: initialCluster
+        value:  "etcd-0=http://etcd-0.etcd:2380,etcd-1=http://etcd-1.etcd:2380,etcd-2=http://etcd-2.etcd:2380"
+      - name: initialClusterToken
+        value: "etcd-cluster-1"
+      - name: dataDir
+        value: "/var/run/etcd"
+      - name: workloadKind
+        value: "StatefulSet"
+      - name: workloadName
+        value: "etcd"
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding 
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
   rules:
   - snapshots: [latest]
+  
