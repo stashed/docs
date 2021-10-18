@@ -6,9 +6,9 @@ metadata:
 spec:
   clientConfig:
     service:
-      name: etcd-service
+      name: etcd
       port: 2379
-      scheme: https
+      scheme: http
   secret:
     name: etcd-stash-auth
   type: etcd
