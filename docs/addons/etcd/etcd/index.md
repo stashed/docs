@@ -20,7 +20,7 @@ Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd dat
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
-- If you are not familiar with how Stash backup and restore Redis databases, please check the following guide [here](/docs/addons/etcd/overview/index.md).
+- If you are not familiar with how Stash backup and restore Etcd databases, please check the following guide [here](/docs/addons/etcd/overview/index.md).
 
 You have to be familiar with following custom resources:
 
@@ -44,11 +44,11 @@ namespace/demo created
 
 In this section, we are going to deploy an Etcd database cluster. Then, we will insert some sample data into it.
 
-### Deploy Redis
+### Deploy Etcd
 
-At first, let's deploy an Etcd database. Here, we will use a statefulset and a service for deploying an Etcd database cluster consisting of three members. The service is used for handling peer communications and client requests.
+At first, let's deploy an Etcd database cluster. Here, we will use a statefulset and a service for deploying an Etcd database cluster consisting of three members. The service is used for handling peer communications and client requests.
 
-Let's deploy an Etcd database cluster named `etcd` using a statefulset and a service  from the YAML manifest file as below,
+Let's deploy an Etcd database cluster named `etcd` using a statefulset and a service  from the YAML manifest as below,
 
 ```yaml
 apiVersion: v1
@@ -127,11 +127,9 @@ $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version"
 service/etcd created
 statefulset.apps/etcd created
 ```
+This YAML will create the necessary Statefulset, Service, PVCs for the Etcd database Cluster. 
 
-
-This YAML will create the necessary StatefulSet, Service for the database. 
-
-Now, wait for the database pods `etcd-0, etcd-1, etcd-2` to go into `Running` state,
+Now, wait for the database pods `etcd-0`, `etcd-1`, and `etcd-2` to go into `Running` state,
 
 ```bash
 ❯ kc get pods -n demo --selector=app=etcd
@@ -142,13 +140,14 @@ etcd-1   1/1     Running   0          10s
 etcd-2   1/1     Running   0          9s
 ```
 
-Once the database pod is in `Running` state, verify that the database is ready to accept the connections. For that, we have to exec into any one of the Etcd pods and run the `endpoint health` command. If the command returns a healthy state, then we can conclude that the database is ready to accept connections.
+Once the database pod is in `Running` state, verify that the database is ready to accept the connections. For that, we have to exec into any one of the Etcd database cluster pods and run the `endpoint health` command. If the command returns a healthy state, then we can conclude that the database is ready to accept connections. To exec into a database pod and check endpoint health, run the following commands,
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-0 -- /bin/sh
 127.0.0.1:2379> etcdctl endpoint health
 127.0.0.1:2379 is healthy: successfully committed proposal: took = 1.258639ms
 ```
+From the above log, we can see the Etcd database is ready to accept connections.
 
 ### Insert Sample Data
 
@@ -166,7 +165,7 @@ data:
   password: cXdl
 ```
 
-Let's create the `Etcd database cluster` we have shown above,
+Let's create the `etcd-stash-auth` secret we have shown above,
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd-secret.yaml
 secret/etcd-stash-auth created
@@ -288,7 +287,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/redis/helm/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -504,10 +503,11 @@ Once, you have created the `RestoreSession` object, Stash will create a restore 
 ```bash
 ❯ kubectl get restoresession -n demo -w
 NAME                   REPOSITORY   PHASE     DURATION          AGE
-sample-redis-restore   gcs-repo     Running                     6s
-sample-redis-restore   gcs-repo     Running                     16s
-sample-redis-restore   gcs-repo     Succeeded                   16s
-sample-redis-restore   gcs-repo     Succeeded   16.324570911s   16s
+etcd-restore           gcs-repo     Running                     9s
+etcd-restore           gcs-repo     Running                     13s
+etcd-restore           gcs-repo     Running                     72s
+etcd-restore           gcs-repo     Succeeded                   72s
+etcd-restore           gcs-repo     Succeeded  1m13s            72s
 ```
 
 The `Succeeded` phase means that the restore process has been completed successfully.
@@ -567,7 +567,7 @@ If you want to restore into a different namespace of the same cluster, you have 
 
 ### Restore Into Different Cluster
 
-If you want to restore into a different cluster, you have to install Stash in the desired cluster. Then, you have to install Stash Redis addon in that cluster too. Then, you have to create the Repository, backend Secret, AppBinding, in the desired cluster. Finally, you have to create the `RestoreSession` object in the desired cluster pointing to the Repository, AppBinding of that cluster.
+If you want to restore into a different cluster, you have to install Stash in the desired cluster. Then, you have to install Stash Etcd addon in that cluster too. Then, you have to create the Repository, backend Secret, AppBinding, in the desired cluster. Finally, you have to create the `RestoreSession` object in the desired cluster pointing to the Repository, AppBinding of that cluster.
 
 ## Cleanup
 

@@ -12,715 +12,610 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup Redis using Stash Auto-Backup
 
-Stash can be configured to automatically backup any Redis database in your cluster. Stash enables cluster administrators to deploy backup blueprints ahead of time so that the database owners can easily backup their database with just a few annotations.
+# Backup TLS secured Etcd using Stash
 
-In this tutorial, we are going to show how you can configure a backup blueprint for Redis databases in your cluster and backup them with few annotations.
+Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd databases. This guide will show you how you can backup & restore a TLS secured Etcd database using Stash.
 
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
-- If you are not familiar with how Stash backup and restore Redis databases, please check the following guide [here](/docs/addons/redis/overview/index.md).
-- If you are not familiar with how auto-backup works in Stash, please check the following guide [here](/docs/guides/latest/auto-backup/overview.md).
-- If you are not familiar with the available auto-backup options for databases in Stash, please check the following guide [here](/docs/guides/latest/auto-backup/database.md).
+- Install cert-manager in your cluster following the instruction [here](https://cert-manager.io/docs/installation/).
+- If you are not familiar with how Stash backup and restore Etcd databases, please check the following guide [here](/docs/addons/etcd/overview/index.md).
 
-You should be familiar with the following `Stash` concepts:
+You have to be familiar with following custom resources:
 
-- [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [Repository](/docs/concepts/crds/repository.md)
+- [AppBinding](/docs/concepts/crds/appbinding.md)
 - [Function](/docs/concepts/crds/function.md)
 - [Task](/docs/concepts/crds/task.md)
+- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
+- [BackupSession](/docs/concepts/crds/backupsession.md)
+- [RestoreSession](/docs/concepts/crds/restoresession.md)
 
-In this tutorial, we are going to show backup of three different Redis databases on three different namespaces named `demo-1`, `demo-2`, and `demo-3`. Create the namespaces as below if you haven't done it already.
-
-```bash
-❯ kubectl create ns demo-1
-namespace/demo-1 created
-
-❯ kubectl create ns demo-2
-namespace/demo-2 created
-
-❯ kubectl create ns demo-3
-namespace/demo-3 created
-```
-
-When you install Stash Enterprise, it installs the necessary addons to backup Redis. Verify that the Redis addons were installed properly using the following command.
+To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create `demo` namespace if you haven't created already.
 
 ```bash
-❯ kubectl get tasks.stash.appscode.com | grep redis
-redis-backup-6.2.5   62m
-redis-backup-6.2.5   62m
+$ kubectl create ns demo
+namespace/demo created
 ```
 
-We are going to use [bitnami/redis](https://artifacthub.io/packages/helm/bitnami/redis)  chart from [ArtifactHub](https://artifacthub.io/). Let's add the respective chart repository to our helm repo list.
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples).
 
+## Prepare Etcd
+
+In this section, we are going to deploy a TLS secured NATS cluster. Then, we are going to create a stream and publish some messages into it.
+
+
+### Create Certificate
+At first, let's create certificates that our Etcd database cluster will use for handling client requests and maintaining peer communications. We will be using Etcd recommended [Cfssl](https://github.com/cloudflare/cfssl) tool for creating our necessary certificates.
+
+If you have `go` installed on your machine, you can run the following commands to install `Cfssl`,
 ```bash
-# Add bitnami chart registry
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-# Update helm registries
-$ helm repo update
+$ go get github.com/cloudflare/cfssl/cmd/cfssl
+$ go get github.com/cloudflare/cfssl/cmd/cfssljson
+````
+
+Now, let's create the certificates using `Cfssl`. You can follow the commands from below. We have stored our SANs in the `ADDRESS` variable here.  The following commands will create 5 certificates named `ca.pem`, `server.pem`, `server-key.pem`, `client.pem`, and `client-key.pem`. The `ca.pem` is a self-signed CA certificate. Rest of the certificates are signed by this CA.
+```bash
+$ echo '{"CN":"CA","key":{"algo":"rsa","size":2048}}' | cfssl gencert  -initca - | cfssljson -bare ca -
+
+$ echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth","client auth", "any"]}}}' > ca-config.json
+
+$ export ADDRESS='etcd-0.etcd,etcd-1.etcd,etcd-2.etcd,*.etcd,etcd-service'
+
+$ export NAME=server
+
+$ echo '{"CN":"'$NAME'","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="$ADDRESS" - |  cfssljson -bare $NAME
+
+$ export NAME=client
+
+$ echo '{"CN":"'$NAME'","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="$ADDRESS" - | cfssljson -bare $NAME
 ```
 
-## Prepare Backup Blueprint
+### Create Secret
+Let's create a generic secret with the certificates created above. To create a secret named `etcd-tls-auth` run the following command,
+```bash
+$ kubectl create secret generic -n demo etcd-tls-auth\
+                     --from-file=./ca.pem\
+                     --from-file=./server.pem\
+                     --from-file=./server-key.pem\
+                     --from-file=./client.pem\
+                     --from-file=./client-key.pem
+````
 
-To backup a Redis database using Stash, you have to create a `Secret` containing the backend credentials, a `Repository` containing the backend information, and a `BackupConfiguration` containing the schedule and target information. A `BackupBlueprint` allows you to specify a template for the `Repository` and the `BackupConfiguration`.
+### Deploy Etcd
 
-The `BackupBlueprint` is a non-namespaced CRD. So, once you have created a `BackupBlueprint`, you can use it to backup any Redis database of any namespace just by creating the storage `Secret` in that namespace and adding few annotations to the AppBinding containing the connection info to your database. Then, Stash will automatically create a `Repository` and a `BackupConfiguration` according to the template to backup the database.
 
-Below is the `BackupBlueprint` object that we are going to use in this tutorial,
+At first, let's deploy an Etcd database cluster. Here, we will use a statefulset and a service for deploying an Etcd database cluster consisting of three members. The service is used for handling peer communications and client requests.
+
+Let's deploy an Etcd database cluster named `etcd` using a statefulset and a service  from the YAML manifest as below,
 
 ```yaml
-apiVersion: stash.appscode.com/v1beta1
-kind: BackupBlueprint
+apiVersion: v1
+kind: Service
 metadata:
-  name: redis-backup-template
+  name: etcd
+  namespace: demo
 spec:
-  # ============== Blueprint for Repository ==========================
+  clusterIP: None
+  ports:
+    - port: 2379
+      name: client
+    - port: 2380
+      name: peer
+  selector:
+    app: etcd-tls
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: etcd-tls
+  namespace: demo
+  labels:
+    app: etcd-tls
+spec:
+  serviceName: etcd
+  replicas: 3
+  selector:
+    matchLabels:
+      app: etcd-tls
+  template:
+    metadata:
+      name: etcd-tls
+      namespace: demo
+      labels:
+        app: etcd-tls
+    spec:
+      containers:
+        - name: etcd
+          image: gcr.io/etcd-development/etcd:v3.5.0
+          ports:
+            - containerPort: 2379
+              name: client
+            - containerPort: 2380
+              name: peer
+          volumeMounts:
+            - name: data
+              mountPath: /var/run/etcd
+            - name: etcd-secret
+              mountPath: /etc/etcd-secret
+          command:
+            - /bin/sh
+            - -c
+            - |
+              PEERS="etcd-tls-0=https://etcd-tls-0.etcd:2380,etcd-tls-1=https://etcd-tls-1.etcd:2380,etcd-tls-2=https://etcd-tls-2.etcd:2380" ;\
+              exec etcd --name ${HOSTNAME} \
+                --listen-peer-urls https://0.0.0.0:2380 \
+                --listen-client-urls https://0.0.0.0:2379 \
+                --advertise-client-urls https://${HOSTNAME}.etcd:2379 \
+                --initial-advertise-peer-urls https://${HOSTNAME}.etcd:2380 \
+                --initial-cluster etcd-tls-0=https://etcd-tls-0.etcd:2380,etcd-tls-1=https://etcd-tls-1.etcd:2380,etcd-tls-2=https://etcd-tls-2.etcd:2380 \
+                --initial-cluster-token etcd-cluster-1 \
+                --data-dir /var/run/etcd \
+                --client-cert-auth \
+                --cert-file "/etc/etcd-secret/server.pem" \
+                --key-file "/etc/etcd-secret/server-key.pem" \
+                --trusted-ca-file "/etc/etcd-secret/ca.pem" \
+                --peer-auto-tls  
+      volumes:
+        - name: etcd-secret
+          secret:
+            secretName: etcd-tls-auth
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        namespace: demo
+      spec:
+        storageClassName: standard
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+```
+
+This YAML will create the necessary Statefulset, Service, and PVCs for the Etcd database Cluster. 
+
+Now, wait for the database pods `etcd-tls-0`, `etcd-tls-1`, and `etcd-tls-2` to go into `Running` state,
+
+```bash
+❯ kubectl get pods -n demo --selector=app=etcd-tls
+
+NAME                READY   STATUS    RESTARTS   AGE
+etcd-tls-0          1/1     Running   0          6m
+etcd-tls-1          1/1     Running   0          6m
+etcd-tls-2          1/1     Running   0          6m
+```
+
+Once the database pod is in `Running` state, verify that the database is ready to accept the connections. For that, we have to exec into any one of the Etcd database cluster pods and run the `endpoint health` command. If the command returns a healthy state, then we can conclude that the database is ready to accept connections. To exec into a database pod and check endpoint health, run the following commands,
+```bash
+❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
+
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem endpoint health 
+127.0.0.1:2379 is healthy: successfully committed proposal: took = 8.497131ms
+```
+From the above log, we can see the Etcd database is ready to accept connections.
+
+### Insert Sample Data
+Now, we are going to exec into the database pod and create some sample data. To access TLS-secured Etcd database from Stash, we need to create a secret containing necessary `client-key` and `client certificate` in the `base64` encoded format. Let's create the secret containing the necessary TLS certificates required to access our Etcd database cluster from the following YAML,
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: etcd-stash-auth
+  namespace: demo
+type: Opaque
+data:
+ client-key.pem: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBc1ZVeUQ3L25QanBnOWlrYlpIdk5pN2ZUZFUyM3NXLzZjT2p6cWdXYm9HRDJLbTdFCk9GeVFXb2FacWxWNHM5V3F3cy9vaGxjb0JHUzMrVUVNbkJjNi9QU0tTUmxVUUUxS3ZqeXhFUkwzU0Yxc3h4UnMKMExVZVFnWno2T1dubkhORTBjNXZObjlSUVo5VENOeHl0WjBqVi94MG9wd0c3KzBzNSs0R05GbmZQMjB5ZXFLNQpDM1JEbEJSWVFKRWZMYTR5dHh6TjI1TENUQ2dsaTlkdWZoaC9ieXVLdHUxVzVaTmowVVh0bXRNRkd5N2JhZ1J2CmlLQ0NqVDQvc0RqWXpTWlZ2VitESlFFemhLZmdqc2NrNXBhaTJsWFhpaXJQVzE4N3JUSkxoc1pacWt3NUlCWEEKSUpqWjFBSSttYytSUE1mVitxV0h0ZG5XOHM1TDZxd2VvVUdwUlFJREFRQUJBb0lCQUFMMGJIVWV1WGVyK1ZtZwpyYmdxNSszZ0RrSHlIWkZ6VURUNWJMWDBpZmRPSmt2bXRKWkwxSXZ0bWpuZ1dyYUVaT2dDRnRuR01nQ0F2U0FHCkdYT3dYMmMvbTk1RDhjZHdna0pST0pJVVF0S04yL1lsUFBydFNhZkgrNzV4dFMxQ0xtOWdoVEhmUlRkV3RFZDkKaE52SjFvRHN6L1Mxck5mcWw4ajFpbHpzOG05WUYxWEtoRlozQmpSWHBFRFdCWUIzeTE2dGV6RlU0NlJaMSs1UwpaR3pTakxhOTNuK0JEeGc2ejdMVjhON0xyYXVQY3lCbkFnUC9KMlR0MTQ3bHM2cHhUWlh2UFd0ZXdvRHV1aHF1CndWQ1FkUWZ3bmlPTmJmbUxDNUp6OWNrNzJvWUg2ditjbEtFc05GT2xZWjdjRGkzaTZ6K2RuK1JOYTUvc295Mm0KV0RsQ1ZURUNnWUVBNHlUSGlXYk5FMEk1N2NnNDNlWkJ6eTBSMGtvTktJRGlJMWZkQmRBWUcraU1vZzZUSEdBSApvYkRFSnI0YkZ3aUM1QmlYeHVxZ2RQSVhqcXNNTGtYM2Zra3ErNkh0VS9XRS9pSmJyRnN6clUreFdoYmxEc0ZPCkRCUWw3SjlkaitRaGcyeXBOcEtjUWVYS0E5WVdvV1VqTkp0Z1dVMG81MmFVcUF3NnRKWW8wMzhDZ1lFQXg5eDAKZVg1YkUyWU02ZU9tZWVXWWdBZC93cVV4NmlYaWl4S2M3Z1Z6WG9qVUVaaUQwVEdrSi9RTW9TNHNHV01OekRlYQorbTdXNzVSTUZoOGlzQjdlTUxlSE0zRTRBV08yVlc4SUVuM1h6U0JLNngvcWIwS2VoWVNIS0R4YnQ0UDBGSVdTCjdYc0pYc09mRlRMclZLbHYyZnE2ZzBwZ1R1Ri9QZzdaRUIxQWxUc0NnWUJ4VDJhdTEzYVVGZVI2QnZpL1VWOGcKNzdYRk5xV3J2K2VQaEFSQkl4Ynp6U1Zpcm15YXFoa0VndjdHNk96d3A1Rk1JaXlNMFh5citoemdVZG1vdDhTSAozZzR3S3c0T1pSc3IvNDNGeEZWYUxyZ2xYZWgwWE9BSFRJSENzWmxsNzRMOFlkZGozdTFPUGtoeGMzb2tseVJoCjJPVE9oNXhSR3k0clNyWjZZYklLRndLQmdDUEg1eDVkTGNjQ1RTdU9jeDU5cVZpNmZ2Z0ZCVE9yUnF5cFQya1oKbHJjRS9ocU1XSVVhUXc1WUZlN0JTbW5kSHZwQnRrQkJtYjlZcUdxSmRuZGJmMkh2YVlnZksreXJ3bGYzUWRXMQpxKzN3YXhrL0pJUjR3OUtaa0d6MnFXRG9nY2t1eE1nNWI4c0VjTFdsNFJYT0k5VTlteWlvSnlmWUhTU3FHZGhWCnRGdERBb0dCQUlEZ1RVOHZNL2VkTml3TVZSMmRnZjRXNEVhcE9zWXhmdFZnOU5YUFNOOEdVNHFtWURCNGtIWnMKQjg5dzFEajB0WU0xQnNseXRYN3llSTUxNi8rUDVuYnQ4eHRtS3RUWVlrWmlvOGFEM2FaZXh0ZTIySXRjTE1xTwpMMERWZ0s3bzRxMVdUVWVCZWkxbDB4b3JXWUR0a0tIYkUvWGJDeHFtOGgzWDdpMlVWOWZFCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t
+ client.pem: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURnekNDQW11Z0F3SUJBZ0lVT1VLSTFzY2pVaEROTEJPazdma3J4dFFlNU9Fd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0RURUxNQWtHQTFVRUF4TUNRMEV3SGhjTk1qRXhNREU1TVRFMU56QXdXaGNOTWpZeE1ERTRNVEUxTnpBdwpXakFSTVE4d0RRWURWUVFERXdaamJHbGxiblF3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUN4VlRJUHYrYytPbUQyS1J0a2U4Mkx0OU4xVGJleGIvcHc2UE9xQlp1Z1lQWXFic1E0WEpCYWhwbXEKVlhpejFhckN6K2lHVnlnRVpMZjVRUXljRnpyODlJcEpHVlJBVFVxK1BMRVJFdmRJWFd6SEZHelF0UjVDQm5Qbwo1YWVjYzBUUnptODJmMUZCbjFNSTNISzFuU05YL0hTaW5BYnY3U3puN2dZMFdkOC9iVEo2b3JrTGRFT1VGRmhBCmtSOHRyakszSE0zYmtzSk1LQ1dMMTI1K0dIOXZLNHEyN1ZibGsyUFJSZTJhMHdVYkx0dHFCRytJb0lLTlBqK3cKT05qTkpsVzlYNE1sQVRPRXArQ094eVRtbHFMYVZkZUtLczliWHp1dE1rdUd4bG1xVERrZ0ZjQWdtTm5VQWo2Wgp6NUU4eDlYNnBZZTEyZGJ5emt2cXJCNmhRYWxGQWdNQkFBR2pnZFl3Z2RNd0RnWURWUjBQQVFIL0JBUURBZ1dnCk1DTUdBMVVkSlFRY01Cb0dDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBZ1lFVlIwbEFEQU1CZ05WSFJNQkFmOEUKQWpBQU1CMEdBMVVkRGdRV0JCU3dUcWpsZWlxVCsyU1pHM1lndzBTY3RDeEkxekFmQmdOVkhTTUVHREFXZ0JRawpMSDVQNmE2bDVkZnZCL1BlV0FINE9MeTdkVEJPQmdOVkhSRUVSekJGZ2c5bGRHTmtMWFJzY3kwd0xtVjBZMlNDCkQyVjBZMlF0ZEd4ekxURXVaWFJqWklJUFpYUmpaQzEwYkhNdE1pNWxkR05rZ2dSbGRHTmtod1IvQUFBQmh3UUEKQUFBQU1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQXJlNHd2b2hGK094dHpONGgvM0RjUHd1dk5hU3BoMnpEWQp4SUwzVDY1U2kxcmNYL3NPdmVVZ0hBZ0RIeGRqeWoyRXB0ckpDWFBsaElQSGt4NWYydHVzV1hxRWVUNHhVdmo3CnlGaXZTSFR3OEtBSWlWL0FjWi96Z2JXYXFqaXo4dTFzd2JZVXFGWERkbDR2ZktVOFc2dVh2elU5U2k2RDRMTWwKbEtHMzY0VStCVzcxS2lBNnR3MmZ1ZitOd3E0TkFNUHZhRlhZaU5JOHVWUDV5eFNFZnBFcldicjBFZ2JwU3JWcwo4SVJPTEJ4cFo5b09qWGloNHBMWTFXV29xVXR4bVR6SWZhMjgxRi85ZzAyMUVrMmErb1lKbnZhMjQvMGEwNHlKCkYyYTM1VDZ0eVhsU0oxMGhkTFpDbi9QMnVNTkNJajBVZk5LZ1M3RVVMQ0x0UnpzbzhMWGkKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+```
+Let's create the `etcd-stash-auth` secret we have shown above,
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd-secret.yaml
+secret/etcd-stash-auth created
+```
+
+## Prepare for Backup
+
+In this section, we are going to prepare the necessary resources (i.e. connection information, backend information, etc.) before backup.
+
+### Ensure Etcd Addon
+
+When you install Stash Enterprise version, it will automatically install all the official database addons. Make sure that Etcd addon was installed properly using the following command.
+
+```bash
+❯ kubectl get tasks.stash.appscode.com | grep etcd
+etcd-backup-3.5.0             18m
+etcd-restore-3.5.0            18m
+```
+
+This addon should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/etcd/README.md#addon-version-compatibility).
+
+
+### Create AppBinding
+
+Stash needs to know how to connect with the Etcd databse cluster. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the Etcd database cluster. You have to point to the respective `AppBinding` as a target of backup instead of the Etcd database cluster itself.
+
+Here, is the YAML of the `AppBinding` that we are going to create for the Etcd database cluster we have deployed earlier.
+
+```yaml
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: etcd-appbinding 
+  namespace: demo
+spec:
+  clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM2akNDQWRLZ0F3SUJBZ0lVZEJYNnU0RHRyNDA3WkZDTWN6Nzg4Y1YyWHVJd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0RURUxNQWtHQTFVRUF4TUNRMEV3SGhjTk1qRXhNREU1TVRBeE56QXdXaGNOTWpZeE1ERTRNVEF4TnpBdwpXakFOTVFzd0NRWURWUVFERXdKRFFUQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCCkFMZmp6OEJhbDhpWTdjSTd2OHNFdndpSmJnQXBqTDIvNnVZbXBaQVZvcW50cjJCcmFMbTlCb1czdkMydm5tbWYKWDhRUFBsWnFIeUxzY1gxZUlpazJyWHJEYUdQaU45VHhLQXVrbWJjZXFsUXZScGNZZkVaVTBQMzhNc0xsQUlHaQpZamZxRjR5Z1UyMjA0L3FucVVPbFFjLzh2MmJpRFNSQXNUM1NUT2FVemdMd05KT20wOUlqT1dUQW15Q2xXWmxnClJmV2tETzVTQ0xZd1pmQ1Z1MTdBalJRMTNsZTdocW9GcW9SUW96dUZQMFp0dlVFdWVPSXlSa3ZlYTFRYVNyTjgKcm1aN1BaL0lIb3dyNjFtMFd0bVE3ckw1eTMyOTgxb3hRNGg2UHdLMGNGNVNyOG9WRUR0TGZVeE1OWHpoMXpRUAorY2FhZWlUWklyc1dqRGNxSm9VWk1wVUNBd0VBQWFOQ01FQXdEZ1lEVlIwUEFRSC9CQVFEQWdFR01BOEdBMVVkCkV3RUIvd1FGTUFNQkFmOHdIUVlEVlIwT0JCWUVGQ1FzZmsvcHJxWGwxKzhIODk1WUFmZzR2THQxTUEwR0NTcUcKU0liM0RRRUJDd1VBQTRJQkFRQmpOOHlxalhEaUdqaDFuUGdKVFpZa1FCa1E4SFZHeThIdlFWWG0zdFhHM3RLcApTaVdDQTlPbittR0xZZTlCMi9lOEFJNkIyMFB1Z0NZWHljMHVOb1RiSFdiZ01pNURiNEVZYXdDdVpkN3M4MXlUClRXY1N0VWZFeUdKNW1ycWZ6OFFPaUt0Sk1UeWFYbHllWllURnhnWUsyOThTcDhubFBRQlgzNVBDakZTbXZwa1UKY0N5TllYMDF1RnFhWE9FZTdkTnpBUmhIaU1xVFM0dkNUUnFrbFpMWHB6a3ViZER3WTVKK3gzYmptcDk1RUtmVwpJbkhERTJ2ckxsU0crZDVWNnBuUG54bXc3aGg2L0NMUTNVMXM3V1d0clVlSU9NUDdCcFJxRG05TjJhajJXUHNLCmpEYXdRcFpGdGhmbEdJR1ZqUUNCNFMwTkQzWWliSkVqdHZHMnBuTlkKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+    service:
+      name: etcd
+      port: 2379
+      scheme: https
+  secret:
+    name: etcd-stash-auth
+  type: etcd
+  version: 3.5.0 
+```
+
+Here,
+
+- `.spec.clientConfig.caBundle` specifies a PEM encoded CA bundle which will be used to validate the serving certificate of the Etcd database cluster.
+- `.spec.clientConfig.service` specifies the Service information to use to connects with the Etcd database cluster.
+- `.spec.secret` specifies the name of the Secret that holds necessary credentials to access the database.
+- `spec.type` specifies the type of the database.
+
+Let's create the `AppBinding` we have shown above,
+
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/appbinding.yaml
+appbinding.appcatalog.appscode.com/etcd-appbinding created
+```
+
+### Prepare Backend
+
+We are going to store our backed up data into a GCS bucket. So, we need to create a Secret with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
+
+**Create Storage Secret:**
+
+At first, let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
+
+```bash
+$ echo -n 'changeit' > RESTIC_PASSWORD
+$ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
+$ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ kubectl create secret generic -n demo gcs-secret \
+    --from-file=./RESTIC_PASSWORD \
+    --from-file=./GOOGLE_PROJECT_ID \
+    --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+secret/gcs-secret created
+```
+
+**Create Repository:**
+
+Now, create a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
+
+```yaml
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: gcs-repo
+  namespace: demo
+spec:
   backend:
     gcs:
       bucket: stash-testing
-      prefix: redis-backup/${TARGET_NAMESPACE}/${TARGET_APP_RESOURCE}/${TARGET_NAME}
+      prefix: /demo/etcd/etcd-tls
     storageSecretName: gcs-secret
-  # ============== Blueprint for BackupConfiguration =================
-  task:
-    name: redis-backup-6.2.5
+```
+
+Let's create the `Repository` we have shown above,
+
+```bash
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/repository.yaml
+repository.stash.appscode.com/gcs-repo created
+```
+
+Now, we are ready to backup our streams into our desired backend.
+
+### Backup
+
+To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our `Etcd` database cluster. Then, Stash will create a CronJob to periodically backup the streams.
+
+#### Create BackupConfiguration
+
+Below is the YAML for `BackupConfiguration` object that we are going to use to backup the data of the Etcd database cluster we have created earlier,
+
+```yaml
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: sample-etcd-backup
+  namespace: demo
+spec:
   schedule: "*/5 * * * *"
-  retentionPolicy:
-    name: 'keep-last-5'
-    keepLast: 5
-    prune: true
-```
-
-Here, we are using a GCS bucket as our backend. We are providing `gcs-secret` at the `storageSecretName` field. Hence, we have to create a secret named `gcs-secret` with the access credentials of our bucket in every namespace where we want to enable backup through this blueprint.
-
-Notice the `prefix` field of `backend` section. We have used some variables in form of `${VARIABLE_NAME}`. Stash will automatically resolve those variables from the database information to make the backend prefix unique for each database instance.
-
-Let's create the `BackupBlueprint` we have shown above,
-
-```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/redis/auto-backup/examples/backupblueprint.yaml
-backupblueprint.stash.appscode.com/redis-backup-template created
-```
-
-Now, we are ready to backup our Redis databases using few annotations. You can check available auto-backup annotations for a databases from [here](/docs/guides/latest/auto-backup/database.md#available-auto-backup-annotations-for-database).
-
-## Auto-backup with default configurations
-
-In this section, we are going to backup a Redis database of `demo-1` namespace. We are going to use the default configurations specified in the `BackupBlueprint`.
-
-### Create Storage Secret
-
-At first, let's create the `gcs-secret` in `demo-1` namespace with the access credentials to our GCS bucket.
-
-```bash
-❯ echo -n 'changeit' > RESTIC_PASSWORD
-❯ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-❯ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-❯ kubectl create secret generic -n demo-1 gcs-secret \
-    --from-file=./RESTIC_PASSWORD \
-    --from-file=./GOOGLE_PROJECT_ID \
-    --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-secret/gcs-secret created
-```
-
-### Deploy Database
-
-Let's deploy a Redis database named `sample-redis-1` in the `demo-1` namespace.
-
-```bash
-❯ helm install sample-redis-1 bitnami/redis -n demo-1
-```
-
-Now, let's insert some sample data into it.
-
-```bash
-❯ export PASSWORD=$(kubectl get secrets -n demo-1 sample-redis-1 -o jsonpath='{.data.\redis-password}' | base64 -d)
-❯ kubectl exec -it -n demo-1 sample-redis-1-master-0 -- redis-cli -a $PASSWORD
-Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
-127.0.0.1:6379> set key1 value1
-OK
-127.0.0.1:6379> get key1
-"value1"
-127.0.0.1:6379> exit
-```
-
-### Create AppBinding
-
-Now, we have to create an AppBinding with the connection information of our database. Below, is the YAML of the AppBinding that we are going to create for our `sample-redis-1` database.
-
-```yaml
-apiVersion: appcatalog.appscode.com/v1alpha1
-kind: AppBinding
-metadata:
-  name: sample-redis-1
-  namespace: demo-1
-  annotations:
-    stash.appscode.com/backup-blueprint: redis-backup-template
-spec:
-  clientConfig:
-    service:
-      name: sample-redis-1-master
-      path: /
-      port: 6379
-      scheme: http
-  secret:
-    name: sample-redis-1
-  secretTransforms:
-  - renameKey:
-      from: redis-password
-      to: password
-  type: redis
-  version: 6.2.5
-```
-
-Notice the `annotations` section. We are pointing to the `BackupBlueprint` that we have created earlier through `stash.appscode.com/backup-blueprint` annotation. Stash will watch this annotation and create a `Repository` and a `BackupConfiguration` according to the `BackupBlueprint`.
-
-Let's create the above AppBinding,
-
-```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/redis/auto-backup/examples/sample-redis-1.yaml
-appbinding.appcatalog.appscode.com/sample-redis-1 created
-```
-
-### Verify Auto-backup configured
-
-In this section, we are going to verify whether Stash has created the respective `Repository` and `BackupConfiguration` for our Redis database or not.
-
-#### Verify Repository
-
-At first, let's verify whether Stash has created a `Repository` for our Redis or not.
-
-```bash
-❯ kubectl get repository -n demo-1
-NAME                 INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-app-sample-redis-1                                                                22s
-```
-
-Now, let's check the YAML of the `Repository`.
-
-```yaml
-❯ kubectl get repository -n demo-1 app-sample-redis-1 -o yaml
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: app-sample-redis-1
-  namespace: demo-1
-  ...
-spec:
-  backend:
-    gcs:
-      bucket: stash-testing
-      prefix: redis-backup/demo-1/redis/sample-redis-1
-    storageSecretName: gcs-secret
-```
-
-Here, you can see that Stash has resolved the variables in `prefix` field and substituted them with the equivalent information from this database.
-
-#### Verify BackupConfiguration
-
-Now, let's verify whether Stash has created a `BackupConfiguration` for our Redis or not.
-
-```bash
-❯ kubectl get backupconfiguration -n demo-1
-NAME                 TASK                 SCHEDULE      PAUSED   AGE
-app-sample-redis-1   redis-backup-6.2.5   */5 * * * *            76s
-```
-
-Now, let's check the YAML of the `BackupConfiguration`.
-
-```yaml
-❯ kubectl get backupconfiguration -n demo-1 app-sample-redis-1 -o yaml
-apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfiguration
-metadata:
-  name: app-sample-redis-1
-  namespace: demo-1
-  ...
-spec:
-  driver: Restic
+  task:
+    name: etcd-backup-3.5.0
   repository:
-    name: app-sample-redis-1
-  retentionPolicy:
-    keepLast: 5
-    name: keep-last-5
-    prune: true
-  runtimeSettings: {}
-  schedule: '*/5 * * * *'
+    name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis-1
-  task:
-    name: redis-backup-6.2.5
-  tempDir: {}
-status:
-  conditions:
-  - lastTransitionTime: "2021-07-29T13:59:57Z"
-    message: Repository demo-1/app-sample-redis-1 exist.
-    reason: RepositoryAvailable
-    status: "True"
-    type: RepositoryFound
-  - lastTransitionTime: "2021-07-29T13:59:57Z"
-    message: Backend Secret demo-1/gcs-secret exist.
-    reason: BackendSecretAvailable
-    status: "True"
-    type: BackendSecretFound
-  - lastTransitionTime: "2021-07-29T13:59:57Z"
-    message: Backup target appcatalog.appscode.com/v1alpha1 appbinding/sample-redis-1
-      found.
-    reason: TargetAvailable
-    status: "True"
-    type: BackupTargetFound
-  - lastTransitionTime: "2021-07-29T13:59:57Z"
-    message: Successfully created backup triggering CronJob.
-    reason: CronJobCreationSucceeded
-    status: "True"
-    type: CronJobCreated
-  observedGeneration: 1
-
+      name: etcd-appbinding 
+  retentionPolicy:
+    name: keep-last-5
+    keepLast: 5
+    prune: true
 ```
 
-Notice the `target` section. Stash has automatically added the Redis as the target of this `BackupConfiguration`.
+Here,
+
+- `.spec.schedule` specifies that we want to backup the streams at 5 minutes intervals.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup Etcd database.
+- `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
+- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted Etcd database cluster.
+- `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
+
+Let's create the `BackupConfiguration` object we have shown above,
+
+```bash
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/tls/examples/backupconfiguration.yaml
+backupconfiguration.stash.appscode.com/sample-nats-backup-tls created
+```
+
+#### Verify CronJob
+
+If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
+
+Verify that the CronJob has been created using the following command,
+
+```bash
+❯ kubectl get cronjob -n demo
+NAME                                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-backup-sample-nats-backup-tls   */5 * * * *   False     0        <none>          14s
+```
+
+#### Wait for BackupSession
+
+The `stash-sample-nats-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
+
+Now, wait for a schedule to appear. Run the following command to watch for `BackupSession` object,
+
+```bash
+❯ kubectl get backupsession -n demo -w
+NAME                           INVOKER-TYPE          INVOKER-NAME             PHASE       DURATION   AGE
+sample-nats-backup-tls-prszs   BackupConfiguration   sample-nats-backup-tls   Succeeded   35s        84s
+```
+
+Here, the phase `Succeeded` means that the backup process has been completed successfully.
 
 #### Verify Backup
 
-Now, let's wait for a backup run to complete. You can watch for `BackupSession` as below,
+Now, we are going to verify whether the backed up data is present in the backend or not. Once a backup is completed, Stash will update the respective `Repository` object to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
 
 ```bash
-❯ kubectl get backupsession -n demo-1 -w
-NAME                            INVOKER-TYPE          INVOKER-NAME         PHASE   DURATION   AGE
-app-sample-redis-1-1627567808   BackupConfiguration   app-sample-redis-1                      0s
-app-sample-redis-1-1627567808   BackupConfiguration   app-sample-redis-1   Running              22s
-app-sample-redis-1-1627567808   BackupConfiguration   app-sample-redis-1   Succeeded   1m28.696008079s   88s
+❯ kubectl get repository -n demo
+NAME         INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
+gcs-repo     true        4.156 KiB   3                2m2s                     97m
 ```
 
-Once the backup has been completed successfully, you should see the backed up data has been stored in the bucket at the directory pointed by the `prefix` field of the `Repository`.
+Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/nats/sample-nats-tls` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/redis/auto-backup/images/sample-redis-1.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/tls/images/sample-nats-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
-## Auto-backup with a custom schedule
 
-In this section, we are going to backup a Redis database of `demo-2` namespace. This time, we are going to overwrite the default schedule used in the `BackupBlueprint`.
 
-### Create Storage Secret
+> Note: Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-At first, let's create the `gcs-secret` in `demo-2` namespace with the access credentials to our GCS bucket.
+## Restore
 
-```bash
-❯ kubectl create secret generic -n demo-2 gcs-secret \
-    --from-file=./RESTIC_PASSWORD \
-    --from-file=./GOOGLE_PROJECT_ID \
-    --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-secret/gcs-secret created
-```
+If you have followed the previous sections properly, you should have a successful backup of your nats streams. Now, we are going to show how you can restore the streams from the backed up data.
 
-### Deploy Database
+### Restore Into the Same NATS Cluster
 
-Let's deploy a Redis database named `sample-redis-2` in the `demo-2` namespace.
+You can restore your data into the same NATS cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same NATS cluster which may be necessary when you have accidentally lost any data.
+
+#### Temporarily Pause Backup
+
+At first, let's stop taking any further backup of the NATS streams so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
+
+Let's pause the `sample-nats-backup` BackupConfiguration,
 
 ```bash
-❯ helm install sample-redis-2 bitnami/redis -n demo-2
+$ kubectl patch backupconfiguration -n demo sample-nats-backup-tls --type="merge" --patch='{"spec": {"paused": true}}'
 ```
 
-Now, let's insert some sample data into it.
+Verify that the `BackupConfiguration` has been paused,
 
 ```bash
-❯ export PASSWORD=$(kubectl get secrets -n demo-2 sample-redis-2 -o jsonpath='{.data.\redis-password}' | base64 -d)
-❯ kubectl exec -it -n demo-2 sample-redis-2-master-0 -- redis-cli -a $PASSWORD
-Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
-127.0.0.1:6379> set key1 value1
-OK
-127.0.0.1:6379> get key1
-"value1"
-127.0.0.1:6379> exit
+❯ kubectl get backupconfiguration -n demo sample-nats-backup-tls
+NAME                     TASK                SCHEDULE      PAUSED   AGE
+sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   true     4m26s
 ```
 
-### Create AppBinding
+Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
 
-Now, we have to create an AppBinding with the connection information of our database. Below, is the YAML of the AppBinding that we are going to create for our `sample-redis-2` database.
+Stash will also suspend the respective CronJob.
+
+```bash
+❯ kubectl get cronjob -n demo
+NAME                                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-backup-sample-nats-backup-tls   */5 * * * *   True      0        2m12s           5m4s
+```
+
+#### Simulate Disaster
+
+Now, let's simulate a disaster scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
+
+```bash
+❯ kubectl exec -n demo sample-nats-tls-box-67fb4fb4f9-gtt9z  -it -- sh -l
+...
+# Let's export the tls.crt and tls.key file paths as environment variables to make further commands re-usable.
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_CERT=/tmp/tls.crt
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_KEY=/tmp/tls.key
+
+# delete the stream "ORDERS"
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats stream rm ORDERS -f
+
+# verify that the stream has been deleted
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats stream ls
+No Streams defined
+
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# exit
+```
+
+#### Create RestoreSession
+
+To restore the streams, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted NATS server.
+
+Here, is the YAML of the `RestoreSession` object that we are going to use for restoring the streams of the NATS server.
 
 ```yaml
-apiVersion: appcatalog.appscode.com/v1alpha1
-kind: AppBinding
-metadata:
-  name: sample-redis-2
-  namespace: demo-2
-  annotations:
-    stash.appscode.com/backup-blueprint: redis-backup-template
-    stash.appscode.com/schedule: "*/3 * * * *"
-spec:
-  clientConfig:
-    service:
-      name: sample-redis-2-master
-      path: /
-      port: 6379
-      scheme: http
-  secret:
-    name: sample-redis-2
-  secretTransforms:
-  - renameKey:
-      from: redis-password
-      to: password
-  type: redis
-  version: 6.2.5
-```
-
-Notice the `annotations` section. This time, we have passed a schedule via `stash.appscode.com/schedule` annotation along with the `stash.appscode.com/backup-blueprint` annotation.
-
-Let's create the above AppBinding,
-
-```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/redis/auto-backup/examples/sample-redis-2.yaml
-appbinding.appcatalog.appscode.com/sample-redis-2 created
-```
-
-### Verify Auto-backup configured
-
-Now, let's verify whether the auto-backup has been configured properly or not.
-
-#### Verify Repository
-
-At first, let's verify whether Stash has created a `Repository` for our Redis or not.
-
-```bash
-❯ kubectl get repository -n demo-2
-NAME                 INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-app-sample-redis-2                                                                29s
-```
-
-Now, let's check the YAML of the `Repository`.
-
-```yaml
-❯ kubectl get repository -n demo-2 app-sample-redis-2  -o yaml
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: app-sample-redis-2
-  namespace: demo-2
-  ...
-spec:
-  backend:
-    gcs:
-      bucket: stash-testing
-      prefix: redis-backup/demo-2/redis/sample-redis-2
-    storageSecretName: gcs-secret
-```
-
-Here, you can see that Stash has resolved the variables in `prefix` field and substituted them with the equivalent information from this new database.
-
-#### Verify BackupConfiguration
-
-Now, let's verify whether Stash has created a `BackupConfiguration` for our Redis or not.
-
-```bash
-❯ kubectl get backupconfiguration -n demo-2
-NAME                 TASK                 SCHEDULE      PAUSED   AGE
-app-sample-redis-2   redis-backup-6.2.5   */3 * * * *            64s
-```
-
-Now, let's check the YAML of the `BackupConfiguration`.
-
-```yaml
-❯ kubectl get backupconfiguration -n demo-2 app-sample-redis-2 -o yaml
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfiguration
+kind: RestoreSession
 metadata:
-  name: app-sample-redis-2
-  namespace: demo-2
-  ...
+  name: sample-nats-restore-tls
+  namespace: demo
 spec:
-  driver: Restic
+  task:
+    name: nats-restore-2.6.1
   repository:
-    name: app-sample-redis-2
-  retentionPolicy:
-    keepLast: 5
-    name: keep-last-5
-    prune: true
-  runtimeSettings: {}
-  schedule: '*/3 * * * *'
+    name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis-2
-  task:
-    name: redis-backup-6.2.5
-  tempDir: {}
-status:
-  conditions:
-  - lastTransitionTime: "2021-07-29T14:17:31Z"
-    message: Repository demo-2/app-sample-redis-2 exist.
-    reason: RepositoryAvailable
-    status: "True"
-    type: RepositoryFound
-  - lastTransitionTime: "2021-07-29T14:17:31Z"
-    message: Backend Secret demo-2/gcs-secret exist.
-    reason: BackendSecretAvailable
-    status: "True"
-    type: BackendSecretFound
-  - lastTransitionTime: "2021-07-29T14:17:31Z"
-    message: Backup target appcatalog.appscode.com/v1alpha1 appbinding/sample-redis-2
-      found.
-    reason: TargetAvailable
-    status: "True"
-    type: BackupTargetFound
-  - lastTransitionTime: "2021-07-29T14:17:31Z"
-    message: Successfully created backup triggering CronJob.
-    reason: CronJobCreationSucceeded
-    status: "True"
-    type: CronJobCreated
-  observedGeneration: 1
+      name: sample-nats-tls
+  interimVolumeTemplate:
+    metadata:
+      name: nats-restore-tmp-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
+  rules:
+  - snapshots: [latest]
 ```
 
-Notice the `schedule` section. This time the `BackupConfiguration` has been created with the schedule we have provided via annotation.
+Here,
 
-Also, notice the `target` section. Stash has automatically added the new Redis as the target of this `BackupConfiguration`.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore NATS streams.
+- `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
+- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
+- `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before injecting into the NATS server.
+- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the streams.
 
-#### Verify Backup
-
-Now, let's wait for a backup run to complete. You can watch for `BackupSession` as below,
+Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-❯ kubectl get backupsession -n demo-2 -w
-NAME                            INVOKER-TYPE          INVOKER-NAME         PHASE     DURATION   AGE
-app-sample-redis-2-1627568283   BackupConfiguration   app-sample-redis-2   Running              86s
-app-sample-redis-2-1627568283   BackupConfiguration   app-sample-redis-2   Succeeded   1m33.522226054s   93s
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/tls/examples/restoresession.yaml
+restoresession.stash.appscode.com/sample-nats-restore-tls created
 ```
 
-Once the backup has been completed successfully, you should see that Stash has created a new directory as pointed by the `prefix` field of the new `Repository` and stored the backed up data there.
-
-<figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/redis/auto-backup/images/sample-redis-2.png">
-  <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
-</figure>
-
-## Auto-backup with custom parameters
-
-In this section, we are going to backup a Redis database of `demo-3` namespace. This time, we are going to pass some parameters for the Task through the annotations.
-
-### Create Storage Secret
-
-At first, let's create the `gcs-secret` in `demo-3` namespace with the access credentials to our GCS bucket.
+Once, you have created the `RestoreSession` object, Stash will create a restore Job. Run the following command to watch the phase of the `RestoreSession` object,
 
 ```bash
-❯ kubectl create secret generic -n demo-3 gcs-secret \
-    --from-file=./RESTIC_PASSWORD \
-    --from-file=./GOOGLE_PROJECT_ID \
-    --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-secret/gcs-secret created
+❯ kubectl get restoresession -n demo -w
+NAME                      REPOSITORY   PHASE       DURATION   AGE
+sample-nats-restore-tls   gcs-repo     Succeeded   15s        55s
 ```
 
-### Deploy Database
+The `Succeeded` phase means that the restore process has been completed successfully.
 
-Let's deploy a Redis database named `sample-redis-3` in the `demo-3` namespace.
+#### Verify Restored Data
+
+Now, let's exec into the nats-box pod and verify whether data actual data has been restored or not,
 
 ```bash
-❯ helm install sample-redis-3 bitnami/redis -n demo-3
+❯ kubectl exec -n demo sample-nats-tls-box-67fb4fb4f9-gtt9z  -it -- sh -l
+...
+# Let's export the tls.crt and tls.key file paths as environment variables to make further commands re-usable.
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_CERT=/tmp/tls.crt
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_KEY=/tmp/tls.key
+
+# Verify that the stream has been restored successfully
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats str ls
+Streams:
+
+        ORDERS
+
+# Verify that the messages have been restored successfully
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats stream info ORDERS
+Information for Stream ORDERS created 2021-09-27T08:23:58Z
+
+Configuration:
+
+             Subjects: ORDERS.*
+     Acknowledgements: true
+            Retention: File - Limits
+             Replicas: 1
+       Discard Policy: Old
+     Duplicate Window: 2m0s
+     Maximum Messages: unlimited
+        Maximum Bytes: unlimited
+          Maximum Age: 1y0d0h0m0s
+ Maximum Message Size: unlimited
+    Maximum Consumers: unlimited
+
+
+Cluster Information:
+
+                 Name: nats
+               Leader: sample-nats-tls-2
+
+State:
+
+             Messages: 2
+                Bytes: 98 B
+             FirstSeq: 1 @ 2021-09-27T06:29:18 UTC
+              LastSeq: 2 @ 2021-09-27T06:29:41 UTC
+     Active Consumers: 0
+     
+sample-nats-tls-box-67fb4fb4f9-gtt9z:~# exit
 ```
 
-Now, let's insert some sample data into it.
+Hence, we can see from the above output that the deleted data has been restored successfully from the backup.
+
+#### Resume Backup
+
+Since our data has been restored successfully we can now resume our usual backup process. Resume the `BackupConfiguration` using following command,
 
 ```bash
-❯ export PASSWORD=$(kubectl get secrets -n demo-3 sample-redis-3 -o jsonpath='{.data.\redis-password}' | base64 -d)
-❯ kubectl exec -it -n demo-3 sample-redis-3-master-0 -- redis-cli -a $PASSWORD
-Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
-127.0.0.1:6379> set key1 value1
-OK
-127.0.0.1:6379> get key1
-"value1"
-127.0.0.1:6379> exit
+❯ kubectl patch backupconfiguration -n demo sample-nats-backup-tls --type="merge" --patch='{"spec": {"paused": false}}'
+backupconfiguration.stash.appscode.com/sample-nats-backup-tls patched
 ```
 
-### Create AppBinding
-
-Now, we have to create an AppBinding with the connection information of our database. Below, is the YAML of the AppBinding that we are going to create for our `sample-redis-3` database.
-
-```yaml
-apiVersion: appcatalog.appscode.com/v1alpha1
-kind: AppBinding
-metadata:
-  name: sample-redis-3
-  namespace: demo-3
-  annotations:
-    stash.appscode.com/backup-blueprint: redis-backup-template
-    params.stash.appscode.com/args: -db 0
-spec:
-  clientConfig:
-    service:
-      name: sample-redis-3-master
-      path: /
-      port: 6379
-      scheme: http
-  secret:
-    name: sample-redis-3
-  secretTransforms:
-  - renameKey:
-      from: redis-password
-      to: password
-  type: redis
-  version: 6.2.5
+Verify that the `BackupConfiguration` has been resumed,
+```bash
+❯ kubectl get backupconfiguration -n demo sample-nats-backup-tls
+NAME                     TASK                SCHEDULE      PAUSED   AGE
+sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   false    16m
 ```
 
-Notice the `annotations` section. This time, we have passed an argument via `params.stash.appscode.com/args` annotation along with the `stash.appscode.com/backup-blueprint` annotation.
-
-Let's create the above AppBinding,
+Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/redis/auto-backup/examples/sample-redis-3.yaml
-appbinding.appcatalog.appscode.com/sample-redis-3 created
+❯ kubectl get cronjob -n demo
+NAME                                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-backup-sample-nats-backup-tls   */5 * * * *   False     0        23s             17m
 ```
 
-### Verify Auto-backup configured
-
-Now, let's verify whether the auto-backup resources has been created or not.
-
-#### Verify Repository
-
-At first, let's verify whether Stash has created a `Repository` for our Redis or not.
-
-```bash
-❯ kubectl get repository -n demo-3
-NAME                 INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-app-sample-redis-3                                                                29s
-```
-
-Now, let's check the YAML of the `Repository`.
-
-```yaml
-❯ kubectl get repository -n demo-3 app-sample-redis-3 -o yaml
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: app-sample-redis-3
-  namespace: demo-3
-  ...
-spec:
-  backend:
-    gcs:
-      bucket: stash-testing
-      prefix: redis-backup/demo-3/redis/sample-redis-3
-    storageSecretName: gcs-secret
-```
-
-Here, you can see that Stash has resolved the variables in `prefix` field and substituted them with the equivalent information from this new database.
-
-#### Verify BackupConfiguration
-
-Now, let's verify whether Stash has created a `BackupConfiguration` for our Redis or not.
-
-```bash
-❯ kubectl get backupconfiguration -n demo-3
-NAME                 TASK                 SCHEDULE      PAUSED   AGE
-app-sample-redis-3   redis-backup-6.2.5   */5 * * * *            62s
-```
-
-Now, let's check the YAML of the `BackupConfiguration`.
-
-```yaml
-❯ kubectl get backupconfiguration -n demo-3 app-sample-redis-3 -o yaml
-apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfiguration
-metadata:
-  name: app-sample-redis-3
-  namespace: demo-3
-  ...
-spec:
-  driver: Restic
-  repository:
-    name: app-sample-redis-3
-  retentionPolicy:
-    keepLast: 5
-    name: keep-last-5
-    prune: true
-  runtimeSettings: {}
-  schedule: '*/5 * * * *'
-  target:
-    ref:
-      apiVersion: appcatalog.appscode.com/v1alpha1
-      kind: AppBinding
-      name: sample-redis-3
-  task:
-    name: redis-backup-6.2.5
-    params:
-    - name: args
-      value: -db 0
-  tempDir: {}
-status:
-  conditions:
-  - lastTransitionTime: "2021-07-29T14:23:58Z"
-    message: Repository demo-3/app-sample-redis-3 exist.
-    reason: RepositoryAvailable
-    status: "True"
-    type: RepositoryFound
-  - lastTransitionTime: "2021-07-29T14:23:58Z"
-    message: Backend Secret demo-3/gcs-secret exist.
-    reason: BackendSecretAvailable
-    status: "True"
-    type: BackendSecretFound
-  - lastTransitionTime: "2021-07-29T14:23:58Z"
-    message: Backup target appcatalog.appscode.com/v1alpha1 appbinding/sample-redis-3
-      found.
-    reason: TargetAvailable
-    status: "True"
-    type: BackupTargetFound
-  - lastTransitionTime: "2021-07-29T14:23:58Z"
-    message: Successfully created backup triggering CronJob.
-    reason: CronJobCreationSucceeded
-    status: "True"
-    type: CronJobCreated
-  observedGeneration: 1
-```
-
-Notice the `task` section. The `args` parameter that we had passed via annotations has been added to the `params` section.
-
-Also, notice the `target` section. Stash has automatically added the new Redis as the target of this `BackupConfiguration`.
-
-#### Verify Backup
-
-Now, let's wait for a backup run to complete. You can watch for `BackupSession` as below,
-
-```bash
-❯ kubectl get backupsession -n demo-3 -w
-NAME                            INVOKER-TYPE          INVOKER-NAME         PHASE     DURATION   AGE
-app-sample-redis-3-1627568709   BackupConfiguration   app-sample-redis-3   Running              20s
-app-sample-redis-3-1627568709   BackupConfiguration   app-sample-redis-3   Succeeded   1m43.931692282s   103s
-```
-
-Once the backup has been completed successfully, you should see that Stash has created a new directory as pointed by the `prefix` field of the new `Repository` and stored the backed up data there.
-
-<figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/redis/auto-backup/images/sample-redis-3.png">
-  <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
-</figure>
+Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
 
 ## Cleanup
 
-To cleanup the resources crated by this tutorial, run the following commands,
+To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```bash
-# cleanup sample-redis-1 resources
-❯ helm uninstall sample-redis-1 -n demo-1
-❯ kubectl delete appbinding sample-redis-1 -n demo-1
-❯ kubectl delete repository -n demo-1 --all
-
-# cleanup sample-redis-2 resources
-❯ helm uninstall sample-redis-2 -n demo-2
-❯ kubectl delete appbinding sample-redis-2 -n demo-2
-❯ kubectl delete repository -n demo-2 --all
-
-# cleanup sample-redis-3 resources
-❯ helm uninstall sample-redis-3 -n demo-3
-❯ kubectl delete appbinding sample-redis-3 -n demo-3
-❯ kubectl delete repository -n demo-3 --all
-
-# cleanup BackupBlueprint
-❯ kubectl delete backupblueprint redis-backup-template
+kubectl delete -n demo backupconfiguration sample-nats-backup-tls
+kubectl delete -n demo restoresession sample-nats-restore-tls
+kubectl delete -n demo repository gcs-repo
+# delete the nats chart
+helm delete sample-nats-tls -n demo
 ```
