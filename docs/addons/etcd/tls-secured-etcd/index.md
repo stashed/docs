@@ -625,6 +625,7 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 kubectl delete -n demo backupconfiguration etcd-tls-backup
 kubectl delete -n demo restoresession etcd-tls-restore
 kubectl delete -n demo repository gcs-repo
+kubectl delete -n demo appbinding etcd-appbinding
 # delete the database, service, and PVCs
 kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd-tls.yaml
 kubectl delete pvc -n demo data-etcd-tls-0 data-etcd-tls-1 data-etcd-tls-2

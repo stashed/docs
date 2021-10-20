@@ -280,7 +280,7 @@ spec:
   backend:
     gcs:
       bucket: stash-testing
-      prefix: /demo/etcd/sample-etcd
+      prefix: /demo/etcd/etcd-backup
     storageSecretName: gcs-secret
 ```
 
@@ -327,7 +327,7 @@ spec:
 Here,
 
 - `.spec.schedule` specifies that we want to backup the database at 5 minutes intervals.
-- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup a Etcd database.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup an Etcd database.
 - `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
 - `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted database.
 - `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
@@ -377,10 +377,10 @@ NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        93 B   1                2m1s                     24m
 ```
 
-Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `/demo/etcd/sample-etcd` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
+Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `/demo/etcd/etcd-backup` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/etcd/images/sample-etcd-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/etcd/images/etcd-backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -485,10 +485,10 @@ spec:
 
 Here,
 
-- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore a Etcd database.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore an Etcd database.
 - `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backupdata into an Etcd database cluster.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `etcd` database.
+- `.spec.target.ref` refers to the respective AppBinding of the `Etcd` database.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
 Let's create the `RestoreSession` object object we have shown above,
@@ -577,6 +577,7 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 kubectl delete -n demo backupconfiguration etcd-backup
 kubectl delete -n demo restoresession etcd-restore
 kubectl delete -n demo repository gcs-repo
+kubectl delete -n demo appbinding etcd-appbinding
 # delete the database, service, and PVCs
 kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd.yaml
 kubectl delete pvc -n demo data-etcd-0 data-etcd-1 data-etcd-2
