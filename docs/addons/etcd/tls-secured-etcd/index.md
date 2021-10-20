@@ -216,6 +216,35 @@ $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version"
 secret/etcd-stash-auth created
 ```
 
+
+Now, let's exec into any one of the database pods and insert some sample data,
+```bash
+❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem put foo bar
+OK
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem put foo2 bar2
+OK
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem put foo3 bar3
+OK
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem put foo4 bar4
+OK
+
+# Verify that the data has been inserted successfully
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem get --prefix foo
+foo
+bar
+foo2
+bar2
+foo3
+bar3
+foo4
+bar4
+127.0.0.1:2379> exit
+```
+
+We have successfully deployed an Etcd database cluster and inserted some sample data into it. In the subsequent sections, we are going to backup these data using Stash.
+
+
 ## Prepare for Backup
 
 In this section, we are going to prepare the necessary resources (i.e. connection information, backend information, etc.) before backup.
@@ -330,7 +359,7 @@ Below is the YAML for `BackupConfiguration` object that we are going to use to b
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: sample-etcd-backup
+  name: etcd-tls-backup
   namespace: demo
 spec:
   schedule: "*/5 * * * *"
@@ -360,8 +389,8 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/tls/examples/backupconfiguration.yaml
-backupconfiguration.stash.appscode.com/sample-nats-backup-tls created
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/backupconfiguration.yaml
+backupconfiguration.stash.appscode.com/etcd-tls-backup created
 ```
 
 #### Verify CronJob
@@ -373,19 +402,19 @@ Verify that the CronJob has been created using the following command,
 ```bash
 ❯ kubectl get cronjob -n demo
 NAME                                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup-tls   */5 * * * *   False     0        <none>          14s
+stash-trigger-etcd-tls-backup         */5 * * * *   False     0        <none>          65s
 ```
 
 #### Wait for BackupSession
 
-The `stash-sample-nats-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
+The `stash-trigger-etcd-tls-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
 
 Now, wait for a schedule to appear. Run the following command to watch for `BackupSession` object,
 
 ```bash
 ❯ kubectl get backupsession -n demo -w
 NAME                           INVOKER-TYPE          INVOKER-NAME             PHASE       DURATION   AGE
-sample-nats-backup-tls-prszs   BackupConfiguration   sample-nats-backup-tls   Succeeded   35s        84s
+etcd-tls-backup-q2dk6          BackupConfiguration   etcd-tls-backup          Succeeded   41s        60s
 ```
 
 Here, the phase `Succeeded` means that the backup process has been completed successfully.
@@ -397,13 +426,13 @@ Now, we are going to verify whether the backed up data is present in the backend
 ```bash
 ❯ kubectl get repository -n demo
 NAME         INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-gcs-repo     true        4.156 KiB   3                2m2s                     97m
+gcs-repo     true        42.105 KiB  2                2m10s                    47m
 ```
 
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/nats/sample-nats-tls` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/nats/tls/images/sample-nats-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/tls-secured-etcd/images/etcd-tls-backup.jpg">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -413,28 +442,30 @@ Now, if we navigate to the GCS bucket, we will see the backed up data has been s
 
 ## Restore
 
-If you have followed the previous sections properly, you should have a successful backup of your nats streams. Now, we are going to show how you can restore the streams from the backed up data.
+If you have followed the previous sections properly, you should have a successful backup of your Etcd database cluster. Now, we are going to show how you can restore the database from the backed up data.
 
-### Restore Into the Same NATS Cluster
+### Restore Into the Same Database
 
-You can restore your data into the same NATS cluster you have backed up from or into a different NATS cluster in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same NATS cluster which may be necessary when you have accidentally lost any data.
+You can restore your data into the same database you have backed up from or into a different database in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same database which may be necessary when you have accidentally deleted any data from the running database.
+
 
 #### Temporarily Pause Backup
 
-At first, let's stop taking any further backup of the NATS streams so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
+At first, let's stop taking any further backup of the database so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
 
-Let's pause the `sample-nats-backup` BackupConfiguration,
+Let's pause the `etcd-tls-backup` BackupConfiguration,
 
 ```bash
-$ kubectl patch backupconfiguration -n demo sample-nats-backup-tls --type="merge" --patch='{"spec": {"paused": true}}'
+$ kubectl patch backupconfiguration -n demo etcd-tls-backup --type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/etcd-tls-backup patched
 ```
 
 Verify that the `BackupConfiguration` has been paused,
 
 ```bash
-❯ kubectl get backupconfiguration -n demo sample-nats-backup-tls
-NAME                     TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   true     4m26s
+❯ kubectl get backupconfiguration -n demo etcd-tls-backup
+NAME              TASK                SCHEDULE      PAUSED   AGE
+etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *   true     25m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -443,78 +474,85 @@ Stash will also suspend the respective CronJob.
 
 ```bash
 ❯ kubectl get cronjob -n demo
-NAME                                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup-tls   */5 * * * *   True      0        2m12s           5m4s
+NAME                            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-trigger-etcd-tls-backup   */5 * * * *   True      0        6m25s           95m
 ```
 
 #### Simulate Disaster
 
-Now, let's simulate a disaster scenario. Here, we are going to exec into the nats-box pod and delete the sample data we have inserted earlier.
+Now, let's simulate an accidental deletion scenario. Here, we are going to exec into a database pod and delete the sample data we have inserted earlier.
 
 ```bash
-❯ kubectl exec -n demo sample-nats-tls-box-67fb4fb4f9-gtt9z  -it -- sh -l
-...
-# Let's export the tls.crt and tls.key file paths as environment variables to make further commands re-usable.
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_CERT=/tmp/tls.crt
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_KEY=/tmp/tls.key
+❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem del foo
+1
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem del foo2 
+1
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem del foo3
+1
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem del foo4
+1
 
-# delete the stream "ORDERS"
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats stream rm ORDERS -f
-
-# verify that the stream has been deleted
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats stream ls
-No Streams defined
-
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# exit
+# Verify that the data has been deleted successfully
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem get --prefix foo
+(nil)
+127.0.0.1:2379> exit
 ```
 
 #### Create RestoreSession
 
-To restore the streams, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted NATS server.
+To restore the database, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted database.
 
-Here, is the YAML of the `RestoreSession` object that we are going to use for restoring the streams of the NATS server.
+Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `Etcd` database cluster.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: sample-nats-restore-tls
+  name: etcd-tls-restore
   namespace: demo
 spec:
   task:
-    name: nats-restore-2.6.1
+    name: etcd-restore-3.5.0 
+    params:
+      - name: initialCluster
+        value:  "etcd-tls-0=https://etcd-tls-0.etcd:2380,etcd-tls-1=https://etcd-tls-1.etcd:2380,etcd-tls-2=https://etcd-tls-2.etcd:2380"
+      - name: initialClusterToken
+        value: "etcd-cluster-1"
+      - name: dataDir
+        value: "/var/run/etcd"
+      - name: workloadKind
+        value: "StatefulSet"
+      - name: workloadName
+        value: "etcd"
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-nats-tls
-  interimVolumeTemplate:
-    metadata:
-      name: nats-restore-tmp-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: 1Gi
+      name: etcd-appbinding
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
   rules:
   - snapshots: [latest]
 ```
 
 Here,
 
-- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore NATS streams.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore a Etcd database.
+- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backupdata into an Etcd database cluster.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted NATS server.
-- `.spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the restored data temporarily before injecting into the NATS server.
-- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the streams.
+- `.spec.target.ref` refers to the respective AppBinding of the `etcd` database.
+- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/tls/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-nats-restore-tls created
 ```
 
@@ -522,62 +560,33 @@ Once, you have created the `RestoreSession` object, Stash will create a restore 
 
 ```bash
 ❯ kubectl get restoresession -n demo -w
-NAME                      REPOSITORY   PHASE       DURATION   AGE
-sample-nats-restore-tls   gcs-repo     Succeeded   15s        55s
+NAME               REPOSITORY   PHASE     DURATION   AGE
+etcd-tls-restore   gcs-repo     Running              5s
+etcd-tls-restore   gcs-repo     Running              60s
+etcd-tls-restore   gcs-repo     Running              2m3s
+etcd-tls-restore   gcs-repo     Succeeded              2m3s
+etcd-tls-restore   gcs-repo     Succeeded   2m3s       2m3s
 ```
 
 The `Succeeded` phase means that the restore process has been completed successfully.
 
 #### Verify Restored Data
 
-Now, let's exec into the nats-box pod and verify whether data actual data has been restored or not,
+Now, let's exec into the database pod and verify whether data actual data has been restored or not,
 
 ```bash
-❯ kubectl exec -n demo sample-nats-tls-box-67fb4fb4f9-gtt9z  -it -- sh -l
-...
-# Let's export the tls.crt and tls.key file paths as environment variables to make further commands re-usable.
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_CERT=/tmp/tls.crt
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# export NATS_KEY=/tmp/tls.key
+❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
 
-# Verify that the stream has been restored successfully
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats str ls
-Streams:
-
-        ORDERS
-
-# Verify that the messages have been restored successfully
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# nats stream info ORDERS
-Information for Stream ORDERS created 2021-09-27T08:23:58Z
-
-Configuration:
-
-             Subjects: ORDERS.*
-     Acknowledgements: true
-            Retention: File - Limits
-             Replicas: 1
-       Discard Policy: Old
-     Duplicate Window: 2m0s
-     Maximum Messages: unlimited
-        Maximum Bytes: unlimited
-          Maximum Age: 1y0d0h0m0s
- Maximum Message Size: unlimited
-    Maximum Consumers: unlimited
-
-
-Cluster Information:
-
-                 Name: nats
-               Leader: sample-nats-tls-2
-
-State:
-
-             Messages: 2
-                Bytes: 98 B
-             FirstSeq: 1 @ 2021-09-27T06:29:18 UTC
-              LastSeq: 2 @ 2021-09-27T06:29:41 UTC
-     Active Consumers: 0
-     
-sample-nats-tls-box-67fb4fb4f9-gtt9z:~# exit
+127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem get --prefix foo
+foo
+bar
+foo2
+bar2
+foo3
+bar3
+foo4
+bar4
+127.0.0.1:2379> exit
 ```
 
 Hence, we can see from the above output that the deleted data has been restored successfully from the backup.
@@ -587,23 +596,23 @@ Hence, we can see from the above output that the deleted data has been restored 
 Since our data has been restored successfully we can now resume our usual backup process. Resume the `BackupConfiguration` using following command,
 
 ```bash
-❯ kubectl patch backupconfiguration -n demo sample-nats-backup-tls --type="merge" --patch='{"spec": {"paused": false}}'
-backupconfiguration.stash.appscode.com/sample-nats-backup-tls patched
+❯ kubectl patch backupconfiguration -n demo etcd-tls-backup --type="merge" --patch='{"spec": {"paused": false}}'
+backupconfiguration.stash.appscode.com/etcd-tls-backup patched
 ```
 
 Verify that the `BackupConfiguration` has been resumed,
 ```bash
-❯ kubectl get backupconfiguration -n demo sample-nats-backup-tls
-NAME                     TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   false    16m
+❯ kubectl get backupconfiguration -n demo etcd-tls-backup
+NAME              TASK                SCHEDULE      PAUSED   AGE
+etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *   false    39m
 ```
 
 Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
 
 ```bash
 ❯ kubectl get cronjob -n demo
-NAME                                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-nats-backup-tls   */5 * * * *   False     0        23s             17m
+NAME                            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-trigger-etcd-tls-backup   */5 * * * *   False     0        2m39s           42m
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
@@ -613,9 +622,10 @@ Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended a
 To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```bash
-kubectl delete -n demo backupconfiguration sample-nats-backup-tls
-kubectl delete -n demo restoresession sample-nats-restore-tls
+kubectl delete -n demo backupconfiguration etcd-tls-backup
+kubectl delete -n demo restoresession etcd-tls-restore
 kubectl delete -n demo repository gcs-repo
-# delete the nats chart
-helm delete sample-nats-tls -n demo
+# delete the database, service, and PVCs
+kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd-tls.yaml
+kubectl delete pvc -n demo data-etcd-tls-0 data-etcd-tls-1 data-etcd-tls-2
 ```

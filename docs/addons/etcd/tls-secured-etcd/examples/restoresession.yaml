@@ -1,14 +1,14 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: etcd-restore
+  name: etcd-tls-restore
   namespace: demo
 spec:
   task:
     name: etcd-restore-3.5.0 
     params:
       - name: initialCluster
-        value:  "etcd-0=https://etcd-TLS-0.etcd:2380,etcd-1=https://etcd-TLS-1.etcd:2380,etcd-2=https://etcd-TLS-2.etcd:2380"
+        value:  "etcd-tls-0=https://etcd-tls-0.etcd:2380,etcd-tls-1=https://etcd-tls-1.etcd:2380,etcd-tls-2=https://etcd-tls-2.etcd:2380"
       - name: initialClusterToken
         value: "etcd-cluster-1"
       - name: dataDir

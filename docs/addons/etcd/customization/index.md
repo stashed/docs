@@ -16,38 +16,37 @@ section_menu_id: stash-addons
 
 Stash provides rich customization supports for the backup and restore process to meet the requirements of various cluster configurations. This guide will show you some examples of these customizations.
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/redis/customization/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/customization/examples).
 
 ## Customizing Backup Process
 
 In this section, we are going to show you how to customize the backup process. Here, we are going to show some examples of providing arguments to the backup process, running the backup process as a specific user, ignoring some indexes during the backup process, etc.
 
 ### Passing arguments to the backup process
+Stash Etcd addon uses [etcdctl](https://github.com/etcd-io/etcd/tree/main/etcdctl) for backup. You can pass arguments to the `etcdctl` through `args` param under `task.params` section.
 
-Stash Redis addon uses [redis-dump-go](https://github.com/yannh/redis-dump-go) for backup. You can pass arguments to the `redis-dump-go` through `args` param under `task.params` section.
-
-The below example shows how you can pass the `-db 1` to take backup only the database with index 1.
+The below example shows how you can pass the `keepalive-timeout=6s` to take backup only the database with index 1.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: sample-redis-backup
+  name: etcd-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   task:
-    name: redis-backup-6.2.5
+    name: etcd-backup-3.5.0
     params:
     - name: args
-      value: -db 1
+      value: --keepalive-timeout=6s	
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding 
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
@@ -62,24 +61,24 @@ If your cluster requires running the backup job as a specific user, you can prov
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: sample-redis-backup
+  name: etcd-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   task:
-    name: redis-backup-6.2.5
+    name: etcd-backup-3.5.0
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
-  runtimeSettings:
+      name: etcd-appbinding
+    runtimeSettings:
     pod:
       securityContext:
         runAsUser: 0
-        runAsGroup: 0
+        runAsGroup: 0 
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
@@ -94,28 +93,28 @@ If you want to specify the Memory/CPU limit/request for your backup job, you can
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: sample-redis-backup
+  name: etcd-backup
   namespace: demo
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   task:
-    name: redis-backup-6.2.5
+    name: etcd-backup-3.5.0
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
-  runtimeSettings:
-    container:
-      resources:
-        requests:
-          cpu: "200m"
-          memory: "1Gi"
-        limits:
-          cpu: "200m"
-          memory: "1Gi"
+      name: etcd-appbinding
+    runtimeSettings:
+      container:
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "1Gi"
+          limits:
+            cpu: "200m"
+            memory: "1Gi"
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
@@ -130,21 +129,21 @@ You can also specify multiple retention policies for your backed up data. For ex
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: sample-redis-backup
+  name: etcd-backup
   namespace: demo
 spec:
   schedule: "*/5 * * * *"
   task:
-    name: redis-backup-6.2.5
+    name: etcd-backup-3.5.0
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding
   retentionPolicy:
-    name: sample-redis-retention
+    name: sample-etcd-retention
     keepLast: 5
     keepDaily: 10
     keepWeekly: 20
@@ -157,31 +156,46 @@ To know more about the available options for retention policies, please visit [h
 
 ## Customizing Restore Process
 
-Stash uses `redis-cli` during the restore process. In this section, we are going to show how you can pass arguments to the restore process, restore a specific snapshot, run restore job as a specific user, etc.
+Stash uses `etcdctl` during the restore process as well. In this section, we are going to show how you can pass arguments to the restore process, restore a specific snapshot, run restore job as a specific user, etc.
 
 ### Passing arguments to the restore process
 
-Similar to the backup process, you can pass arguments to the restore process through the `args` params under `task.params` section. Here, we have passed `--pipe-timeout` argument to the `redis-cli`.
+Similar to the backup process, you can pass additional arguments to the restore process alongside with the reqiored arguements through the `args` params under `task.params` section. Here, we have passed `--dial-timeout` argument to the `etcdctl`.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: sample-redis-restore
+  name: etcd-restore
   namespace: demo
 spec:
   task:
-    name: redis-restore-6.2.5
+    name: etcd-restore-3.5.0 
     params:
-    - name: args
-      value: --pipe-timeout 300
+      - name: initialCluster
+        value:  "etcd-0=http://etcd-0.etcd:2380,etcd-1=http://etcd-1.etcd:2380,etcd-2=http://etcd-2.etcd:2380"
+      - name: initialClusterToken
+        value: "etcd-cluster-1"
+      - name: dataDir
+        value: "/var/run/etcd"
+      - name: workloadKind
+        value: "StatefulSet"
+      - name: workloadName
+        value: "etcd"
+      - name: args
+        value: --dial-timeout=2s
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding 
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
   rules:
   - snapshots: [latest]
 ```
@@ -209,18 +223,34 @@ The below example shows how you can pass a specific snapshot name through the `s
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: sample-redis-restore
+  name: etcd-restore
   namespace: demo
 spec:
   task:
-    name: redis-restore-6.2.5
+    name: etcd-restore-3.5.0 
+    params:
+      - name: initialCluster
+        value:  "etcd-0=http://etcd-0.etcd:2380,etcd-1=http://etcd-1.etcd:2380,etcd-2=http://etcd-2.etcd:2380"
+      - name: initialClusterToken
+        value: "etcd-cluster-1"
+      - name: dataDir
+        value: "/var/run/etcd"
+      - name: workloadKind
+        value: "StatefulSet"
+      - name: workloadName
+        value: "etcd"
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding 
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
   rules:
   - snapshots: [4bc21d6f]
 ```
@@ -235,20 +265,31 @@ You can provide `securityContext` under `runtimeSettings.pod` section to run the
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: sample-redis-restore
+  name: etcd-restore
   namespace: demo
 spec:
   task:
-    name: redis-restore-6.2.5
+    name: etcd-restore-3.5.0 
+    params:
+      - name: initialCluster
+        value:  "etcd-0=http://etcd-0.etcd:2380,etcd-1=http://etcd-1.etcd:2380,etcd-2=http://etcd-2.etcd:2380"
+      - name: initialClusterToken
+        value: "etcd-cluster-1"
+      - name: dataDir
+        value: "/var/run/etcd"
+      - name: workloadKind
+        value: "StatefulSet"
+      - name: workloadName
+        value: "etcd"
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding 
   runtimeSettings:
-    pod:
+    container:
       securityContext:
         runAsUser: 0
         runAsGroup: 0
@@ -264,20 +305,34 @@ Similar to the backup process, you can also provide `resources` field under the 
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: sample-redis-restore
+  name: etcd-restore
   namespace: demo
 spec:
   task:
-    name: redis-restore-6.2.5
+    name: etcd-restore-3.5.0 
+    params:
+      - name: initialCluster
+        value:  "etcd-0=http://etcd-0.etcd:2380,etcd-1=http://etcd-1.etcd:2380,etcd-2=http://etcd-2.etcd:2380"
+      - name: initialClusterToken
+        value: "etcd-cluster-1"
+      - name: dataDir
+        value: "/var/run/etcd"
+      - name: workloadKind
+        value: "StatefulSet"
+      - name: workloadName
+        value: "etcd"
   repository:
     name: gcs-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: sample-redis
+      name: etcd-appbinding 
   runtimeSettings:
     container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
       resources:
         requests:
           cpu: "200m"

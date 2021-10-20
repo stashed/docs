@@ -171,7 +171,7 @@ $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version"
 secret/etcd-stash-auth created
 ```
 
-Now, let's exec into anyone of the database pod and insert some sample data,
+Now, let's exec into any one of the database pods and insert some sample data,
 ```bash
 ❯ kubectl exec -it -n demo etcd-0 -- /bin/sh
 127.0.0.1:2379> etcdctl --user root:qwe put foo bar
@@ -299,7 +299,7 @@ To schedule a backup, we have to create a `BackupConfiguration` object targeting
 
 #### Create BackupConfiguration
 
-Below is the YAML for `BackupConfiguration` object we are going to use to backup the `etcd` database cluster we have deployed earlier,
+Below is the YAML for `BackupConfiguration` object we are going to use to backup the `Etcd` database cluster we have deployed earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -445,7 +445,7 @@ Now, let's simulate an accidental deletion scenario. Here, we are going to exec 
 
 To restore the database, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted database.
 
-Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `etcd` database.
+Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `Etcd` database cluster.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
