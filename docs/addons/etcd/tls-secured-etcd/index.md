@@ -57,21 +57,25 @@ $ go get github.com/cloudflare/cfssl/cmd/cfssljson
 ````
 
 Now, let's create the certificates using `Cfssl`. You can follow the commands from below. We have stored our SANs in the `ADDRESS` variable here.  The following commands will create 5 certificates named `ca.pem`, `server.pem`, `server-key.pem`, `client.pem`, and `client-key.pem`. The `ca.pem` is a self-signed CA certificate. Rest of the certificates are signed by this CA.
+
 ```bash
 $ echo '{"CN":"CA","key":{"algo":"rsa","size":2048}}' | cfssl gencert  -initca - | cfssljson -bare ca -
 
+
 $ echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth","client auth", "any"]}}}' > ca-config.json
 
-$ export ADDRESS='etcd-0.etcd,etcd-1.etcd,etcd-2.etcd,*.etcd,etcd-service'
+
+$ export ADDRESS='127.0.0.1,0.0.0.0,etcd-tls-0.etcd,etcd-tls-1.etcd,etcd-tls-2.etcd,etcd'
 
 $ export NAME=server
 
 $ echo '{"CN":"'$NAME'","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="$ADDRESS" - |  cfssljson -bare $NAME
 
+
 $ export NAME=client
 
 $ echo '{"CN":"'$NAME'","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="$ADDRESS" - | cfssljson -bare $NAME
-```
+````
 
 ### Create Secret
 Let's create a generic secret with the certificates created above. To create a secret named `etcd-tls-auth` run the following command,
@@ -87,9 +91,9 @@ $ kubectl create secret generic -n demo etcd-tls-auth\
 ### Deploy Etcd
 
 
-At first, let's deploy an Etcd database cluster. Here, we will use a statefulset and a service for deploying an Etcd database cluster consisting of three members. The service is used for handling peer communications and client requests.
+At first, let's deploy an Etcd database cluster. Here, we will use a Statefulset and a service for deploying an Etcd database cluster consisting of three members. The service is used for handling peer communications and client requests.
 
-Let's deploy an Etcd database cluster named `etcd` using a statefulset and a service  from the YAML manifest as below,
+Let's deploy an Etcd cluster named `etcd-tls` using a statefulset and a service  from the YAML manifest as below,
 
 ```yaml
 apiVersion: v1

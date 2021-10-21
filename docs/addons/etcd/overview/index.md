@@ -18,17 +18,17 @@ section_menu_id: stash-addons
 
 Stash `{{< param "info.version" >}}` supports backup and restore operation of many databases. This guide will give you an overview of how Etcd database backup and restore process works in Stash.
 
-## Logical Backup
+## Backup
 
-Stash supports taking logical backup of Etcd databases using [etcdctl](https://github.com/etcd-io/etcd/tree/main/etcdctl). It is the most flexible way to perform a backup and restore, and a good choice when the data size is relatively small.
+Stash supports taking backup of Etcd database using [etcdctl](https://github.com/etcd-io/etcd/tree/main/etcdctl). It is the most flexible way to perform backup and restore of Etcd database.
 
-### How Logical Backup Works
+### How Backup Works
 
-The following diagram shows how Stash takes logical backup of a Etcd database. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash takes backup of a Etcd database. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Etcd Backup Overview" src="/docs/addons/etcd/overview/images/etcd-logical-backup.svg">
-  <figcaption align="center">Fig: Etcd Logical Backup Overview</figcaption>
+  <img alt="Etcd Backup Overview" src="/docs/addons/etcd/overview/images/etcd-backup.svg">
+  <figcaption align="center">Fig: Etcd Backup Overview</figcaption>
 </figure>
 
 The backup process consists of the following steps:
@@ -51,19 +51,19 @@ The backup process consists of the following steps:
 
 9. Then, it creates the Job to backup the targeted database.
 
-10. The backup Job reads necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
+10. The backup Job reads the necessary information to connect with the database from the `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-11. Then, the Job takes snapshot of the targeted database using etcdctl and uploads the snapshot to the backend. Stash stores the snapshot temporarily in a temporary directory before uploading into the backend. Hence, you can provide a tempdir template using `spec.TempDir` field of `BackupConfiguration` crd to use to store those dumped files temporarily.
+11. Then, the Job takes snapshot of the targeted database using `etcdctl` and uploads the snapshot to the backend. Stash stores the snapshot temporarily in a directory before uploading that into the backend. You can limit the temporary directory size using `spec.TempDir` field of `BackupConfiguration` crd.
 
-12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup procedure.
+12. Finally, when the backup is complete, the Job sends Prometheus metrics to the Pushgateway running inside Stash operator pod. It also updates the `BackupSession` and `Repository` status to reflect the backup completion.
 
-### How Restore from Logical Backup Works
+### How Restore from Backup Works
 
-The following diagram shows how Stash restores a Etcd database from a logical backup. Open the image in a new tab to see the enlarged version.
+The following diagram shows how Stash restores an Etcd database from a backup. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Etcd Database Restore Overview" src="/docs/addons/etcd/overview/images/etcd-logical-restore.svg">
-  <figcaption align="center">Fig: Etcd Logical Restore Process Overview</figcaption>
+  <img alt="Etcd Database Restore Overview" src="/docs/addons/etcd/overview/images/etcd-restore.svg">
+  <figcaption align="center">Fig: Etcd Restore Process Overview</figcaption>
 </figure>
 
 The restore process consists of the following steps:
