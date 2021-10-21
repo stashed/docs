@@ -15,10 +15,10 @@ spec:
       kind: AppBinding
       name: etcd-appbinding
     runtimeSettings:
-    pod:
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0 
+      pod:
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0 
   retentionPolicy:
     name: keep-last-5
     keepLast: 5

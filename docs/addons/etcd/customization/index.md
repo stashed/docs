@@ -75,10 +75,10 @@ spec:
       kind: AppBinding
       name: etcd-appbinding
     runtimeSettings:
-    pod:
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0 
+      pod:
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0 
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
@@ -106,15 +106,15 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: etcd-appbinding
-    runtimeSettings:
-      container:
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "1Gi"
-          limits:
-            cpu: "200m"
-            memory: "1Gi"
+  runtimeSettings:
+    container:
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "1Gi"
+        limits:
+          cpu: "200m"
+          memory: "1Gi"
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
