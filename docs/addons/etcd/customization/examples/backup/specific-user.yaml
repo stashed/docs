@@ -14,11 +14,11 @@ spec:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: etcd-appbinding
-    runtimeSettings:
-      pod:
-        securityContext:
-          runAsUser: 0
-          runAsGroup: 0 
+  runtimeSettings:
+    pod:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0 
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
