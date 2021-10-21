@@ -78,7 +78,7 @@ The restore process consists of the following steps:
 
 5. The Job reads necessary information to connect with the database from respective `AppBinding` crd. It also reads backend information and access credentials from `Repository` crd and Storage Secret respectively.
 
-6. Then, the job downloads the backed up snapshot from the backend and insert into the desired database. Stash stores the downloaded files temporarily before inserting into the targeted database. Hence, you can provide a tempdir template using `spec.TempDir` field of `RestoreSession` crd to use to store those restored files temporarily.
+6. Then, the job downloads the backed up snapshot from the backend and restore that snapshot into the `Etcd` database. Stash stores the downloaded files temporarily before inserting into the targeted database.
 
 7. Finally, when the restore process is complete, the Job sends Prometheus metrics to the Pushgateway and update the `RestoreSession` status to reflect restore completion.
 
