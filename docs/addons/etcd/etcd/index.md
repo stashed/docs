@@ -380,7 +380,7 @@ gcs-repo   true        93 B   1                2m1s                     24m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `/demo/etcd/etcd-backup` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/etcd/images/etcd-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/etcd/images/etcd-backup.jpg">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
