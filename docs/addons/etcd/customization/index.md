@@ -1,10 +1,10 @@
 ---
 title: Etcd Backup Customization | Stash
-description: Customizing Etcd Backup and Restore process with Stash
+description: Customizing Backup and Restore process with Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-etcd-customization
-    name: Customizing Etcd Backup & Restore Process
+    name: Customizing Backup & Restore Process
     parent: stash-etcd
     weight: 40
 product_name: stash

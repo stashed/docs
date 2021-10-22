@@ -4,7 +4,7 @@ description: Backup TLS Secured Etcd using Stash
 menu:
   docs_{{ .version }}:
     identifier: etcd-backup-tls
-    name: TLS Secured Etcd Cluster
+    name: Etcd Cluster with TLS
     parent: stash-etcd
     weight: 30
 product_name: stash
@@ -13,7 +13,7 @@ section_menu_id: stash-addons
 ---
 
 
-# Backup TLS secured Etcd using Stash
+# Backup & Restore an Etcd Cluster with TLS
 
 Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd database. This guide will show you how you can backup & restore a TLS secured Etcd cluster using Stash.
 
@@ -21,7 +21,6 @@ Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd dat
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
-- Install cert-manager in your cluster following the instruction [here](https://cert-manager.io/docs/installation/).
 - If you are not familiar with how Stash backup and restore Etcd databases, please check the following guide [here](/docs/addons/etcd/overview/index.md).
 
 You have to be familiar with following custom resources:
@@ -40,15 +39,15 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls/examples).
 
 ## Prepare Etcd
 
-In this section, we are going to deploy a TLS secured Etcd cluster. Then, we are going to insert some sample data into the cluster.
+In this section, we are going to deploy a TLS secured Etcd cluster. Then, we will insert some sample data into the cluster.
 
 
-### Create Certificate
-At first, let's create certificates that our Etcd cluster will use for handling client requests and maintaining peer communications. We will be using Etcd recommended [cfssl](https://github.com/cloudflare/cfssl) tool for creating our necessary certificates.
+### Create Certificates
+Let's create certificates that our Etcd cluster will use for authenticating client requests and peer communications. We will be using Etcd recommended [cfssl](https://github.com/cloudflare/cfssl) tool for creating our necessary certificates.
 
 If you have `go` installed on your machine, you can run the following commands to install `cfssl`,
 ```bash
@@ -77,10 +76,10 @@ $ export NAME=client
 $ echo '{"CN":"'$NAME'","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="$ADDRESS" - | cfssljson -bare $NAME
 ````
 
-We have stored our SANs in the `ADDRESS` variable here.  The above commands will create 5 certificates named `ca.pem`, `server.pem`, `server-key.pem`, `client.pem`, and `client-key.pem`. The `ca.pem` is a self-signed CA certificate. Rest of the certificates are signed by this CA.
+We have stored our SANs in the `ADDRESS` variable here. The above commands should create 5 certificates named `ca.pem`, `server.pem`, `server-key.pem`, `client.pem`, and `client-key.pem`. The `ca.pem` is a self-signed CA certificate. Rest of the certificates are signed by this CA.
 
 ### Create Secret
-Let's create a generic secret with the certificates created above.
+Let's create a generic Secret with the certificates created above.
 ```bash
 $ kubectl create secret generic -n demo etcd-server-certs\
                      --from-file=./ca.pem\
@@ -94,10 +93,9 @@ secret/etcd-server-certs created
 
 ### Deploy Etcd
 
+At first, let's deploy an Etcd cluster. Here, we will use a StatefulSet and a Service to deploy an Etcd cluster consisting of three members. The Service is used for handling peer communications and client requests.
 
-At first, let's deploy an Etcd cluster. Here, we will use a StatefulSet and a Service for deploying an Etcd cluster consisting of three members. The Service is used for handling peer communications and client requests.
-
-Let's deploy an Etcd cluster named `etcd-tls` using a StatefulSet and a Service  from the YAML manifest as below,
+Here, are the sample YAMLs that we are going to use to deploy the Etcd cluster,
 
 ```yaml
 apiVersion: v1
@@ -182,13 +180,12 @@ spec:
             storage: 1Gi
 ```
 
-Let's create the `Etcd cluster` we have shown above,
+Let's deploy the Etcd cluster we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls/examples/etcd.yaml
 service/etcd created
 statefulset.apps/etcd-tls created
 ```
-This YAML will create the necessary StatefulSet, Service, PVCs for the Etcd cluster. 
 
 Now, let's wait for the database pods `etcd-tls-0`, `etcd-tls-1`, and `etcd-tls-2` to go into `Running` state,
 
@@ -201,7 +198,7 @@ etcd-tls-1          1/1     Running   0          6m
 etcd-tls-2          1/1     Running   0          6m
 ```
 
-Once the database pods are in `Running` state, verify that the Etcd cluster is ready to accept connections. Let's exec into the `etcd-tls-0` database pod and check cluster's `endpoint health`.
+Once the database pods are in `Running` state, verify that the Etcd cluster is ready to accept connections. Let's exec into the `etcd-tls-0` database pod and check cluster's health.
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
@@ -212,7 +209,7 @@ Once the database pods are in `Running` state, verify that the Etcd cluster is r
 We can see from the above output that our Etcd cluster is ready to accept connections.
 
 ### Insert Sample Data
-Now, we are going to exec into anyone of the database pod and insert some sample data.
+Now, we are going to exec into any of the database pods and insert some sample data.
 
 Let's exec into the `etcd-tls-0` pod for inserting sample data.
 
@@ -245,11 +242,11 @@ We have successfully deployed an Etcd cluster and inserted some sample data into
 
 ## Prepare for Backup
 
-In this section, we are going to prepare the necessary resources (i.e. connection information, backend information, etc.) before backup.
+In this section, we are going to prepare the necessary resources (e.g., connection information, backend information, etc.) before backup.
 
 ### Ensure Etcd Addon
 
-When you install Stash Enterprise version, it will automatically install all the official database addons. Make sure that Etcd addon was installed properly using the following command.
+When you install Stash Enterprise edition, it will automatically install all the official addons. Make sure that Etcd addon has been installed properly using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep etcd
@@ -260,7 +257,7 @@ etcd-restore-3.5.0            18m
 This addon should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/etcd/README.md#addon-version-compatibility).
 
 ### Create Secret
-To access TLS secured Etcd cluster from Stash, we need to create a secret containing necessary `client-key` and `client certificate` in the `base64` encoded format. Let's create the secret containing necessary `client-key` and `client certificate` from the certificates created earlier to access our Etcd cluster.
+To access TLS secured Etcd cluster from Stash, we need to create a Secret. Let's create the Secret containing `client-key,pem` and `client.pem` from the certificates we have created earlier.
 
 ```bash
 kc create secret generic -n demo etcd-client-certs\
@@ -271,9 +268,9 @@ secret/etcd-client-certs created
 
 ### Create AppBinding
 
-Stash needs to know how to connect with the Etcd databse cluster. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the Etcd cluster. You have to point to the respective `AppBinding` as a target of backup instead of the Etcd cluster itself.
+Stash needs to know how to connect with the Etcd cluster. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the Etcd cluster. You have to point to the respective `AppBinding` as a target of backup instead of the Etcd cluster itself.
 
-Here, is the YAML of the `AppBinding` targetting the Etcd cluster we have deployed earlier.
+Here is the YAML of the `AppBinding` that we are going to create for the Etcd cluster we have deployed earlier.
 
 ```yaml
 apiVersion: appcatalog.appscode.com/v1alpha1
@@ -296,15 +293,15 @@ spec:
 
 Here,
 
-- `.spec.clientConfig.caBundle` specifies a  base64 encoded CA bundle which will be used to validate the serving certificate of the Etcd cluster. This is the base64 encoded version of previously created certificate `ca.pem` 
+- `.spec.clientConfig.caBundle` specifies the base64 encoded CA certificate. Here we have used the base64 encoded version of our previously generated `ca.pem` certificate.
 - `.spec.clientConfig.Service` specifies the Service information to use to connect with the Etcd cluster.
-- `.spec.secret` specifies the name of the Secret that holds the necessary client certificates  to access the Etcd cluster.
-- `spec.type` specifies the type of the database.
+- `.spec.secret` specifies the name of the Secret that holds the necessary client certificates.
+- `.spec.type` specifies the type of the database.
 
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/etcd-appbinding created
 ```
 
@@ -348,7 +345,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -356,11 +353,11 @@ Now, we are ready to backup our data into our desired backend.
 
 ### Backup
 
-To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our `Etcd` cluster. Then, Stash will create a CronJob to periodically backup the cluster.
+To schedule a backup, we need to create a `BackupConfiguration` object targeting the respective `AppBinding` of our Etcd cluster. Then, Stash will create a CronJob to periodically backup the cluster.
 
 #### Create BackupConfiguration
 
-Below is the YAML for `BackupConfiguration` object that we are going to use to backup the data of the Etcd cluster we have created earlier,
+Below, is the YAML for `BackupConfiguration` object that we are going to use to backup the TLS enabled Etcd cluster we have deployed earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -396,7 +393,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/etcd-tls-backup created
 ```
 
@@ -439,7 +436,7 @@ gcs-repo     true        42.105 KiB  2                2m10s                    4
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/nats/sample-nats-tls` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/tls-secured-etcd/images/etcd-tls-backup.jpg">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/tls/images/etcd-tls-backup.jpg">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -447,13 +444,13 @@ Now, if we navigate to the GCS bucket, we will see the backed up data has been s
 
 > Note: Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore
+## Restore Etcd
 
-If you have followed the previous sections properly, you should have a successful backup of your Etcd cluster. Now, we are going to show how you can restore the Etcd cluster from the back up.
+If you have followed the previous sections properly, you should have a successful backup of your TLS enabled Etcd cluster. Now, we are going to show how you can restore the Etcd cluster from the backup.
 
 ### Restore Into the Same Etcd Cluster
 
-You can restore your data into the same Etcd cluster you have taken backed up snapshot from or into a different Etcd cluster. In this section, we are going to show you how to restore in the same Etcd cluster which may be necessary when you have accidentally deleted any data from the running cluster.
+You can restore your data into the same Etcd cluster you have taken backup from or into a different Etcd cluster. In this section, we are going to show you how to restore data in the same Etcd cluster which maybe necessary when you have accidentally deleted any data from the running cluster.
 
 
 #### Temporarily Pause Backup
@@ -510,7 +507,7 @@ Now, let's simulate an accidental deletion scenario. Here, we are going to exec 
 
 To restore the database, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted database.
 
-Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `Etcd` database cluster.
+Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our Etcd database cluster.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -551,20 +548,20 @@ spec:
 Here,
 
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore an Etcd database.
-- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backed up data into an Etcd cluster.
-- The `initialcluster` argument of `spec.task.params` section refers to the initial cluster configuration of the Etcd cluster and it must be the same as the initial cluster configuration of the deployed Etcd cluster.
-- The `dataDir` argument of `spec.task.params` section refers to the datadir of the deployed Etcd cluster where the backed up data will get restored.
-- The `workloadKind` argument of `spec.task.params` section refers to the workload e.g. Pod/StatefulSet we have used to deploy the Etcd cluster where we are operating restore using Stash.
-- The `workloadName` argument of `spec.task.params` section refers to the workload name we have used to deploy the Etcd cluster.
+- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backup data into an Etcd cluster. We need to specify the folowing parameters to restore data in an Etcd cluster.
+  - `initialcluster` parameter refers to the initial cluster configuration of the Etcd cluster and it must be the same as the initial cluster configuration of the deployed Etcd cluster.
+  - `dataDir` parameter refers to the datadir of the deployed Etcd cluster where the backed up data will get restored.
+  - `workloadKind` parameter refers to the workload e.g. Pod/StatefulSet we have used to deploy the Etcd cluster.
+  - `workloadName` parameter refers to the workload name we have used to deploy the Etcd cluster.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `Etcd` database.
+- `.spec.target.ref` refers to the respective AppBinding of the Etcd database.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
-- In `spec.runtimeSettings.Container.securityContext` we have specified root user and root group. We need to delete existing data of the data dir of our Etcd cluster in order to restore the backed up data. For that, the restoresession job needs either the root access or the same user access as Etcd database pods. You can specify anyone of the two user.
+- In `spec.runtimeSettings.Container.securityContext` we have specified root user and root group. We need to access the data dir of our Etcd cluster in order to restore the backed up data. For that, the restoresession job needs either the root access or the same user access as Etcd database pods. You can specify any of the two user.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls/examples/restoresession.yaml
 restoresession.stash.appscode.com/etcd-tls-restore created
 ```
 
@@ -584,7 +581,7 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 #### Verify Restored Data
 
-Now, let's exec into the `etcd-tls-0` database pod and verify whether data actual data has been restored or not,
+Now, let's exec into the `etcd-tls-0` database pod and verify whether the actual data has been restored or not,
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
@@ -620,7 +617,7 @@ NAME              TASK                SCHEDULE      PAUSED   AGE
 etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *   false    39m
 ```
 
-Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
+Here, `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
 
 ```bash
 ❯ kubectl get cronjob -n demo
@@ -629,6 +626,19 @@ stash-trigger-etcd-tls-backup   */5 * * * *   False     0        2m39s          
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
+
+### Restore Into Different Database of the Same Namespace
+
+If you want to restore the backed up data into a different Etcd cluster of the same namespace, you have to create another `AppBinding` pointing to the desired cluster. Then, you have to create the `RestoreSession` pointing to the new `AppBinding`.
+
+### Restore Into Different Namespace
+
+If you want to restore into a different namespace of the same cluster, you have to create the Repository, backend Secret, AppBinding, in the desired namespace. You can use [Stash kubectl plugin](https://stash.run/docs/latest/guides/latest/cli/cli/) to easily copy the resources into a new namespace. Then, you have to create the `RestoreSession` object in the desired namespace pointing to the Repository, AppBinding of that namespace.
+
+### Restore Into Different Cluster
+
+If you want to restore into a different cluster, you have to install Stash in the desired cluster. Then, you have to create the Repository, backend Secret, AppBinding, in the desired cluster. Finally, you have to create the `RestoreSession` object in the desired cluster pointing to the Repository, AppBinding of that cluster.
+
 
 ## Cleanup
 
@@ -640,6 +650,6 @@ kubectl delete -n demo restoresession etcd-tls-restore
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo appbinding etcd-appbinding
 # delete the database, Service, and PVCs
-kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd-tls.yaml
+kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls/examples/etcd-tls.yaml
 kubectl delete pvc -n demo data-etcd-tls-0 data-etcd-tls-1 data-etcd-tls-2
 ```

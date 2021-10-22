@@ -4,7 +4,7 @@ description: Take backup of Etcd cluster using Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-etcd-basic-auth
-    name: Backup & Restore Etcd Cluster
+    name: Etcd Cluster with Basic Auth
     parent: stash-etcd
     weight: 20
 product_name: stash
@@ -12,7 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Take a backup of the Etcd database using Stash
+# Backup & Restore an Etcd Cluster with Basic Auth Enabled
 
 Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd database. This guide will show you how you can take backup & restore your Etcd database using Stash.
 
@@ -38,7 +38,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples).
 
 ## Prepare Etcd
 
@@ -46,9 +46,9 @@ In this section, we are going to deploy an Etcd cluster. Then, we will insert so
 
 ### Deploy Etcd
 
-At first, let's deploy an Etcd cluster. Here, we will use a StatefulSet and a Service for deploying an Etcd cluster consisting of three members. The Service is used for handling peer communications and client requests of the Etcd cluster.
+At first, let's deploy an Etcd cluster. Here, we will use a StatefulSet and a Service to deploy an Etcd cluster consisting of three members. The Service is used for handling peer communications and client requests.
 
-Let's deploy an Etcd cluster named `etcd` using a StatefulSet and a Service from the YAML manifest as below,
+Here, is the sample YAMLs that we are going to use to deploy the Etcd cluster,
 
 ```yaml
 apiVersion: v1
@@ -121,15 +121,14 @@ spec:
             storage: 1Gi
 ```
 
-Let's create the `Etcd cluster` we have shown above,
+Let's deploy the Etcd cluster we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/etcd.yaml
 service/etcd created
 statefulset.apps/etcd created
 ```
-This YAML will create the necessary StatefulSet, Service, PVCs for the Etcd cluster. 
 
-Now, wait for the database pods `etcd-0`, `etcd-1`, and `etcd-2` to go into `Running` state,
+Now, let's wait for the database pods `etcd-0`, `etcd-1`, and `etcd-2` to go into `Running` state,
 
 ```bash
 ❯ kc get pods -n demo --selector=app=etcd
@@ -140,7 +139,7 @@ etcd-1   1/1     Running   0          10s
 etcd-2   1/1     Running   0          9s
 ```
 
-Once the database pods are in `Running` state, verify that the Etcd cluster is ready to accept connections. Let's exec into `etcd-0` pod and check cluster's `endpoint health`.
+Once the database pods are in `Running` state, verify that the Etcd cluster is ready to accept connections. Let's exec into the `etcd-0` pod and check cluster's health.
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-0 -- /bin/sh
@@ -149,9 +148,8 @@ Once the database pods are in `Running` state, verify that the Etcd cluster is r
 ```
 We can see from the above output that our Etcd cluster is ready to accept connections.
 
-
-### Enabling basic authentication in Etcd cluster
-To use basic-authentication in Etcd cluster, we need to add a user and a password for that user using `etcdctl` first. We will add one special user, `root` and grant this user `root` role. The `root` role has global read-write access and permission accross an Etcd database by default.
+### Enabling basic authentication
+To use basic authentication in Etcd cluster, we need to create a user using `etcdctl`. We will add one special user, `root` and grant this user `root` role. The `root` role has global read-write access and permission accross an Etcd database by default.
 
 Let's exec into `etcd-0` pod and enable basic authentication,
 
@@ -170,13 +168,13 @@ Role root is granted to user root
 Authentication Enabled
 127.0.0.1:2379> exit
 ```
-Here, we have used `not@secret` as password for the user root. 
+Here, we have used `not@secret` as password for the user we have created above. 
 
 ### Insert Sample Data
 
-Now, we are going to exec into anyone of the database pod and insert some sample data.
+Now, we are going to exec into any of the database pods and insert some sample data.
 
-Let's exec into the `etcd-0` pod for inserting sample data. For future convenience, we have exported the username and password as an environment variable in the `etcd-0` pod.
+Let's exec into the `etcd-0` pod for inserting sample data. We are going to export the username and password as an environment variable.
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-0 -- /bin/sh
@@ -206,11 +204,11 @@ We have successfully deployed an Etcd cluster and inserted some sample data into
 
 ## Prepare for Backup
 
-In this section, we are going to prepare the necessary resources (i.e. database connection information, backend information, etc.) before backup.
+In this section, we are going to prepare the necessary resources (e.g., database connection information, backend information, etc.) before backup.
 
 ### Ensure Etcd Addon
 
-When you install Stash Enterprise version, it will automatically install all the official database addons. Make sure that Etcd addon was installed properly using the following command.
+When you install Stash Enterprise edition, it will automatically install all the official addons. Make sure that Etcd addon has been installed properly using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep etcd
@@ -221,9 +219,10 @@ etcd-restore-3.5.0            18m
 This addon should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/etcd/README.md#addon-version-compatibility).
 
 ### Create Secret
-You can skip this section if you don't have any authentication enabled in your Etcd cluster. 
 
-We need to create a secret containing access credentials to take backup using Stash while we have enabled basic-authentication in the Etcd cluster. We need to encode the username and password in base64 encoding into the secret. Let's create the secret containing the username and password of our Etcd database from the following YAML,
+>You can skip this section if you don't have any authentication enabled in your Etcd cluster. 
+
+We need to create a Secret containing access credentials to take backup using Stash while we have enabled basic authentication in the Etcd cluster. Here is the YAML of a Secret containing the username and password of our Etcd cluster,
 
 ```yaml
 apiVersion: v1
@@ -232,22 +231,22 @@ metadata:
   name: etcd-basic-auth
   namespace: demo
 type: Opaque
-data:
-  username: cm9vdA==
-  password: bm90QHNlY3JldA==
+stringData:
+  username: root
+  password: not@secret
 ```
 
-Let's create the `etcd-basic-auth` secret we have shown above,
+Let's create the `etcd-basic-auth` Secret we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd-secret.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/etcd-secret.yaml
 secret/etcd-basic-auth created
 ```
 
 ### Create AppBinding
 
-Stash needs to know how to connect with the Etcd databse cluster. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the Etcd cluster. You have to point to the respective `AppBinding` as a target of backup instead of the Etcd cluster itself.
+Stash needs to know how to connect with the Etcd cluster. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the Etcd cluster. You have to point to the respective `AppBinding` as a target of backup instead of the Etcd cluster itself.
 
-Here, is the YAML of the `AppBinding` that we are going to create for the Etcd cluster we have deployed earlier.
+Here is the YAML of the `AppBinding` that we are going to create for the Etcd cluster we have deployed earlier.
 
 ```yaml
 apiVersion: appcatalog.appscode.com/v1alpha1
@@ -269,14 +268,14 @@ spec:
 
 Here,
 
-- **.spec.clientConfig.Service** specifies the Service information to use to connects with the database client.
-- **.spec.secret** specifies the name of the Secret that holds necessary credentials to access the database. If your Etcd database is not using authentication, then don't provide this field.
-- `spec.type` specifies the type of the database.
+- `.spec.clientConfig.Service` specifies the Service information to use to connects with the database client.
+- `.spec.secret` specifies the name of the Secret that holds necessary credentials to access the database. If your Etcd database is not using authentication, then don't provide this field.
+- `.spec.type` specifies the type of the database.
 
 Let's create the `AppBinding` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/appbinding.yaml
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/appbinding.yaml
 appbinding.appcatalog.appscode.com/etcd-appbinding created
 ```
 
@@ -301,7 +300,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, crete a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
+Now, create a `Repository` object with the information of your desired bucket. Below is the YAML of `Repository` object we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
@@ -313,14 +312,14 @@ spec:
   backend:
     gcs:
       bucket: stash-testing
-      prefix: /demo/etcd/etcd-backup
+      prefix: /demo/etcd/basic-auth-backup
     storageSecretName: gcs-secret
 ```
 
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/repository.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -328,11 +327,11 @@ Now, we are ready to backup our data into our desired backend.
 
 ### Backup
 
-To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our `Etcd` cluster. Then Stash will create a CronJob to periodically backup the database.
+To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our Etcd cluster. Then Stash will create a CronJob to periodically backup the database.
 
 #### Create BackupConfiguration
 
-Below is the YAML for `BackupConfiguration` object we are going to use to backup the `Etcd` database cluster we have deployed earlier,
+Below, is the YAML for `BackupConfiguration` object we are going to use to backup the Etcd cluster we have deployed earlier.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -368,7 +367,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/backupconfiguration.yaml
+$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/etcd-backup created
 ```
 
@@ -410,10 +409,10 @@ NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
 gcs-repo   true        93 B   1                2m1s                     24m
 ```
 
-Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `/demo/etcd/etcd-backup` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
+Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `/demo/etcd/basic-auth-backup` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/etcd/images/etcd-backup.jpg">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/etcd/basic-auth/images/etcd-backup.jpg">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -425,7 +424,7 @@ If you have followed the previous sections properly, you should have a successfu
 
 ### Restore Into the Same Etcd Cluster
 
-You can restore your data into the same Etcd cluster you have taken backed up snapshot from or into a different Etcd cluster. In this section, we are going to show you how to restore in the same Etcd cluster which may be necessary when you have accidentally deleted any data from the running cluster.
+You can restore your data into the same Etcd cluster you have taken backup from or into a different Etcd cluster. In this section, we are going to show you how to restore data in the same Etcd cluster which maybe necessary when you have accidentally deleted any data from the running cluster.
 
 #### Temporarily Pause Backup
 
@@ -481,7 +480,7 @@ Now, let's simulate an accidental deletion scenario. Here, we are going to exec 
 
 To restore the database, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted database.
 
-Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `Etcd` database cluster.
+Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our Etcd database cluster.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -522,20 +521,20 @@ spec:
 Here,
 
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore an Etcd database.
-- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backed up data into an Etcd cluster.
-- The `initialcluster` argument of `spec.task.params` section refers to the initial cluster configuration of the Etcd cluster and it must be the same as the initial cluster configuration of the deployed Etcd cluster.
-- The `dataDir` argument of `spec.task.params` section refers to the datadir of the deployed Etcd cluster where the backed up data will get restored.
-- The `workloadKind` argument of `spec.task.params` section refers to the workload e.g. Pod/StatefulSet we have used to deploy the Etcd cluster where we are operating restore using Stash.
-- The `workloadName` argument of `spec.task.params` section refers to the workload name we have used to deploy the Etcd cluster.
+- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backup data into an Etcd cluster. We need to specify the folowing parameters to restore data in an Etcd cluster.
+  - `initialcluster` parameter refers to the initial cluster configuration of the Etcd cluster and it must be the same as the initial cluster configuration of the deployed Etcd cluster.
+  - `dataDir` parameter refers to the datadir of the deployed Etcd cluster where the backed up data will get restored.
+  - `workloadKind` parameter refers to the workload e.g. Pod/StatefulSet we have used to deploy the Etcd cluster.
+  - `workloadName` parameter refers to the workload name we have used to deploy the Etcd cluster.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `Etcd` database.
+- `.spec.target.ref` refers to the respective AppBinding of the Etcd database.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
-- In `spec.runtimeSettings.Container.securityContext` we have specified root user and root group. We need to delete existing data of the data dir of our Etcd cluster in order to restore the backed up data. For that, the restoresession job needs either the root access or the same user access as Etcd database pods. You can specify anyone of the two user.
+- In `spec.runtimeSettings.Container.securityContext` we have specified root user and root group. We need to access the data dir of our Etcd cluster in order to restore the backed up data. For that, the restoresession job needs either the root access or the same user access as Etcd database pods. You can specify any of the two user.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/restoresession.yaml
 restoresession.stash.appscode.com/etcd-restore created
 ```
 
@@ -555,7 +554,7 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 #### Verify Restored Data
 
-Now, let's exec into the `etcd-0` database pod and verify whether data actual data has been restored or not,
+Now, let's exec into the `etcd-0` database pod and verify whether the actual data has been restored or not,
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-0 -- /bin/sh
@@ -623,6 +622,6 @@ kubectl delete -n demo restoresession etcd-restore
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo appbinding etcd-appbinding
 # delete the Etcd cluster, Service, and PVCs
-kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd.yaml
+kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/etcd.yaml
 kubectl delete pvc -n demo data-etcd-0 data-etcd-1 data-etcd-2
 ```

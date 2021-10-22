@@ -33,13 +33,13 @@ Here, the addon follows `M.M.P` versioning scheme where `M.M.P` (Major.Minor.Pat
 
 ## Addon Version Compatibility
 
-Any addon with matching major version with the database version should be able to take backup of that database. For example, Etcd addon with version `3.x.x` should be able take backup of any Etcd of `3.x.x` series. However, this might not be true for some versions. In that case, we will have a separate addon for that version.
+Any addon with matching major version with the database version should be able to take backup of that database. For example, Etcd addon with version `3.x.x` should be able to take backup of any Etcd of `3.x.x` series. However, this might not be true for some versions. In that case, we will have a separate addon for that version.
 
 ## Documentation Overview
 
 Stash Etcd documentations are organized as below:
 
-- [How does it works?](/docs/addons/etcd/overview/index.md) gives an overview of how backup and restore process for etcd database works in Stash.
-- [Backup & Restore Etcd Cluster](/docs/addons/etcd/etcd/index.md) shows how to backup and restore a Etcd database.
-- [Backup & Restore TLS Secured Etcd Cluster](/docs/addons/etcd/tls-secured-etcd/index.md) shows how to configure a backup and restore process for TLS secured Etcd database.
-- [Customizing Etcd Backup & Restore Process](/docs/addons/etcd/customization/index.md) shows how to customize the backup & restore process.
+- [How does it works?](/docs/addons/etcd/overview/index.md) gives an overview of how backup and restore process for Etcd database works in Stash.
+- [Etcd Cluster with Basic Auth](/docs/addons/etcd/basic-auth/index.md) shows how to backup and restore an Etcd cluster.
+- [Etcd Cluster with TLS](/docs/addons/etcd/tls/index.md) shows how to configure backup and restore process for TLS secured Etcd cluster.
+- [Customizing Backup & Restore Process](/docs/addons/etcd/customization/index.md) shows how to customize the backup & restore process.
