@@ -11,6 +11,6 @@ spec:
       port: 2379
       scheme: https
   secret:
-    name: etcd-stash-auth
+    name: etcd-client-certs
   type: etcd
   version: 3.5.0 

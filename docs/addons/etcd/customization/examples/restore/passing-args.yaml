@@ -18,7 +18,7 @@ spec:
       - name: workloadName
         value: "etcd"
       - name: args
-        value: --dial-timeout=2s
+        value: --insecure-skip-tls-verify=true
   repository:
     name: gcs-repo
   target:
@@ -33,4 +33,3 @@ spec:
         runAsGroup: 0
   rules:
   - snapshots: [latest]
-  

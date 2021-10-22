@@ -124,8 +124,8 @@ spec:
 Let's create the `Etcd cluster` we have shown above,
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd.yaml
-Service/etcd created
-StatefulSet.apps/etcd created
+service/etcd created
+statefulset.apps/etcd created
 ```
 This YAML will create the necessary StatefulSet, Service, PVCs for the Etcd cluster. 
 
@@ -174,9 +174,9 @@ Here, we have used `not@secret` as password for the user root.
 
 ### Insert Sample Data
 
-Now, we are going to exec into the database pod and insert some sample data.
+Now, we are going to exec into anyone of the database pod and insert some sample data.
 
-Let's exec into `etcd-0` pod for inserting sample data. For future convenience, we have exported the username and password as an environment variable in the `etcd-0` pod.
+Let's exec into the `etcd-0` pod for inserting sample data. For future convenience, we have exported the username and password as an environment variable in the `etcd-0` pod.
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-0 -- /bin/sh
@@ -324,11 +324,11 @@ $ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version"
 repository.stash.appscode.com/gcs-repo created
 ```
 
-Now, we are ready to backup our database into our desired backend.
+Now, we are ready to backup our data into our desired backend.
 
 ### Backup
 
-To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our desired database. Then Stash will create a CronJob to periodically backup the database.
+To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our `Etcd` cluster. Then Stash will create a CronJob to periodically backup the database.
 
 #### Create BackupConfiguration
 
@@ -423,13 +423,13 @@ Now, if we navigate to the GCS bucket, we will see the backed up data has been s
 
 If you have followed the previous sections properly, you should have a successful backup of your Etcd cluster. Now, we are going to show how you can restore the database from the backed up data.
 
-### Restore Into the Same Database
+### Restore Into the Same Etcd Cluster
 
-You can restore your data into the same database you have backed up from or into a different database in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same database which may be necessary when you have accidentally deleted any data from the running database.
+You can restore your data into the same Etcd cluster you have taken backed up snapshot from or into a different Etcd cluster. In this section, we are going to show you how to restore in the same Etcd cluster which may be necessary when you have accidentally deleted any data from the running cluster.
 
 #### Temporarily Pause Backup
 
-At first, let's stop taking any further backup of the database so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
+At first, let's stop taking any further backup of the Etcd cluster so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
 
 Let's pause the `etcd-backup` BackupConfiguration,
 
@@ -555,7 +555,7 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 #### Verify Restored Data
 
-Now, let's exec into the database pod and verify whether data actual data has been restored or not,
+Now, let's exec into the `etcd-0` database pod and verify whether data actual data has been restored or not,
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-0 -- /bin/sh
@@ -622,7 +622,7 @@ kubectl delete -n demo backupconfiguration etcd-backup
 kubectl delete -n demo restoresession etcd-restore
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo appbinding etcd-appbinding
-# delete the database, Service, and PVCs
+# delete the Etcd cluster, Service, and PVCs
 kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/etcd/examples/etcd.yaml
 kubectl delete pvc -n demo data-etcd-0 data-etcd-1 data-etcd-2
 ```

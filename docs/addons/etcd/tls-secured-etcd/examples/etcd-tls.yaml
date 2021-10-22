@@ -67,7 +67,7 @@ spec:
       volumes:
         - name: etcd-secret
           secret:
-            secretName: etcd-tls-auth
+            secretName: etcd-server-certs
   volumeClaimTemplates:
     - metadata:
         name: data

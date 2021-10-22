@@ -16,7 +16,7 @@ spec:
       - name: workloadKind
         value: "StatefulSet"
       - name: workloadName
-        value: "etcd"
+        value: "etcd-tls"
   repository:
     name: gcs-repo
   target:

@@ -1,10 +1,10 @@
 ---
-title: TLS-secured-Etcd Backup | Stash
-description: Backup TLS-secured-Etcd using Stash
+title: TLS Secured Etcd Backup | Stash
+description: Backup TLS Secured Etcd using Stash
 menu:
   docs_{{ .version }}:
-    identifier: tls-secured-etcd-backup
-    name: TLS-secured-etcd
+    identifier: etcd-backup-tls
+    name: TLS Secured Etcd Cluster
     parent: stash-etcd
     weight: 30
 product_name: stash
@@ -15,7 +15,7 @@ section_menu_id: stash-addons
 
 # Backup TLS secured Etcd using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd databases. This guide will show you how you can backup & restore a TLS secured Etcd database using Stash.
+Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd database. This guide will show you how you can backup & restore a TLS secured Etcd cluster using Stash.
 
 ## Before You Begin
 
@@ -44,19 +44,19 @@ namespace/demo created
 
 ## Prepare Etcd
 
-In this section, we are going to deploy a TLS secured NATS cluster. Then, we are going to create a stream and publish some messages into it.
+In this section, we are going to deploy a TLS secured Etcd cluster. Then, we are going to insert some sample data into the cluster.
 
 
 ### Create Certificate
-At first, let's create certificates that our Etcd database cluster will use for handling client requests and maintaining peer communications. We will be using Etcd recommended [Cfssl](https://github.com/cloudflare/cfssl) tool for creating our necessary certificates.
+At first, let's create certificates that our Etcd cluster will use for handling client requests and maintaining peer communications. We will be using Etcd recommended [cfssl](https://github.com/cloudflare/cfssl) tool for creating our necessary certificates.
 
-If you have `go` installed on your machine, you can run the following commands to install `Cfssl`,
+If you have `go` installed on your machine, you can run the following commands to install `cfssl`,
 ```bash
 $ go get github.com/cloudflare/cfssl/cmd/cfssl
 $ go get github.com/cloudflare/cfssl/cmd/cfssljson
 ````
 
-Now, let's create the certificates using `Cfssl`. You can follow the commands from below. We have stored our SANs in the `ADDRESS` variable here.  The following commands will create 5 certificates named `ca.pem`, `server.pem`, `server-key.pem`, `client.pem`, and `client-key.pem`. The `ca.pem` is a self-signed CA certificate. Rest of the certificates are signed by this CA.
+To create the necessary certificates using `cfssl` you can follow the commands below. 
 
 ```bash
 $ echo '{"CN":"CA","key":{"algo":"rsa","size":2048}}' | cfssl gencert  -initca - | cfssljson -bare ca -
@@ -77,23 +77,27 @@ $ export NAME=client
 $ echo '{"CN":"'$NAME'","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="$ADDRESS" - | cfssljson -bare $NAME
 ````
 
+We have stored our SANs in the `ADDRESS` variable here.  The above commands will create 5 certificates named `ca.pem`, `server.pem`, `server-key.pem`, `client.pem`, and `client-key.pem`. The `ca.pem` is a self-signed CA certificate. Rest of the certificates are signed by this CA.
+
 ### Create Secret
-Let's create a generic secret with the certificates created above. To create a secret named `etcd-tls-auth` run the following command,
+Let's create a generic secret with the certificates created above.
 ```bash
-$ kubectl create secret generic -n demo etcd-tls-auth\
+$ kubectl create secret generic -n demo etcd-server-certs\
                      --from-file=./ca.pem\
                      --from-file=./server.pem\
                      --from-file=./server-key.pem\
                      --from-file=./client.pem\
                      --from-file=./client-key.pem
+
+secret/etcd-server-certs created
 ````
 
 ### Deploy Etcd
 
 
-At first, let's deploy an Etcd database cluster. Here, we will use a Statefulset and a service for deploying an Etcd database cluster consisting of three members. The service is used for handling peer communications and client requests.
+At first, let's deploy an Etcd cluster. Here, we will use a StatefulSet and a Service for deploying an Etcd cluster consisting of three members. The Service is used for handling peer communications and client requests.
 
-Let's deploy an Etcd cluster named `etcd-tls` using a statefulset and a service  from the YAML manifest as below,
+Let's deploy an Etcd cluster named `etcd-tls` using a StatefulSet and a Service  from the YAML manifest as below,
 
 ```yaml
 apiVersion: v1
@@ -165,7 +169,7 @@ spec:
       volumes:
         - name: etcd-secret
           secret:
-            secretName: etcd-tls-auth
+            secretName: etcd-server-certs
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -178,9 +182,15 @@ spec:
             storage: 1Gi
 ```
 
-This YAML will create the necessary Statefulset, Service, and PVCs for the Etcd database Cluster. 
+Let's create the `Etcd cluster` we have shown above,
+```bash
+$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd.yaml
+service/etcd created
+statefulset.apps/etcd-tls created
+```
+This YAML will create the necessary StatefulSet, Service, PVCs for the Etcd cluster. 
 
-Now, wait for the database pods `etcd-tls-0`, `etcd-tls-1`, and `etcd-tls-2` to go into `Running` state,
+Now, let's wait for the database pods `etcd-tls-0`, `etcd-tls-1`, and `etcd-tls-2` to go into `Running` state,
 
 ```bash
 ❯ kubectl get pods -n demo --selector=app=etcd-tls
@@ -191,37 +201,21 @@ etcd-tls-1          1/1     Running   0          6m
 etcd-tls-2          1/1     Running   0          6m
 ```
 
-Once the database pod is in `Running` state, verify that the database is ready to accept the connections. For that, we have to exec into any one of the Etcd database cluster pods and run the `endpoint health` command. If the command returns a healthy state, then we can conclude that the database is ready to accept connections. To exec into a database pod and check endpoint health, run the following commands,
+Once the database pods are in `Running` state, verify that the Etcd cluster is ready to accept connections. Let's exec into the `etcd-tls-0` database pod and check cluster's `endpoint health`.
+
 ```bash
 ❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
 
 127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem endpoint health 
 127.0.0.1:2379 is healthy: successfully committed proposal: took = 8.497131ms
 ```
-From the above log, we can see the Etcd database is ready to accept connections.
+We can see from the above output that our Etcd cluster is ready to accept connections.
 
 ### Insert Sample Data
-Now, we are going to exec into the database pod and create some sample data. To access TLS-secured Etcd database from Stash, we need to create a secret containing necessary `client-key` and `client certificate` in the `base64` encoded format. Let's create the secret containing the necessary TLS certificates required to access our Etcd database cluster from the following YAML,
+Now, we are going to exec into anyone of the database pod and insert some sample data.
 
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: etcd-stash-auth
-  namespace: demo
-type: Opaque
-data:
- client-key.pem: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBc1ZVeUQ3L25QanBnOWlrYlpIdk5pN2ZUZFUyM3NXLzZjT2p6cWdXYm9HRDJLbTdFCk9GeVFXb2FacWxWNHM5V3F3cy9vaGxjb0JHUzMrVUVNbkJjNi9QU0tTUmxVUUUxS3ZqeXhFUkwzU0Yxc3h4UnMKMExVZVFnWno2T1dubkhORTBjNXZObjlSUVo5VENOeHl0WjBqVi94MG9wd0c3KzBzNSs0R05GbmZQMjB5ZXFLNQpDM1JEbEJSWVFKRWZMYTR5dHh6TjI1TENUQ2dsaTlkdWZoaC9ieXVLdHUxVzVaTmowVVh0bXRNRkd5N2JhZ1J2CmlLQ0NqVDQvc0RqWXpTWlZ2VitESlFFemhLZmdqc2NrNXBhaTJsWFhpaXJQVzE4N3JUSkxoc1pacWt3NUlCWEEKSUpqWjFBSSttYytSUE1mVitxV0h0ZG5XOHM1TDZxd2VvVUdwUlFJREFRQUJBb0lCQUFMMGJIVWV1WGVyK1ZtZwpyYmdxNSszZ0RrSHlIWkZ6VURUNWJMWDBpZmRPSmt2bXRKWkwxSXZ0bWpuZ1dyYUVaT2dDRnRuR01nQ0F2U0FHCkdYT3dYMmMvbTk1RDhjZHdna0pST0pJVVF0S04yL1lsUFBydFNhZkgrNzV4dFMxQ0xtOWdoVEhmUlRkV3RFZDkKaE52SjFvRHN6L1Mxck5mcWw4ajFpbHpzOG05WUYxWEtoRlozQmpSWHBFRFdCWUIzeTE2dGV6RlU0NlJaMSs1UwpaR3pTakxhOTNuK0JEeGc2ejdMVjhON0xyYXVQY3lCbkFnUC9KMlR0MTQ3bHM2cHhUWlh2UFd0ZXdvRHV1aHF1CndWQ1FkUWZ3bmlPTmJmbUxDNUp6OWNrNzJvWUg2ditjbEtFc05GT2xZWjdjRGkzaTZ6K2RuK1JOYTUvc295Mm0KV0RsQ1ZURUNnWUVBNHlUSGlXYk5FMEk1N2NnNDNlWkJ6eTBSMGtvTktJRGlJMWZkQmRBWUcraU1vZzZUSEdBSApvYkRFSnI0YkZ3aUM1QmlYeHVxZ2RQSVhqcXNNTGtYM2Zra3ErNkh0VS9XRS9pSmJyRnN6clUreFdoYmxEc0ZPCkRCUWw3SjlkaitRaGcyeXBOcEtjUWVYS0E5WVdvV1VqTkp0Z1dVMG81MmFVcUF3NnRKWW8wMzhDZ1lFQXg5eDAKZVg1YkUyWU02ZU9tZWVXWWdBZC93cVV4NmlYaWl4S2M3Z1Z6WG9qVUVaaUQwVEdrSi9RTW9TNHNHV01OekRlYQorbTdXNzVSTUZoOGlzQjdlTUxlSE0zRTRBV08yVlc4SUVuM1h6U0JLNngvcWIwS2VoWVNIS0R4YnQ0UDBGSVdTCjdYc0pYc09mRlRMclZLbHYyZnE2ZzBwZ1R1Ri9QZzdaRUIxQWxUc0NnWUJ4VDJhdTEzYVVGZVI2QnZpL1VWOGcKNzdYRk5xV3J2K2VQaEFSQkl4Ynp6U1Zpcm15YXFoa0VndjdHNk96d3A1Rk1JaXlNMFh5citoemdVZG1vdDhTSAozZzR3S3c0T1pSc3IvNDNGeEZWYUxyZ2xYZWgwWE9BSFRJSENzWmxsNzRMOFlkZGozdTFPUGtoeGMzb2tseVJoCjJPVE9oNXhSR3k0clNyWjZZYklLRndLQmdDUEg1eDVkTGNjQ1RTdU9jeDU5cVZpNmZ2Z0ZCVE9yUnF5cFQya1oKbHJjRS9ocU1XSVVhUXc1WUZlN0JTbW5kSHZwQnRrQkJtYjlZcUdxSmRuZGJmMkh2YVlnZksreXJ3bGYzUWRXMQpxKzN3YXhrL0pJUjR3OUtaa0d6MnFXRG9nY2t1eE1nNWI4c0VjTFdsNFJYT0k5VTlteWlvSnlmWUhTU3FHZGhWCnRGdERBb0dCQUlEZ1RVOHZNL2VkTml3TVZSMmRnZjRXNEVhcE9zWXhmdFZnOU5YUFNOOEdVNHFtWURCNGtIWnMKQjg5dzFEajB0WU0xQnNseXRYN3llSTUxNi8rUDVuYnQ4eHRtS3RUWVlrWmlvOGFEM2FaZXh0ZTIySXRjTE1xTwpMMERWZ0s3bzRxMVdUVWVCZWkxbDB4b3JXWUR0a0tIYkUvWGJDeHFtOGgzWDdpMlVWOWZFCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t
- client.pem: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURnekNDQW11Z0F3SUJBZ0lVT1VLSTFzY2pVaEROTEJPazdma3J4dFFlNU9Fd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0RURUxNQWtHQTFVRUF4TUNRMEV3SGhjTk1qRXhNREU1TVRFMU56QXdXaGNOTWpZeE1ERTRNVEUxTnpBdwpXakFSTVE4d0RRWURWUVFERXdaamJHbGxiblF3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUN4VlRJUHYrYytPbUQyS1J0a2U4Mkx0OU4xVGJleGIvcHc2UE9xQlp1Z1lQWXFic1E0WEpCYWhwbXEKVlhpejFhckN6K2lHVnlnRVpMZjVRUXljRnpyODlJcEpHVlJBVFVxK1BMRVJFdmRJWFd6SEZHelF0UjVDQm5Qbwo1YWVjYzBUUnptODJmMUZCbjFNSTNISzFuU05YL0hTaW5BYnY3U3puN2dZMFdkOC9iVEo2b3JrTGRFT1VGRmhBCmtSOHRyakszSE0zYmtzSk1LQ1dMMTI1K0dIOXZLNHEyN1ZibGsyUFJSZTJhMHdVYkx0dHFCRytJb0lLTlBqK3cKT05qTkpsVzlYNE1sQVRPRXArQ094eVRtbHFMYVZkZUtLczliWHp1dE1rdUd4bG1xVERrZ0ZjQWdtTm5VQWo2Wgp6NUU4eDlYNnBZZTEyZGJ5emt2cXJCNmhRYWxGQWdNQkFBR2pnZFl3Z2RNd0RnWURWUjBQQVFIL0JBUURBZ1dnCk1DTUdBMVVkSlFRY01Cb0dDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBZ1lFVlIwbEFEQU1CZ05WSFJNQkFmOEUKQWpBQU1CMEdBMVVkRGdRV0JCU3dUcWpsZWlxVCsyU1pHM1lndzBTY3RDeEkxekFmQmdOVkhTTUVHREFXZ0JRawpMSDVQNmE2bDVkZnZCL1BlV0FINE9MeTdkVEJPQmdOVkhSRUVSekJGZ2c5bGRHTmtMWFJzY3kwd0xtVjBZMlNDCkQyVjBZMlF0ZEd4ekxURXVaWFJqWklJUFpYUmpaQzEwYkhNdE1pNWxkR05rZ2dSbGRHTmtod1IvQUFBQmh3UUEKQUFBQU1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQXJlNHd2b2hGK094dHpONGgvM0RjUHd1dk5hU3BoMnpEWQp4SUwzVDY1U2kxcmNYL3NPdmVVZ0hBZ0RIeGRqeWoyRXB0ckpDWFBsaElQSGt4NWYydHVzV1hxRWVUNHhVdmo3CnlGaXZTSFR3OEtBSWlWL0FjWi96Z2JXYXFqaXo4dTFzd2JZVXFGWERkbDR2ZktVOFc2dVh2elU5U2k2RDRMTWwKbEtHMzY0VStCVzcxS2lBNnR3MmZ1ZitOd3E0TkFNUHZhRlhZaU5JOHVWUDV5eFNFZnBFcldicjBFZ2JwU3JWcwo4SVJPTEJ4cFo5b09qWGloNHBMWTFXV29xVXR4bVR6SWZhMjgxRi85ZzAyMUVrMmErb1lKbnZhMjQvMGEwNHlKCkYyYTM1VDZ0eVhsU0oxMGhkTFpDbi9QMnVNTkNJajBVZk5LZ1M3RVVMQ0x0UnpzbzhMWGkKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
-```
-Let's create the `etcd-stash-auth` secret we have shown above,
-```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd-secret.yaml
-secret/etcd-stash-auth created
-```
+Let's exec into the `etcd-tls-0` pod for inserting sample data.
 
-
-Now, let's exec into any one of the database pods and insert some sample data,
 ```bash
 ❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
 127.0.0.1:2379> etcdctl --cacert  /etc/etcd-secret/ca.pem --cert /etc/etcd-secret/client.pem --key /etc/etcd-secret/client-key.pem put foo bar
@@ -246,7 +240,7 @@ bar4
 127.0.0.1:2379> exit
 ```
 
-We have successfully deployed an Etcd database cluster and inserted some sample data into it. In the subsequent sections, we are going to backup these data using Stash.
+We have successfully deployed an Etcd cluster and inserted some sample data into it. In the subsequent sections, we are going to backup these data using Stash.
 
 
 ## Prepare for Backup
@@ -265,12 +259,21 @@ etcd-restore-3.5.0            18m
 
 This addon should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/etcd/README.md#addon-version-compatibility).
 
+### Create Secret
+To access TLS secured Etcd cluster from Stash, we need to create a secret containing necessary `client-key` and `client certificate` in the `base64` encoded format. Let's create the secret containing necessary `client-key` and `client certificate` from the certificates created earlier to access our Etcd cluster.
+
+```bash
+kc create secret generic -n demo etcd-client-certs\
+                          --from-file=./client.pem\
+                          --from-file=./client-key.pem
+secret/etcd-client-certs created
+```
 
 ### Create AppBinding
 
-Stash needs to know how to connect with the Etcd databse cluster. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the Etcd database cluster. You have to point to the respective `AppBinding` as a target of backup instead of the Etcd database cluster itself.
+Stash needs to know how to connect with the Etcd databse cluster. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the Etcd cluster. You have to point to the respective `AppBinding` as a target of backup instead of the Etcd cluster itself.
 
-Here, is the YAML of the `AppBinding` that we are going to create for the Etcd database cluster we have deployed earlier.
+Here, is the YAML of the `AppBinding` targetting the Etcd cluster we have deployed earlier.
 
 ```yaml
 apiVersion: appcatalog.appscode.com/v1alpha1
@@ -281,21 +284,21 @@ metadata:
 spec:
   clientConfig:
     caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM2akNDQWRLZ0F3SUJBZ0lVZEJYNnU0RHRyNDA3WkZDTWN6Nzg4Y1YyWHVJd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0RURUxNQWtHQTFVRUF4TUNRMEV3SGhjTk1qRXhNREU1TVRBeE56QXdXaGNOTWpZeE1ERTRNVEF4TnpBdwpXakFOTVFzd0NRWURWUVFERXdKRFFUQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCCkFMZmp6OEJhbDhpWTdjSTd2OHNFdndpSmJnQXBqTDIvNnVZbXBaQVZvcW50cjJCcmFMbTlCb1czdkMydm5tbWYKWDhRUFBsWnFIeUxzY1gxZUlpazJyWHJEYUdQaU45VHhLQXVrbWJjZXFsUXZScGNZZkVaVTBQMzhNc0xsQUlHaQpZamZxRjR5Z1UyMjA0L3FucVVPbFFjLzh2MmJpRFNSQXNUM1NUT2FVemdMd05KT20wOUlqT1dUQW15Q2xXWmxnClJmV2tETzVTQ0xZd1pmQ1Z1MTdBalJRMTNsZTdocW9GcW9SUW96dUZQMFp0dlVFdWVPSXlSa3ZlYTFRYVNyTjgKcm1aN1BaL0lIb3dyNjFtMFd0bVE3ckw1eTMyOTgxb3hRNGg2UHdLMGNGNVNyOG9WRUR0TGZVeE1OWHpoMXpRUAorY2FhZWlUWklyc1dqRGNxSm9VWk1wVUNBd0VBQWFOQ01FQXdEZ1lEVlIwUEFRSC9CQVFEQWdFR01BOEdBMVVkCkV3RUIvd1FGTUFNQkFmOHdIUVlEVlIwT0JCWUVGQ1FzZmsvcHJxWGwxKzhIODk1WUFmZzR2THQxTUEwR0NTcUcKU0liM0RRRUJDd1VBQTRJQkFRQmpOOHlxalhEaUdqaDFuUGdKVFpZa1FCa1E4SFZHeThIdlFWWG0zdFhHM3RLcApTaVdDQTlPbittR0xZZTlCMi9lOEFJNkIyMFB1Z0NZWHljMHVOb1RiSFdiZ01pNURiNEVZYXdDdVpkN3M4MXlUClRXY1N0VWZFeUdKNW1ycWZ6OFFPaUt0Sk1UeWFYbHllWllURnhnWUsyOThTcDhubFBRQlgzNVBDakZTbXZwa1UKY0N5TllYMDF1RnFhWE9FZTdkTnpBUmhIaU1xVFM0dkNUUnFrbFpMWHB6a3ViZER3WTVKK3gzYmptcDk1RUtmVwpJbkhERTJ2ckxsU0crZDVWNnBuUG54bXc3aGg2L0NMUTNVMXM3V1d0clVlSU9NUDdCcFJxRG05TjJhajJXUHNLCmpEYXdRcFpGdGhmbEdJR1ZqUUNCNFMwTkQzWWliSkVqdHZHMnBuTlkKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
-    service:
+    Service:
       name: etcd
       port: 2379
       scheme: https
   secret:
-    name: etcd-stash-auth
+    name: etcd-client-certs
   type: etcd
   version: 3.5.0 
 ```
 
 Here,
 
-- `.spec.clientConfig.caBundle` specifies a PEM encoded CA bundle which will be used to validate the serving certificate of the Etcd database cluster.
-- `.spec.clientConfig.service` specifies the Service information to use to connects with the Etcd database cluster.
-- `.spec.secret` specifies the name of the Secret that holds necessary credentials to access the database.
+- `.spec.clientConfig.caBundle` specifies a  base64 encoded CA bundle which will be used to validate the serving certificate of the Etcd cluster. This is the base64 encoded version of previously created certificate `ca.pem` 
+- `.spec.clientConfig.Service` specifies the Service information to use to connect with the Etcd cluster.
+- `.spec.secret` specifies the name of the Secret that holds the necessary client certificates  to access the Etcd cluster.
 - `spec.type` specifies the type of the database.
 
 Let's create the `AppBinding` we have shown above,
@@ -349,15 +352,15 @@ $ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version"
 repository.stash.appscode.com/gcs-repo created
 ```
 
-Now, we are ready to backup our streams into our desired backend.
+Now, we are ready to backup our data into our desired backend.
 
 ### Backup
 
-To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our `Etcd` database cluster. Then, Stash will create a CronJob to periodically backup the streams.
+To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our `Etcd` cluster. Then, Stash will create a CronJob to periodically backup the cluster.
 
 #### Create BackupConfiguration
 
-Below is the YAML for `BackupConfiguration` object that we are going to use to backup the data of the Etcd database cluster we have created earlier,
+Below is the YAML for `BackupConfiguration` object that we are going to use to backup the data of the Etcd cluster we have created earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -385,9 +388,9 @@ spec:
 Here,
 
 - `.spec.schedule` specifies that we want to backup the streams at 5 minutes intervals.
-- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup Etcd database.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup our Etcd cluster.
 - `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
-- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted Etcd database cluster.
+- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted Etcd cluster.
 - `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
 
 Let's create the `BackupConfiguration` object we have shown above,
@@ -446,16 +449,16 @@ Now, if we navigate to the GCS bucket, we will see the backed up data has been s
 
 ## Restore
 
-If you have followed the previous sections properly, you should have a successful backup of your Etcd database cluster. Now, we are going to show how you can restore the database from the backed up data.
+If you have followed the previous sections properly, you should have a successful backup of your Etcd cluster. Now, we are going to show how you can restore the Etcd cluster from the back up.
 
-### Restore Into the Same Database
+### Restore Into the Same Etcd Cluster
 
-You can restore your data into the same database you have backed up from or into a different database in the same cluster or a different cluster. In this section, we are going to show you how to restore in the same database which may be necessary when you have accidentally deleted any data from the running database.
+You can restore your data into the same Etcd cluster you have taken backed up snapshot from or into a different Etcd cluster. In this section, we are going to show you how to restore in the same Etcd cluster which may be necessary when you have accidentally deleted any data from the running cluster.
 
 
 #### Temporarily Pause Backup
 
-At first, let's stop taking any further backup of the database so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
+At first, let's stop taking any further backup of the Etcd cluster so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
 
 Let's pause the `etcd-tls-backup` BackupConfiguration,
 
@@ -484,7 +487,7 @@ stash-trigger-etcd-tls-backup   */5 * * * *   True      0        6m25s          
 
 #### Simulate Disaster
 
-Now, let's simulate an accidental deletion scenario. Here, we are going to exec into a database pod and delete the sample data we have inserted earlier.
+Now, let's simulate an accidental deletion scenario. Here, we are going to exec into the `etcd-tls-0` database pod and delete the sample data we have inserted earlier.
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
@@ -528,7 +531,7 @@ spec:
       - name: workloadKind
         value: "StatefulSet"
       - name: workloadName
-        value: "etcd"
+        value: "etcd-tls"
   repository:
     name: gcs-repo
   target:
@@ -547,17 +550,22 @@ spec:
 
 Here,
 
-- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore a Etcd database.
-- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backupdata into an Etcd database cluster.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore an Etcd database.
+- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backed up data into an Etcd cluster.
+- The `initialcluster` argument of `spec.task.params` section refers to the initial cluster configuration of the Etcd cluster and it must be the same as the initial cluster configuration of the deployed Etcd cluster.
+- The `dataDir` argument of `spec.task.params` section refers to the datadir of the deployed Etcd cluster where the backed up data will get restored.
+- The `workloadKind` argument of `spec.task.params` section refers to the workload e.g. Pod/StatefulSet we have used to deploy the Etcd cluster where we are operating restore using Stash.
+- The `workloadName` argument of `spec.task.params` section refers to the workload name we have used to deploy the Etcd cluster.
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `etcd` database.
+- `.spec.target.ref` refers to the respective AppBinding of the `Etcd` database.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
+- In `spec.runtimeSettings.Container.securityContext` we have specified root user and root group. We need to delete existing data of the data dir of our Etcd cluster in order to restore the backed up data. For that, the restoresession job needs either the root access or the same user access as Etcd database pods. You can specify anyone of the two user.
 
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/restoresession.yaml
-restoresession.stash.appscode.com/sample-nats-restore-tls created
+restoresession.stash.appscode.com/etcd-tls-restore created
 ```
 
 Once, you have created the `RestoreSession` object, Stash will create a restore Job. Run the following command to watch the phase of the `RestoreSession` object,
@@ -576,7 +584,7 @@ The `Succeeded` phase means that the restore process has been completed successf
 
 #### Verify Restored Data
 
-Now, let's exec into the database pod and verify whether data actual data has been restored or not,
+Now, let's exec into the `etcd-tls-0` database pod and verify whether data actual data has been restored or not,
 
 ```bash
 ❯ kubectl exec -it -n demo etcd-tls-0 -- /bin/sh
@@ -590,6 +598,7 @@ foo3
 bar3
 foo4
 bar4
+
 127.0.0.1:2379> exit
 ```
 
@@ -630,7 +639,7 @@ kubectl delete -n demo backupconfiguration etcd-tls-backup
 kubectl delete -n demo restoresession etcd-tls-restore
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo appbinding etcd-appbinding
-# delete the database, service, and PVCs
+# delete the database, Service, and PVCs
 kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls-secured-etcd/examples/etcd-tls.yaml
 kubectl delete pvc -n demo data-etcd-tls-0 data-etcd-tls-1 data-etcd-tls-2
 ```

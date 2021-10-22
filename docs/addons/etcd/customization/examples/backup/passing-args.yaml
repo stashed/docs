@@ -9,7 +9,7 @@ spec:
     name: etcd-backup-3.5.0
     params:
     - name: args
-      value: --keepalive-timeout=6s	
+      value: --insecure-skip-tls-verify=true	
   repository:
     name: gcs-repo
   target:

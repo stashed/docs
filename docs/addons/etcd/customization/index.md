@@ -4,7 +4,7 @@ description: Customizing Etcd Backup and Restore process with Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-etcd-customization
-    name: Customizing Backup & Restore Process
+    name: Customizing Etcd Backup & Restore Process
     parent: stash-etcd
     weight: 40
 product_name: stash
@@ -25,8 +25,7 @@ In this section, we are going to show you how to customize the backup process. H
 ### Passing arguments to the backup process
 Stash Etcd addon uses [etcdctl](https://github.com/etcd-io/etcd/tree/main/etcdctl) for backup. You can pass arguments to the `etcdctl` through `args` param under `task.params` section.
 
-The below example shows how you can pass the `keepalive-timeout=6s` to take backup only the database with index 1.
-
+The below example shows how you can pass the `--insecure-skip-tls-verify` to skip server certificate verification (`CAUTION`: this option should be enabled only for testing purposes)
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
@@ -39,7 +38,7 @@ spec:
     name: etcd-backup-3.5.0
     params:
     - name: args
-      value: --keepalive-timeout=6s	
+      value: --insecure-skip-tls-verify=true	
   repository:
     name: gcs-repo
   target:
@@ -160,7 +159,7 @@ Stash uses `etcdctl` during the restore process as well. In this section, we are
 
 ### Passing arguments to the restore process
 
-Similar to the backup process, you can pass additional arguments to the restore process alongside with the reqiored arguements through the `args` params under `task.params` section. Here, we have passed `--dial-timeout` argument to the `etcdctl`.
+Similar to the backup process, you can pass additional arguments to the restore process alongside with the reqiored arguements through the `args` params under `task.params` section. Here, we have passed `--insecure-skip-tls-verify` argument to the `etcdctl` to skip server certificate verification (CAUTION: this option should be enabled only for testing purposes).
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -183,7 +182,7 @@ spec:
       - name: workloadName
         value: "etcd"
       - name: args
-        value: --dial-timeout=2s
+        value: --insecure-skip-tls-verify=true
   repository:
     name: gcs-repo
   target:
