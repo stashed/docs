@@ -84,4 +84,4 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-- Backup your Etcd database using Stash following the guide from [here](/docs/addons/etcd/etcd/index.md).
+- Backup your Etcd database using Stash following the guide from [here](/docs/addons/etcd/basic-auth/index.md).
