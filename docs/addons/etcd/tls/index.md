@@ -293,7 +293,7 @@ spec:
 
 Here,
 
-- `.spec.clientConfig.caBundle` specifies the base64 encoded CA certificate. Here we have used the base64 encoded version of our previously generated `ca.pem` certificate.
+- `.spec.clientConfig.caBundle` specifies the base64 encoded CA certificate. Here, we have used the base64 encoded version of our previously generated `ca.pem` certificate.
 - `.spec.clientConfig.Service` specifies the Service information to use to connect with the Etcd cluster.
 - `.spec.secret` specifies the name of the Secret that holds the necessary client certificates.
 - `.spec.type` specifies the type of the database.
@@ -548,7 +548,7 @@ spec:
 Here,
 
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to restore an Etcd database.
-- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backup data into an Etcd cluster. We need to specify the folowing parameters to restore data in an Etcd cluster.
+- `.spec.task.params` refers to the names and values of the Params objects specifying necessary parameters and their values for restoring backup data into an Etcd cluster. We need to specify the folowing parameters,
   - `initialcluster` parameter refers to the initial cluster configuration of the Etcd cluster and it must be the same as the initial cluster configuration of the deployed Etcd cluster.
   - `dataDir` parameter refers to the datadir of the deployed Etcd cluster where the backed up data will get restored.
   - `workloadKind` parameter refers to the workload e.g. Pod/StatefulSet we have used to deploy the Etcd cluster.
@@ -556,7 +556,7 @@ Here,
 - `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
 - `.spec.target.ref` refers to the respective AppBinding of the Etcd database.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
-- In `spec.runtimeSettings.Container.securityContext` we have specified root user and root group. We need to access the data dir of our Etcd cluster in order to restore the backed up data. For that, the restoresession job needs either the root access or the same user access as Etcd database pods. You can specify any of the two user.
+- The restore Job need access to the respective volume of the Etcd database. As a result, we have to run the restore Job as the same user as the Etcd database or as root user. Here, we are running the restore Job as root user using `spec.runtimeSettings.Container.securityContext` section.
 
 Let's create the `RestoreSession` object object we have shown above,
 
@@ -629,7 +629,7 @@ Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended a
 
 ### Restore Into Different Database of the Same Namespace
 
-If you want to restore the backed up data into a different Etcd cluster of the same namespace, you have to create another `AppBinding` pointing to the desired cluster. Then, you have to create the `RestoreSession` pointing to the new `AppBinding`.
+If you want to restore the backed up data into a different Etcd cluster of the same namespace, you have to create another `AppBinding` ppointing to the desired Etcd database. Then, you have to create the `RestoreSession` pointing to the new `AppBinding`.
 
 ### Restore Into Different Namespace
 
