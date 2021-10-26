@@ -316,7 +316,7 @@ At first, let's create a secret called `gcs-secret` with access credentials to o
 ```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ cat downloaded-sa-key.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
@@ -649,6 +649,9 @@ kubectl delete -n demo backupconfiguration etcd-tls-backup
 kubectl delete -n demo restoresession etcd-tls-restore
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo appbinding etcd-appbinding
+kubectl delete -n demo Secret gcs-secret
+kubectl delete -n demo Secret etcd-client-certs
+kubectl delete -n demo Secret etcd-server-certs
 # delete the database, Service, and PVCs
 kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/tls/examples/etcd-tls.yaml
 kubectl delete pvc -n demo data-etcd-tls-0 data-etcd-tls-1 data-etcd-tls-2

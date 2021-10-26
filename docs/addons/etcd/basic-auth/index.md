@@ -131,7 +131,7 @@ statefulset.apps/etcd created
 Now, let's wait for the database pods `etcd-0`, `etcd-1`, and `etcd-2` to go into `Running` state,
 
 ```bash
-❯ kc get pods -n demo --selector=app=etcd
+❯ kubectl get pods -n demo --selector=app=etcd
 
 NAME     READY   STATUS    RESTARTS   AGE
 etcd-0   1/1     Running   0          11s
@@ -290,11 +290,11 @@ At first, let's create a secret called `gcs-secret` with access credentials to o
 ```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat downloaded-sa-json.key > GOOGLE_Service_ACCOUNT_JSON_KEY
+$ cat downloaded-sa-key.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
-    --from-file=./GOOGLE_Service_ACCOUNT_JSON_KEY
+    --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 secret/gcs-secret created
 ```
 
@@ -621,6 +621,8 @@ kubectl delete -n demo backupconfiguration etcd-backup
 kubectl delete -n demo restoresession etcd-restore
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo appbinding etcd-appbinding
+kubectl delete -n demo Secret etcd-basic-auth
+kubectl delete -n demo Secret gcs-secret
 # delete the Etcd cluster, Service, and PVCs
 kubectl delete -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/etcd/basic-auth/examples/etcd.yaml
 kubectl delete pvc -n demo data-etcd-0 data-etcd-1 data-etcd-2
