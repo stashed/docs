@@ -4,7 +4,7 @@ metadata:
   name: wordpress-mysql
   namespace: demo
 spec:
-  version: 8.0.14-v3
+  version: 8.0.27
   replicas: 1
   storageType: Durable
   storage:

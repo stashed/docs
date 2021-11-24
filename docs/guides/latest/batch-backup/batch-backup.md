@@ -387,7 +387,7 @@ metadata:
   namespace: demo
 spec:
   type: mysql
-  version: 8.0.14-v3
+  version: 8.0.27
   clientConfig:
     service:
       name: wordpress-db
