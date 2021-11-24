@@ -32,9 +32,3 @@ From here you can learn all about Stash's architecture and how to deploy and use
 command-line options, configuration options, API definitions, and procedures.
 
 We're always looking for help improving our documentation, so please don't hesitate to [file an issue](https://github.com/stashed/project/issues/new) if you see some problem.
-
----
-
-**Stash binaries collects anonymous usage statistics to help us learn how the software is being used and how we can improve it. To disable stats collection, run the operator with the flag** `--enable-analytics=false`.
-
----

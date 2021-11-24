@@ -325,7 +325,6 @@ spec:
     - --pushgateway-url=http://stash-operator.kube-system.svc:56789
     - --enable-status-subresource=true
     - --use-kubeapiserver-fqdn-for-aks=true
-    - --enable-analytics=true
     - --logtostderr=true
     - --alsologtostderr=false
     - --v=3
@@ -596,7 +595,6 @@ Pod Template:
       --pushgateway-url=http://stash-operator.kube-system.svc:56789
       --enable-status-subresource=true
       --use-kubeapiserver-fqdn-for-aks=true
-      --enable-analytics=true
       --logtostderr=true
       --alsologtostderr=false
       --v=3
