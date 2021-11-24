@@ -116,7 +116,7 @@ For example, here is an example of `spec.task` section before and after the upda
 ```bash
 # Before Update
   task:
-    name: mysql-backup-8.0.21-v2 # remove '-v1' part
+    name: mysql-backup-8.0.27 # remove '-v1' part
 ```
 
 ```bash
