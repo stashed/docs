@@ -25,7 +25,6 @@ Stash is a Kubernetes operator for restic. For more information, visit here: htt
 
 ```
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
-      --enable-analytics                 Send analytical events to Google Analytics (default true)
   -h, --help                             help for stash
       --service-name string              Stash service name. (default "stash-operator")
       --use-kubeapiserver-fqdn-for-aks   if true, uses kube-apiserver FQDN for AKS cluster to workaround https://github.com/Azure/AKS/issues/522 (default true)
