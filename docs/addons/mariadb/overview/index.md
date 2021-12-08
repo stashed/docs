@@ -4,7 +4,7 @@ description: How MariaDB Backup & Restore Works in Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-mariadb-overview
-    name: How does it works?
+    name: How does it work?
     parent: stash-mariadb
     weight: 10
 product_name: stash

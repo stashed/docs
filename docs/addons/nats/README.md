@@ -39,7 +39,7 @@ This addon with matching major version with the NATS version should be able to t
 
 Stash NATS documentations are organized as below:
 
-- [How does it works?](/docs/addons/nats/overview/index.md) gives an overview of how backup and restore process for NATS works in Stash.
+- [How does it work?](/docs/addons/nats/overview/index.md) gives an overview of how backup and restore process for NATS works in Stash.
 - [Helm managed NATS](/docs/addons/nats/helm/index.md) shows how to backup and restore a Helm managed NATS.
 - **Different authentications:** shows how to backup and restore NATS using different authentication methods.
   - [Basic Authentication](/docs/addons/nats/authentications/basic-auth/index.md)

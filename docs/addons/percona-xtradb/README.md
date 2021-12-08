@@ -40,6 +40,6 @@ Any addon with matching major version with the database version should be able t
 
 Stash Percona XtraDB documentations are organized as below:
 
-- [How does it works?](/docs/addons/percona-xtradb/overview/index.md) gives an overview of how backup and restore process for Percona XtraDB database works in Stash.
+- [How does it work?](/docs/addons/percona-xtradb/overview/index.md) gives an overview of how backup and restore process for Percona XtraDB database works in Stash.
 - [Standalone Percona-XtraDB](/docs/addons/percona-xtradb/standalone/index.md) shows how to backup and restore a standalone Percona-XtraDB database.
 - [Percona-XtraDB Cluster](/docs/addons/percona-xtradb/cluster/index.md) shows how to backup & restore  a Percona-XtraDB cluster.
