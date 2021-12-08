@@ -247,7 +247,7 @@ Let's create a secret called `gcs-secret` with access credentials to our desired
 ```console
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat downloaded-sa-json.key > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ cat downloaded-sa-key.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
@@ -257,7 +257,7 @@ secret/gcs-secret created
 
 **Create Repository:**
 
-Now, crete a `Repository` using this secret. Below is the YAML of Repository crd we are going to create,
+Now, create a `Repository` using this secret. Below is the YAML of Repository crd we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
