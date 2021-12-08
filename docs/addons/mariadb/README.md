@@ -39,7 +39,7 @@ Any addon with matching major version with the database version should be able t
 
 Stash MariaDB documentations are organized as below:
 
-- [How does it works?](/docs/addons/mariadb/overview/index.md) gives an overview of how backup and restore process for MariaDB database works in Stash.
+- [How does it work?](/docs/addons/mariadb/overview/index.md) gives an overview of how backup and restore process for MariaDB database works in Stash.
 - [Helm managed MariaDB](/docs/addons/mariadb/helm/index.md) shows how to backup and restore a Helm managed MariaDB database.
 - [Auto-Backup](/docs/addons/mariadb/auto-backup/index.md) shows how to configure a generic backup template for all the MariaDB databases of a cluster.
 - [Customizing Backup & Restore Process](/docs/addons/mariadb/customization/index.md) shows how to customize the backup & restore process.

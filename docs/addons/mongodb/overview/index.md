@@ -4,7 +4,7 @@ description: How MongoDB Backup Works in Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-mongodb-overview
-    name: How does it works?
+    name: How does it work?
     parent: stash-mongodb
     weight: 10
 product_name: stash

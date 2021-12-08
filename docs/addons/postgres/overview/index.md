@@ -4,7 +4,7 @@ description: How PostgreSQL Backup & Restore Works in Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-postgres-overview
-    name: How does it works?
+    name: How does it work?
     parent: stash-postgres
     weight: 10
 product_name: stash
