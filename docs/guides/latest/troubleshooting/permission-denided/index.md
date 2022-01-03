@@ -142,7 +142,7 @@ spec:
   runtimeSettings:
     pod:
       securityContext:
-        fsGroup: 65534​
+        fsGroup: 65534
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
