@@ -5,7 +5,7 @@ menu:
     identifier: security
     name: Security
     parent: latest-guides
-    weight: 125
+    weight: 130
 menu_name: docs_{{ .version }}
 ---
 
