@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Troubleshooting `"permission denied"` issue
 
-Sometimes the backup or restore fails due to permission issue. This can happen for various reasons. In this guide, we are going to explain the possible scenarios when this issue can arise and what you can do to solve it.
+Sometimes the backup or restore fails due to permission issue. This can happen for various reasons. In this guide, we are going to explain the known scenarios when this issue can arise and what you can do to solve it.
 
 ## Identifying the issue
 
@@ -54,13 +54,13 @@ Here, are few actions you can take to solve the issue in the scenarios mentioned
 
 ### For local volume as backend
 
-If you are facing the issue because of using local volume as backend, you can take any of the following actions to solve the issue.
+If you are facing the issue while using local volume as backend, you can take any of the following actions to solve the issue.
 
 #### Run the backup/restore as `root` user
 
 You can run the backup process as `root` by adding `runtimeSettings.container.securityContext` in the `BackupConfiguration` or `RestoreSession` spec.
 
-Here, is and example of running backup as `root` user:
+Here, is an example of running backup as `root` user:
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -236,7 +236,7 @@ spec:
 
 If your restore fails because it does not have necessary permission to read backed up data from the repository, you have to run the restore process as the same user as the backup process or `root` user using the `runtimeSettings.container.securityContext` section.
 
-Here, is an example or running restore as a particular user:
+Here, is an example of running restore as a particular user:
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1

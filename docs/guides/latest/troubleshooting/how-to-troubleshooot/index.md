@@ -26,7 +26,7 @@ If you have created the desired `BackupConfiguration` but the respective backup 
 
 #### Describe the `BackupConfiguration`
 
-At first, you have should describe the respective `BackupConfiguration` as below:
+At first, you should describe the respective `BackupConfiguration` as below:
 
 ```bash
 kubectl describe backupconfiguration <backupconfiguration name> -n <namespace>
@@ -54,11 +54,11 @@ Now, inspect the log carefully. You should see the respective error in the log.
 
 ### Backup Failed
 
-If a backup has failed, follow the following steps to identify the root cause.
+If a backup fails, follow the following steps to identify the root cause.
 
 #### Describe the `BackupSession`
 
-At first, describe the respective `BackupSession`. You should see the respective error in the `Status` section.
+At first, describe the failing `BackupSession`. You should see the respective error in the `Status` section.
 
 ```bash
 kubectl describe backupsession <backupsession name> -n <namespace>
@@ -90,11 +90,11 @@ Inspect the log carefully. You should notice the respective error that lead to b
 
 ## Troubleshoot Restore Issues
 
-If a restore has failed, follow the following steps to identify the root cause.
+If a restore fails, follow the following steps to identify the root cause.
 
 #### Describe the `RestoreSession`
 
-At first, describe the respective `RestoreSession`. You should see the respective error in the `Status` section.
+At first, describe the failing `RestoreSession`. You should see the respective error in the `Status` section.
 
 ```bash
 kubectl describe restoresession <restoresession name> -n <namespace>

@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Troubleshooting `"repository is already locked "` issue
 
-Sometime the backend repository get locked and subsequent backup fail. In this guide, we are going explain why this can happen and what you can do to solve the issue.
+Sometimes, the backend repository get locked and subsequent backup fail. In this guide, we are going to explain why this can happen and what you can do to solve the issue.
 
 ## Identifying the issue
 
@@ -36,7 +36,7 @@ kubectl logs -n <namespace> <backup job's pod name> --all-containers
 
 ## Possible reasons
 
-A restic process that modify the repository, create a lock at the beginning it's operation. When it completes the operation, it remove the lock so that other restic process can use the repository. Now, if the process is killed unexpectedly, it can not remove the lock. As a result the repository remain in locked state and become unusable for other process.
+A restic process that modify the repository, create a lock at the beginning it's operation. When it completes the operation, it remove the lock so that other restic process can use the repository. Now, if the process is killed unexpectedly, it can not remove the lock. As a result, the repository remains locked and become unusable for other process.
 
 ### Possible scenarios when a repository can get locked
 
@@ -44,7 +44,7 @@ The repository can get locked in the following scenarios.
 
 #### 1. The backup job/pod containing sidecar has been terminated.
 
-If the workload pod that has `stash` sidecar or backup job's pod get terminated while a backup is running, the repository can get locked. I this case, you have find out why the pod was terminated.
+If the workload pod that has `stash` sidecar or backup job's pod get terminated while a backup is running, the repository can get locked. In this case, you have to find out why the pod was terminated.
 
 #### 2. The temp-dir is set too low
 
