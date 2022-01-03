@@ -1,0 +1,125 @@
+---
+title: How to Troubleshoot Stash issues | Stash
+description: Troubleshooting backup/restore issues
+menu:
+  docs_{{ .version }}:
+    identifier: troubleshooting-how-to
+    name: How to Troubleshoot
+    parent: troubleshooting
+    weight: 5
+product_name: stash
+menu_name: docs_{{ .version }}
+section_menu_id: guides
+---
+
+# How to Troubleshoot Stash Issues
+
+This guide will give you an overview of how you can gather necessary information to identify the issue that causes the backup/restore failure.
+
+## Troubleshoot Backup Issues
+
+In this section, we are going to explain how to troubleshoot backup issues.
+
+### Backup was Never Triggered
+
+If you have created the desired `BackupConfiguration` but the respective backup triggering CronJob was never created or any `BackupSession` was not created in the scheduled time, in this case follow the following steps:
+
+#### Describe the `BackupConfiguration`
+
+At first, you have should describe the respective `BackupConfiguration` as below:
+
+```bash
+kubectl describe backupconfiguration <backupconfiguration name> -n <namespace>
+```
+
+Now, check the `Status` section of `BackupConfiguration`. Make sure all the `conditions` are `True`. If there is any issue during backup setup, you should see the error in the respective condition.
+
+Also, check the event to see if there is any indication of error.
+
+#### Check Stash operator log
+
+If you don't notice any error on the previous step, you should check the Stash operator log.
+
+Run the following command to view Stash operator log:
+
+```bash
+# Identify the Stash operator pod
+kubectl get pods --all-namespaces | grep stash
+
+# View log of Stash operator pod
+kubectl logs -n <operator namespace> <stash operator pod name> -c operator
+```
+
+Now, inspect the log carefully. You should see the respective error in the log.
+
+### Backup Failed
+
+If a backup has failed, follow the following steps to identify the root cause.
+
+#### Describe the `BackupSession`
+
+At first, describe the respective `BackupSession`. You should see the respective error in the `Status` section.
+
+```bash
+kubectl describe backupsession <backupsession name> -n <namespace>
+```
+
+Also, check the `Events` section. Sometimes, it can be helpful to identify the issue.
+
+#### View Backup Job/Sidecar log
+
+If you don't see any error in the previous step, you should try checking log of the respective backup job / sidecar.
+
+If you are trying to backup a workload, run the following command to inspect the log:
+
+```bash
+kubectl logs -n <namespace> <workload pod name> -c stash
+```
+
+If you are trying to backup using Stash addons, run the following command to inspect the log:
+
+```bash
+# Identify the backup pod
+kubectl get pods -n <namespace> | grep stash-backup
+
+# View the log of the backup pod
+kubectl logs -n <namespace> <backup pod name> --all-containers
+```
+
+Inspect the log carefully. You should notice the respective error that lead to backup failure.
+
+## Troubleshoot Restore Issues
+
+If a restore has failed, follow the following steps to identify the root cause.
+
+#### Describe the `RestoreSession`
+
+At first, describe the respective `RestoreSession`. You should see the respective error in the `Status` section.
+
+```bash
+kubectl describe restoresession <restoresession name> -n <namespace>
+```
+
+Also, check the `Events` section. Sometimes, it can be helpful to identify the issue.
+
+#### View Restore Job/Init-Container log
+
+If you don't see any error in the previous step, you should try checking log of the respective restore job / init-container.
+
+If you are trying to restore a workload, run the following command to inspect the log:
+
+```bash
+kubectl logs -n <namespace> <workload pod name> -c stash-init
+```
+
+If you are trying to restore using Stash addons, run the following command to inspect the log:
+
+```bash
+# Identify the restore pod
+kubectl get pods -n <namespace> | grep stash-restore
+
+# View the log of the restore pod
+kubectl logs -n <namespace> <restore pod name> --all-containers
+```
+
+Inspect the log carefully. You should notice the respective error that lead to restore failure.
