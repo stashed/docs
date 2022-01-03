@@ -1,6 +1,6 @@
 ---
 title: Repository Locked | Stash
-description: Troubleshooting "Repository Locked" issue
+description: Troubleshooting "repository is already locked" issue
 menu:
   docs_{{ .version }}:
     identifier: troubleshooting-repo-locked
@@ -12,7 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Troubleshooting "Repository Locked" issue
+# Troubleshooting `"repository is already locked "` issue
 
 Sometime the backend repository get locked and subsequent backup fail. In this guide, we are going explain why this can happen and what you can do to solve the issue.
 
@@ -66,7 +66,7 @@ Then, run the following command to unlock the repository:
 kubectl stash unlock <repository name> --namespace=<namespace>
 ```
 
-### Delete the lock file from backend
+### Delete the locks folder from backend
 
 If you are using a cloud bucket that provide a UI to browse the storage, you can go to the repository directory and delete the `locks` folder.
 

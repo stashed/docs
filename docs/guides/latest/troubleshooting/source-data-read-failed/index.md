@@ -12,7 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Troubleshooting "failed to read all source data" issue
+# Troubleshooting `"failed to read all source data"` issue
 
 Sometime backup fails due to Stash being unable to read the targeted data. In this guide, we are going to explain the possible scenario when this error can happen and what you can do to solve the issue.
 
