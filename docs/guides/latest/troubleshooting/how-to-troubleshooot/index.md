@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # How to Troubleshoot Stash Issues
 
-This guide will give you an overview of how you can gather necessary information to identify the issue that causes the backup/restore failure.
+This guide will give you an overview of how you can gather the necessary information to identify the issue that causes the backup/restore failure.
 
 ## Troubleshoot Backup Issues
 
@@ -22,7 +22,7 @@ In this section, we are going to explain how to troubleshoot backup issues.
 
 ### Backup was Never Triggered
 
-If you have created the desired `BackupConfiguration` but the respective backup triggering CronJob was never created or any `BackupSession` was not created in the scheduled time, in this case follow the following steps:
+If you have created the desired `BackupConfiguration` but the respective backup triggering CronJob was never created or any `BackupSession` was not created in the scheduled time, in this case, follow the following steps:
 
 #### Describe the `BackupConfiguration`
 
@@ -34,13 +34,13 @@ kubectl describe backupconfiguration <backupconfiguration name> -n <namespace>
 
 Now, check the `Status` section of `BackupConfiguration`. Make sure all the `conditions` are `True`. If there is any issue during backup setup, you should see the error in the respective condition.
 
-Also, check the event to see if there is any indication of error.
+Also, check the event to see if there is any indication of an error.
 
 #### Check Stash operator log
 
-If you don't notice any error on the previous step, you should check the Stash operator log.
+If you don't notice any error in the previous step, you should check the Stash operator log.
 
-Run the following command to view Stash operator log:
+Run the following command to view the Stash operator log:
 
 ```bash
 # Identify the Stash operator pod
@@ -68,7 +68,7 @@ Also, check the `Events` section. Sometimes, it can be helpful to identify the i
 
 #### View Backup Job/Sidecar log
 
-If you don't see any error in the previous step, you should try checking log of the respective backup job / sidecar.
+If you don't see any error in the previous step, you should try checking the log of the respective backup job/sidecar.
 
 If you are trying to backup a workload, run the following command to inspect the log:
 
@@ -86,7 +86,7 @@ kubectl get pods -n <namespace> | grep stash-backup
 kubectl logs -n <namespace> <backup pod name> --all-containers
 ```
 
-Inspect the log carefully. You should notice the respective error that lead to backup failure.
+Inspect the log carefully. You should notice the respective error that leads to backup failure.
 
 ## Troubleshoot Restore Issues
 
@@ -104,7 +104,7 @@ Also, check the `Events` section. Sometimes, it can be helpful to identify the i
 
 #### View Restore Job/Init-Container log
 
-If you don't see any error in the previous step, you should try checking log of the respective restore job / init-container.
+If you don't see any error in the previous step, you should try checking the log of the respective restore job / init-container.
 
 If you are trying to restore a workload, run the following command to inspect the log:
 
@@ -122,4 +122,4 @@ kubectl get pods -n <namespace> | grep stash-restore
 kubectl logs -n <namespace> <restore pod name> --all-containers
 ```
 
-Inspect the log carefully. You should notice the respective error that lead to restore failure.
+Inspect the log carefully. You should notice the respective error that leads to restore failure.

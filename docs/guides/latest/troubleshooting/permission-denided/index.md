@@ -14,15 +14,15 @@ section_menu_id: guides
 
 # Troubleshooting `"permission denied"` issue
 
-Sometimes the backup or restore fails due to permission issue. This can happen for various reasons. In this guide, we are going to explain the known scenarios when this issue can arise and what you can do to solve it.
+Sometimes the backup or restore fails due to permission issues. This can happen for various reasons. In this guide, we are going to explain the known scenarios when this issue can arise and what you can do to solve it.
 
 ## Identifying the issue
 
-If you describe the respective `BackupSession` / `RestoreSession` or view the log from respective backup/restore sidecar/job, you should see a message pointing to `permission denied` error.
+If you describe the respective `BackupSession` / `RestoreSession` or view the log from the respective backup/restore sidecar/job, you should see a message pointing to the `permission denied` error.
 
 ## Possible reasons
 
-The issue can happen during both backup and restore. Here, are few possible scenarios when you can face the issue.
+The issue can happen during both backup and restore. Here, are a few possible scenarios when you can face the issue.
 
 ### During Backup
 
@@ -38,7 +38,7 @@ If you are using an addon that needs `interimVolume` for storing the data tempor
 
 ### During Restore
 
-You may see the permission issue during restore process in the following scenarios.
+You may see the permission issue during the restore process in the following scenarios.
 
 ### Backup was taken as a particular user
 
@@ -50,11 +50,11 @@ If you are using an addon that needs `interimVolume` for storing the data tempor
 
 ## Solutions
 
-Here, are few actions you can take to solve the issue in the scenarios mentioned  above.
+Here, are a few actions you can take to solve the issue in the scenarios mentioned above.
 
 ### For local volume as backend
 
-If you are facing the issue while using local volume as backend, you can take any of the following actions to solve the issue.
+If you are facing the issue while using local volume as a backend, you can take any of the following actions to solve the issue.
 
 #### Run the backup/restore as `root` user
 
@@ -93,7 +93,7 @@ spec:
     prune: true
 ```
 
-Here, is an example of running restore as `root` user:
+Here, is an example of running restores as `root` user:
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -149,15 +149,15 @@ spec:
     prune: true
 ```
 
-> If you are taking backup of workload (i.e. StatefulSet, Deployment etc.) volumes, you have to provide the `fsGroup` in your workload spec instead of `BackupConfiguration` / `RestoreSession`.
+> If you are taking backup of workload (i.e. StatefulSet, Deployment, etc.) volumes, you have to provide the `fsGroup` in your workload spec instead of `BackupConfiguration` / `RestoreSession`.
 
-#### Give read,write permissions to all users
+#### Give read, write permissions to all users
 
 You can also use `chmod` to give read, write permissions to all users for the directory you are using as backend.
 
 ### For using InterimVolume
 
-If you are facing the issue for using `interimVolume` in your backup/restore process, you can either run the backup/restore process as root user or you can provide the storage access permission to Stash using `fsGroup`.
+If you are facing the issue because of using `interimVolume` in your backup/restore process, you can either run the backup/restore process as `root` user or you can provide the storage access permission to Stash using `fsGroup`.
 
 Here, is an example of running backup as `root` user:
 
@@ -234,7 +234,7 @@ spec:
 
 ### For user id mismatch during restore
 
-If your restore fails because it does not have necessary permission to read backed up data from the repository, you have to run the restore process as the same user as the backup process or `root` user using the `runtimeSettings.container.securityContext` section.
+If your restore fails because it does not have the necessary permission to read backed up data from the repository, you have to run the restore process as the same user as the backup process or `root` user using the `runtimeSettings.container.securityContext` section.
 
 Here, is an example of running restore as a particular user:
 
