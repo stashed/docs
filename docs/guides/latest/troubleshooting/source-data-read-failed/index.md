@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Troubleshooting `"failed to read all source data"` issue
 
-Sometime backup fails due to Stash being unable to read the targeted data. In this guide, we are going to explain the possible scenario when this error can happen and what you can do to solve the issue.
+Sometimes, the backup fails due to Stash being unable to read the targeted data. In this guide, we are going to explain the possible scenario when this error can happen and what you can do to solve the issue.
 
 ## Identifying the issue
 
@@ -26,13 +26,13 @@ Warning: failed to read all source data during backup
 
 ## Possible reason
 
-By default, Stash runs backup as non-root user. If the target data directory is not readable to all users, then Stash will fail to read the targeted data.
+By default, Stash runs backup as a non-root user. If the target data directory is not readable to all users, then Stash will fail to read the targeted data.
 
 ## Solution
 
-Run the backup process as same user as the targeted application or run the backup process as root user.
+Run the backup process as the same user as the targeted application or run the backup process as the root user.
 
-Here is an example of `BackupConfiguration` for running backup as root user:
+Here is an example of `BackupConfiguration` for running backup as the root user:
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
