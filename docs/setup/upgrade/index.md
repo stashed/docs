@@ -28,7 +28,7 @@ Helm [does not upgrade the CRDs](https://github.com/helm/helm/issues/6581) bundl
 kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/crds/stash-catalog-crds.yaml
 ```
 
-If you are upgrading from a version older than `v2020.10.11`, you have to register the following CRD:
+If you are upgrading from a version older than `v2021.10.11`, you have to register the following CRD:
 
 ```bash
  kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/charts/stash-metrics/crds/metrics.appscode.com_metricsconfigurations.yaml
