@@ -30,7 +30,6 @@ stash restore [flags]
       --metrics-enabled             Specify whether to export Prometheus metrics
       --pushgateway-url string      Pushgateway URL where the metrics will be pushed
       --restore-model string        Specify whether using job or init-container to restore (default init-container) (default "init-container")
-      --secret-dir string           Directory where storage secret has been mounted
       --target-kind string          Kind of the Target
       --target-name string          Name of the Target
 ```

@@ -29,7 +29,6 @@ stash run-backup [flags]
       --max-connections int      Specify maximum concurrent connections for GCS, Azure and B2 backend
       --metrics-enabled          Specify whether to export Prometheus metrics
       --pushgateway-url string   URL of Prometheus pushgateway used to cache backup metrics
-      --secret-dir string        Directory where storage secret has been mounted
       --target-kind string       Kind of the Target
       --target-name string       Name of the Target
 ```

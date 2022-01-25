@@ -19,10 +19,11 @@ stash forget [snapshotID ...] [flags]
 ### Options
 
 ```
-  -h, --help                help for forget
-      --kubeconfig string   Path to kubeconfig file with authorization information (the master location is set by the master flag).
-      --master string       The address of the Kubernetes API server (overrides any value in kubeconfig)
-      --repo-name string    Name of the Repository CRD.
+  -h, --help                    help for forget
+      --kubeconfig string       Path to kubeconfig file with authorization information (the master location is set by the master flag).
+      --master string           The address of the Kubernetes API server (overrides any value in kubeconfig)
+      --repo-name string        Name of the Repository CRD.
+      --repo-namespace string   Namespace of the Repository CRD.
 ```
 
 ### Options inherited from parent commands
