@@ -32,20 +32,16 @@ Stash is a Kubernetes operator for restic. For more information, visit here: htt
 
 ### SEE ALSO
 
-* [stash backup](/docs/reference/operator/stash_backup.md)	 - Run Stash Backup
 * [stash backup-pvc](/docs/reference/operator/stash_backup-pvc.md)	 - Takes a backup of Persistent Volume Claim
-* [stash check](/docs/reference/operator/stash_check.md)	 - Check restic backup
 * [stash create-backupsession](/docs/reference/operator/stash_create-backupsession.md)	 - create a BackupSession
 * [stash create-vs](/docs/reference/operator/stash_create-vs.md)	 - Take snapshot of PersistentVolumeClaims
 * [stash forget](/docs/reference/operator/stash_forget.md)	 - Delete snapshots from a restic repository
-* [stash recover](/docs/reference/operator/stash_recover.md)	 - Recover restic backup
 * [stash restore](/docs/reference/operator/stash_restore.md)	 - Restore from backup
 * [stash restore-pvc](/docs/reference/operator/stash_restore-pvc.md)	 - Takes a restore of Persistent Volume Claim
 * [stash restore-vs](/docs/reference/operator/stash_restore-vs.md)	 - Restore PVC from VolumeSnapshot
 * [stash run](/docs/reference/operator/stash_run.md)	 - Launch Stash Controller
 * [stash run-backup](/docs/reference/operator/stash_run-backup.md)	 - Take backup of workload paths
 * [stash run-hook](/docs/reference/operator/stash_run-hook.md)	 - Execute Backup or Restore Hooks
-* [stash scaledown](/docs/reference/operator/stash_scaledown.md)	 - Scale down workload
 * [stash snapshots](/docs/reference/operator/stash_snapshots.md)	 - Get snapshots of restic repo
 * [stash update-status](/docs/reference/operator/stash_update-status.md)	 - Update status of Repository, Backup/Restore Session
 * [stash version](/docs/reference/operator/stash_version.md)	 - Prints binary version number.
