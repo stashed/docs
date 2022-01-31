@@ -20,6 +20,13 @@ Delete a snapshot from repository backend
 kubectl-stash delete snapshot [flags]
 ```
 
+### Examples
+
+```
+  # Delete Snapshot
+  stash delete snapshot gcs-repo-c063d146 -n demo
+```
+
 ### Options
 
 ```
