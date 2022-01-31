@@ -26,7 +26,7 @@ kubectl-stash create backupconfig [flags]
   # Create a new BackupConfiguration
   # stash create backupconfig --namespace=<namespace> gcs-repo [Flag]
   # For Restic driver
-  stash create backupconfig ss-backup --namespace=demo --repository=gcs-repo --schedule="*/4 * * * *" --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-demo --paths=/source/data --volume-mounts=source-data:/source/data --keep-last=5 --prune=true
+  stash create backupconfig ss-backup --namespace=demo --repo-name=gcs-repo --schedule="*/4 * * * *" --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-demo --paths=/source/data --volume-mounts=source-data:/source/data --keep-last=5 --prune=true
   # For VolumeSnapshotter driver
   stash create backupconfig statefulset-volume-snapshot --namespace=demo --driver=VolumeSnapshotter --schedule="*/4 * * * *" --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-demo --replica=1 --volumesnpashotclass=default-snapshot-class --keep-last=5 --prune=true
 ```
@@ -46,7 +46,8 @@ kubectl-stash create backupconfig [flags]
       --paths strings                List of paths to backup
       --prune                        Specify whether to prune old snapshot data
       --replica int32                Replica specifies the number of replicas whose data should be backed up
-      --repository string            Name of the Repository
+      --repo-name string             Name of the Repository
+      --repo-namespace string        Namespace of the Repository
       --schedule string              Schedule of the Backup
       --target-apiversion string     API-Version of the target resource
       --target-kind string           Kind of the target resource

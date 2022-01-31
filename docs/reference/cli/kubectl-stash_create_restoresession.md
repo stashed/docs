@@ -26,7 +26,7 @@ kubectl-stash create restoresession [flags]
   # Create a RestoreSession
   # stash create restore --namespace=demo <restore session name> [Flag]
   # For Restic driver
-  stash create restoresession ss-restore --namespace=demo --repository=gcs-repo --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-recovered --paths=/source/data --volume-mounts=source-data:/source/data
+  stash create restoresession ss-restore --namespace=demo --repo-name=gcs-repo --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-recovered --paths=/source/data --volume-mounts=source-data:/source/data
   # For VolumeSnapshotter driver
   stash create restoresession restore-pvc --namespace=demo --driver=VolumeSnapshotter --replica=3 --claim.name=restore-data-restore-demo-${POD_ORDINAL} --claim.access-modes=ReadWriteOnce --claim.storageclass=standard --claim.size=1Gi --claim.datasource=source-data-stash-demo-0-1567146010
 ```
@@ -45,7 +45,8 @@ kubectl-stash create restoresession [flags]
       --host string                  Name of the Source host
       --paths strings                List of paths to backup
       --replica int32                Replica specifies the number of replicas whose data should be backed up
-      --repository string            Name of the Repository
+      --repo-name string             Name of the Repository
+      --repo-namespace string        Namespace of the Repository
       --snapshots strings            Name of the Snapshot(single)
       --target-apiversion string     API-Version of the target resource
       --target-kind string           Kind of the target resource
