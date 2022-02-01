@@ -164,7 +164,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 - **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed before the backup process.
 - **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed after the backup process.
 
-For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview.md).
 
 #### spec.runtimeSettings
 
@@ -254,6 +254,6 @@ A `BackupConfiguration` object has the following fields in the `status` section.
 
 ## Next Steps
 
-- Learn how to configure `BackupConfiguration` to backup workloads data from [here](/docs/guides/latest/workloads/overview.md).
-- Learn how to configure `BackupConfiguration` to backup databases from [here](/docs/guides/latest/addons/overview.md).
-- Learn how to configure `BackupConfiguration` to backup stand-alone PVC from [here](/docs/guides/latest/volumes/overview.md).
+- Learn how to configure `BackupConfiguration` to backup workloads data from [here](/docs/guides/workloads/overview.md).
+- Learn how to configure `BackupConfiguration` to backup databases from [here](/docs/guides/addons/overview.md).
+- Learn how to configure `BackupConfiguration` to backup stand-alone PVC from [here](/docs/guides/volumes/overview.md).

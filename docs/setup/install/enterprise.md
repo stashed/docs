@@ -14,7 +14,7 @@ section_menu_id: setup
 
 # Install Stash Enterprise Edition
 
-Stash Enterprise edition is the open core version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview.md).
+Stash Enterprise edition is the open core version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Auto-Backup](/docs/guides/auto-backup/overview.md), [Batch Backup](/docs/guides/batch-backup/overview.md), and [Local Backend](/docs/guides/backends/local.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview.md).
 
 If you are willing to try Stash Enterprise Edition, you can grab a **30 days trial** license from [here](https://license-issuer.appscode.com/?p=stash-enterprise).
 
@@ -213,4 +213,4 @@ pvc-restore                   5m2s
 
 As you can see from the above output that Stash has created `Task` objects for each supported databases.
 
-Now, you are ready to [take your first backup](/docs/guides/latest/README.md) using Stash.
+Now, you are ready to [take your first backup](/docs/guides/README.md) using Stash.

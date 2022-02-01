@@ -53,7 +53,7 @@ Aggregated API Server self-hosts validating and mutating [webhooks](https://kube
 
 ### Backend
 
-Backend is the storage where Stash stores backed up files. It can be a cloud storage like GCS bucket, AWS S3, Azure Blob Storage etc. or a Kubernetes persistent volume like [NFS](https://kubernetes.io/docs/concepts/storage/volumes/#nfs), [PersistentVolumeClaim](https://kubernetes.io/docs/concepts/storage/volumes/#persistentvolumeclaim), etc. To learn more about backend, please visit [here](/docs/guides/latest/backends/overview.md).
+Backend is the storage where Stash stores backed up files. It can be a cloud storage like GCS bucket, AWS S3, Azure Blob Storage etc. or a Kubernetes persistent volume like [NFS](https://kubernetes.io/docs/concepts/storage/volumes/#nfs), [PersistentVolumeClaim](https://kubernetes.io/docs/concepts/storage/volumes/#persistentvolumeclaim), etc. To learn more about backend, please visit [here](/docs/guides/backends/overview.md).
 
 ### CronJob
 

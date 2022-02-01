@@ -36,7 +36,3 @@ This concept section is divided into the following modules:
   - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md) introduces the concept of `BackupBlueprint` crd that specifies a blueprint for `Repository` and `BackupConfiguration` object which provides an option to share backup configuration across similar targets.
   - [AppBinding](/docs/concepts/crds/appbinding.md) introduces the concept of `AppBinding` crd which holds the information that are necessary to connect with an application like database.
   - [Snapshot](/docs/concepts/crds/snapshot.md) introduces the concept of `Snapshot` object that represents backed up snapshots in a Kubernetes native way.
-
-- v1alpha1 API
-  - [Restic](/docs/concepts/crds/v1alpha1/restic.md) introduces the concept of `Restic` crd that is used for configuring [restic](https://restic.net) in a Kubernetes native way.
-  - [Recovery](/docs/concepts/crds/v1alpha1/recovery.md) introduces the concept of `Recovery` crd that is used to restore a backup taken using Stash.
