@@ -58,7 +58,7 @@ If your repository gets locked, you have to unlock it manually. You can use one 
 
 ### Use Stash kubectl plugin
 
-At first, install the Stash `kubectl` plugin by following the instruction [here](https://stash.run/docs/latest/setup/install/kubectl_plugin/).
+At first, install the Stash `kubectl` plugin by following the instruction [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/kubectl_plugin/).
 
 Then, run the following command to unlock the repository:
 
