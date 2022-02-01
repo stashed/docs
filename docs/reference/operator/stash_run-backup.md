@@ -29,7 +29,6 @@ stash run-backup [flags]
       --max-connections int      Specify maximum concurrent connections for GCS, Azure and B2 backend
       --metrics-enabled          Specify whether to export Prometheus metrics
       --pushgateway-url string   URL of Prometheus pushgateway used to cache backup metrics
-      --secret-dir string        Directory where storage secret has been mounted
       --target-kind string       Kind of the Target
       --target-name string       Name of the Target
 ```
@@ -38,7 +37,6 @@ stash run-backup [flags]
 
 ```
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
-      --service-name string              Stash service name. (default "stash-operator")
       --use-kubeapiserver-fqdn-for-aks   if true, uses kube-apiserver FQDN for AKS cluster to workaround https://github.com/Azure/AKS/issues/522 (default true)
 ```
 

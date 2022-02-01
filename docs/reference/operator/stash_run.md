@@ -84,6 +84,7 @@ stash run [flags]
       --permit-address-sharing                                  If true, SO_REUSEADDR will be used when binding the port. This allows binding to wildcard IPs like 0.0.0.0 and specific IPs in parallel, and it avoids waiting for the kernel to release sockets in TIME_WAIT state. [default=false]
       --permit-port-sharing                                     If true, SO_REUSEPORT will be used when binding the port, which allows more than one instance to bind on the same address and port. [default=false]
       --profiling                                               Enable profiling via web interface host:port/debug/pprof/ (default true)
+      --pushgateway-url string                                  URL of the Prometheus pushgateway where backup metrics will be pushed.
       --qps float                                               The maximum QPS to the master from this client (default 100)
       --requestheader-allowed-names strings                     List of client certificate common names to allow to provide usernames in headers specified by --requestheader-username-headers. If empty, any client certificate validated by the authorities in --requestheader-client-ca-file is allowed.
       --requestheader-client-ca-file string                     Root certificate bundle to use to verify client certificates on incoming requests before trusting usernames in headers specified by --requestheader-username-headers. WARNING: generally do not depend on authorization being already done for incoming requests.
@@ -107,7 +108,6 @@ stash run [flags]
 
 ```
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
-      --service-name string              Stash service name. (default "stash-operator")
       --use-kubeapiserver-fqdn-for-aks   if true, uses kube-apiserver FQDN for AKS cluster to workaround https://github.com/Azure/AKS/issues/522 (default true)
 ```
 

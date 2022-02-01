@@ -19,17 +19,17 @@ stash forget [snapshotID ...] [flags]
 ### Options
 
 ```
-  -h, --help                help for forget
-      --kubeconfig string   Path to kubeconfig file with authorization information (the master location is set by the master flag).
-      --master string       The address of the Kubernetes API server (overrides any value in kubeconfig)
-      --repo-name string    Name of the Repository CRD.
+  -h, --help                    help for forget
+      --kubeconfig string       Path to kubeconfig file with authorization information (the master location is set by the master flag).
+      --master string           The address of the Kubernetes API server (overrides any value in kubeconfig)
+      --repo-name string        Name of the Repository CRD.
+      --repo-namespace string   Namespace of the Repository CRD.
 ```
 
 ### Options inherited from parent commands
 
 ```
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
-      --service-name string              Stash service name. (default "stash-operator")
       --use-kubeapiserver-fqdn-for-aks   if true, uses kube-apiserver FQDN for AKS cluster to workaround https://github.com/Azure/AKS/issues/522 (default true)
 ```
 

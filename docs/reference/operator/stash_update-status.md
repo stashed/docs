@@ -37,9 +37,9 @@ stash update-status [flags]
       --path string                      Directory inside the bucket where backed up data will be stored
       --provider string                  Backend provider (i.e. gcs, s3, azure etc)
       --region string                    Region for s3/s3 compatible backend
-      --repository string                Name of the Repository
+      --repo-name string                 Name of the Repository
+      --repo-namespace string            Namespace of the Repository
       --scratch-dir string               Temporary directory
-      --secret-dir string                Directory where storage secret has been mounted
       --target-kind string               Kind of the target
       --target-name string               Name of the target
 ```
@@ -48,7 +48,6 @@ stash update-status [flags]
 
 ```
       --bypass-validating-webhook-xray   if true, bypasses validating webhook xray checks
-      --service-name string              Stash service name. (default "stash-operator")
       --use-kubeapiserver-fqdn-for-aks   if true, uses kube-apiserver FQDN for AKS cluster to workaround https://github.com/Azure/AKS/issues/522 (default true)
 ```
 
