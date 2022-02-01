@@ -127,7 +127,7 @@ A `BackupBatch` object has the following fields in the `spec` section.
 - **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed on each backup session before taking backup of any of the members.
 - **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed on each backup session after taking backup of all the members.
 
-For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/latest/hooks/overview.md).
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview.md).
 
 #### spec.runtimeSettings
 
@@ -172,4 +172,4 @@ The following conditions are set for the members of a `BackupBatch`.
 
 ## Next Steps
 
-- Learn how to configure `BackupBatch` to backup data from [here](/docs/guides/latest/batch-backup/overview.md).
+- Learn how to configure `BackupBatch` to backup data from [here](/docs/guides/batch-backup/overview.md).

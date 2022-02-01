@@ -355,7 +355,7 @@ spec:
 
 ### Prepare Backend
 
-We are going to store our backed up data into a GCS bucket. So, we need to create a `Secret` with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/latest/backends/overview.md).
+We are going to store our backed up data into a GCS bucket. So, we need to create a `Secret` with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
 
 #### Create Storage Secret
 
@@ -768,7 +768,7 @@ namespace/restored created
 
 #### Install `stash` kubectl plugin
 
-Now, we are going to use `stash` kubectl plugin to help us copying the `Repository` and backend `Secret` from our `demo` namespace into `restored` namespace. If you haven't already installed the `stash` kubectl-plugin, please install it by following the guide from [here](https://stash.run/docs/latest/setup/install/kubectl_plugin/).
+Now, we are going to use `stash` kubectl plugin to help us copying the `Repository` and backend `Secret` from our `demo` namespace into `restored` namespace. If you haven't already installed the `stash` kubectl-plugin, please install it by following the guide from [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/kubectl_plugin/).
 
 Verify that the `stash` kubectl plugin has been installed properly,
 

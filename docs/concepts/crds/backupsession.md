@@ -236,6 +236,6 @@ Stash uses the job model for taking volume snapshots. Each volume is considered 
 
 ## Next Steps
 
-- Learn how backup of workloads data works from [here](/docs/guides/latest/workloads/overview.md).
-- Learn how backup of databases works from [here](/docs/guides/latest/addons/overview.md).
-- Learn how backup stand alone PVC works from [here](/docs/guides/latest/volumes/overview.md).
+- Learn how backup of workloads data works from [here](/docs/guides/workloads/overview.md).
+- Learn how backup of databases works from [here](/docs/guides/addons/overview.md).
+- Learn how backup stand alone PVC works from [here](/docs/guides/volumes/overview.md).

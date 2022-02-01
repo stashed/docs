@@ -14,7 +14,7 @@ section_menu_id: setup
 
 # Install Stash Community Edition
 
-Stash Community edition is available under [AppsCode-Community-1.0.0](https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Community-1.0.0.md) license and free to use for both commercial and non-commercial purposes. It comes with all the basic backup functionalities. However, it lacks some advanced features such as [Database Backup](/docs/guides/latest/addons/overview.md), [Auto-Backup](/docs/guides/latest/auto-backup/overview.md), [Batch Backup](/docs/guides/latest/batch-backup/overview.md), and [Local Backend](/docs/guides/latest/backends/local.md) support, etc. compared to the Enterprise edition. A full features comparison between the Stash Community edition and Enterprise edition can be found [here](/docs/concepts/what-is-stash/overview.md).
+Stash Community edition is available under [AppsCode-Community-1.0.0](https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Community-1.0.0.md) license and free to use for both commercial and non-commercial purposes. It comes with all the basic backup functionalities. However, it lacks some advanced features such as [Database Backup](/docs/guides/addons/overview.md), [Auto-Backup](/docs/guides/auto-backup/overview.md), [Batch Backup](/docs/guides/batch-backup/overview.md), and [Local Backend](/docs/guides/backends/local.md) support, etc. compared to the Enterprise edition. A full features comparison between the Stash Community edition and Enterprise edition can be found [here](/docs/concepts/what-is-stash/overview.md).
 
 To use Stash Community edition, you can grab **1 year** free license from [here](https://license-issuer.appscode.com/?p=stash-community).
 
@@ -136,4 +136,4 @@ restoresessions.stash.appscode.com        2020-08-24T08:20:55Z
 tasks.stash.appscode.com                  2020-08-24T08:20:55Z
 ```
 
-Now, you are ready to [take your first backup](/docs/guides/latest/README.md) using Stash.
+Now, you are ready to [take your first backup](/docs/guides/README.md) using Stash.

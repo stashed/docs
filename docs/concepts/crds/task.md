@@ -93,5 +93,5 @@ You might be wondering why we have introduced `Function` and `Task` crd. We have
 
 ## Next Steps
 
-- Learn how Stash backup databases using `Function-Task` model from [here](/docs/guides/latest/addons/overview.md).
-- Learn how Stash backup stand-alone PVC using `Function-Task` model from [here](/docs/guides/latest/volumes/overview.md).
+- Learn how Stash backup databases using `Function-Task` model from [here](/docs/guides/addons/overview.md).
+- Learn how Stash backup stand-alone PVC using `Function-Task` model from [here](/docs/guides/volumes/overview.md).
