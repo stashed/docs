@@ -30,7 +30,7 @@ kubectl-stash delete snapshot [flags]
 ### Options
 
 ```
-      --docker-registry string   Docker image registry (default "restic")
+      --docker-registry string   Docker image registry (default "stashed")
   -h, --help                     help for snapshot
       --image-tag string         Stash image tag (default "latest")
 ```
