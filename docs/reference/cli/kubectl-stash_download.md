@@ -24,7 +24,7 @@ kubectl-stash download [flags]
 
 ```
       --destination string       Destination path where snapshot will be restored.
-      --docker-registry string   Docker image registry for restic cli (default "restic")
+      --docker-registry string   Docker image registry for restic cli (default "stashed")
   -h, --help                     help for download
       --host string              Name of the source host machine (default "host-0")
       --image-tag string         Restic docker image tag (default "latest")
