@@ -1,38 +1,52 @@
 ---
-title: Kubectl-Stash
+title: Pause Backup
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash
-    name: Kubectl-Stash
+    identifier: kubectl-stash-pause-backup
+    name: Pause Backup
     parent: reference-cli
-    weight: 0
-
 menu_name: docs_{{ .version }}
 section_menu_id: reference
-url: /docs/{{ .version }}/reference/cli/
-aliases:
-- /docs/{{ .version }}/reference/cli/kubectl-stash/
 ---
-## kubectl-stash
+## kubectl-stash pause backup
 
-kubectl plugin for Stash by AppsCode
+Pause backup
 
 ### Synopsis
 
-kubectl plugin for Stash by AppsCode. For more information, visit here: https://appscode.com/products/stash
+Pause backup by setting "paused" field of BackupConfiguration/BackupBatch to "true"
+
+```
+kubectl-stash pause backup [flags]
+```
+
+### Examples
+
+```
+  # Pause a BackupConfigration
+  stash pause backup --namespace=<namespace> --backupconfig=<backup-configuration-name>
+  stash pause backup --backup-config=sample-mongodb -n demo
+```
 
 ### Options
 
 ```
+  -h, --help   help for backup
+```
+
+### Options inherited from parent commands
+
+```
       --as string                        Username to impersonate for the operation
       --as-group stringArray             Group to impersonate for the operation, this flag can be repeated to specify multiple groups.
+      --backupbatch string               Name of the BackupBatch to pause
+      --backupconfig string              Name of the Backupconfiguration to pause
       --cache-dir string                 Default cache directory (default "/home/runner/.kube/cache")
       --certificate-authority string     Path to a cert file for the certificate authority
       --client-certificate string        Path to a client certificate file for TLS
       --client-key string                Path to a client key file for TLS
       --cluster string                   The name of the kubeconfig cluster to use
       --context string                   The name of the kubeconfig context to use
-  -h, --help                             help for kubectl-stash
       --insecure-skip-tls-verify         If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
       --kubeconfig string                Path to the kubeconfig file to use for CLI requests.
       --match-server-version             Require server version to match client version
@@ -47,15 +61,5 @@ kubectl plugin for Stash by AppsCode. For more information, visit here: https://
 
 ### SEE ALSO
 
-* [kubectl-stash clone](/docs/reference/cli/kubectl-stash_clone.md)	 - Clone Kubernetes resources
-* [kubectl-stash completion](/docs/reference/cli/kubectl-stash_completion.md)	 - Generate completion script
-* [kubectl-stash cp](/docs/reference/cli/kubectl-stash_cp.md)	 - Copy stash resources from one namespace to another namespace
-* [kubectl-stash create](/docs/reference/cli/kubectl-stash_create.md)	 - create stash resources
-* [kubectl-stash delete](/docs/reference/cli/kubectl-stash_delete.md)	 - Delete stash resources
-* [kubectl-stash download](/docs/reference/cli/kubectl-stash_download.md)	 - Download snapshots
 * [kubectl-stash pause](/docs/reference/cli/kubectl-stash_pause.md)	 - Pause Stash backup temporarily
-* [kubectl-stash resume](/docs/reference/cli/kubectl-stash_resume.md)	 - Resume stash resources
-* [kubectl-stash trigger](/docs/reference/cli/kubectl-stash_trigger.md)	 - Trigger a backup
-* [kubectl-stash unlock](/docs/reference/cli/kubectl-stash_unlock.md)	 - Unlock Restic Repository
-* [kubectl-stash version](/docs/reference/cli/kubectl-stash_version.md)	 - Prints binary version number.
 
