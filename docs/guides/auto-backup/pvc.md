@@ -404,12 +404,12 @@ spec:
 
 **Verify BackupConfiguration:**
 
-Verify that the `BackupConfiguration` crd has been created by the following command,
+If everything goes well, the phase of the `BackupConfiguration` should be created and in `Ready` state. Verify that the `BackupConfiguration` CRD by the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
-NAME                            TASK         SCHEDULE       PAUSED   AGE
-persistentvolumeclaim-nfs-pvc   pvc-backup   */15 * * * *            119s
+NAME                            TASK         SCHEDULE       PAUSED   PHASE   AGE
+persistentvolumeclaim-nfs-pvc   pvc-backup   */15 * * * *            Ready   119s
 ```
 
 Let's check the YAML of this `BackupConfiguration`,

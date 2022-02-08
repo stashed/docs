@@ -200,9 +200,23 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 backupconfiguration.stash.appscode.com/dmn-backup created
 ```
 
+**Verify Backup Setup Successful**
+
+If everything goes well, the phase of the `BackupConfiguration` should be in `Ready` state. The `Ready` Phase indicates that the backup setup is successful. Let's check the `Phase` of the BackupConfiguration,
+
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME                TASK    SCHEDULE      PAUSED   PHASE      AGE
+dmn-backup                  */5 * * * *            Ready      11s
+```
+> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful.Describe the BackupConfiguration by following command,
+```bash
+$ kubectl describe backupconfiguration -n demo 
+```
+
 **Verify Sidecar:**
 
-If everything goes well, Stash will inject a sidecar container into the `stash-demo` DaemonSet to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
+Stash will inject a sidecar container into the `stash-demo` DaemonSet to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
 ```bash
 $ kubectl get pod -n demo
@@ -312,7 +326,7 @@ Verify that the `CronJob` has been created using the following command,
 ```bash
 $ kubectl get backupconfiguration -n  demo
 NAME         TASK   SCHEDULE      PAUSED   AGE
-dmn-backup          */1 * * * *            3m
+dmn-backup          */5 * * * *            3m
 ```
 
 **Wait for BackupSession:**
@@ -369,8 +383,8 @@ Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that th
 
 ```bash
 $ kubectl get backupconfiguration -n demo
-NAME                TASK   SCHEDULE      PAUSED   AGE
-dmn-backup                 */1 * * * *   true     26m
+NAME                TASK   SCHEDULE      PAUSED   PHASE   AGE
+dmn-backup                 */5 * * * *   true     Ready   26m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.

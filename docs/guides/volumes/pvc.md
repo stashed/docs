@@ -315,7 +315,19 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 backupconfiguration.stash.appscode.com/nfs-pvc-backup created
 ```
 
-If everything goes well, Stash will create a CronJob to trigger backup periodically.
+**Verify Backup Setup Successful**
+
+If everything goes well, the phase of the `BackupConfiguration` should be in `Ready` state. The `Ready` Phase indicates that the backup setup is successful. Let's check the `Phase` of the BackupConfiguration,
+
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME             TASK         SCHEDULE      PAUSED   PHASE    AGE
+nfs-pvc-backup   pvc-backup   */5 * * * *            Ready    11s
+```
+> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful.Describe the BackupConfiguration by following command,
+```bash
+$ kubectl describe backupconfiguration -n demo 
+```
 
 **Verify CronJob:**
 
@@ -385,7 +397,7 @@ Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that th
 ```bash
 $ kubectl get backupconfiguration -n demo nfs-pvc-backup
 NAME             TASK   SCHEDULE      PAUSED   AGE
-nfs-pvc-backup          */1 * * * *   true     20m
+nfs-pvc-backup          */5 * * * *   true     20m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
