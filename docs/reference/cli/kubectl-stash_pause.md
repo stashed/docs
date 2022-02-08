@@ -1,27 +1,26 @@
 ---
-title: Kubectl-Stash
+title: Pause
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash
-    name: Kubectl-Stash
+    identifier: kubectl-stash-pause
+    name: Pause
     parent: reference-cli
-    weight: 0
-
 menu_name: docs_{{ .version }}
 section_menu_id: reference
-url: /docs/{{ .version }}/reference/cli/
-aliases:
-- /docs/{{ .version }}/reference/cli/kubectl-stash/
 ---
-## kubectl-stash
+## kubectl-stash pause
 
-kubectl plugin for Stash by AppsCode
-
-### Synopsis
-
-kubectl plugin for Stash by AppsCode. For more information, visit here: https://appscode.com/products/stash
+Pause Stash backup temporarily
 
 ### Options
+
+```
+      --backupbatch string    Name of the BackupBatch to pause
+      --backupconfig string   Name of the Backupconfiguration to pause
+  -h, --help                  help for pause
+```
+
+### Options inherited from parent commands
 
 ```
       --as string                        Username to impersonate for the operation
@@ -32,7 +31,6 @@ kubectl plugin for Stash by AppsCode. For more information, visit here: https://
       --client-key string                Path to a client key file for TLS
       --cluster string                   The name of the kubeconfig cluster to use
       --context string                   The name of the kubeconfig context to use
-  -h, --help                             help for kubectl-stash
       --insecure-skip-tls-verify         If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
       --kubeconfig string                Path to the kubeconfig file to use for CLI requests.
       --match-server-version             Require server version to match client version
@@ -47,15 +45,6 @@ kubectl plugin for Stash by AppsCode. For more information, visit here: https://
 
 ### SEE ALSO
 
-* [kubectl-stash clone](/docs/reference/cli/kubectl-stash_clone.md)	 - Clone Kubernetes resources
-* [kubectl-stash completion](/docs/reference/cli/kubectl-stash_completion.md)	 - Generate completion script
-* [kubectl-stash cp](/docs/reference/cli/kubectl-stash_cp.md)	 - Copy stash resources from one namespace to another namespace
-* [kubectl-stash create](/docs/reference/cli/kubectl-stash_create.md)	 - create stash resources
-* [kubectl-stash delete](/docs/reference/cli/kubectl-stash_delete.md)	 - Delete stash resources
-* [kubectl-stash download](/docs/reference/cli/kubectl-stash_download.md)	 - Download snapshots
-* [kubectl-stash pause](/docs/reference/cli/kubectl-stash_pause.md)	 - Pause Stash backup temporarily
-* [kubectl-stash resume](/docs/reference/cli/kubectl-stash_resume.md)	 - Resume stash resources
-* [kubectl-stash trigger](/docs/reference/cli/kubectl-stash_trigger.md)	 - Trigger a backup
-* [kubectl-stash unlock](/docs/reference/cli/kubectl-stash_unlock.md)	 - Unlock Restic Repository
-* [kubectl-stash version](/docs/reference/cli/kubectl-stash_version.md)	 - Prints binary version number.
+* [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
+* [kubectl-stash pause backup](/docs/reference/cli/kubectl-stash_pause_backup.md)	 - Pause backup
 
