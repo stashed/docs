@@ -234,16 +234,16 @@ backupconfiguration.stash.appscode.com/deployment-backup created
 
 **Verify Backup Setup Successful**
 
-If everything goes well, the phase of the `BackupConfiguration` should be in `Ready` state. The `Ready` Phase indicates that the backup setup is successful. Let's check the `Phase` of the BackupConfiguration,
+If everything goes well, the Phase of the `BackupConfiguration` should be `Ready`. The `Ready` Phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
 NAME                TASK    SCHEDULE      PAUSED   PHASE      AGE
 deployment-backup           */5 * * * *            Ready      11s
 ```
-> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful.Describe the BackupConfiguration by following command,
+> If the BackupConfiguration is not in `Ready` Phase, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful. Describe the BackupConfiguration by following command,
 ```bash
-$ kubectl describe backupconfiguration -n demo 
+$ kubectl describe backupconfiguration -n demo deployment-backup
 ```
 
 **Verify Sidecar:**

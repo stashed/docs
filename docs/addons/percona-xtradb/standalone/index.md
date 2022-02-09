@@ -358,9 +358,24 @@ $ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version"
 backupconfiguration.stash.appscode.com/sample-xtradb-backup created
 ```
 
+#### Verify Backup Setup Successful
+
+If everything goes well, the Phase of the `BackupConfiguration` should be `Ready`. The `Ready` Phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME                   TASK                       SCHEDULE      PAUSED   PHASE      AGE
+sample-xtradb-backup   perconaxtradb-backup-5.7   */5 * * * *            Ready      11s
+```
+
+> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful.  Describe the BackupConfiguration by following command,
+```bash
+$ kubectl describe backupconfiguration -n demo sample-xtradb-backup
+```
+
 #### Verify CronJob
 
-If everything goes well, Stash will create a CronJob with the schedule specified in `.spec.schedule` field of `BackupConfiguration` CRD.
+Stash will create a CronJob with the schedule specified in `.spec.schedule` field of `BackupConfiguration` CRD.
 
 Verify that the CronJob has been created using the following command,
 
@@ -428,8 +443,8 @@ Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that th
 
 ```console
 $ kkubectl get backupconfiguration -n demo sample-xtradb-backup
-NAME                   TASK                        SCHEDULE      PAUSED   AGE
-sample-xtradb-backup   perconaxtradb-backup-5.7    */5 * * * *   true     13m
+NAME                   TASK                        SCHEDULE      PAUSED   PHASE   AGE
+sample-xtradb-backup   perconaxtradb-backup-5.7    */5 * * * *   true     Ready   13m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.

@@ -226,8 +226,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Redi
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-1
-NAME                 TASK                 SCHEDULE      PAUSED   AGE
-app-sample-redis-1   redis-backup-6.2.5   */5 * * * *            76s
+NAME                 TASK                 SCHEDULE      PAUSED   PHASE   AGE
+app-sample-redis-1   redis-backup-6.2.5   */5 * * * *            Ready   76s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -422,8 +422,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Redi
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-2
-NAME                 TASK                 SCHEDULE      PAUSED   AGE
-app-sample-redis-2   redis-backup-6.2.5   */3 * * * *            64s
+NAME                 TASK                 SCHEDULE      PAUSED   PHASE   AGE
+app-sample-redis-2   redis-backup-6.2.5   */3 * * * *            Ready   64s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -618,8 +618,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Redi
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3
-NAME                 TASK                 SCHEDULE      PAUSED   AGE
-app-sample-redis-3   redis-backup-6.2.5   */5 * * * *            62s
+NAME                 TASK                 SCHEDULE      PAUSED   PHASE   AGE
+app-sample-redis-3   redis-backup-6.2.5   */5 * * * *            Ready   62s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -689,8 +689,8 @@ Now, let's wait for a backup run to complete. You can watch for `BackupSession` 
 
 ```bash
 ❯ kubectl get backupsession -n demo-3 -w
-NAME                            INVOKER-TYPE          INVOKER-NAME         PHASE     DURATION   AGE
-app-sample-redis-3-1627568709   BackupConfiguration   app-sample-redis-3   Running              20s
+NAME                            INVOKER-TYPE          INVOKER-NAME         PHASE     DURATION            AGE
+app-sample-redis-3-1627568709   BackupConfiguration   app-sample-redis-3   Running                       20s
 app-sample-redis-3-1627568709   BackupConfiguration   app-sample-redis-3   Succeeded   1m43.931692282s   103s
 ```
 

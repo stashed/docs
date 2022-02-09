@@ -403,8 +403,7 @@ spec:
 ```
 
 **Verify BackupConfiguration:**
-
-If everything goes well, the phase of the `BackupConfiguration` should be created and in `Ready` state. Verify that the `BackupConfiguration` CRD by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our Pvc and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` CRD by the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
@@ -412,8 +411,7 @@ NAME                            TASK         SCHEDULE       PAUSED   PHASE   AGE
 persistentvolumeclaim-nfs-pvc   pvc-backup   */15 * * * *            Ready   119s
 ```
 
-Let's check the YAML of this `BackupConfiguration`,
-
+Now, let's check the YAML of the `BackupConfiguration`.
 ```bash
 $ kubectl get backupconfiguration -n demo persistentvolumeclaim-nfs-pvc -o yaml
 ```

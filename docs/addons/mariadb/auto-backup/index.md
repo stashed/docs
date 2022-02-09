@@ -194,8 +194,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Mari
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo
-NAME                 TASK                    SCHEDULE      PAUSED   AGE
-app-sample-mariadb   mariadb-backup-10.5.8   */5 * * * *            7m28s
+NAME                 TASK                    SCHEDULE      PAUSED   PHASE   AGE
+app-sample-mariadb   mariadb-backup-10.5.8   */5 * * * *            Ready   7m28s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -378,8 +378,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Mari
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-2
-NAME                   TASK                    SCHEDULE      PAUSED   AGE
-app-sample-mariadb-2   mariadb-backup-10.5.8   */3 * * * *            3m24s
+NAME                   TASK                    SCHEDULE      PAUSED   PHASE   AGE
+app-sample-mariadb-2   mariadb-backup-10.5.8   */3 * * * *            Ready   3m24s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -562,8 +562,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Mari
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3
-NAME                   TASK                    SCHEDULE      PAUSED   AGE
-app-sample-mariadb-3   mariadb-backup-10.5.8   */5 * * * *            106s
+NAME                   TASK                    SCHEDULE      PAUSED   PHASE   AGE
+app-sample-mariadb-3   mariadb-backup-10.5.8   */5 * * * *            Ready   106s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.

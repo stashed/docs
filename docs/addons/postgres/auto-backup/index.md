@@ -203,8 +203,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Post
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo
-NAME                    TASK                        SCHEDULE      PAUSED   AGE
-app-sample-postgres-1   postgres-backup-11.9   */5 * * * *            97s
+NAME                    TASK                        SCHEDULE      PAUSED   PHASE   AGE
+app-sample-postgres-1   postgres-backup-11.9        */5 * * * *            Ready   97s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -374,8 +374,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Post
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-2
-NAME                    TASK                        SCHEDULE      PAUSED   AGE
-app-sample-postgres-2   postgres-backup-11.9   */3 * * * *            61s
+NAME                    TASK                        SCHEDULE      PAUSED   PHASE   AGE
+app-sample-postgres-2   postgres-backup-11.9        */3 * * * *            Ready   61s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -546,8 +546,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Post
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3
-NAME                    TASK                        SCHEDULE      PAUSED   AGE
-app-sample-postgres-3   postgres-backup-11.9   */5 * * * *            51s
+NAME                    TASK                        SCHEDULE      PAUSED   PHASE   AGE
+app-sample-postgres-3   postgres-backup-11.9        */5 * * * *            Ready   51s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.

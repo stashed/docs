@@ -374,6 +374,21 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 backupconfiguration.stash.appscode.com/sample-postgres-backup created
 ```
 
+**Verify Backup Setup Successful**
+
+If everything goes well, the Phase of the `BackupConfiguration` should be `Ready`. The `Ready` Phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME                     TASK                       SCHEDULE      PAUSED   PHASE      AGE
+sample-postgres-backup   postgres-backup-11.9       */5 * * * *            Ready      11s
+```
+
+> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful. Describe the BackupConfiguration by following command,
+```bash
+$ kubectl describe backupconfiguration -n demo sample-postgres-backup
+```
+
 **Verify CronJob:**
 
 If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` crd.
@@ -439,8 +454,8 @@ Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that th
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-postgres-backup
-NAME                    TASK                        SCHEDULE      PAUSED   AGE
-sample-postgres-backup  postgres-backup-11.9      */5 * * * *   true     5m55s
+NAME                    TASK                        SCHEDULE      PAUSED   PHASE   AGE
+sample-postgres-backup  postgres-backup-11.9      */5 * * * *     true     Ready   5m55s
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.

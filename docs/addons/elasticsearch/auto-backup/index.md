@@ -394,12 +394,12 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-Now, let's verify whether Stash has created a `BackupConfiguration` for our Elasticsearch or not.
+If everything goes well, Stash should create a `BackupConfiguration` for our Elasticsearch and the Phase of that `BackupConfiguration` should be `Ready`. Now, let's verify whether Stash has created a `BackupConfiguration` for our Elasticsearch or not.
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-2
-NAME            TASK                         SCHEDULE      PAUSED   AGE
-app-es-demo-2   elasticsearch-backup-7.3.2   */3 * * * *            77s
+NAME            TASK                         SCHEDULE      PAUSED   PHASE   AGE
+app-es-demo-2   elasticsearch-backup-7.3.2   */3 * * * *            Ready   77s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -579,8 +579,8 @@ Now, let's verify whether Stash has created a `BackupConfiguration` for our Elas
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3
-NAME            TASK                         SCHEDULE      PAUSED   AGE
-app-es-demo-3   elasticsearch-backup-7.3.2   */5 * * * *            84s
+NAME            TASK                         SCHEDULE      PAUSED   PHASE   AGE
+app-es-demo-3   elasticsearch-backup-7.3.2   */5 * * * *            Ready   84s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.

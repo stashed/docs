@@ -239,12 +239,12 @@ spec:
 
 **Verify BackupConfiguratoin:**
 
-Verify that the `BackupConfiguration` has been created by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our Deployment and the Phase of that `BackupConfiguration` should be `Ready`. Verify that the `BackupConfiguration` has been created by the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
-NAME                    TASK   SCHEDULE       PAUSED   AGE
-deployment-stash-demo          */15 * * * *            19s
+NAME                    TASK   SCHEDULE       PAUSED   PHASE   AGE
+deployment-stash-demo          */15 * * * *            Ready   19s
 ```
 
 Let's check the YAML of this `BackupConfiguration`,
@@ -450,13 +450,13 @@ Notice that the variables of the `prefix` field of `BackupBlueprint` is now repl
 
 **Verify BackupConfiguratoin:**
 
-Verify that a `BackupConfiguration` has been created for this StatefulSet using the following command,
+Verify that a `BackupConfiguration` has been created and in `Ready` Phase for this StatefulSet using the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
-NAME                    TASK   SCHEDULE      PAUSED   AGE
-deployment-stash-demo          */5 * * * *            40m
-statefulset-sts-demo           */5 * * * *            105s
+NAME                    TASK   SCHEDULE      PAUSED   PHASE   AGE
+deployment-stash-demo          */5 * * * *            Ready   40m
+statefulset-sts-demo           */5 * * * *            Ready   105s
 ```
 
 Here, `statefulset-sts-demo` has been created for the StatefulSet `sts-demo`. You can check the YAML of this `BackupConfiguration` to see that the target field is pointing to this StatefulSet.
@@ -632,14 +632,14 @@ spec:
 
 **Verify BackupConfiguratoin:**
 
-Verify that a `BackupConfiguration` has been created for this DaemonSet using the following command,
+Verify that a `BackupConfiguration` has been created and in `Ready` Phase for this DaemonSet using the following command,
 
 ```bash
 $  kubectl get backupconfiguration -n demo
-NAME                    TASK   SCHEDULE      PAUSED   AGE
-daemonset-dmn-demo             */5 * * * *            90s
-deployment-stash-demo          */5 * * * *            71m
-statefulset-sts-demo           */5 * * * *            32m
+NAME                    TASK   SCHEDULE      PAUSED   PHASE   AGE
+daemonset-dmn-demo             */5 * * * *            Ready   90s
+deployment-stash-demo          */5 * * * *            Ready   71m
+statefulset-sts-demo           */5 * * * *            Ready   32m
 ```
 
 Here, `daemonset-dmn-demo` has been created for the DaemonSet `dmn-demo`. You can check the YAML of this `BackupConfiguration` to see that the target field is pointing to this DaemonSet.

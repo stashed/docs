@@ -535,9 +535,24 @@ $ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version"
 backupconfiguration.stash.appscode.com/sample-nats-backup-tls created
 ```
 
+#### Verify Backup Setup Successful
+
+If everything goes well, the Phase of the `BackupConfiguration` should be `Ready`. The `Ready` Phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME                     TASK                    SCHEDULE      PAUSED   PHASE      AGE
+sample-nats-backup-tls   nats-backup-2.6.1       */5 * * * *            Ready      11s
+```
+
+> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful.  Describe the BackupConfiguration by following command,
+```bash
+$ kubectl describe backupconfiguration -n demo sample-nats-backup-tls
+```
+
 #### Verify CronJob
 
-If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
+Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
 
 Verify that the CronJob has been created using the following command,
 
@@ -604,8 +619,8 @@ Verify that the `BackupConfiguration` has been paused,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup-tls
-NAME                     TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   true     4m26s
+NAME                     TASK                SCHEDULE      PAUSED   PHASE   AGE
+sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   true     Ready   4m26s
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -765,8 +780,8 @@ backupconfiguration.stash.appscode.com/sample-nats-backup-tls patched
 Verify that the `BackupConfiguration` has been resumed,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup-tls
-NAME                     TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   false    16m
+NAME                     TASK                SCHEDULE      PAUSED   PHASE   AGE
+sample-nats-backup-tls   nats-backup-2.6.1   */5 * * * *   false    Ready   16m
 ```
 
 Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.

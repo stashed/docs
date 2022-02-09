@@ -397,6 +397,20 @@ $ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version"
 backupconfiguration.stash.appscode.com/etcd-tls-backup created
 ```
 
+### Verify Backup Setup Successful
+
+If everything goes well, the Phase of the `BackupConfiguration` should be `Ready`. The `Ready` Phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME              TASK                SCHEDULE      PAUSED   PHASE      AGE
+etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *            Ready      11s
+```
+
+> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful.Describe the BackupConfiguration by following command,
+```bash
+$ kubectl describe backupconfiguration -n demo etcd-tls-backup
+```
+
 #### Verify CronJob
 
 If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
@@ -468,8 +482,8 @@ Verify that the `BackupConfiguration` has been paused,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo etcd-tls-backup
-NAME              TASK                SCHEDULE      PAUSED   AGE
-etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *   true     25m
+NAME              TASK                SCHEDULE      PAUSED   PHASE   AGE
+etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *   true     Ready   25m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -613,8 +627,8 @@ backupconfiguration.stash.appscode.com/etcd-tls-backup patched
 Verify that the `BackupConfiguration` has been resumed,
 ```bash
 ❯ kubectl get backupconfiguration -n demo etcd-tls-backup
-NAME              TASK                SCHEDULE      PAUSED   AGE
-etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *   false    39m
+NAME              TASK                SCHEDULE      PAUSED   PHASE   AGE
+etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *   false    Ready   39m
 ```
 
 Here, `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.
