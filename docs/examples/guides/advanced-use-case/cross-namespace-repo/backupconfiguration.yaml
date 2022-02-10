@@ -1,0 +1,25 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: ss-backup
+  namespace: demo
+spec:
+  repository:
+    # name: local-repo-with-pvc
+    name: gcs-repo
+    namespace: test
+  schedule: "*/5 * * * *"
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: stash-demo
+    volumeMounts:
+    - name: source-data
+      mountPath: /source/data
+    paths:
+    - /source/data
+  retentionPolicy:
+    name: 'keep-last-5'
+    keepLast: 5
+    prune: true
