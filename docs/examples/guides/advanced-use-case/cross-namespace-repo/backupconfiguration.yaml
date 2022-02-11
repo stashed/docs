@@ -2,12 +2,11 @@ apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
   name: ss-backup
-  namespace: demo
+  namespace: dev
 spec:
   repository:
-    # name: local-repo-with-pvc
     name: gcs-repo
-    namespace: test
+    namespace: stash
   schedule: "*/5 * * * *"
   target:
     ref:

@@ -9,3 +9,6 @@ spec:
       bucket: stash-testing
       prefix: /cross-namespace/data/sample-statefulset
     storageSecretName: gcs-secret
+  usagePolicy:
+    allowedNamespaces:
+      from: All

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: re-headless
-  namespace: demo
+  namespace: staging
 spec:
   ports:
   - name: http
@@ -16,7 +16,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: stash-recovered
-  namespace: demo
+  namespace: staging
   labels:
     app: stash-recovered
 spec:
