@@ -222,7 +222,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-Now, let's verify whether Stash has created a `BackupConfiguration` for our Redis or not.
+If everything goes well, Stash should create a `BackupConfiguration` for our Redis in `demo-1` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-1
@@ -418,7 +418,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-Now, let's verify whether Stash has created a `BackupConfiguration` for our Redis or not.
+If everything goes well, Stash should create a `BackupConfiguration` for our Redis in `demo-2` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-2
@@ -614,7 +614,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-Now, let's verify whether Stash has created a `BackupConfiguration` for our Redis or not.
+If everything goes well, Stash should create a `BackupConfiguration` for our Redis in `demo-3` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3

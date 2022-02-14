@@ -332,11 +332,6 @@ NAME                    TASK                    SCHEDULE      PAUSED   PHASE    
 sample-mongodb-backup   mongodb-backup-4.2.3    */5 * * * *            Ready      11s
 ```
 
-> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful. Describe the BackupConfiguration by following command,
-```console
-$ kubectl describe backupconfiguration -n demo sample-mongodb-backup
-```
-
 **Verify CronJob:**
 
 Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` crd.

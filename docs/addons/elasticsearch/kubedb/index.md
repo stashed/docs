@@ -462,10 +462,6 @@ $ kubectl get backupconfiguration -n demo
 NAME                TASK                         SCHEDULE      PAUSED   PHASE      AGE
 sample-es-backup    elasticsearch-backup-7.3.2   */5 * * * *            Ready      11s
 ```
-> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful. Describe the BackupConfiguration by following command,
-```bash
-$ kubectl describe backupconfiguration -n demo sample-es-backup
-```
 
 ### Verify CronJob
 

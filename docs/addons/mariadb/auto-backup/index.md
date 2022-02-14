@@ -190,7 +190,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-Now, let's verify whether Stash has created a `BackupConfiguration` for our MariaDB or not.
+If everything goes well, Stash should create a `BackupConfiguration` for our MariaDB in `demo` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo
@@ -374,7 +374,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-Now, let's verify whether Stash has created a `BackupConfiguration` for our MariaDB or not.
+If everything goes well, Stash should create a `BackupConfiguration` for our MariaDB in `demo-2` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-2
@@ -558,7 +558,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-Now, let's verify whether Stash has created a `BackupConfiguration` for our MariaDB or not.
+If everything goes well, Stash should create a `BackupConfiguration` for our MariaDB in `demo-3` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3

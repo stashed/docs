@@ -631,8 +631,7 @@ spec:
 ```
 
 **Verify BackupConfiguratoin:**
-
-Verify that a `BackupConfiguration` has been created and in `Ready` Phase for this DaemonSet using the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our DaemonSet and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 $  kubectl get backupconfiguration -n demo

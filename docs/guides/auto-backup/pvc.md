@@ -403,7 +403,7 @@ spec:
 ```
 
 **Verify BackupConfiguration:**
-If everything goes well, Stash should create a `BackupConfiguration` for our Pvc and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` CRD by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our Pvc and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n demo

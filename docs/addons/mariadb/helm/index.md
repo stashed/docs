@@ -366,11 +366,6 @@ NAME                    TASK                    SCHEDULE      PAUSED   PHASE    
 sample-mariadb-backup   mariadb-backup-10.5.8   */5 * * * *            Ready      11s
 ```
 
-> If the BackupConfiguration is not in `Ready` state, you need to describe that CRD for finding out the specific reason of the backup setup being unsuccessful. Describe the BackupConfiguration by following command,
-```bash
-$ kubectl describe backupconfiguration -n demo sample-mariadb-backup
-```
-
 #### Verify CronJob
 
 Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
