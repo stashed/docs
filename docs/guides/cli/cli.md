@@ -22,7 +22,7 @@ Stash gives you kubectl plugin support named `kubectl stash` cli. `kubectl stash
 Available command for `kubectl stash` cli are:
 
 | Main Command                                       | Uses                                                                       |
-| -------------------------------------------------- | -------------------------------------------------------------------------- |
+|----------------------------------------------------|----------------------------------------------------------------------------|
 | [create repository](#create-repository)            | Create a new `Repository`.                                                 |
 | [create backupconfig](#create-backupconfiguration) | Create a new `BackupConfiguration`.                                        |
 | [create restoresession](#create-restoresession)    | Create a new `RestoreSession`.                                             |
@@ -32,7 +32,11 @@ Available command for `kubectl stash` cli are:
 | [copy volumesnapshot](#copy-volumesnapshot)        | Copy `VolumeSnapshot` from source namespace to destination namespace.      |
 | [clone pvc](#clone-pvc)                            | Clone a PVC from source namespace to destination namespace.                |
 | [trigger](#trigger-an-instant-backup)              | Used to take an instant backup.                                            |
-| [unlock](#unlock-repository)                       | Used to unlock a Remote Repository.                                        |
+| [pause backup](#pause-backup)                      | Used to pause Stash backup.                                                |
+| [resume backup](#resume-backup)                    | Used to resume Stash backup.                                               |
+| [debug backup](#debug-backup)                      | Used to debug Stash backup.                                                |
+| [debug restore](#debug-restore)                    | Used to debug Stash restore.                                               |
+| [debug operator](#debug-operator)                  | Used to debug Stash operator pod.                                          |
 
 ## Create Command
 
@@ -303,4 +307,90 @@ kubectl stash unlock <repository-name> [flags]
 
 ```bash
 $ kubectl stash unlock my-repo --namespace=demo
+```
+## Pause Command
+
+`kubectl stash pause` command is used to pause Stash backup temporarily. 
+### Pause Backup
+To pause a backup you need to provide BackupConfiguration name or BackupBatch name. You will provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+
+| Flag             | Description                                                                       |
+|------------------|-----------------------------------------------------------------------------------|
+| `--namespace`    | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
+| `--backupconfig` | Name of the BackupConfiguration.                                                  |
+| `--backupbatch`  | Name of the BackupBatch.                                                          |
+**Format:**
+
+```bash
+kubectl stash pause backup [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash pause backup --namespace=demo --backupconfig=sample-mariadb-backup
+```
+### Resume Backup
+To resume a backup you need to provide BackupConfiguration name or BackupBatch name. You will provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+
+| Flag             | Description                                                                       |
+|------------------|-----------------------------------------------------------------------------------|
+| `--namespace`    | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
+| `--backupconfig` | Name of the BackupConfiguration.                                                  |
+| `--backupbatch`  | Name of the BackupBatch.                                                          |
+
+**Format:**
+
+```bash
+kubectl stash resume backup [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash resume backup --namespace=demo --backupconfig=sample-mariadb-backup
+```
+
+## Debug Command
+`kubectl stash debug` command is used to debug stash resources. 
+### Debug Backup
+To debug a backup you need to provide BackupConfiguration name or BackupBatch name. You will provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+
+| Flag             | Description                                                                       |
+|------------------|-----------------------------------------------------------------------------------|
+| `--namespace`    | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
+| `--backupconfig` | Name of the BackupConfiguration.                                                  |
+| `--backupbatch`  | Name of the BackupBatch.                                                          |
+
+
+**Format:**
+```bash
+kubectl stash debug backup [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash debug backup --namespace=demo --backupconfig=sample-mariadb-backup 
+```
+### Debug Restore
+
+To debug a restore you need to provide RestoreSession name or RestoreBatch name. You will provide the RestoreSession name or RestoreBatch name by using flags. The available flags are:
+
+| Flag               | Description                                                                       |
+|--------------------|-----------------------------------------------------------------------------------|
+| `--namespace`      | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
+| `--restoresession` | Name of the RestoreSession.                                                       |
+| `--restorebatch`   | Name of the RestoreBatch.                                                         |
+
+
+**Format:**
+```bash
+kubectl stash debug restore [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash debug restore --namespace=demo --restoresession=sample-mariadb-restore 
 ```
