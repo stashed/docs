@@ -39,6 +39,9 @@ spec:
       bucket: stash-demo-backup
       prefix: demo
     storageSecretName: gcs-secret
+  usagePolicy:
+    allowedNamespaces:
+      from: Same
   wipeOut: false
 status:
   firstBackupTime: "2019-04-15T06:08:16Z"
@@ -60,6 +63,9 @@ Here, we are going to describe the various sections of the `Repository` crd.
 
 - **backend prefix/subPath**
 `prefix` of any backend denotes the directory inside the backend where the backed up snapshots will be stored. In case of **Local** backend, `subPath` is used for this purpose.
+
+- **spec.usagePolicy**
+`spec.usagePolicy` indicates the namespaces from where the repository can be referred by other objects. Here, the field `spec.usagePolicy.allowedNamespaces.from: Same` specifies this reposotory can only be referred from the same namespace where the repository resides. 
 
 - **spec.wipeOut**
 As the name implies, `spec.wipeOut` field indicates whether Stash operator should delete backed up files from the backend when `Repository` crd is deleted. The default value of this field is `false` which tells Stash to not delete backed up data when a user deletes a `Repository` crd.
