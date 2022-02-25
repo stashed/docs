@@ -64,11 +64,41 @@ Here, we are going to describe the various sections of the `Repository` crd.
 - **backend prefix/subPath**
 `prefix` of any backend denotes the directory inside the backend where the backed up snapshots will be stored. In case of **Local** backend, `subPath` is used for this purpose.
 
-- **spec.usagePolicy**
-`spec.usagePolicy` indicates the namespaces from where the repository can be referred by other objects. Here, the field `spec.usagePolicy.allowedNamespaces.from: Same` specifies this reposotory can only be referred from the same namespace where the repository resides. 
-
 - **spec.wipeOut**
 As the name implies, `spec.wipeOut` field indicates whether Stash operator should delete backed up files from the backend when `Repository` crd is deleted. The default value of this field is `false` which tells Stash to not delete backed up data when a user deletes a `Repository` crd.
+
+- **spec.usagePolicy**
+This lets you control which namespaces are allowed to use the Repository and which are not. If you refer to a Repository from a restricted namespace, Stash will reject creating the respective BackupConfiguration/RestoreSession from validating webhook. You can use the usagePolicy to allow only the same namespace, a subset of namespaces, or all the namespaces to refer to the Repository.
+
+#### Repository `spec.usagePolicy` examples
+If you want your Repository CRD to  allow referencing it only from the same namespace, you can write the `spec.usagePolicy` section like the below:
+```yaml
+spec: 
+  usagePolicy:
+    allowedNamespaces:
+      from: Same
+```
+
+ Here is the `spec.usagePolicy` section of a Repository that allows referencing it from all namespaces,
+```yaml
+spec: 
+  usagePolicy:
+    allowedNamespaces:
+      from: All
+```
+
+ To allow a Repository that can be  referred only from `prod` and `staging` namespaces,
+```yaml
+spec:
+  usagePolicy:
+    allowedNamespaces:
+      from: Selector
+      selector:
+        matchExpressions:
+        - key: "kubernetes.io/metadata.name"
+          operator: In
+          values: ["prod","staging"]
+```
 
 ### Repository `Status`
 
@@ -91,6 +121,7 @@ Stash checks the integrity of backed up files after each backup. `status.integri
 
 - **status.snapshotsRemovedOnLastCleanup**
 `status.snapshotsRemovedOnLastCleanup` shows the number of old snapshots that has been cleaned up according to retention policy on last backup session.
+
 
 ## Deleting Repository
 
