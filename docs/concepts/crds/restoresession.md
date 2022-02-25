@@ -105,26 +105,42 @@ status:
   phase: Succeeded
   sessionDuration: 2m40.595857548s
   conditions:
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
+  - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Repository demo/minio-repo exist.
     reason: RepositoryAvailable
     status: "True"
     type: RepositoryFound
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
+  - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Backend Secret demo/minio-secret exist.
     reason: BackendSecretAvailable
     status: "True"
     type: BackendSecretFound
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
+  - lastTransitionTime: "2022-02-25T17:55:56Z"  
+    Message: Successfully validated.
+    Reason:  ResourceValidationPassed
+    Status:  "True"
+    Type:    ValidationPassed
+  - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Restore target apps/v1 statefulset/recovered-statefulset found.
     reason: TargetAvailable
     status: "True"
     type: RestoreTargetFound
-  - lastTransitionTime: "2020-07-25T17:55:56Z"
+  - lastTransitionTime: "2022-02-25T17:55:56Z"
+    Message: Restorer job/init-container has been ensured successfully for StatefulSet demo/recovered-statefulset.
+    Reason:  SuccessfullyEnsuredRestorerEntity
+    Status:  "True"
+    Type:    RestorerEnsured
+  - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Successfully injected stash init-container.
     reason: InitContainerInjectionSucceeded
     status: "True"
     type: StashInitContainerInjected
+  - lastTransitionTime: "2022-02-25T17:55:56Z"
+    Message: Successfully pushed metrics.
+    Reason:  SuccessfullyPushedMetrics
+    Status:  "True"
+    Type:    MetricsPushed
+
   stats:
   - duration: 884.431745ms
     hostname: host-1
@@ -294,7 +310,9 @@ Not every pod or replica of the target will run the restore process. Thus, we re
 | `BackendSecretFound`         | Indicates whether the respective backend secret was found or not.                                                                              |
 | `RestoreTargetFound`         | Indicates whether the restore target was found or not.                                                                                         |
 | `StashInitContainerInjected` | Indicates whether stash init-container was injected into the targeted workload or not. This condition is applicable only in the sidecar model. |
-| `RestoreJobCreated`          | Indicates whether the restore job was created or not. This condition is applicable only in the job model.                                      |
+| `RestorerEnsured`          | Indicates whether the Restorer job/init-container was created or not.                                      |
+| `ValidationPassed`   | Indicates whether the validation conditions of the CRD are passed or not.           |
+| ` MetricsPushed`     | Indicates whether metrics are pushed successfully to Pushgateway or not. |
 
 #### status.stats
 

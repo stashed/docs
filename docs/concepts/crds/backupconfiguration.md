@@ -142,7 +142,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 #### spec.backupHistoryLimit
 
-`spec.backupHistoryLimit` specifies the number of `BackupSession` and its associate resources (Job, PVC etc.) to keep for debugging purposes. The default value of this field is 1. Stash will cleanup the old `BackupSession` and it's associate resources after each backup session according to `backupHistoryLimit`.
+`spec.backupHistoryLimit` specifies the number of `BackupSession` and its associate resources (Job, PVC etc.) to keep for debugging purposes. The default value of this field is 1. Stash will cleanup the old `BackupSession` and it's associate resources after each backup session according to `backupHistoryLimit`. Stash will always keep the last completed BackupSession when `backuphistorylimit>0`. It will keep the last completed BackupSession even if it exceeds the history limit. This will help to keep the backup history when a backup gets skipped due to another running backup.
 
 #### spec.task
 
@@ -251,6 +251,7 @@ A `BackupConfiguration` object has the following fields in the `status` section.
 | `RepositoryFound`    | Indicates whether the respective Repository object was found or not. |
 | `BackendSecretFound` | Indicates whether the respective backend secret was found or not.    |
 | `CronJobCreated`     | Indicates whether the backup triggering CronJob was created  or not. |
+| `ValidationPassed`   | Indicates whether the validation conditions of the CRD are passed or not. |           |
 
 ## Next Steps
 
