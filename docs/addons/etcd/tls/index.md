@@ -399,7 +399,7 @@ backupconfiguration.stash.appscode.com/etcd-tls-backup created
 
 ### Verify Backup Setup Successful
 
-If everything goes well, the Phase of the `BackupConfiguration` should be `Ready`. The `Ready` Phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
 ```bash
 $ kubectl get backupconfiguration -n demo
 NAME              TASK                SCHEDULE      PAUSED   PHASE      AGE
@@ -408,7 +408,7 @@ etcd-tls-backup   etcd-backup-3.5.0   */5 * * * *            Ready      11s
 
 #### Verify CronJob
 
-If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
+Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
 
 Verify that the CronJob has been created using the following command,
 

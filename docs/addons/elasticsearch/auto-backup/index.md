@@ -213,12 +213,12 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-If everything goes well, Stash should create a `BackupConfiguration` for our ElasticSearch in `demo` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our ElasticSearch in `demo` namespace and the phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo
-NAME          TASK                         SCHEDULE      PAUSED   AGE
-app-es-demo   elasticsearch-backup-7.3.2   */5 * * * *            12s
+NAME          TASK                         SCHEDULE      PAUSED   PHASE   AGE
+app-es-demo   elasticsearch-backup-7.3.2   */5 * * * *            Ready   12s
 ```
 
 Now, let's check the YAML of the `BackupConfiguration`.
@@ -394,7 +394,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-If everything goes well, Stash should create a `BackupConfiguration` for our ElasticSearch in `demo-2` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our ElasticSearch in `demo-2` namespace and the phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 
 ```bash
@@ -576,7 +576,7 @@ Here, you can see that Stash has resolved the variables in `prefix` field and su
 
 #### Verify BackupConfiguration
 
-If everything goes well, Stash should create a `BackupConfiguration` for our ElasticSearch in `demo-3` namespace and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our ElasticSearch in `demo-3` namespace and the phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo-3

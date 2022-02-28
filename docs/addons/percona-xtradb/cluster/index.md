@@ -373,7 +373,7 @@ backupconfiguration.stash.appscode.com/sample-xtradb-cluster-backup created
 
 #### Verify Backup Setup Successful
 
-If everything goes well, the Phase of the `BackupConfiguration` should be `Ready`. The `Ready` Phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
 
 ```bash
 $ kubectl get backupconfiguration -n demo

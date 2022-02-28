@@ -239,7 +239,7 @@ spec:
 
 **Verify BackupConfiguratoin:**
 
-If everything goes well, Stash should create a `BackupConfiguration` for our Deployment and the Phase of that `BackupConfiguration` should be `Ready`. Verify that the `BackupConfiguration` has been created by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our Deployment and the phase of that `BackupConfiguration` should be `Ready`. Verify that the `BackupConfiguration` has been created by the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
@@ -631,7 +631,7 @@ spec:
 ```
 
 **Verify BackupConfiguratoin:**
-If everything goes well, Stash should create a `BackupConfiguration` for our DaemonSet and the Phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` for our DaemonSet and the phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 $  kubectl get backupconfiguration -n demo
