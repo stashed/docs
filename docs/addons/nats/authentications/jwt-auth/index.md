@@ -395,10 +395,20 @@ Let's create the `BackupConfiguration` object we have shown above,
 $ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/nats/authentications/jwt-auth/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-nats-backup created
 ```
+#### Verify Backup Setup Successful
+
+If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME                    TASK                    SCHEDULE      PAUSED   PHASE      AGE
+sample-nats-backup      nats-backup-2.6.1       */5 * * * *            Ready      11s
+```
+
 
 #### Verify CronJob
 
-If everything goes well, Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
+Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
 
 Verify that the CronJob has been created using the following command,
 
@@ -467,8 +477,8 @@ Verify that the `BackupConfiguration` has been paused,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
-NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.6.1   */5 * * * *   true     2d18h
+NAME                 TASK                SCHEDULE      PAUSED   PHASE   AGE
+sample-nats-backup   nats-backup-2.6.1   */5 * * * *   true     Redy   2d18h
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
@@ -625,8 +635,8 @@ backupconfiguration.stash.appscode.com/sample-nats-backup patched
 Verify that the `BackupConfiguration` has been resumed,
 ```bash
 ❯ kubectl get backupconfiguration -n demo sample-nats-backup
-NAME                 TASK                SCHEDULE      PAUSED   AGE
-sample-nats-backup   nats-backup-2.6.1   */5 * * * *   false    2d19h
+NAME                 TASK                SCHEDULE      PAUSED   PHASE   AGE
+sample-nats-backup   nats-backup-2.6.1   */5 * * * *   false    Ready   2d19h
 ```
 
 Here,  `false` in the `PAUSED` column means the backup has been resumed successfully. The CronJob also should be resumed now.

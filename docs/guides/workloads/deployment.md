@@ -232,9 +232,20 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
+**Verify Backup Setup Successful**
+
+If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
+
+```bash
+$ kubectl get backupconfiguration -n demo
+NAME                TASK    SCHEDULE      PAUSED   PHASE      AGE
+deployment-backup           */5 * * * *            Ready      11s
+```
+
+
 **Verify Sidecar:**
 
-If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
+Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
 
 ```bash
 $ kubectl get pod -n demo
@@ -345,7 +356,7 @@ Verify that the `CronJob` has been created using the following command,
 ```bash
 $ kubectl get cronjob -n demo
 NAME                SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-deployment-backup   */1 * * * *   False     0        35s             64s
+deployment-backup   */5 * * * *   False     0        35s             64s
 ```
 
 **Wait for BackupSession:**
@@ -402,8 +413,8 @@ Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that th
 
 ```bash
 $ kubectl get backupconfiguration -n demo
-NAME                TASK   SCHEDULE      PAUSED   AGE
-deployment-backup          */1 * * * *   true     26m
+NAME                TASK    SCHEDULE      PAUSED   PHASE      AGE
+deployment-backup           */5 * * * *   true     Ready      26m
 ```
 
 Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
