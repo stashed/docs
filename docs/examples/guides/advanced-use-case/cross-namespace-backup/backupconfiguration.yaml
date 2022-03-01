@@ -2,7 +2,7 @@ apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
   name: ss-backup
-  namespace: dev
+  namespace: prod
 spec:
   repository:
     name: gcs-repo

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: headless
-  namespace: dev
+  namespace: prod
 spec:
   ports:
   - name: http
@@ -16,7 +16,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: stash-demo
-  namespace: dev
+  namespace: prod
   labels:
     app: stash-demo
 spec:
