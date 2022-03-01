@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: headless
+  namespace: prod
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 0
+  selector:
+    app: stash-demo
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stash-demo
+  namespace: prod
+  labels:
+    app: stash-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stash-demo
+  serviceName: headless
+  template:
+    metadata:
+      labels:
+        app: stash-demo
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["/bin/sh", "-c","echo $(POD_NAME) > /source/data/data.txt && sleep 3000"]
+        env:
+        - name:  POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath:  metadata.name
+        volumeMounts:
+        - name: source-data
+          mountPath: "/source/data"
+        imagePullPolicy: IfNotPresent
+  volumeClaimTemplates:
+  - metadata:
+      name: source-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi

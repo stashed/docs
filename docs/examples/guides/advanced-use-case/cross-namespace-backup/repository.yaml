@@ -1,0 +1,14 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: gcs-repo
+  namespace: stash
+spec:
+  backend:
+    gcs:
+      bucket: stash-testing
+      prefix: /cross-namespace/data/sample-statefulset
+    storageSecretName: gcs-secret
+  usagePolicy:
+    allowedNamespaces:
+      from: All

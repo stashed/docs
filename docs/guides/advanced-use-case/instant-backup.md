@@ -6,7 +6,7 @@ menu:
     identifier: advance-use-case-instant-backup
     name: Instant Backup
     parent: advance-use-case
-    weight: 10
+    weight: 15
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
