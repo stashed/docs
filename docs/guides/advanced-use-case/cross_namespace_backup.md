@@ -187,7 +187,7 @@ spec:
       from: All
 ```
 
-Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace. Please, check the following guide from [here](/docs/concepts/crds/repository/) for more details.
+Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace. Please, check the following guide from [here](/docs/concepts/crds/repository.md) for more details.
 
 Let's create the Repository we have shown above,
 ```bash
