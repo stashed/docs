@@ -116,31 +116,30 @@ status:
     status: "True"
     type: BackendSecretFound
   - lastTransitionTime: "2022-02-25T17:55:56Z"  
-    Message: Successfully validated.
-    Reason:  ResourceValidationPassed
-    Status:  "True"
-    Type:    ValidationPassed
+    message: Successfully validated.
+    reason:  ResourceValidationPassed
+    status:  "True"
+    type:    ValidationPassed
   - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Restore target apps/v1 statefulset/recovered-statefulset found.
     reason: TargetAvailable
     status: "True"
     type: RestoreTargetFound
   - lastTransitionTime: "2022-02-25T17:55:56Z"
-    Message: Restorer job/init-container has been ensured successfully for StatefulSet demo/recovered-statefulset.
-    Reason:  SuccessfullyEnsuredRestorerEntity
-    Status:  "True"
-    Type:    RestorerEnsured
+    message: Restorer job/init-container has been ensured successfully for StatefulSet demo/recovered-statefulset.
+    reason:  SuccessfullyEnsuredRestorerEntity
+    status:  "True"
+    type:    RestorerEnsured
   - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Successfully injected stash init-container.
     reason: InitContainerInjectionSucceeded
     status: "True"
     type: StashInitContainerInjected
   - lastTransitionTime: "2022-02-25T17:55:56Z"
-    Message: Successfully pushed metrics.
-    Reason:  SuccessfullyPushedMetrics
-    Status:  "True"
-    Type:    MetricsPushed
-
+    message: Successfully pushed metrics.
+    reason:  SuccessfullyPushedMetrics
+    status:  "True"
+    type:    MetricsPushed
   stats:
   - duration: 884.431745ms
     hostname: host-1
