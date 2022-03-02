@@ -68,7 +68,7 @@ Here, we are going to describe the various sections of the `Repository` crd.
 As the name implies, `spec.wipeOut` field indicates whether Stash operator should delete backed up files from the backend when `Repository` crd is deleted. The default value of this field is `false` which tells Stash to not delete backed up data when a user deletes a `Repository` crd.
 
 - **spec.usagePolicy**
-This lets you control which namespaces are allowed to use the Repository and which are not. If you refer to a Repository from a restricted namespace, Stash will reject creating the respective BackupConfiguration/RestoreSession from validating webhook. You can use the usagePolicy to allow only the same namespace, a subset of namespaces, or all the namespaces to refer to the Repository. If you don't specify any usagePolicy, Stash will allow referencing the Repository only from the namespace where the Repository has been created.
+This lets you control which namespaces are allowed to use the Repository and which are not. If you refer to a Repository from a restricted namespace, Stash will reject creating the respective BackupConfiguration/RestoreSession from validating webhook. You can use the `usagePolicy` to allow only the same namespace, a subset of namespaces, or all the namespaces to refer to the Repository. If you don't specify any `usagePolicy`, Stash will allow referencing the Repository only from the namespace where the Repository has been created.
 
 
 Here is an example of `spec.usagePolicy` that limits referencing the Repository only from the same namespace,
@@ -87,7 +87,7 @@ spec:
       from: All
 ```
 
-Here is an example of `spec.usagePolicy` that allows referencing it from only prod and staging namespace,
+Here is an example of `spec.usagePolicy` that allows referencing it from only `prod` and `staging` namespace,
 ```yaml
 spec:
   usagePolicy:

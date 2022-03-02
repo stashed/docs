@@ -251,7 +251,7 @@ A `BackupConfiguration` object has the following fields in the `status` section.
 | `RepositoryFound`    | Indicates whether the respective Repository object was found or not. |
 | `BackendSecretFound` | Indicates whether the respective backend secret was found or not.    |
 | `CronJobCreated`     | Indicates whether the backup triggering CronJob was created  or not. |
-| `ValidationPassed`   | Indicates whether the resource has passed validation checks or not. |           |
+| `ValidationPassed`   | Indicates whether the resource has passed validation checks or not.  |
 
 ## Next Steps
 
