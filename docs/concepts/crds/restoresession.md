@@ -310,8 +310,8 @@ Not every pod or replica of the target will run the restore process. Thus, we re
 | `RestoreTargetFound`         | Indicates whether the restore target was found or not.                                                                                         |
 | `StashInitContainerInjected` | Indicates whether stash init-container was injected into the targeted workload or not. This condition is applicable only in the sidecar model. |
 | `RestorerEnsured`          | Indicates whether the Restorer job/init-container was created or not.                                      |
-| `ValidationPassed`   | Indicates whether the validation conditions of the CRD are passed or not.           |
-| ` MetricsPushed`     | Indicates whether metrics are pushed successfully to Pushgateway or not. |
+| `ValidationPassed`   | Indicates whether the resource has passed validation checks or not. |
+| ` MetricsPushed`     | Indicates whether the metrics have been pushed to the Pushgateway or not. |
 
 #### status.stats
 
