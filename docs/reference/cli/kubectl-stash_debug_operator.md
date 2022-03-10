@@ -1,23 +1,37 @@
 ---
-title: Pause
+title: Debug Operator
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-pause
-    name: Pause
+    identifier: kubectl-stash-debug-operator
+    name: Debug Operator
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash pause
+## kubectl-stash debug operator
 
-Pause Stash backup temporarily
+Debug Stash operator
+
+### Synopsis
+
+Show debugging information for Stash operator
+
+```
+kubectl-stash debug operator [flags]
+```
+
+### Examples
+
+```
+  # Debug operator pod
+  stash debug operator --namespace=<namespace>
+  stash debug operator -n kube-system
+```
 
 ### Options
 
 ```
-      --backupbatch string    Name of the BackupBatch to pause
-      --backupconfig string   Name of the BackupConfiguration to pause
-  -h, --help                  help for pause
+  -h, --help   help for operator
 ```
 
 ### Options inherited from parent commands
@@ -45,6 +59,5 @@ Pause Stash backup temporarily
 
 ### SEE ALSO
 
-* [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
-* [kubectl-stash pause backup](/docs/reference/cli/kubectl-stash_pause_backup.md)	 - Pause backup
+* [kubectl-stash debug](/docs/reference/cli/kubectl-stash_debug.md)	 - Debug common Stash issues
 

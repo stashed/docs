@@ -24,8 +24,8 @@ kubectl-stash resume backup [flags]
 
 ```
   # Resume a BackupConfigration
-  stash resume backup --namespace=<namespace> --backupconfig=<backup-configuration-name>
-  stash resume backup --backup-config=sample-mongodb -n demo
+  stash resume backup --namespace=<namespace> --backupconfig=<backupconfiguration-name>
+  stash resume backup --namespace=demo --backupconfig=sample-mongodb-backup
 ```
 
 ### Options
@@ -61,5 +61,5 @@ kubectl-stash resume backup [flags]
 
 ### SEE ALSO
 
-* [kubectl-stash resume](/docs/reference/cli/kubectl-stash_resume.md)	 - Resume stash resources
+* [kubectl-stash resume](/docs/reference/cli/kubectl-stash_resume.md)	 - Resume Stash backup
 

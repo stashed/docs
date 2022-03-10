@@ -10,7 +10,7 @@ section_menu_id: reference
 ---
 ## kubectl-stash resume
 
-Resume stash resources
+Resume Stash backup
 
 ### Options
 
