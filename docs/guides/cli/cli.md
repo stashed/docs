@@ -31,6 +31,7 @@ Available command for `kubectl stash` cli are:
 | [copy backupconfig](#copy-backupconfiguration)     | Copy `BackupConfiguration` from source namespace to destination namespace. |
 | [copy volumesnapshot](#copy-volumesnapshot)        | Copy `VolumeSnapshot` from source namespace to destination namespace.      |
 | [clone pvc](#clone-pvc)                            | Clone a PVC from source namespace to destination namespace.                |
+| [download](#download-snapshots)                    | Used to download the snapshots of a `Repository`.                          |
 | [trigger](#trigger-an-instant-backup)              | Used to take an instant backup.                                            |
 | [pause backup](#pause-backup)                      | Used to pause Stash backup.                                                |
 | [resume backup](#resume-backup)                    | Used to resume Stash backup.                                               |
@@ -274,6 +275,31 @@ kubectl stash clone pvc <pvc-name> [flags]
 ```bash
 $ kubectl stash clone pvc my-pvc -n demo --to-namespace=demo-1 --secret=<secret> --bucket=<bucket> --prefix=<prefix> --provider=<provider>
 ```
+## Download Snapshots
+
+`kubectl stash download` command is used to download the snapshots from the backend repository.
+To download the snapshots you need to provide the `Repository` name. You can provide the namespace by using the `--namespace` flag. You have to provide the download directory and snapshot list using flags. The available flags are:
+
+
+
+| Flag            | Description                                                           |
+|-----------------|-----------------------------------------------------------------------|
+| `--namespace`   | Indicates the source namespace where the `Repository` has existed.    |
+| `--destination` | Indicates the local directory where the snapshots will be downloaded. |                                     |
+| `--snapshots`   | Specifies the list of snapshots. (Provide a list of snapshot ID)      |
+**Format:**
+
+```bash
+kubectl stash download <repository-name> [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash download gcs-repo --namespace=demo --destination=/home/downloads/ --snapshots="19eb4793,b7244d52"
+
+```
+Use `kubectl get snapshots` to get the available snapshots.
 
 ## Trigger an Instant Backup
 
@@ -312,7 +338,7 @@ $ kubectl stash unlock my-repo --namespace=demo
 
 `kubectl stash pause` command is used to pause Stash backup temporarily. 
 ### Pause Backup
-To pause a backup you need to provide BackupConfiguration name or BackupBatch name. You will provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+To pause a backup you need to provide BackupConfiguration name or BackupBatch name. You have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
@@ -331,7 +357,7 @@ kubectl stash pause backup [flags]
 $ kubectl stash pause backup --namespace=demo --backupconfig=sample-mariadb-backup
 ```
 ### Resume Backup
-To resume a backup you need to provide BackupConfiguration name or BackupBatch name. You will provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+To resume a backup you need to provide BackupConfiguration name or BackupBatch name. You have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
@@ -352,9 +378,9 @@ $ kubectl stash resume backup --namespace=demo --backupconfig=sample-mariadb-bac
 ```
 
 ## Debug Command
-`kubectl stash debug` command is used to debug stash resources. 
+`kubectl stash debug` command is used to debug stash resources. This command describes the necessary resources and shows logs from the related pods which makes the debugging process quicker and easier.
 ### Debug Backup
-To debug a backup you need to provide BackupConfiguration name or BackupBatch name. You will provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+To debug a backup you need to provide BackupConfiguration name or BackupBatch name. You have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
@@ -375,7 +401,7 @@ $ kubectl stash debug backup --namespace=demo --backupconfig=sample-mariadb-back
 ```
 ### Debug Restore
 
-To debug a restore you need to provide RestoreSession name or RestoreBatch name. You will provide the RestoreSession name or RestoreBatch name by using flags. The available flags are:
+To debug a restore you need to provide RestoreSession name or RestoreBatch name. You have to provide the RestoreSession name or RestoreBatch name by using flags. The available flags are:
 
 | Flag               | Description                                                                       |
 |--------------------|-----------------------------------------------------------------------------------|
