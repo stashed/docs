@@ -31,13 +31,13 @@ Available command for `kubectl stash` cli are:
 | [copy backupconfig](#copy-backupconfiguration)     | Copy `BackupConfiguration` from source namespace to destination namespace. |
 | [copy volumesnapshot](#copy-volumesnapshot)        | Copy `VolumeSnapshot` from source namespace to destination namespace.      |
 | [clone pvc](#clone-pvc)                            | Clone a PVC from source namespace to destination namespace.                |
-| [download](#download-snapshots)                    | Used to download the snapshots of a `Repository`.                          |
-| [trigger](#trigger-an-instant-backup)              | Used to take an instant backup.                                            |
-| [pause backup](#pause-backup)                      | Used to pause Stash backup.                                                |
-| [resume backup](#resume-backup)                    | Used to resume Stash backup.                                               |
-| [debug backup](#debug-backup)                      | Used to debug Stash backup.                                                |
-| [debug restore](#debug-restore)                    | Used to debug Stash restore.                                               |
-| [debug operator](#debug-operator)                  | Used to debug Stash operator pod.                                          |
+| [download](#download-snapshots)                    | Download backup snapshots from backend into your local repository.         |
+| [trigger](#trigger-an-instant-backup)              | Take an instant backup.                                                    |
+| [pause backup](#pause-backup)                      | Pause Stash backup.                                                        |
+| [resume backup](#resume-backup)                    | Resume Stash backup.                                                       |
+| [debug backup](#debug-backup)                      | Debug Stash backup issues.                                                 |
+| [debug restore](#debug-restore)                    | Debug Stash restore issues.                                                |
+| [debug operator](#debug-operator)                  | Debug Stash operator issues.                                               |
 
 ## Create Command
 
@@ -157,9 +157,9 @@ $ kubectl stash create restoresession ss-restore --namespace=demo --repository=g
 To copy a Secret, you need to provide Secret name and destination namespace. You will provide the destination namespace by using flag. The available flags are:
 
 | Flag             | Description                                                          |
-| ---------------- | -------------------------------------------------------------------- |
-| `--namespace`    | Indicates the source namespace where the Secret has existed.         |
-| `--to-namespace` | Indicates the destination namespace where the Secret will be copied. |
+| ---------------- |----------------------------------------------------------------------|
+| `--namespace`    | Indicates the namespace of the respective `Secret`.                  |
+| `--to-namespace` | Indicates the destination namespace where the `Secret` will be copied. |
 
 **Format:**
 
@@ -182,9 +182,9 @@ To copy a Repository, you need to provide a Repository name and destination name
 
 You will provide the destination namespace by using flag. The available flags are:
 
-| Flag             | Description                                                                |
-| ---------------- | -------------------------------------------------------------------------- |
-| `--namespace`    | Indicates the source namespace where the `Repository` has existed.         |
+| Flag             | Description                                                           |
+| ---------------- |-----------------------------------------------------------------------|
+| `--namespace`    | Indicates the namespace of the respective `Repository`.               |
 | `--to-namespace` | Indicates the destination namespace where the `Repository` will be copied. |
 
 **Format:**
@@ -210,8 +210,8 @@ To copy a BackupConfiguration, you need to provide BackupConfiguration name and 
 You will provide the destination namespace by using flags. The available flags are:
 
 | Flag             | Description                                                                         |
-| ---------------- | ----------------------------------------------------------------------------------- |
-| `--namespace`    | Indicates the source namespace where the `BackupConfiguration` has existed.         |
+| ---------------- |-------------------------------------------------------------------------------------|
+| `--namespace`    | Indicates the namespace of the respective `BackupConfiguration`.                    |
 | `--to-namespace` | Indicates the destination namespace where the `BackupConfiguration` will be copied. |
 
 **Format:**
@@ -228,11 +228,11 @@ $ kubectl stash cp backupconfig my-backupconfig --namespace=demo --to-namespace=
 
 ### Copy VolumeSnapshot
 
-To copy a VolumeSnapshot, you need to provide VolumeSnapshot name and destination namespace. You will provide the destination namespace by using flag. The available flags are:
+To copy a VolumeSnapshot, you need to provide `VolumeSnapshot` name and destination namespace. You will provide the destination namespace by using flag. The available flags are:
 
 | Flag             | Description                                                                    |
-| ---------------- | ------------------------------------------------------------------------------ |
-| `--namespace`    | Indicates the source namespace where the `VolumeSnapshot` has existed.         |
+| ---------------- |--------------------------------------------------------------------------------|
+| `--namespace`    | Indicates the namespace of the respective `VolumeSnapshot`.                    |
 | `--to-namespace` | Indicates the destination namespace where the `VolumeSnapshot` will be copied. |
 
 **Example:**
@@ -254,8 +254,8 @@ To clone a PVC, you need to provide backend credentials for creating Repository.
 You will provide the backend credential by using flags. The available flags are:
 
 | Flag                | Description                                                                   |
-| ------------------- | ----------------------------------------------------------------------------- |
-| `--namespace`       | Indicates the source namespace where the pvc has existed.                     |
+| ------------------- |-------------------------------------------------------------------------------|
+| `--namespace`       | Indicates namespace of the respective pvc.                                    |
 | `--to-namespace`    | Indicates the destination namespace where the PVC will be cloned.             |
 | `--secret`          | Specify the name of the storage secret that will be used to create Repository |
 | `--bucket`          | Specify the name of the cloud bucket/container.                               |
@@ -275,18 +275,18 @@ kubectl stash clone pvc <pvc-name> [flags]
 ```bash
 $ kubectl stash clone pvc my-pvc -n demo --to-namespace=demo-1 --secret=<secret> --bucket=<bucket> --prefix=<prefix> --provider=<provider>
 ```
+
 ## Download Snapshots
 
-`kubectl stash download` command is used to download the snapshots from the backend repository.
-To download the snapshots you need to provide the `Repository` name. You can provide the namespace by using the `--namespace` flag. You have to provide the download directory and snapshot list using flags. The available flags are:
-
-
+`kubectl stash download` command is used to download the snapshots from backend repository into your local machine.
+To download the snapshots you have to provide `Repository` name, download directory and snapshot list. You will provide the download directory and snapshot list using flags. The available flags are:
 
 | Flag            | Description                                                           |
 |-----------------|-----------------------------------------------------------------------|
-| `--namespace`   | Indicates the source namespace where the `Repository` has existed.    |
+| `--namespace`   | Indicates the namespace of the respective `Repository`.               |
 | `--destination` | Indicates the local directory where the snapshots will be downloaded. |                                     |
 | `--snapshots`   | Specifies the list of snapshots. (Provide a list of snapshot ID)      |
+
 **Format:**
 
 ```bash
@@ -309,7 +309,7 @@ To trigger an instant backup, you need to have a BackupConfiguration in your clu
 **Format:**
 
 ```bash
-kubectl stash trigger <backupconfig-name>[flags]
+$ kubectl stash trigger <backupconfig-name>[flags]
 ```
 
 **Example:**
@@ -334,17 +334,20 @@ kubectl stash unlock <repository-name> [flags]
 ```bash
 $ kubectl stash unlock my-repo --namespace=demo
 ```
+
 ## Pause Command
 
 `kubectl stash pause` command is used to pause Stash backup temporarily. 
+
 ### Pause Backup
-To pause a backup you need to provide BackupConfiguration name or BackupBatch name. You have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+To pause a backup you have to provide the `BackupConfiguration` name or `BackupBatch` name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
-| `--namespace`    | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
-| `--backupconfig` | Name of the BackupConfiguration.                                                  |
-| `--backupbatch`  | Name of the BackupBatch.                                                          |
+| `--namespace`    | Indicates the namespace of the respective `BackupConfiguration` or `BackupBatch`. |
+| `--backupconfig` | Name of the `BackupConfiguration`.                                                |
+| `--backupbatch`  | Name of the `BackupBatch`.                                                        |
+
 **Format:**
 
 ```bash
@@ -354,16 +357,17 @@ kubectl stash pause backup [flags]
 **Example:**
 
 ```bash
-$ kubectl stash pause backup --namespace=demo --backupconfig=sample-mariadb-backup
+$ kubectl stash pause backup --namespace=demo --backupconfig=my-config
 ```
+
 ### Resume Backup
-To resume a backup you need to provide BackupConfiguration name or BackupBatch name. You have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+To resume a backup you have to provide the `BackupConfiguration` name or `BackupBatch` name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
-| `--namespace`    | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
-| `--backupconfig` | Name of the BackupConfiguration.                                                  |
-| `--backupbatch`  | Name of the BackupBatch.                                                          |
+| `--namespace`    | Indicates the namespace of the respective `BackupConfiguration` or `BackupBatch`. |
+| `--backupconfig` | Name of the `BackupConfiguration`.                                                |
+| `--backupbatch`  | Name of the `BackupBatch`.                                                        |
 
 **Format:**
 
@@ -374,22 +378,24 @@ kubectl stash resume backup [flags]
 **Example:**
 
 ```bash
-$ kubectl stash resume backup --namespace=demo --backupconfig=sample-mariadb-backup
+$ kubectl stash resume backup --namespace=demo --backupconfig==my-config
 ```
 
 ## Debug Command
 `kubectl stash debug` command is used to debug stash resources. This command describes the necessary resources and shows logs from the related pods which makes the debugging process quicker and easier.
+
 ### Debug Backup
-To debug a backup you need to provide BackupConfiguration name or BackupBatch name. You have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+To debug a backup you have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
-| `--namespace`    | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
-| `--backupconfig` | Name of the BackupConfiguration.                                                  |
-| `--backupbatch`  | Name of the BackupBatch.                                                          |
+| `--namespace`    | Indicates the namespace of the respective `BackupConfiguration` or `BackupBatch`. |
+| `--backupconfig` | Name of the `BackupConfiguration`.                                                |
+| `--backupbatch`  | Name of the `BackupBatch`.                                                        |
 
 
 **Format:**
+
 ```bash
 kubectl stash debug backup [flags]
 ```
@@ -397,20 +403,22 @@ kubectl stash debug backup [flags]
 **Example:**
 
 ```bash
-$ kubectl stash debug backup --namespace=demo --backupconfig=sample-mariadb-backup 
+$ kubectl stash debug backup --namespace=demo --backupconfig=my-config
 ```
+
 ### Debug Restore
 
-To debug a restore you need to provide RestoreSession name or RestoreBatch name. You have to provide the RestoreSession name or RestoreBatch name by using flags. The available flags are:
+To debug a restore you have to provide the `RestoreSession` name or `RestoreBatch` name by using flags. The available flags are:
 
-| Flag               | Description                                                                       |
-|--------------------|-----------------------------------------------------------------------------------|
-| `--namespace`      | Indicates the source namespace where BackupConfiguration/BackupBacth has existed. |
-| `--restoresession` | Name of the RestoreSession.                                                       |
-| `--restorebatch`   | Name of the RestoreBatch.                                                         |
+| Flag               | Description                                                                    |
+|--------------------|--------------------------------------------------------------------------------|
+| `--namespace`      | Indicates the namespace of the respective `RestoreSession` or `RestoreBatch.`  |
+| `--restoresession` | Name of the `RestoreSession`.                                                  |
+| `--restorebatch`   | Name of the `RestoreBatch`.                                                    |
 
 
 **Format:**
+
 ```bash
 kubectl stash debug restore [flags]
 ```
@@ -418,5 +426,5 @@ kubectl stash debug restore [flags]
 **Example:**
 
 ```bash
-$ kubectl stash debug restore --namespace=demo --restoresession=sample-mariadb-restore 
+$ kubectl stash debug restore --namespace=demo --restoresession=my-restore 
 ```
