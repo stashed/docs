@@ -24,8 +24,8 @@ kubectl-stash pause backup [flags]
 
 ```
   # Pause a BackupConfigration
-  stash pause backup --namespace=<namespace> --backupconfig=<backup-configuration-name>
-  stash pause backup --backup-config=sample-mongodb -n demo
+  stash pause backup --namespace=<namespace> --backupconfig=<backupconfiguration-name>
+  stash pause backup --namespace=demo --backupconfig=sample-mongodb-backup
 ```
 
 ### Options
@@ -40,7 +40,7 @@ kubectl-stash pause backup [flags]
       --as string                        Username to impersonate for the operation
       --as-group stringArray             Group to impersonate for the operation, this flag can be repeated to specify multiple groups.
       --backupbatch string               Name of the BackupBatch to pause
-      --backupconfig string              Name of the Backupconfiguration to pause
+      --backupconfig string              Name of the BackupConfiguration to pause
       --cache-dir string                 Default cache directory (default "/home/runner/.kube/cache")
       --certificate-authority string     Path to a cert file for the certificate authority
       --client-certificate string        Path to a client certificate file for TLS

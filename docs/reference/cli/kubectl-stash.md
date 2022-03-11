@@ -51,10 +51,11 @@ kubectl plugin for Stash by AppsCode. For more information, visit here: https://
 * [kubectl-stash completion](/docs/reference/cli/kubectl-stash_completion.md)	 - Generate completion script
 * [kubectl-stash cp](/docs/reference/cli/kubectl-stash_cp.md)	 - Copy stash resources from one namespace to another namespace
 * [kubectl-stash create](/docs/reference/cli/kubectl-stash_create.md)	 - create stash resources
+* [kubectl-stash debug](/docs/reference/cli/kubectl-stash_debug.md)	 - Debug common Stash issues
 * [kubectl-stash delete](/docs/reference/cli/kubectl-stash_delete.md)	 - Delete stash resources
 * [kubectl-stash download](/docs/reference/cli/kubectl-stash_download.md)	 - Download snapshots
 * [kubectl-stash pause](/docs/reference/cli/kubectl-stash_pause.md)	 - Pause Stash backup temporarily
-* [kubectl-stash resume](/docs/reference/cli/kubectl-stash_resume.md)	 - Resume stash resources
+* [kubectl-stash resume](/docs/reference/cli/kubectl-stash_resume.md)	 - Resume Stash backup
 * [kubectl-stash trigger](/docs/reference/cli/kubectl-stash_trigger.md)	 - Trigger a backup
 * [kubectl-stash unlock](/docs/reference/cli/kubectl-stash_unlock.md)	 - Unlock Restic Repository
 * [kubectl-stash version](/docs/reference/cli/kubectl-stash_version.md)	 - Prints binary version number.

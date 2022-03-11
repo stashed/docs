@@ -1,23 +1,39 @@
 ---
-title: Pause
+title: Debug Backup
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-pause
-    name: Pause
+    identifier: kubectl-stash-debug-backup
+    name: Debug Backup
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash pause
+## kubectl-stash debug backup
 
-Pause Stash backup temporarily
+Debug backup
+
+### Synopsis
+
+Debug common Stash backup issues
+
+```
+kubectl-stash debug backup [flags]
+```
+
+### Examples
+
+```
+  # Debug a BackupConfigration
+  stash debug backup --namespace=<namespace> --backupconfig=<backupconfiguration-name>
+  stash debug backup --namespace=demo --backupconfig=sample-mongodb-backup
+```
 
 ### Options
 
 ```
-      --backupbatch string    Name of the BackupBatch to pause
-      --backupconfig string   Name of the BackupConfiguration to pause
-  -h, --help                  help for pause
+      --backupbatch string    Name of the BackupBatch to debug
+      --backupconfig string   Name of the BackupConfiguration to debug
+  -h, --help                  help for backup
 ```
 
 ### Options inherited from parent commands
@@ -45,6 +61,5 @@ Pause Stash backup temporarily
 
 ### SEE ALSO
 
-* [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
-* [kubectl-stash pause backup](/docs/reference/cli/kubectl-stash_pause_backup.md)	 - Pause backup
+* [kubectl-stash debug](/docs/reference/cli/kubectl-stash_debug.md)	 - Debug common Stash issues
 
