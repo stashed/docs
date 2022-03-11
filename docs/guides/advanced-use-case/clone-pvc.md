@@ -6,7 +6,7 @@ menu:
     identifier: advance-use-case-clone-pvc
     name: Clone Data Volumes
     parent: advance-use-case
-    weight: 30
+    weight: 50
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides

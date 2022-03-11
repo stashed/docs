@@ -6,7 +6,7 @@ menu:
     identifier: advance-use-case-pause-backup
     name: Pause Backup
     parent: advance-use-case
-    weight: 20
+    weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides

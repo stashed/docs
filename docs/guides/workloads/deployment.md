@@ -366,10 +366,11 @@ The `deployment-backup` CronJob will trigger a backup on each scheduled slot by 
 Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
 
 ```bash
-$ watch -n 2 kubectl get backupsession -n demo
-Every 1.0s: kubectl get backupsession -n demo     suaas-appscode: Mon Jun 24 10:23:08 2019
+$ kubectl get backupsession -n demo -w
 
 NAME                           INVOKER-TYPE          INVOKER-NAME        PHASE       AGE
+deployment-backup-1561350125   BackupConfiguration   deployment-backup   Running     10s
+deployment-backup-1561350125   BackupConfiguration   deployment-backup   Running     35s
 deployment-backup-1561350125   BackupConfiguration   deployment-backup   Succeeded   63s
 ```
 
@@ -612,8 +613,7 @@ Notice the `Init-Containers` section. We can see that the init-container `stash-
 Run the following command to watch RestoreSession phase,
 
 ```bash
-$ watch -n 2 kubectl get restoresession -n demo
-Every 5.0s: kubectl get restoresession -n demo           suaas-appscode: Mon Jun 24 10:33:57 2019
+$ kubectl get restoresession -n demo -w
 
 NAME                 REPOSITORY-NAME   PHASE       AGE
 deployment-restore   gcs-repo          Succeeded   2m56s
