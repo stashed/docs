@@ -6,7 +6,7 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-  schedule: "*/40 * * * *"
+  schedule: "*/5 * * * *"
   target:
     ref:
       apiVersion: apps/v1
@@ -15,10 +15,13 @@ spec:
     volumeMounts:
     - name: source-data
       mountPath: /source/data
-    paths:
-    - /source/data
-    exclude:
-    - /source/data/not-important.txt
+    rules:
+    - paths:
+      - /source/data
+      exclude:
+      - /source/data/not-important.txt # exclude only one file
+      - /source/data/*.html # exclude all file that has a particular extension
+      - /source/data/tmp/* # exclude a directory
   retentionPolicy:
     name: 'keep-last-5'
     keepLast: 5

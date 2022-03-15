@@ -169,8 +169,7 @@ Now, we are ready to backup our sample data into this backend.
 
 We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Then, Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of `/source/data` directory of the target.
 
-##### Excluding a particular file:
-You can exclude a particular file during a backup. Below is the YAML of the `BackupConfiguration` object to backup everything in the `source/data` directory except `source/data/not-important.txt`.
+You can exclude a particular file during a backup. Below is the YAML of the `BackupConfiguration` crd that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -193,13 +192,15 @@ spec:
     paths:
     - /source/data
     exclude:
-    - /source/data/not-important.txt
+    - /source/data/not-important.txt # exclude only one file
+    - /source/data/*.html # exclude all file that has a particular extension
+    - /source/data/tmp/* # exclude a directory
   retentionPolicy:
     name: 'keep-last-5'
     keepLast: 5
     prune: true
 ```
-
+The above configuration will backup everything inside the `/source/data` directory except `source/data/not-important.txt`, all `html` files, and the directory `source/data/tmp`.
 Let’s create the `BackupConfiguration` object that we have shown above,
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/exclude-include-files/backupconfiguration.yaml

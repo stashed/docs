@@ -1,0 +1,51 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: source-data
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: stash-demo
+  name: stash-demo
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stash-demo
+  template:
+    metadata:
+      labels:
+        app: stash-demo
+      name: busybox
+    spec:
+      containers:
+      - args: ["echo sample-text-1 > /source/data/data1.txt && 
+                echo sample-text-2 > /source/data/data2.txt && 
+                echo not-important > /source/data/not-important.txt && 
+                echo sample-html > /source/data/index.html &&
+                echo sample-json > /source/data/resp.json &&
+                mkdir /source/data/temp && echo sample-text > /source/data/temp/tmp.txt &&
+                sleep 3000"]
+        command: ["/bin/sh", "-c"]
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+        - mountPath: /source/data
+          name: source-data
+      restartPolicy: Always
+      volumes:
+      - name: source-data
+        persistentVolumeClaim:
+          claimName: source-data
