@@ -18,7 +18,7 @@ This guide will show you how to take backup and restore across clusters using St
 
 ## Before You Begin
 
-- At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters0. If you do not already have clusters, you can create one by using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
+- At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters. We will use kind clusters throughtout this tutorial. To know more about kind clusters, follow this doc - [here](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
 
 - You should be familiar with the following `Stash` concepts:
@@ -31,7 +31,7 @@ To demonstrate the cross-clusters capability, we are going to use the `prod` clu
 
 Let's create a cluster named `prod`,
 ```bash
-$ kind create cluster --image=kindest/node:v1.23.0 --name prod
+$ kind create cluster --name prod
 Creating cluster "prod" ...
  ✓ Ensuring node image (kindest/node:v1.23.0) 🖼
  ✓ Preparing nodes 📦  
@@ -49,8 +49,14 @@ Have a nice day! 👋
 
 To verify the current cluster you are working on,
 ```
-kubectl config current-context
+$ kubectl config current-context
 kind-prod
+```
+
+if you are currently not in `prod` cluster, you can switch your cluster by the following command,
+```
+$ kubectl config use-context kind-prod
+Switched to context "kind-prod".
 ```
 
 We are going to create a namespace named `demo` in `prod` cluster,
@@ -146,7 +152,6 @@ Verify that the sample data has been created in `/source/data` directory using t
 
 ```bash
 $ kubectl exec -n demo stash-demo-7678679bcb-2s927 -- cat /source/data/data.txt
-
 sample_data
 ```
 
@@ -317,7 +322,6 @@ Verify that the BackupConfiguration has been paused,
 $ kubectl get backupconfiguration -n demo
 NAME                TASK   SCHEDULE      PAUSED   PHASE   AGE
 deployment-backup          */5 * * * *   true     Ready   49m
-
 ```
 
 Notice the `PAUSED` column. Value `true` indicates that the BackupConfiguration has been paused.
@@ -326,26 +330,32 @@ Notice the `PAUSED` column. Value `true` indicates that the BackupConfiguration 
 
 Let's create a cluster named `staging`,
 ```bash
-$ kind create cluster --image=kindest/node:v1.23.0 --name staging
-Creating cluster "prod" ...
+$ kind create cluster --name staging
+Creating cluster "staging" ...
  ✓ Ensuring node image (kindest/node:v1.23.0) 🖼
  ✓ Preparing nodes 📦  
  ✓ Writing configuration 📜 
  ✓ Starting control-plane 🕹️ 
  ✓ Installing CNI 🔌 
  ✓ Installing StorageClass 💾 
-Set kubectl context to "kind-prod"
+Set kubectl context to "kind-staging"
 You can now use your cluster with:
 
-kubectl cluster-info --context kind-prod
+kubectl cluster-info --context kind-staging
 
 Have a nice day! 👋
 ```
 
 To verify the current cluster you are working on,
 ```
-kubectl config current-context
+$ kubectl config current-context
 kind-staging
+```
+
+if you are currently not in `staging` cluster, you can switch your cluster by the following command,
+```
+$ kubectl config use-context kind-staging
+Switched to context "kind-staging".
 ```
 
 We are going to create a namespace named `demo` in `staging` cluster,
@@ -419,7 +429,6 @@ Let's create the Deployment we have shown above.
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-cluster-backup/deployment_staging.yaml
-
 persistentvolumeclaim/demo-pvc created
 deployment.apps/stash-recovered created
 ```
