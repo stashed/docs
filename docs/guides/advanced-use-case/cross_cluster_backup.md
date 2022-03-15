@@ -18,7 +18,7 @@ This guide will show you how to take backup and restore across clusters using St
 
 ## Before You Begin
 
-- At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters. We will use kind clusters throughtout this tutorial. To know more about kind clusters, follow this doc - [here](https://kind.sigs.k8s.io/docs/user/quick-start/).
+- At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters. We will use kind clusters throughout this tutorial. To know more about kind clusters, follow this doc - [here](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
 
 - You should be familiar with the following `Stash` concepts:
@@ -53,13 +53,13 @@ $ kubectl config current-context
 kind-prod
 ```
 
-if you are currently not in `prod` cluster, you can switch your cluster by the following command,
+if you are currently not in the `prod` cluster, you can switch your cluster by the following command,
 ```
 $ kubectl config use-context kind-prod
 Switched to context "kind-prod".
 ```
 
-We are going to create a namespace named `demo` in `prod` cluster,
+We are going to create a namespace named `demo` in the `prod` cluster,
 ```
 $ kubectl create ns demo
 namespace/demo created
@@ -352,13 +352,13 @@ $ kubectl config current-context
 kind-staging
 ```
 
-if you are currently not in `staging` cluster, you can switch your cluster by the following command,
+if you are currently not in the `staging` cluster, you can switch your cluster by the following command,
 ```
 $ kubectl config use-context kind-staging
 Switched to context "kind-staging".
 ```
 
-We are going to create a namespace named `demo` in `staging` cluster,
+We are going to create a namespace named `demo` in the `staging` cluster,
 ```
 $ kubectl create ns demo
 namespace/demo created
