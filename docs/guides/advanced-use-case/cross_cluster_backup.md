@@ -18,7 +18,7 @@ This guide will show you how to take backup and restore across clusters using St
 
 ## Before You Begin
 
-- At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters. We will use kind clusters throughout this tutorial. To know more about kind clusters, follow this doc - [here](https://kind.sigs.k8s.io/docs/user/quick-start/).
+- At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters. We will use kind clusters throughout this tutorial. To know more about kind clusters, follow this doc [here](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
 
 - You should be familiar with the following `Stash` concepts:
@@ -27,7 +27,11 @@ This guide will show you how to take backup and restore across clusters using St
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-To demonstrate the cross-clusters capability, we are going to use the `prod` cluster for taking backup. Then, we will restore the backup in the `staging` cluster.
+## Backup from prod Cluster
+
+To demonstrate the cross-clusters backup and restore capabilities, we will use the `prod` cluster for taking backup and restore the backup into the `staging` cluster.
+
+### Prepare Cluster
 
 Let's create a cluster named `prod`,
 ```bash
@@ -47,7 +51,7 @@ kubectl cluster-info --context kind-prod
 Have a nice day! 👋
 ```
 
-To verify the current cluster you are working on,
+To verify your current cluster,
 ```
 $ kubectl config current-context
 kind-prod
@@ -65,19 +69,14 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in [docs/examples/guides/advanced-use-case/cross-cluster-backup](/docs/examples/guides/advanced-use-case/cross-cluster-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+>**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/examples/guides/advanced-use-case/cross-cluster-backup).
 
 
 Install `Stash` in your `prod` cluster following the steps [here](/docs/setup/README.md).
 
-## Configure Backup
+### Deploy Workload
 
-Now, we are going to configure backup for volumes of a Deployment in the `prod` cluster. We will deploy a Deployment with 3 replicas. We will generate some sample data in it. Then, we are going to configure backup for this Deployment using Stash.
-
-
-### Deploy Deployment
-
-Let's deploy a Deployment in the `prod` cluster at the beginning. This Deployment will automatically generate sample data in the `/source/data` directory.
+Let's deploy a Deployment and an associated PVC in the `prod` cluster at the beginning. This Deployment will automatically generate sample data in the `/source/data` directory.
 
 Below are the YAMLs of the Deployment and PVC that we are going to create,
 
@@ -159,7 +158,7 @@ sample_data
 
 We are going to store our backed-up data into a GCS bucket. We have to create a Secret with the necessary credentials and a Repository CRD to use this backend. 
 
-If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+If you want to use a different backend, please read the respective backend configuration doc [here](/docs/guides/backends/overview.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
@@ -206,9 +205,9 @@ repository.stash.appscode.com/gcs-repo created
 
 Now, we are ready to backup our sample data into this backend.
 
-### Backup
+### Configure Backup
 
-We are going to create a `BackupConfiguration` crd in the `demo` namespace targeting the `stash-demo` Deployment that we have deployed earlier. This `BackupConfiguration` will refer to the `gcs-repo` repository. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of the `/source/data` directory of the target.
+We are going to create a `BackupConfiguration` object in the `demo` namespace targeting the `stash-demo` Deployment that we have deployed earlier. This `BackupConfiguration` will refer to the `gcs-repo` repository. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of the `/source/data` directory of the target.
 
 **Create BackupConfiguration:**
 
@@ -248,18 +247,16 @@ Here,
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target paths.
 - `spec.target.paths` specifies list of file paths to backup.
 
-Let's create the `BackupConfiguration` crd we have shown above,
+Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-cluster-backup/backupconfiguration_prod.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
-### Verify Backup Setup
-
 **Verify BackupConfiguration Ready:**
 
-If everything goes well, Stash should create a `deployment-backup` BackupConfiguration in the `demo` namespace and the phase of that BackupConfiguration should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, the Phase of the BackupConfiguration should be `Ready`. Let's check the BackupConfiguration phase,
 
 ```bash
 ❯ kubectl get backupconfiguration -n demo
@@ -282,9 +279,7 @@ stash-trigger-deployment-backup   */5 * * * *   False     0        28s          
 
 ### Verify Backup
 
-**Verify BackupSession Succeeded:**
-
-The `stash-trigger-deployment-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` crd. The sidecar container watches for the `BackupSession` crd. When it finds one, it will take backup immediately.
+The `stash-trigger-deployment-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` crd. The sidecar container watches for the `BackupSession` object. When it finds one, it will take backup immediately.
 
 Wait for the next schedule for the backup. Run the following command to watch `BackupSession` crd,
 
@@ -300,10 +295,9 @@ deployment-backup-1647238200   BackupConfiguration   deployment-backup   Succeed
 
 We can see from the above output that the backup session has succeeded.
 
+## Restore into `staging` Cluster
 
-## Configure Restore
-
-This section will show you how to restore the backed-up data in a different cluster.
+This section will demonstrate you restoring the backed-up data into `staging` cluster.
 
 **Stop Taking Backup of the Old Deployment:**
 
@@ -326,7 +320,7 @@ deployment-backup          */5 * * * *   true     Ready   49m
 
 Notice the `PAUSED` column. Value `true` indicates that the BackupConfiguration has been paused.
 
-**Create `staging` cluster and install Stash**
+### Prepare Cluster
 
 Let's create a cluster named `staging`,
 ```bash
@@ -364,13 +358,9 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in [docs/examples/guides/advanced-use-case/cross-cluster-backup](/docs/examples/guides/advanced-use-case/cross-cluster-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
-
-
 Install `Stash` in your `staging` cluster following the steps [here](/docs/setup/README.md).
 
-
-**Deploy Deployment:**
+### Deploy Recovered Workload
 
 We are going to create a new Deployment named `stash-recovered` and a PVC as a storage of the Deployment. We will restore the backed-up data inside it.
 
@@ -433,13 +423,9 @@ persistentvolumeclaim/demo-pvc created
 deployment.apps/stash-recovered created
 ```
 
-### Prepare Backend
+### Prepare Backend Info
 
-We are going to restore our backed-up data from a GCS bucket. We have to create a Secret with the necessary credentials and a Repository CRD to use our backend. 
-
-If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
-
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+We have to re-create the Repository CR and the respective Secret that we have used in the `prod` cluster.
 
 **Create Secret:**
 
@@ -482,13 +468,13 @@ repository.stash.appscode.com/gcs-repo created
 
 Now, we are ready to restore our sample data from this specified backend.
 
-## Restore
+### Configure Restore
+
+Now, we need to create a `RestoreSession` object targeting the `stash-recovered` Deployment to restore the backed-up data inside it.
 
 **Create RestoreSession:**
 
-Now, we need to create a `RestoreSession` crd targeting the `stash-recovered` Deployment to restore the backed-up data inside it.
-
-Below is the YAML of the `RestoreSesion` crd that we are going to create,
+Below is the YAML of the `RestoreSesion` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -526,9 +512,7 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 restoresession.stash.appscode.com/deployment-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` into the `stash-recovered` Deployment. The Deployment will restart and the `init-container` will restore the desired data on start-up.
-
-### Verify Restore
+Now, wait for the RestoreSession phase to go into `Succeeded` state.
 
 **Wait for RestoreSession to Succeeded:**
 
@@ -543,12 +527,9 @@ deployment-restore   gcs-repo     Succeeded   10s        35s
 
 So, we can see from the output of the above command that the restore process succeeded.
 
+### Verify Restored Data
 
-**Verify Restored Data:**
-
-In this section, we are going to verify that the desired data has been restored successfully.
-
-At first, check if the `stash-recovered` pods of the Deployment has gone into the `Running` state by the following commands,
+In this section, we are going to verify whether the desired data has been restored successfully or not.
 
 ```bash
 $ kubectl get pods -n demo -l app='stash-recovered'
@@ -571,8 +552,35 @@ sample_data
 
 ## Cleaning Up
 
-To clean up the Kubernetes resources created by this tutorial, run:
+To clean up the Kubernetes resources created by this tutorial in `prod` and `staging` clusters, run the following commands:
 
+**`prod` cluster**
+
+Switch your cluster to `prod`,
+```
+$ kubectl config use-context kind-prod
+Switched to context "kind-prod".
+```
+
+Clean up the Stash resources in the `prod` cluster:
+```bash
+kubectl delete -n demo deployments stash-demo
+kubectl delete -n demo pvc stash-sample-data
+kubectl delete -n demo backupconfiguration deployment-backup
+kubectl delete -n demo repository gcs-repo
+kubectl delete -n demo secret gcs-secret
+```
+
+
+**`staging` cluster**
+
+Switch your cluster to `staging`,
+```
+$ kubectl config use-context kind-staging
+Switched to context "kind-staging".
+```
+
+Clean up the Stash resources in the `prod` cluster:
 ```bash
 kubectl delete -n demo deployments stash-recovered
 kubectl delete -n demo pvc demo-pvc
