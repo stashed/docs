@@ -28,7 +28,7 @@ This guide will show you how to take backup and restore across clusters using St
 
 ## Backup from `prod` Cluster
 
-To demonstrate the cross-clusters backup and restore capabilities, we will use the `prod` cluster for taking backup and restore the backup into the `staging` cluster.
+To demonstrate the cross-clusters backup and restore capabilities, we will use the `prod` cluster for taking backup and restoring the backup into the `staging` cluster.
 
 ### Prepare Cluster
 
@@ -179,7 +179,7 @@ Now, we are ready to backup our workload's data to our desired backend.
 
 **Create Repository:**
 
-Now, create a `Repository` using this secret. Below is the YAML of `Repository` crd we are going to create, 
+Now, create a `Repository` using this secret. Below is the YAML of the `Repository` object we are going to create, 
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
@@ -295,7 +295,7 @@ We can see from the above output that the backup session has succeeded.
 
 ## Restore into `staging` Cluster
 
-This section will demonstrate you restoring the backed-up data into `staging` cluster.
+This section will demonstrate restoring the backed-up data into the `staging` cluster.
 
 **Stop Taking Backup of the Old Deployment:**
 
@@ -306,6 +306,12 @@ Let's pause the `deployment-backup` BackupConfiguration,
 ```bash
 $ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/deployment-backup patched
+```
+
+You can also use the Stash kubectl plugin to pause the backup like the following,
+```bash
+$ kubectl stash pause backup --backupconfig=deployment-backup -n demo
+BackupConfiguration demo/deployment-backup has been paused successfully.
 ```
 
 Verify that the BackupConfiguration has been paused,
@@ -541,10 +547,6 @@ Verify that the backed up data has been restored in `/source/data` directory of 
 
 ```bash
 $ kubectl exec -n demo stash-recovered-56547b7b57-scxl4 -- cat /source/data/data.txt
-sample_data
-$ kubectl exec -n demo stash-recovered-56547b7b57-w4rf5 -- cat /source/data/data.txt
-sample_data
-$ kubectl exec -n demo stash-recovered-56547b7b57-zxb2p -- cat /source/data/data.txt
 sample_data
 ```
 
