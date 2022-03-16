@@ -33,6 +33,7 @@ To demonstrate the cross-clusters backup and restore capabilities, we will use t
 ### Prepare Cluster
 
 Let's create a cluster named `prod`,
+
 ```bash
 $ kind create cluster --name prod
 Creating cluster "prod" ...
@@ -51,25 +52,27 @@ Have a nice day! 👋
 ```
 
 To verify your current cluster,
-```
+
+```bash
 $ kubectl config current-context
 kind-prod
 ```
 
 if you are currently not in the `prod` cluster, you can switch your cluster by the following command,
-```
+
+```bash
 $ kubectl config use-context kind-prod
 Switched to context "kind-prod".
 ```
 
 We are going to create a namespace named `demo` in the `prod` cluster,
-```
+
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
 
 >**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/guides/advanced-use-case/cross-cluster-backup/examples).
-
 
 Install `Stash` in your `prod` cluster following the steps [here](/docs/setup/README.md).
 
@@ -127,7 +130,7 @@ spec:
           claimName: stash-sample-data
 ```
 
-Let's create the Deployment and PVC we have shown above.
+Let's create the Deployment and PVC we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/deployment_prod.yaml
@@ -196,6 +199,7 @@ spec:
 ```
 
 Let's create the Repository we have shown above,
+
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/repository_prod.yaml
 repository.stash.appscode.com/gcs-repo created
@@ -309,6 +313,7 @@ backupconfiguration.stash.appscode.com/deployment-backup patched
 ```
 
 You can also use the Stash kubectl plugin to pause the backup like the following,
+
 ```bash
 $ kubectl stash pause backup --backupconfig=deployment-backup -n demo
 BackupConfiguration demo/deployment-backup has been paused successfully.
@@ -327,6 +332,7 @@ Notice the `PAUSED` column. Value `true` indicates that the BackupConfiguration 
 ### Prepare Cluster
 
 Let's create a cluster named `staging`,
+
 ```bash
 $ kind create cluster --name staging
 Creating cluster "staging" ...
@@ -345,19 +351,22 @@ Have a nice day! 👋
 ```
 
 To verify the current cluster you are working on,
-```
+
+```bash
 $ kubectl config current-context
 kind-staging
 ```
 
-if you are currently not in the `staging` cluster, you can switch your cluster by the following command,
-```
+If you are currently not in the `staging` cluster, you can switch your cluster by the following command,
+
+```bash
 $ kubectl config use-context kind-staging
 Switched to context "kind-staging".
 ```
 
 We are going to create a namespace named `demo` in the `staging` cluster,
-```
+
+```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
@@ -554,15 +563,17 @@ sample_data
 
 To clean up the Kubernetes resources created by this tutorial in `prod` and `staging` clusters, run the following commands:
 
-**`prod` cluster**
+**Cleanup `prod` Cluster**
 
 Switch your cluster to `prod`,
-```
+
+```bash
 $ kubectl config use-context kind-prod
 Switched to context "kind-prod".
 ```
 
-Clean up the Stash resources in the `prod` cluster:
+Clean up the Stash resources in the `prod` cluster,
+
 ```bash
 kubectl delete -n demo deployments stash-demo
 kubectl delete -n demo pvc stash-sample-data
@@ -571,16 +582,17 @@ kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo secret gcs-secret
 ```
 
-
-**`staging` cluster**
+**Cleanup `staging` Cluster**
 
 Switch your cluster to `staging`,
-```
+
+```bash
 $ kubectl config use-context kind-staging
 Switched to context "kind-staging".
 ```
 
-Clean up the Stash resources in the `prod` cluster:
+Clean up the Stash resources in the `staging` cluster,
+
 ```bash
 kubectl delete -n demo deployments stash-recovered
 kubectl delete -n demo pvc demo-pvc
