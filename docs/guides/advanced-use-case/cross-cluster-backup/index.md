@@ -12,7 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Cross-Namespace Backup and Restore
+# Cross-Cluster Backup and Restore
 
 This guide will show you how to take backup and restore across clusters using Stash.
 
