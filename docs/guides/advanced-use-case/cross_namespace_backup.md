@@ -6,7 +6,7 @@ menu:
     identifier: advance-use-case-cross-namespace-backup
     name: Cross-Namespace Backup and Restore
     parent: advance-use-case
-    weight: 10
+    weight: 50
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
@@ -243,7 +243,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/workloads/statefulset/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-namespace-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -251,7 +251,7 @@ backupconfiguration.stash.appscode.com/ss-backup created
 
 **Verify BackupConfiguration Ready:**
 
-If everything goes well, Stash should create a `stash-demo` StatefulSet in the `prod` namespace and the phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, Stash should create a `ss-backup` BackupConfiguration in the `prod` namespace and the phase of that BackupConfiguration should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
 
 ```bash
 ❯ kubectl get backupconfiguration -n prod
@@ -424,7 +424,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/workloads/statefulset/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-namespace-backup/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
