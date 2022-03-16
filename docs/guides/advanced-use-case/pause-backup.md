@@ -266,7 +266,7 @@ Now, wait for the next backup schedule. This time, the CronJob will not create a
 
 Let's describe the `BackupConfiguration` to verify that the event has been created,
 
-```yaml
+```bash
 $ kubectl describe backupconfiguration -n demo pause-backup
 Name:         pause-backup
 Namespace:    demo
@@ -350,7 +350,7 @@ Notice the `PHASE` column. It is showing that the `BackupSession` has been skipp
 
 If you describe the `BackupSession` object you are going to see that there is an event explaining why it has been skipped.
 
-```yaml
+```bash
 $ kubectl describe backupsession -n demo instant-backupsession
 Name:         instant-backupsession
 Namespace:    demo
