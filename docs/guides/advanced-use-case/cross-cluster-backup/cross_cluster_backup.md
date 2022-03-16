@@ -26,7 +26,7 @@ This guide will show you how to take backup and restore across clusters using St
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-## Backup from prod Cluster
+## Backup from `prod` Cluster
 
 To demonstrate the cross-clusters backup and restore capabilities, we will use the `prod` cluster for taking backup and restore the backup into the `staging` cluster.
 
@@ -358,7 +358,7 @@ namespace/demo created
 
 Install `Stash` in your `staging` cluster following the steps [here](/docs/setup/README.md).
 
-### Deploy Recovered Workload
+### Deploy Restore Workload
 
 We are going to create a new Deployment named `stash-recovered` and a PVC as a storage of the Deployment. We will restore the backed-up data inside it.
 
