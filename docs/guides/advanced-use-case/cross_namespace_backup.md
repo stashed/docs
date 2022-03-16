@@ -6,7 +6,7 @@ menu:
     identifier: advance-use-case-cross-namespace-backup
     name: Cross-Namespace Backup and Restore
     parent: advance-use-case
-    weight: 10
+    weight: 50
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides

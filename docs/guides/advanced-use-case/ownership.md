@@ -6,7 +6,7 @@ menu:
     identifier: file-ownership-stash
     name: File Ownership
     parent: advance-use-case
-    weight: 60
+    weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
