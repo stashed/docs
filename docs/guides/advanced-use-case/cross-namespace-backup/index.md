@@ -28,7 +28,11 @@ This guide will show you how to take backup and restore across namespaces using 
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-To demonstrate the cross-namespace capability, we are going to use the `prod` namespace for taking backup. Then, we will restore the backup in the `staging` namespace. We will be keeping our `Repository` and the backend Secret in a separate namespace called `stash`.
+## Backup from `prod` Namespace
+
+To demonstrate the cross-namespace capability, we are going to use the `prod` namespace for taking backup. Then, we will restore the backup in the `staging` namespace. We will keep our Repository and the backend Secret in a separate namespace called `demo`.
+
+Let's create the above-mentioned namespaces,
 
 ```bash
 $ kubectl create ns prod
@@ -37,19 +41,13 @@ namespace/prod created
 $ kubectl create ns staging
 namespace/staging created
 
-$ kubectl create ns stash
-namespace/stash created
+$ kubectl create ns demo
+namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in [docs/examples/guides/advanced-use-case/cross-namespace-backup](/docs/examples/guides/advanced-use-case/cross-namespace-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+>**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/guides/advanced-use-case/cross-namespace-backup/examples).
 
-
-## Configure Backup
-
-Now, we are going to configure backup for volumes of a StatefulSet in the `prod` namespace. We will deploy a StatefulSet with 3 replicas and a service. We will generate some sample data in it. Then, we are going to configure backup for this StatefulSet using Stash.
-
-
-### Deploy StatefulSet
+### Deploy Workload
 
 Let's deploy a StatefulSet in the `prod` namespace at the beginning. This StatefulSet will automatically generate sample data in the `/source/data` directory.
 
@@ -115,7 +113,7 @@ spec:
 Let's create the StatefulSet we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-namespace-backup/statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/statefulset.yaml
 service/headless created
 statefulset.apps/stash-demo created
 ```
@@ -143,39 +141,37 @@ stash-demo-2
 
 ### Prepare Backend
 
-We are going to store our backed-up data into a GCS bucket. We have to create a Secret with the necessary credentials and a Repository CRD to use this backend. We will create the Secret and Repository in the `stash` namespace. With the cross-namespace Repository support, Stash has the ability to backup and restore data in a different namespace.
+We are going to store our backed-up data into a GCS bucket. We have to create a Secret with the necessary credentials and a Repository CRD to use this backend. 
 
-If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+If you want to use a different backend, please read the doc [here](/docs/guides/backends/overview.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
 **Create Secret:**
 
-Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
+Let's create a secret called `gcs-secret` in `demo` namespace with access credentials to our desired GCS bucket,
 
 ```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
 $ cat /path/to/downloaded-sa-key.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-$ kubectl create secret generic -n stash gcs-secret \
+$ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
     --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 secret/gcs-secret created
 ```
 
-Now, we are ready to backup our workload's data to our desired backend.
-
 **Create Repository:**
 
-Now, create a `Repository` using this secret. Below is the YAML of `Repository` crd we are going to create, 
+Now, create a Repository using this secret. Below is the YAML of Repository object we are going to create, 
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   name: gcs-repo
-  namespace: stash
+  namespace: demo
 spec:
   backend:
     gcs:
@@ -187,22 +183,23 @@ spec:
       from: All
 ```
 
-Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace. Please, check the following guide from [here](/docs/concepts/crds/repository.md) for more details.
+Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace or to a group of namespaces. Please, check the following guide from [here](/docs/concepts/crds/repository.md) for more details.
 
 Let's create the Repository we have shown above,
+
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-namespace-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 Now, we are ready to backup our sample data into this backend.
 
-### Backup
+### Configure Backup
 
-We are going to create a `BackupConfiguration` crd in the `prod` namespace targeting the `stash-demo` StatefulSet that we have deployed earlier. This `BackupConfiguration` will refer to the `gcs-repo` repository of the `stash` namespace. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of the `/source/data` directory of the target.
+We are going to create a `BackupConfiguration` object in the `prod` namespace targeting the `stash-demo` StatefulSet. This `BackupConfiguration` will refer to the `gcs-repo` repository of the `demo` namespace. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take periodic backup of the `/source/data` directory of the target.
 
 **Create BackupConfiguration:**
 
-Below is the YAML of the `BackupConfiguration` crd that we are going to create,
+Below is the YAML of the `BackupConfiguration` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -213,7 +210,7 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-    namespace: stash
+    namespace: demo
   schedule: "*/5 * * * *"
   target:
     ref:
@@ -243,15 +240,13 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-namespace-backup/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
-### Verify Backup Setup
-
 **Verify BackupConfiguration Ready:**
 
-If everything goes well, Stash should create a `ss-backup` BackupConfiguration in the `prod` namespace and the phase of that BackupConfiguration should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, the phase of the BackupConfiguration should be `Ready`. Let's check the BackupConfiguration Phase,
 
 ```bash
 ❯ kubectl get backupconfiguration -n prod
@@ -261,7 +256,7 @@ ss-backup          */5 * * * *            Ready   13s
 
 **Verify CronJob:**
 
-Stash will also create a `CronJob` with the schedule specified in the `spec.schedule` field of the `BackupConfiguration` crd.
+Stash will also create a `CronJob` with the schedule specified in the `spec.schedule` field of the `BackupConfiguration` object.
 
 Verify that the `CronJob` has been created using the following command,
 
@@ -273,11 +268,9 @@ stash-trigger-ss-backup   */5 * * * *   False     0        4m55s           3m14s
 
 ### Verify Backup
 
-**Verify BackupSession Succeeded:**
+The `stash-trigger-ss-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object. The sidecar container watches for the `BackupSession` object. When it finds one, it will take backup immediately.
 
-The `stash-trigger-ss-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` crd. The sidecar container watches for the `BackupSession` crd. When it finds one, it will take backup immediately.
-
-Wait for the next schedule for the backup. Run the following command to watch `BackupSession` crd,
+Wait for the next schedule for the backup. Run the following command to watch `BackupSession` object,
 
 ```bash
 $ kubectl get backupsession -n prod -w
@@ -288,22 +281,28 @@ ss-backup-1644562803   BackupConfiguration   ss-backup      Running             
 ss-backup-1644562803   BackupConfiguration   ss-backup      Succeeded   1m21s      81s
 ```
 
-We can see from the above output that the backup session has succeeded. Now, we are going to verify whether the backed-up data has been stored in the backend.
+We can see from the above output that the backup session has succeeded.
 
+## Restore into `staging` Namespace
 
-## Restore
-
-This section will show you how to restore the backed-up data in a different namespace. We will demonstrate restoring volumes in the `staging` namespace using Stash.
+This section will demonstrate restoring the backed-up volumes in the `staging` namespace using Stash.
 
 **Stop Taking Backup of the Old StatefulSet:**
 
-At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created earlier. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the old StatefulSet. We are going to pause the `BackupConfiguration` that we created earlier. You can learn more how to pause a scheduled backup [here](/docs/guides/advanced-use-case/pause-backup.md)
 
 Let's pause the `ss-backup` BackupConfiguration,
 
 ```bash
 $ kubectl patch backupconfiguration -n prod ss-backup --type="merge" --patch='{"spec": {"paused": true}}'
 backupconfiguration.stash.appscode.com/ss-backup patched
+```
+
+You can also use the Stash kubectl plugin to pause the backup like the following,
+
+```bash
+$ kubectl stash pause backup --backupconfig=ss-backup -n prod
+BackupConfiguration demo/deployment-backup has been paused successfully.
 ```
 
 Verify that the BackupConfiguration has been paused,
@@ -316,7 +315,7 @@ ss-backup          */5 * * * *   true     Ready   53m
 
 Notice the `PAUSED` column. Value `true` indicates that the BackupConfiguration has been paused.
 
-**Deploy StatefulSet:**
+### Deploy Restore Workload
 
 We are going to create a new StatefulSet named `stash-recovered` and restore the backed-up data inside it.
 
@@ -379,16 +378,18 @@ spec:
 Let's create the StatefulSet we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-namespace-backup/statefulset_recovered.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/statefulset_recovered.yaml
 service/re-headless created
 statefulset.apps/stash-recovered created
 ```
 
+### Configure Restore
+
+Now, we need to create a `RestoreSession` object targeting the `stash-recovered` StatefulSet to restore the backed-up data inside it.
+
 **Create RestoreSession:**
 
-Now, we need to create a `RestoreSession` crd targeting the `stash-recovered` StatefulSet to restore the backed-up data inside it.
-
-Below is the YAML of the `RestoreSesion` crd that we are going to create,
+Below is the YAML of the `RestoreSesion` object that we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -399,7 +400,7 @@ metadata:
 spec:
   repository:
     name: gcs-repo
-    namespace: stash
+    namespace: demo
   target:
     ref:
       apiVersion: apps/v1
@@ -421,16 +422,14 @@ Here,
 - `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
   - `mountPath` must be the same mountPath as the original volume because Stash stores the absolute path of the backed-up files. If you use a different mountPath for the restored volume the backed up files will not be restored into your desired volume.
 
-Let's create the `RestoreSession` crd we have shown above,
+Let's create the `RestoreSession` object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/cross-namespace-backup/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` into the `stash-recovered` StatefulSet. The StatefulSet will restart and the `init-container` will restore the desired data on start-up.
-
-### Verify Restore
+Now, wait for the RestoreSession phase to go into `Succeeded` state.
 
 **Wait for RestoreSession to Succeeded:**
 
@@ -445,12 +444,11 @@ ss-restore   gcs-repo     Succeeded   3m6s       4m
 
 So, we can see from the output of the above command that the restore process succeeded.
 
-
-**Verify Restored Data:**
+### Verify Restored Data
 
 In this section, we are going to verify that the desired data has been restored successfully.
 
-At first, check if the `stash-recovered` pods of a StatefulSet has gone into the `Running` state by the following commands,
+Get the pods of the `stash-recovered` StatefulSet,
 
 ```bash
 $ kubectl get pod -n staging
@@ -473,7 +471,7 @@ stash-demo-2
 
 ## Cleaning Up
 
-To clean up the Kubernetes resources created by this tutorial, run:
+To clean up the resources created by this tutorial, run:
 
 ```bash
 kubectl delete -n prod statefulset stash-demo
