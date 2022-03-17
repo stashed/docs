@@ -123,3 +123,43 @@ kubectl logs -n <namespace> <restore pod name> --all-containers
 ```
 
 Inspect the log carefully. You should notice the respective error that leads to restore failure.
+
+## Debug with Stash `kubectl` Plugin
+
+You can use the Stash `kubectl` plugin to debug any backup/restore issue.
+
+### Debug Backup
+
+Run the following command to inspect any backup issue,
+
+```bash
+kubectl stash debug backup -n <namespace> --backupconfig <backupconfiguration name>
+```
+
+The above command will:
+
+- Show version information of Kubernetes and Stash
+- Describe relevent `BackupConfiguration`, `BackupSessions`, and `Pods`
+- Show logs from the relevent `Pods`
+
+### Debug Restore
+
+Run the following command to inspect any restore issue,
+
+```bash
+kubectl stash debug restore -n <namespace> --restoresession <restoresession name>
+```
+
+The above command will:
+
+- Show version information of Kubernetes and Stash
+- Describe relevent `RestoreSession` and `Pods`
+- Show logs from the relevent `Pods`
+
+### Debug Operator
+
+Run the following command to view the Stash operator log:
+
+```bash
+kubectl stash debug operator
+```
