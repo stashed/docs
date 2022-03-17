@@ -28,8 +28,6 @@ This guide will show you how to take backup and restore across namespaces using 
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-## Backup from `prod` Namespace
-
 To demonstrate the cross-namespace capability, we are going to use the `prod` namespace for taking backup. Then, we will restore the backup in the `staging` namespace. We will keep our Repository and the backend Secret in a separate namespace called `demo`.
 
 Let's create the above-mentioned namespaces,
@@ -46,6 +44,10 @@ namespace/demo created
 ```
 
 >**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/guides/advanced-use-case/cross-namespace-backup/examples).
+
+## Backup from `prod` Namespace
+
+This section will demonstrate taking backup of the volumes of a StatefulSet from the `prod` namespace using Stash.
 
 ### Deploy Workload
 
@@ -285,7 +287,7 @@ We can see from the above output that the backup session has succeeded.
 
 ## Restore into `staging` Namespace
 
-This section will demonstrate restoring the backed-up volumes in the `staging` namespace using Stash.
+This section will demonstrate restoring the backed-up volumes into the `staging` namespace using Stash.
 
 **Stop Taking Backup of the Old StatefulSet:**
 
