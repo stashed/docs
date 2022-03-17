@@ -544,6 +544,7 @@ So, we can see from the output of the above command that the restore process suc
 
 In this section, we are going to verify whether the desired data has been restored successfully or not.
 
+Get the pods of the `stash-recovered` Deployment,
 ```bash
 $ kubectl get pods -n demo -l app='stash-recovered'
 NAME                               READY   STATUS    RESTARTS   AGE
@@ -552,7 +553,7 @@ stash-recovered-56547b7b57-w4rf5   1/1     Running   0          16m
 stash-recovered-56547b7b57-zxb2p   1/1     Running   0          16m
 ```
 
-Verify that the backed up data has been restored in `/source/data` directory of the `stash-recovered` pods of the Deployment using the following commands,
+Verify that the backed-up data has been restored in `/source/data` directory of the `stash-recovered` pods of the Deployment using the following commands,
 
 ```bash
 $ kubectl exec -n demo stash-recovered-56547b7b57-scxl4 -- cat /source/data/data.txt
