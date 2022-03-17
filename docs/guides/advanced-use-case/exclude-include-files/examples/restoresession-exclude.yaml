@@ -1,0 +1,23 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: deployment-restore-exclude
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo-full
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: stash-recovered
+    volumeMounts:
+    - name:  source-data
+      mountPath: /source/data
+    rules:
+    - paths:
+      - /source/data/
+      exclude:
+      - /source/data/not-important.txt # don't restore this file
+      - /source/data/*.html # don't restore all files with .html extension
+      - /source/data/tmp/* # don't restore this directory

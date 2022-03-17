@@ -1,0 +1,27 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: deployment-backup-exclude
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo-exclude
+  schedule: "*/5 * * * *"
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: stash-demo
+    volumeMounts:
+    - name: source-data
+      mountPath: /source/data
+    paths:
+    - /source/data
+    exclude:
+    - /source/data/not-important.txt # exclude only one file
+    - /source/data/*.html # exclude all the files that has a particular extension
+    - /source/data/tmp/* # exclude a directory
+  retentionPolicy:
+    name: 'keep-last-5'
+    keepLast: 5
+    prune: true
