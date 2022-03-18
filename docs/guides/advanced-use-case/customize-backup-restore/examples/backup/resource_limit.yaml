@@ -1,0 +1,32 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: deployment-backup
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo
+  schedule: "*/5 * * * *"
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: sample-deployment
+    volumeMounts:
+    - name: source-data
+      mountPath: /source/data
+    paths:
+    - /source/data
+  runtimeSettings:
+    container:
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "1Gi"
+        limits:
+          cpu: "200m"
+          memory: "1Gi"
+  retentionPolicy:
+    name: keep-last-5
+    keepLast: 5
+    prune: true
