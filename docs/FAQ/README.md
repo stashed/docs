@@ -16,35 +16,35 @@ aliases:
 
 # Frequently Asked Questions
 
-## How to temporarily disable backup?
+## How to temporarily pause a backup?
 
-Run the following command to disable a backup temporarily,
+### Pause Backup
+
+Run the following commands to pasue a backup temporarily,
 
 ```bash
+# pause backup by patching BackupConfiguration
 ❯ kubectl patch backupconfiguration -n <namespace> <backupconfiguration name> --type="merge" --patch='{"spec": {"paused": true}}'
-```
 
-Or you can use the Stash `kubectl` plugin to pause a backup, 
-
-```bash
+# pause backup using Stash `kubectl` plugin 
 ❯ kubectl stash pause backup -n demo --backupconfig=<backupconfiguration name>
 ```
 
-Similarly you can also resume a disabled/paused backup. Run the following command to resume a backup, 
+### Resume Backup
+
+Similarly you can also resume a paused backup. Run the following commands to resume a backup,
 
 ```bash
+# resume backup by patching BackupConfiguration
 kubectl patch backupconfiguration -n <namespace> <backupconfiguration name> --type="merge" --patch='{"spec": {"paused": false}}'
-```
 
-Or you can use the Stash `kubectl` plugin to resume a backup, 
-
-```bash
+# resume backup using Stash `kubectl` plugin
 ❯ kubectl stash resume backup -n demo --backupconfig=<backupconfiguration name>
 ```
 
 ## When `retentionPolicy` is applied?
 
-`retentionPolicy` specifies the policy to follow for cleaning old snapshots. The `rententionPolicy` is applied when the backend conatains any snapshot that falls outside the scope of the policy. If you use the policy `keep-last-5`, Stash will remove any snapshot that is older than the most recent 5 snapshots.
+`retentionPolicy` specifies the policy to follow for cleaning old snapshots. Stash removes any snapshot from backend that falls outside the scope of the policy. When a `BackupSession` is completed, Stash checks for outdated snapshots according to the `retentionPolicy` and remove them. If you use the policy `keep-last-5`, Stash will remove any snapshot that is older than the most recent 5 snapshots. 
 
 ## Do I need to delete the init containers after recovery?
 
