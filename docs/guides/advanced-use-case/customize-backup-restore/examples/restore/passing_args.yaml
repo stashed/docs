@@ -16,6 +16,5 @@ spec:
         mountPath: /source/data
     rules:
       - paths:
-          - /source/data/
-      - snapshots: [latest]
+          - /source/data/s
     args: ["--tag=t1,t2"]

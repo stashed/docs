@@ -194,8 +194,7 @@ spec:
         mountPath: /source/data
     rules:
       - paths:
-          - /source/data/
-      - snapshots: [latest]
+          - /source/data/s
     args: ["--tag=t1,t2"]
 ```
 
@@ -236,8 +235,6 @@ spec:
     - name:  source-data
       mountPath:  /source/data
     rules:
-    - paths:
-      - /source/data/
     - snapshots: [4bc21d6f]
 ```
 

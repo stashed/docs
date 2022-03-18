@@ -15,6 +15,4 @@ spec:
     - name:  source-data
       mountPath:  /source/data
     rules:
-    - paths:
-      - /source/data/
     - snapshots: [4bc21d6f]
