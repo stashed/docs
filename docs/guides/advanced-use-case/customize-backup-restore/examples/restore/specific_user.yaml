@@ -1,0 +1,23 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: sample-deployment
+  namespace: demo
+spec:
+  repository:
+    name: gcs-repo
+  target: # target indicates where the recovered data will be stored
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: stash-recovered
+    volumeMounts:
+    - name:  source-data
+      mountPath:  /source/data
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+  rules:
+  - snapshots: [latest]
