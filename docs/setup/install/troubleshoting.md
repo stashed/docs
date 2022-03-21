@@ -28,6 +28,42 @@ In addition, if your GKE cluster is a [private cluster](https://cloud.google.com
 
 For network volume such as NFS, Stash needs to deploy a helper deployment in the same namespace as the Repository that uses the NFS as backend to provide Snapshot listing facility. We call this helper deployment network volume accessor. You can configure its resources, user id, privileged permission etc. Run the following command to enable network volume accessor,
 
+
+<ul class="nav nav-tabs" id="installerTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="new-installer-tab" data-toggle="tab" href="#new-installation-tab" role="tab" aria-controls="new-installation-tab" aria-selected="true">New Installation</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="existing-installation" data-toggle="tab" href="#existing-installation-tab" role="tab" aria-controls="existing-installation-tab" aria-selected="false">Existing Installation</a>
+  </li>
+</ul>
+<div class="tab-content" id="installerTabContent">
+  <div class="tab-pane fade show active" id="new-installation-tab" role="tabpanel" aria-labelledby="new-installation-tab">
+
+### New Installation
+
+If you haven't installed Stash yet, run the following command to configure the network volume accessor during installation
+
+```bash
+$ helm install stash appscode/stash   \
+--version {{< param "info.version" >}} \
+--namespace kube-system                \
+--set features.enterprise=true         \
+--reuse-values                                        \
+--set stash-enterprise.netVolAccessor.cpu=200m        \
+--set stash-enterprise.netVolAccessor.memory=128Mi    \
+--set stash-enterprise.netVolAccessor.runAsUser=0     \
+--set stash-enterprise.netVolAccessor.privileged=true
+--set-file global.license=/path/to/license-file.txt
+```
+
+</div>
+<div class="tab-pane fade" id="existing-installation-tab" role="tabpanel" aria-labelledby="existing-installation-tab">
+
+### Existing Installation
+
+If you have installed Stash already in your cluster but didn't configure the network volume accessor, you can use `helm upgrade` command to configure it in the existing installation.
+
 ```bash
 $ helm upgrade stash appscode/stash -n kube-system        \
     --reuse-values                                        \
@@ -36,6 +72,10 @@ $ helm upgrade stash appscode/stash -n kube-system        \
     --set stash-enterprise.netVolAccessor.runAsUser=0     \
     --set stash-enterprise.netVolAccessor.privileged=true
 ```
+</div>
+</div>
+
+
 
 ## Detect Stash version
 

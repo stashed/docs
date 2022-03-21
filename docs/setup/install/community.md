@@ -21,11 +21,11 @@ To use Stash Community edition, you can grab **1 year** free license from [here]
 ## Prerequisites
 
 - **Kubernetes version**: Stash is compatible with any Kubernetes cluster with version `1.16` or later.
-- **Extended API server support**: Your cluster needs to support and allow the Kubernetes API server extension.
+- **Extended API server**: Your cluster needs to support extended Kubernetes API server.
 - **Webhook support**: Your cluster must support Kubernetes validation and mutation webhooks.
-- **RBAC permission**: Stash operator needs a few RBAC permissions on your cluster. You can find the list of the required RBAC permissions [here](/docs/guides/security/rbac.md).
-- **Installing on GKE cluster**: To install Stash on your GKE cluster, please check the requirements [here](/docs/setup/install/troubleshoting.md/#installing-in-gke-cluster).
-- **NFS volume**: If you are willing to use NFS volume as a backend, you need to customize the Stash installation like [here](/docs/setup/install/troubleshoting.md/#configuring-network-volume-accessor).
+- **RBAC permissions**: Stash operator needs a few RBAC permissions on your cluster. You can find the list of the required RBAC permissions [here](/docs/guides/security/rbac.md).
+- **Installing on GKE cluster**: To install Stash on your GKE cluster, please check the requirements [here](/docs/setup/install/troubleshoting/#installing-in-gke-cluster).
+- **NFS volume**: If you are willing to use NFS volume as a backend, you need to customize the Stash installation like [here](/docs/setup/install/troubleshoting/#configuring-network-volume-accessor).
 
 ## Get a License
 
