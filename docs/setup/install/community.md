@@ -20,12 +20,12 @@ To use Stash Community edition, you can grab **1 year** free license from [here]
 
 ## Prerequisites
 
-- Kubernetes cluster: You need to have a running Kubernetes cluster. Stash is compatible with any Kubernetes cluster with version `1.16` or greater.
-- Extended API server support: Your cluster needs to be compatible with the Kubernetes API  server extension to run Stash.
-- Webhook support: Stash uses webhook for doing a few specific tasks like sending notifications to users. Your cluster has to support webhook for performing such tasks through Stash. 
-- RBAC permission: Stash operator needs some RBAC permissions on your cluster. You can find the list of the required RBAC permissions [here](/docs/guides/security/rbac.md).
-- Cluster specific requirements: Stash needs some cluster specific permissions in some cases. For example, the requirements for GKE cluster is [here](/docs/setup/install/troubleshoting.md/#installing-in-gke-cluster).
-- NFS volume: If you are willing to use NFS volume as a backend, you need to customize the Stash installation like [here](/docs/setup/install/troubleshoting.md/#configuring-network-volume-accessor).
+- **Kubernetes version**: Stash is compatible with any Kubernetes cluster with version `1.16` or later.
+- **Extended API server support**: Your cluster needs to support and allow the Kubernetes API server extension.
+- **Webhook support**: Your cluster must support Kubernetes validation and mutation webhooks.
+- **RBAC permission**: Stash operator needs a few RBAC permissions on your cluster. You can find the list of the required RBAC permissions [here](/docs/guides/security/rbac.md).
+- **Installing on GKE cluster**: To install Stash on your GKE cluster, please check the requirements [here](/docs/setup/install/troubleshoting.md/#installing-in-gke-cluster).
+- **NFS volume**: If you are willing to use NFS volume as a backend, you need to customize the Stash installation like [here](/docs/setup/install/troubleshoting.md/#configuring-network-volume-accessor).
 
 ## Get a License
 
