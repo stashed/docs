@@ -3,9 +3,9 @@ title: Clone Data Volumes | Stash
 description: An step by step guide on how to clone data volumes using Stash.
 menu:
   docs_{{ .version }}:
-    identifier: advance-use-case-clone-pvc
+    identifier: use-cases-clone-pvc
     name: Clone Data Volumes
-    parent: advance-use-case
+    parent: use-cases
     weight: 30
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -35,7 +35,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [/docs/examples/guides/advanced-use-case/clone-pvc](/docs/examples/guides/advanced-use-case/clone-pvc) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+> **Note:** YAML files used in this tutorial are stored in [/docs/examples/guides/use-cases/clone-pvc](/docs/examples/guides/use-cases/clone-pvc) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Clone the Volumes of a Deployment
 
@@ -120,7 +120,7 @@ The above Deployment will automatically create `data.txt` and `config.cfg` file 
 Let's create the Deployment and PVCs we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/deployment/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/deployment/deployment.yaml
 persistentvolumeclaim/source-data created
 persistentvolumeclaim/source-config created
 deployment.apps/stash-demo created
@@ -182,7 +182,7 @@ spec:
 Let's create the `Repository` object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -226,7 +226,7 @@ spec:
 Let's create the `BackupConfiguration` object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/deployment/dep-backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/deployment/dep-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -332,7 +332,7 @@ Here,
 Let's create the `RestoreSession` object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/deployment/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/deployment/restoresession.yaml
 restoresession.stash.appscode.com/restore-deployment created
 ```
 
@@ -415,7 +415,7 @@ spec:
 Create the deployment we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/deployment/restore-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/deployment/restore-deployment.yaml
 deployment.apps/restore-demo created
 ```
 
@@ -524,7 +524,7 @@ The above StatefulSet will automatically create `data.txt` and `config.cfg` file
 Let's create the Statefulset we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/statefulset/statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/statefulset/statefulset.yaml
 service/headless configured
 statefulset.apps/stash-demo created
 ```
@@ -590,7 +590,7 @@ spec:
 Let’s create the Repository object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -634,7 +634,7 @@ spec:
 Let’s create the `BackupConfiguration` object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/statefulset/ss-backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/statefulset/ss-backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -747,7 +747,7 @@ spec:
 Let’s create the `RestoreSession` object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/statefulset/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/statefulset/restoresession.yaml
 restoresession.stash.appscode.com/restore-statefulset created
 ```
 
@@ -858,7 +858,7 @@ spec:
 Create the StatefulSet we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/clone-pvc/statefulset/restore-statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/clone-pvc/statefulset/restore-statefulset.yaml
 service/re-headless created
 statefulset.apps/restore-demo created
 ```

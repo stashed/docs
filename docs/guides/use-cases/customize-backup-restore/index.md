@@ -3,9 +3,9 @@ title: Backup/Restore Customization | Stash
 description: A guide on how to customize backup/restore process in Stash.
 menu:
   docs_{{ .version }}:
-    identifier: advance-use-case-customize-backup-restore
+    identifier: use-cases-customize-backup-restore
     name: Customize Backup/Restore
-    parent: advance-use-case
+    parent: use-cases
     weight: 70
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -16,7 +16,7 @@ section_menu_id: guides
 
 This guide will show you how you can customize backup and restore processes in Stash according to your needs.
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/guides/advanced-use-case/customize-backup-restore/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/guides/use-cases/customize-backup-restore/examples).
 
 ## Customizing Backup Process
 

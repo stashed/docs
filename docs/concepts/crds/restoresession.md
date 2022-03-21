@@ -187,7 +187,7 @@ A `RestoreSession` object has the following fields in the `spec` section.
 
 - **spec.target.volumeClaimTemplates :** You can specify a list of PVC template using `spec.target.volumeClaimTemplates` field. Stash will create those PVCs then it will restore the desired data into them. Then, you can use those PVCs to deploy your desired workload.
 
-- **spec.target.replicas :** If you want to restore the volumes of a StatefulSet through `spec.target.volumeClaimTemplate` field, you can specify the number of replicas of the StatefulSet using `spec.target.replicas`. In this case, you have to use `${POD_ORDINAL}` variable suffix in the claim name. Stash will replace that variable with respective ordinal and it will create the volumes for each replica. For more details, please visit [here](/docs/guides/advanced-use-case/clone-pvc.md#clone-the-volumes-of-a-satefulset).
+- **spec.target.replicas :** If you want to restore the volumes of a StatefulSet through `spec.target.volumeClaimTemplate` field, you can specify the number of replicas of the StatefulSet using `spec.target.replicas`. In this case, you have to use `${POD_ORDINAL}` variable suffix in the claim name. Stash will replace that variable with respective ordinal and it will create the volumes for each replica. For more details, please visit [here](/docs/guides/use-cases/clone-pvc.md#clone-the-volumes-of-a-satefulset).
 
 - **spec.target.rules :** `spec.target.rules` is an array of restore rules that specify how Stash should restore data for each host. For example, Stash runs the restore process in all pods of a StatefulSet. You can configure this `spec.target.rules` section to control what data will be restored into which pod. Each restore rule has the following fields:
 

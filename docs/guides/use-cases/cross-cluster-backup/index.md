@@ -3,9 +3,9 @@ title: Cross-Cluster Backup and Restore | Stash
 description: A guide on how to use backup and restore across clusters using Stash.
 menu:
   docs_{{ .version }}:
-    identifier: advance-use-case-cross-cluster-backup
+    identifier: use-cases-cross-cluster-backup
     name: Cross-Cluster Backup and Restore
-    parent: advance-use-case
+    parent: use-cases
     weight: 60
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -72,7 +72,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/guides/advanced-use-case/cross-cluster-backup/examples).
+>**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/guides/use-cases/cross-cluster-backup/examples).
 
 Install `Stash` in your `prod` cluster following the steps [here](/docs/setup/README.md).
 
@@ -133,7 +133,7 @@ spec:
 Let's create the Deployment and PVC we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/deployment_prod.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-cluster-backup/examples/deployment_prod.yaml
 persistentvolumeclaim/stash-sample-data created
 deployment.apps/stash-demo created
 ```
@@ -201,7 +201,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/repository_prod.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-cluster-backup/examples/repository_prod.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -252,7 +252,7 @@ Here,
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/backupconfiguration_prod.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-cluster-backup/examples/backupconfiguration_prod.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -303,7 +303,7 @@ This section will demonstrate restoring the backed-up data into the `staging` cl
 
 **Stop Taking Backup of the Old Deployment:**
 
-At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created earlier. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created earlier. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
 
 Let's pause the `deployment-backup` BackupConfiguration,
 
@@ -431,7 +431,7 @@ spec:
 Let's create the Deployment we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/deployment_staging.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-cluster-backup/examples/deployment_staging.yaml
 persistentvolumeclaim/demo-pvc created
 deployment.apps/stash-recovered created
 ```
@@ -475,7 +475,7 @@ spec:
 
 Let's create the Repository we have shown above,
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/repository_prod.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-cluster-backup/examples/repository_prod.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -521,7 +521,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-cluster-backup/examples/restoresession_staging.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-cluster-backup/examples/restoresession_staging.yaml
 restoresession.stash.appscode.com/deployment-restore created
 ```
 

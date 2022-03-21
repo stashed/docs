@@ -3,9 +3,9 @@ title: Instant Backup | Stash
 description: An step by step guide on how to take instant backup using Stash.
 menu:
   docs_{{ .version }}:
-    identifier: advance-use-case-instant-backup
+    identifier: use-cases-instant-backup
     name: Instant Backup
-    parent: advance-use-case
+    parent: use-cases
     weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -34,7 +34,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/advanced-use-case/instant-backup](/docs/examples/guides/advanced-use-case/instant-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+>**Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/use-cases/instant-backup](/docs/examples/guides/use-cases/instant-backup) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Configure Backup
 
@@ -97,7 +97,7 @@ The above Deployment will automatically create a `data.txt` file in `/source/dat
 Let’s create the Deployment and PVC we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/instant-backup/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/instant-backup/deployment.yaml
 persistentvolumeclaim/source-data created
 deployment.apps/stash-demo created
 ```
@@ -155,7 +155,7 @@ spec:
 Let’s create the `Repository` object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/instant-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/instant-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -196,7 +196,7 @@ spec:
 Let’s create the `BackupConfiguration` object that we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/instant-backup/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/instant-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -256,7 +256,7 @@ spec:
 Let's create the `BackupSession` object that we have have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/instant-backup/backupsession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/instant-backup/backupsession.yaml
 backupsession.stash.appscode.com/deployment-backupsession created
 ```
 
@@ -289,7 +289,7 @@ gcs-repo   true        24 B   1                116s                     10m
 Now, if we navigate to the GCS bucket, we are going to see backed up data has been stored in `stash/instant/deployment` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/advanced-use-case/instant.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/use-cases/instant.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 

@@ -3,9 +3,9 @@ title: Cross-Namespace Backup and Restore | Stash
 description: A guide on how to use backup and restore across namespaces using Stash.
 menu:
   docs_{{ .version }}:
-    identifier: advance-use-case-cross-namespace-backup
+    identifier: use-cases-cross-namespace-backup
     name: Cross-Namespace Backup and Restore
-    parent: advance-use-case
+    parent: use-cases
     weight: 50
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -43,7 +43,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
->**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/guides/advanced-use-case/cross-namespace-backup/examples).
+>**Note:** YAML files used in this tutorial can be found [here](https://github.com/stashed/docs/guides/use-cases/cross-namespace-backup/examples).
 
 ## Backup from `prod` Namespace
 
@@ -115,7 +115,7 @@ spec:
 Let's create the StatefulSet we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/statefulset.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-backup/examples/statefulset.yaml
 service/headless created
 statefulset.apps/stash-demo created
 ```
@@ -190,7 +190,7 @@ Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to r
 Let's create the Repository we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-backup/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 Now, we are ready to backup our sample data into this backend.
@@ -242,7 +242,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-backup/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/ss-backup created
 ```
 
@@ -291,7 +291,7 @@ This section will demonstrate restoring the backed-up volumes into the `staging`
 
 **Stop Taking Backup of the Old StatefulSet:**
 
-At first, let's stop taking any further backup of the old StatefulSet. We are going to pause the `BackupConfiguration` that we created earlier. You can learn more how to pause a scheduled backup [here](/docs/guides/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the old StatefulSet. We are going to pause the `BackupConfiguration` that we created earlier. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
 
 Let's pause the `ss-backup` BackupConfiguration,
 
@@ -380,7 +380,7 @@ spec:
 Let's create the StatefulSet we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/statefulset_recovered.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-backup/examples/statefulset_recovered.yaml
 service/re-headless created
 statefulset.apps/stash-recovered created
 ```
@@ -427,7 +427,7 @@ Here,
 Let's create the `RestoreSession` object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/cross-namespace-backup/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-backup/examples/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 

@@ -411,7 +411,7 @@ This section will show you how to restore the backed up data from the backend we
 
 **Stop Taking Backup of the Old StatefulSet:**
 
-At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
 
 Let's pause the `ss-backup` BackupConfiguration,
 
@@ -667,7 +667,7 @@ Generally, Stash restores data in individual replicas from a backup of the respe
 
 **Stop Taking Backup of the Old StatefulSet:**
 
-At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the old StatefulSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` StatefulSet. Then, Stash will stop taking any further backup for this StatefulSet. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
 
 Let's pause the `deployment-backup` BackupConfiguration,
 
