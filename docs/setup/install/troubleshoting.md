@@ -49,7 +49,6 @@ $ helm install stash appscode/stash   \
 --version {{< param "info.version" >}} \
 --namespace kube-system                \
 --set features.enterprise=true         \
---reuse-values                                        \
 --set stash-enterprise.netVolAccessor.cpu=200m        \
 --set stash-enterprise.netVolAccessor.memory=128Mi    \
 --set stash-enterprise.netVolAccessor.runAsUser=0     \

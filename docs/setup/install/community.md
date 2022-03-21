@@ -21,7 +21,7 @@ To use Stash Community edition, you can grab **1 year** free license from [here]
 ## Prerequisites
 
 - **Kubernetes version**: Stash is compatible with any Kubernetes cluster with version `1.16` or later.
-- **Extended API server**: Your cluster needs to support extended Kubernetes API server.
+- **Extended API server**: Your cluster needs to support Kubernetes extended API server.
 - **Webhook support**: Your cluster must support Kubernetes validation and mutation webhooks.
 - **RBAC permissions**: Stash operator needs a few RBAC permissions on your cluster. You can find the list of the required RBAC permissions [here](/docs/guides/security/rbac.md).
 - **Installing on GKE cluster**: To install Stash on your GKE cluster, please check the requirements [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/troubleshoting/#installing-in-gke-cluster).
