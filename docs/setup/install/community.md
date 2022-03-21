@@ -18,6 +18,15 @@ Stash Community edition is available under [AppsCode-Community-1.0.0](https://gi
 
 To use Stash Community edition, you can grab **1 year** free license from [here](https://license-issuer.appscode.com/?p=stash-community).
 
+## Prerequisites to intall Stash
+
+- Kubernetes cluster: You need to have a running Kubernetes cluster. Stash is compatible with any Kubernetes cluster with version `1.12` or greater.
+- Extended API server support: Your cluster needs to be compatible with API server extension to run Stash.
+- Webhook support: Stash uses webhook for it's job. Your cluster has to support webhook for running Stash. 
+- RBAC permission: Stash needs some RBAC permissions. You can find the list of the required RBAC permission [here](/docs/guides/security/rbac.md)
+- Cluster specific requirements: Stash needs some cluster specific permissions in some cases. For example, you can find the requirements for GKE cluster [here](/docs/setup/install/troubleshoting.md/#installing-in-gke-cluster)
+- NFS volume customization: It you are willing to use NFS volume as a backened, you need to customize the Stash installation like [here](/docs/setup/install/troubleshoting.md/#configuring-network-volume-accessor)
+
 ## Get a License
 
 In this section, we are going to show you how you can get a **1 year** free license for Stash Community edition. You can get a license for your Kubernetes cluster by going through the following steps:
