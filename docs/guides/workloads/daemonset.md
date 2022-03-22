@@ -366,7 +366,7 @@ This section will show you how to restore the backed up data from the backend we
 
 **Stop Taking Backup of the Old DaemonSet:**
 
-At first, let's stop taking any further backup of the old DaemonSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` DaemonSet. Then, Stash will stop taking any further backup for this DaemonSet. You can learn more how to pause a scheduled backup [here](/docs/guides/advanced-use-case/pause-backup.md)
+At first, let's stop taking any further backup of the old DaemonSet so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` DaemonSet. Then, Stash will stop taking any further backup for this DaemonSet. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
 
 Let's pause the `dmn-backup` BackupConfiguration,
 

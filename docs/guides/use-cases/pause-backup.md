@@ -3,9 +3,9 @@ title: Pause Backup | Stash
 description: An step by step guide on how to pause a scheduled backup in Stash.
 menu:
   docs_{{ .version }}:
-    identifier: advance-use-case-pause-backup
+    identifier: use-cases-pause-backup
     name: Pause Backup
-    parent: advance-use-case
+    parent: use-cases
     weight: 20
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -34,7 +34,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/advanced-use-case/pause-backup](/docs/examples/guides/advanced-use-case/pause-backup) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/examples/guides/use-cases/pause-backup](/docs/examples/guides/use-cases/pause-backup) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Configure Backup
 
@@ -97,7 +97,7 @@ The above Deployment will automatically create a `data.txt` file in `/source/dat
 Let's create the Deployment and PVC we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/pause-backup/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/pause-backup/deployment.yaml
 persistentvolumeclaim/source-pvc created
 deployment.apps/stash-demo created
 ```
@@ -157,7 +157,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/pause-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/pause-backup/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -198,7 +198,7 @@ spec:
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/pause-backup/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/pause-backup/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/pause-backup created
 ```
 
@@ -332,7 +332,7 @@ spec:
 Let's create the `BackupSession` we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/advanced-use-case/pause-backup/backupsession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/use-cases/pause-backup/backupsession.yaml
 backupsession.stash.appscode.com/instant-backupsession created
 ```
 

@@ -5,7 +5,7 @@ menu:
   docs_{{ .version }}:
     identifier: file-ownership-stash
     name: File Ownership
-    parent: advance-use-case
+    parent: use-cases
     weight: 40
 product_name: stash
 menu_name: docs_{{ .version }}

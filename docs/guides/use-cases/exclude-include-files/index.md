@@ -3,9 +3,9 @@ title: Exclude/Include Files | Stash
 description: A guide on how to filter files during backup/restore process.
 menu:
   docs_{{ .version }}:
-    identifier: advance-use-case-exclude-include-files
+    identifier: use-cases-exclude-include-files
     name: Exclude/Include Files
-    parent: advance-use-case
+    parent: use-cases
     weight: 12
 product_name: stash
 menu_name: docs_{{ .version }}
@@ -60,7 +60,7 @@ spec:
 Let’s create the PVC we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/pvc-source.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/pvc-source.yaml
 persistentvolumeclaim/source-data created
 ```
 
@@ -107,7 +107,7 @@ spec:
 Let’s create the `Deployment` we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/deployment-source.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/deployment-source.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -182,7 +182,7 @@ spec:
 Let’s create the `Repository`,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/repository-full.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/repository-full.yaml
 repository.stash.appscode.com/gcs-repo-full created
 ```
 
@@ -219,7 +219,7 @@ The above `BackupConfiguration` will backup everything inside the `/source/data`
 Let’s create the `BackupConfiguration` object that we have shown above, 
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/backupconfiguration-full.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/backupconfiguration-full.yaml
 backupconfiguration.stash.appscode.com/deployment-backup-full created
 ```
 
@@ -292,7 +292,7 @@ spec:
 Let’s create the `Repository` we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/repository-exclude.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/repository-exclude.yaml
 repository.stash.appscode.com/gcs-repo-exclude created
 ```
 
@@ -335,7 +335,7 @@ The above BackupConfiguration will backup everything inside the `/source/data` d
  Let’s create the BackupConfiguration object that we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/backupconfiguration-exclude.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/backupconfiguration-exclude.yaml
 backupconfiguration.stash.appscode.com/deployment-backup-exclude created
 ```
 
@@ -406,7 +406,7 @@ spec:
 Let’s create the PVC we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/pvc-recovered.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/pvc-recovered.yaml
 persistentvolumeclaim/recovered-data created
 ```
 
@@ -452,7 +452,7 @@ spec:
 Let’s create the `Deployment` we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/deployment-recovered.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/deployment-recovered.yaml
 deployment.apps/stash-recovered created
 ```
 
@@ -502,7 +502,7 @@ The above `RestoreSession` will restore everything inside the `/source/data` dir
 Let’s create the `RestoreSession` object that we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/restoresession-exclude.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/restoresession-exclude.yaml
 restoresession.stash.appscode.com/deployment-restore-exclude created
 ```
 
@@ -555,7 +555,7 @@ spec:
 Let’s create the `RestoreSession` object that we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/advanced-use-case/exclude-include-files/examples/restoresession-include.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/exclude-include-files/examples/restoresession-include.yaml
 restoresession.stash.appscode.com/deployment-restore-include created
 ```
 
