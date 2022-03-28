@@ -14,7 +14,7 @@ section_menu_id: guides
 
 {{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
 
-# Managed Backup Across Namespaces
+# Managing Backup Across Namespaces using Auto-Backup
 
 This tutorial will show you how to manage cross-namespace backup for Kubernetes workloads using the Auto-Backup feature of Stash. We are going to keep our StorageSecret in the `demo` namespace and take backup of your workloads from `ns1`, `ns2`, and `ns3` namespaces. 
 
@@ -31,7 +31,7 @@ This tutorial will show you how to manage cross-namespace backup for Kubernetes 
   - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
   - [BackupSession](/docs/concepts/crds/backupsession.md)
 
-To demonstrate the cross-namespace backup management, we are going to create 4 namespaces called `demo`, `ns1`, `ns2`, and `ns3`  throughout this tutorial.
+We are going to create 4 namespaces called `demo`, `ns1`, `ns2`, and `ns3`. To create the namspaces execute the following commands,
 
 ```bash
 $ kubectl create namespace demo
@@ -46,7 +46,7 @@ namespace/ns3 created
 
 ## Prepare Backup Blueprint
 
-We are going to use [GCS Backend](/docs/guides/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure StorageSecret and the` spec.backend` section of `BackupBlueprint` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/backends/overview.md).
+We will use [GCS Backend](/docs/guides/backends/gcs.md) to store our backed-up data. You can use any supported backend you prefer. You just have to configure StorageSecret and the `spec.backend` section of `BackupBlueprint` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/backends/overview.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
@@ -57,7 +57,7 @@ At first, let's create a Storage Secret for the GCS backend in `demo` namespace,
 ```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
 $ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ mv downloaded-sa-json.key GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+$ mv downloaded-sa-key.json GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 $ kubectl create secret generic -n demo gcs-secret \
     --from-file=./RESTIC_PASSWORD \
     --from-file=./GOOGLE_PROJECT_ID \
@@ -67,7 +67,7 @@ secret/gcs-secret created
 
 **Create BackupBlueprint:**
 
-Now, we have to create a `BackupBlueprint` crd with a blueprint for the `Repository` and `BackupConfiguration` object. To keep our repository in an isolated namespace `demo` we have to put that into `spec.repoNamespace` section.
+Now, we have to create a `BackupBlueprint` object with a blueprint for the `Repository` and `BackupConfiguration` object. To keep our repository in an isolated namespace `demo`, we have to put that into `spec.repoNamespace` section.
 
 Below is the YAML of the `BackupBlueprint` object that we are going to create,
 
@@ -91,8 +91,8 @@ spec:
     keepLast: 5
     prune: true
 ```
-0
-Note that if we keep the `spec.repoNamespace` field empty, the repository will be created in the workload's namespace by default. 
+
+Note that, the value `demo` in the `spec.repoNamespace` indicates that the Repository will be created in demo namespace.If you keep this field empty, the Repository will be created in the target workload's namespace by default. 
 
 Let's create the `BackupBlueprint` that we have shown above,
 
@@ -101,12 +101,12 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 backupblueprint.stash.appscode.com/managed-backup-blueprint created
 ```
 
-Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just need to add some annotations to the targeted workload from different or same namespaces to enable periodic backup.
+Now, automatic backup is configured for Kubernetes workloads (`Deployment`, `StatefulSet`, `DaemonSet` etc.). We just need to add some annotations into our target workloads for enabling periodic backup.
 
 
 ## Backup Deployment from `ns1` namespace
 
-Now, we are going to backup a Deployment from the `ns1` namespace using the blueprint we have configured earlier. We are going to mount two ConfigMap volume in two different directories of the Deployment. Then, we will backup those directories using Auto-backup.
+Now, we are going to backup a Deployment from the `ns1` namespace using the blueprint we have configured earlier. We will mount two ConfigMap volume in two different directories of the Deployment. Then, we will backup those directories using Auto-backup.
 
 **Create Deployment:**
 
@@ -173,7 +173,7 @@ spec:
           name: stash-sample-data-2
 ```
 
-Notice the `metadata.annotations` field. We have specified the automatic backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `managed-backup-blueprint` BackupBlueprint for creating `Repository` and `BackupConfiguration` for this Deployment. BackupBlueprint is a non-namespaced resource, so we just need to specify the name of the blueprint.
+Notice the `metadata.annotations` field. We have specified the automatic backup specific annotations to backup `/source/data-1` and `/source/data-2` directories of the `source-data-1` and `source-data-2` volumes respectively. We have also specified to use `managed-backup-blueprint` BackupBlueprint for creating `Repository` and `BackupConfiguration` for this Deployment. As the BackupBlueprint is a non-namespaced resource, we just need to specify the name of the BackupBlueprint.
 
 Let's create the above Deployment,
 
@@ -184,11 +184,11 @@ configmap/stash-sample-data-2 created
 deployment.apps/stash-demo created
 ```
 
-If everything goes well, Stash will create a `BackupConfiguration` in the `ns1` namespace and `Repository` in the `demo` namespace.
+If everything goes well, Stash will create a `BackupConfiguration` in the `ns1` namespace and `Repository` in the `demo` namespace for this Deployment.
 
 **Verify Repository:**
 
-Verify that the Repository has been created in `demo` successfully by the following command,
+Verify that the Repository has been created in `demo` namespace successfully by the following command,
 
 ```bash
 $ kubectl get repository -n demo
@@ -278,9 +278,9 @@ spec:
 
 Notice that the `spec.repository` is pointing to the `demo-deploy-stash-demo` Repository of the `demo` namespace. Also, notice that the `spec.target.paths` and `spec.target.volumeMounts` fields have been populated with the information we had provided as annotation of the Deployment.
 
-**Wait for BackupSession:**
+**Wait for BackupSession to be succeded:**
 
-Now, wait for the next backup schedule. Run the following command to watch `BackupSession` crd:
+Now, wait for the next backup schedule. Run the following command to watch the `BackupSession` object in ns1 namespace:
 
 ```bash
 $ kubectl get backupsession -n ns1 -w
@@ -291,11 +291,11 @@ deploy-stash-demo-1648116301   BackupConfiguration   deploy-stash-demo   Running
 deploy-stash-demo-1648116301   BackupConfiguration   deploy-stash-demo   Succeeded   38s        37s
 ```
 
->Note: Respective CronJob creates `BackupSession` crd with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
+>Note: Respective CronJob creates `BackupSession` object with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.
 
 ## Backup StatefulSet from `ns2` namespace
 
-Now, we are going to backup a StatefulSet from the `ns2` namespace with the same blueprint we have used to backup Deployment in the previous section.
+Now, we are going to backup a StatefulSet from the `ns2` namespace with the same BackupBlueprint we have used to backup Deployment in the previous section.
 
 **Create StatefulSet:**
 
@@ -385,7 +385,7 @@ Verify that a Repository has been created for this StatefulSet using the followi
 ```bash
 $ kubectl get repository -n demo
 NAME                     INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-demo-deploy-stash-demo                                                                35m
+demo-deploy-stash-demo   true        189 B  7                3m15s                    36m
 demo-sts-sts-demo                                                                     48s
 ```
 
@@ -418,11 +418,11 @@ spec:
           kubernetes.io/metadata.name: ns2
 ```
 
-Notice that the variables of the `spec.backend.gcs.prefix` field of `BackupBlueprint` is now replaced with `demo`, `statefulset` and `sts-demo` respectively.
+Notice that the variables of the `spec.backend.gcs.prefix` field of `BackupBlueprint` is now replaced with `ns2`, `statefulset` and `sts-demo` respectively.
 
 **Verify BackupConfiguratoin:**
 
-Verify that a `BackupConfiguration` has been created in the `ns2` namespace and it is in the `Ready` Phase for this StatefulSet using the following command,
+Verify that a `BackupConfiguration` has been created in the `ns2` namespace and it is in the `Ready` Phase using the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n ns2
@@ -430,7 +430,7 @@ NAME           TASK   SCHEDULE      PAUSED   PHASE   AGE
 sts-sts-demo          */5 * * * *            Ready   3m49s
 ```
 
-Here, `sts-sts-demo` has been created for the StatefulSet `sts-demo`. You can check the YAML of this `BackupConfiguration` to see that it is pointing to the repository of the `demo` namespace.
+Here, `sts-sts-demo` has been created for the StatefulSet `sts-demo`. You can check the YAML of this `BackupConfiguration` to see that it is pointing to the Repository of the `demo` namespace.
 
 ```bash
 $ kubectl get backupconfiguration -n ns2 sts-sts-demo -o yaml
@@ -471,9 +471,9 @@ spec:
   tempDir: {}
 ```
 
-**Wait for BackupSession:**
+**Wait for BackupSession to be succeded:**
 
-Now, wait for the next backup schedule. Watch the `BackupSession` of the BackupConfiguration `statefulset-sts-demo` using the following command to see if it's succeeded,
+Now, wait for the next backup schedule. Watch the `BackupSession` of the BackupConfiguration `statefulset-sts-demo` to see if it's succeeded,
 
 ```bash
 $ kubectl get backupsession -n ns2 -w
@@ -486,7 +486,7 @@ sts-sts-demo-1648118701   BackupConfiguration   sts-sts-demo   Succeeded   1m36s
 
 ## Backup DaemonSet from `ns3` namespace
 
-Now, we are going to use the same blueprint to backup a DaemonSet from the `ns3` namespace. We are going to mount a ConfigMap in `/etc/config` directory. Then, we will backup this directory using automatic backup.
+Now, we are going to use the same BackupBlueprint to backup a DaemonSet from the `ns3` namespace. We are going to mount a ConfigMap in `/etc/config` directory. Then, we will backup this directory using automatic backup.
 
 **Create DaemonSet:**
 
@@ -557,9 +557,9 @@ Verify that a `Repository` has been created for this DaemonSet  in `demo` namesp
 ```bash
 $ kubectl get repository -n demo
 NAME                     INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-demo-deploy-stash-demo                                                                61m
+demo-deploy-stash-demo   true        410 B  13               2m3s                     70m
 demo-ds-dmn-demo                                                                      94s
-demo-sts-sts-demo                                                                     26m
+demo-sts-sts-demo        true        765 B  4                4m28s                    26m                                                             26m
 ```
 
 Here, `demo-ds-dmn-demo` Repository has been created for our `dmn-demo` DaemonSet.
@@ -592,7 +592,7 @@ spec:
 ```
 
 **Verify BackupConfiguratoin:**
-If everything goes well, Stash should create a `BackupConfiguration` in the `ns3` namespace for our DaemonSet and the phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` crd by the following command,
+If everything goes well, Stash should create a `BackupConfiguration` in the `ns3` namespace for our DaemonSet and the phase of that `BackupConfiguration` should be `Ready`. Verify the `BackupConfiguration` object by the following command,
 
 ```bash
 $ kubectl get backupconfiguration -n ns3
@@ -651,4 +651,19 @@ NAME                     INVOKER-TYPE          INVOKER-NAME   PHASE       DURATI
 ds-dmn-demo-1648121403   BackupConfiguration   ds-dmn-demo    Running                6s
 ds-dmn-demo-1648121403   BackupConfiguration   ds-dmn-demo    Running                18s
 ds-dmn-demo-1648121403   BackupConfiguration   ds-dmn-demo    Succeeded   30s        30s
+```
+
+## Cleanup
+
+To cleanup the resources created by this tutorial, please run the following commands,
+
+```bash
+$ kubectl delete deployment -n ns1 stash-demo
+deployment.apps "stash-demo" deleted
+$ kubectl delete statefulset -n ns2 sts-demo
+statefulset.apps "sts-demo" deleted
+$ kubectl delete daemonset -n ns3 dmn-demo
+daemonset.apps "dmn-demo" deleted
+$ kubectl delete backupblueprint managed-backup-blueprint
+backupblueprint.stash.appscode.com "managed-backup-blueprint" deleted
 ```
