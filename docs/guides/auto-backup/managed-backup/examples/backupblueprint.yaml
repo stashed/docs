@@ -4,12 +4,15 @@ metadata:
   name: managed-backup-blueprint
 spec:
   # ============== Blueprint for Repository ==========================
-  repoNamespace: demo
+  repoNamespace: backup
   backend:
     gcs:
       bucket: stash-testing
       prefix: stash-auto-backup/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
+  usagePolicy:
+    allowedNamespaces:
+      from: All
   # ============== Blueprint for BackupConfiguration =================
   schedule: "*/5 * * * *"
   retentionPolicy:
