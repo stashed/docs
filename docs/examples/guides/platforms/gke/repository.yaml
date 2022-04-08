@@ -6,6 +6,6 @@ metadata:
 spec:
   backend:
     gcs:
-      bucket: appscode-qa
-      prefix: /source/data
-    storageSecretName: gcs-secret
+      bucket: stash-testing
+      prefix: demo/mariadb/sample-mariadb
+    storageSecretName: encryption-secret

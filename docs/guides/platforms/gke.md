@@ -14,19 +14,20 @@ section_menu_id: guides
 
 # Using Stash with Google Kubernetes Engine (GKE)
 
-This guide will show you how to use Stash to backup and restore volumes of a Kubernetes workload running in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/). Here, we are going to backup a volume of a Deployment into [GCS Bucket](https://cloud.google.com/storage/). Then, we are going to show how to restore this backed up data into a volume of another Deployment.
+This guide will show you how to use Stash to backup and restore a KubeDB database running in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) with Workload Identity enabled. Here, we are going to backup a MariaDB database into [GCS Bucket](https://cloud.google.com/storage/). Then, we are going to show how to restore this backed up data.
 
 ## Before You Begin
 
-- At first, you need to have a Kubernetes cluster in the Google Cloud Platform. If you don't already have a cluster, create one from [here](https://console.cloud.google.com/kubernetes/).
+- At first, you need to have a Kubernetes cluster in the Google Cloud Platform with [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) enabled. If you don’t already have a cluster, create one from [here](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#console).
 
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
-
+- Install `KubeDB` operator in your cluster following the steps [here](https://kubedb.com/docs/v2022.03.28/setup/).
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
   - [BackupSession](/docs/concepts/crds/backupsession.md)
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
+- You will need the [Google Cloud CLI](https://cloud.google.com/sdk/downloads).
 - You will need a [GCS Bucket](https://console.cloud.google.com/storage/) and [GCE persistent disk](https://console.cloud.google.com/compute/disks). GCE persistent disk must be in the same GCE project and zone as the cluster.
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
@@ -36,157 +37,211 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-**Choosing StorageClass:**
+## Prepare IAM Service Account
 
-Stash works with any `StorageClass`. Check available `StorageClass` in your cluster using the following command:
-
-```bash
-$ kubectl get storageclass -n demo
-NAME                 PROVISIONER                AGE
-standard             kubernetes.io/gce-pd       3m
-```
-
-Here, we have `standard` StorageClass in our cluster.
-
-> **Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/platforms/gke](/docs/examples/guides/platforms/gke) directory of [stashed/doc](https://github.com/stashed/doc) repository.
-
-## Backup the Volume of a Deployment
-
-Here, we are going to deploy a Deployment with a PVC. This Deployment will automatically generate some sample data into the PVC. Then, we are going to backup this sample data using Stash.
-
-### Prepare Workload
-
-At first, let's deploy the workload whose volumes we are going to backup. Here, we are going create a PVC and deploy a Deployment with this PVC.
-
-**Create PVC:**
-
-Below is the YAML of the sample PVC that we are going to create,
-
-```yaml
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: source-pvc
-  namespace: demo
-spec:
-  accessModes:
-  - ReadWriteOnce
-  storageClassName: standard
-  resources:
-    requests:
-      storage: 1Gi
-```
-
-Let's create the PVC we have shown above,
+At first, let's create an IAM service account which will contain the roles for accessing GCS Bucket,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/pvc.yaml
-persistentvolumeclaim/source-pvc created
+$ gcloud iam service-accounts create storage-accessor-gsa \
+    --project=sample-project
 ```
 
-**Deploy Deployment:**
+Let's add the required roles to this service account for accessing the GCS bucket.
 
-Now, we are going to deploy a Deployment that uses the above PVC. This Deployment will automatically generate sample data (`data.txt` file) in `/source/data` directory where we have mounted the PVC.
+```bash
+$ gcloud projects add-iam-policy-binding sample-project \
+    --member "serviceAccount:storage-accessor-gsa@sample-project.iam.gserviceaccount.com" \
+    --role "roles/storage.objectAdmin"
+```
 
-Below is the YAML of the Deployment that we are going to create,
+```bash
+$ gcloud projects add-iam-policy-binding sample-project \
+    --member "serviceAccount:storage-accessor-gsa@sample-project.iam.gserviceaccount.com" \
+    --role "roles/storage.admin"
+```
+
+## Prepare MariaDB 
+
+In this section, we are going to deploy a MariaDB database using KubeDB. Then, we are going to insert some sample data into it.
+
+### Deploy MariaDB using KubeDB
+
+At first, let’s deploy a MariaDB standalone database named `sample-mariadb` using KubeDB,
 
 ```yaml
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: kubedb.com/v1alpha2
+kind: MariaDB
 metadata:
-  labels:
-    app: stash-demo
-  name: stash-demo
+  name: sample-mariadb
   namespace: demo
 spec:
+  version: "10.5.8"
   replicas: 1
-  selector:
-    matchLabels:
-      app: stash-demo
-  template:
-    metadata:
-      labels:
-        app: stash-demo
-      name: busybox
-    spec:
-      containers:
-      - args: ["echo sample_data > /source/data/data.txt && sleep 3000"]
-        command: ["/bin/sh", "-c"]
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /source/data
-          name: source-data
-      restartPolicy: Always
-      volumes:
-      - name: source-data
-        persistentVolumeClaim:
-          claimName: source-pvc
+  storageType: Durable
+  storage:
+    storageClassName: "standard"
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+  terminationPolicy: WipeOut
 ```
-
-Let's create the Deployment we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/deployment.yaml
-deployment.apps/stash-demo created
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/mariadb.yaml
+mariadb.kubedb.com/sample-mariadb created
 ```
 
-Now, wait for the pods of the Deployment to go into the `Running` state.
+Now, wait for the database pod `sample-mariadb-0` to go into Running state,
 
 ```bash
-$ kubectl get pod -n demo
-NAME                          READY   STATUS    RESTARTS   AGE
-stash-demo-798987998b-qz6bt   1/1     Running   0          45s
+$ kubectl get pod -n demo sample-mariadb-0
+NAME               READY   STATUS    RESTARTS   AGE
+sample-mariadb-0   1/1     Running   0          29m
 ```
 
-To verify that the sample data has been created in `/source/data` directory, use the following command:
+Once the database pod is in Running state, verify that the database is ready to accept the connections.
 
 ```bash
-$ kubectl exec -n demo stash-demo-798987998b-qz6bt -- cat /source/data/data.txt
-sample_data
+$ kubectl logs -n demo sample-mariadb-0
+2021-02-22  9:41:37 0 [Note] Reading of all Master_info entries succeeded
+2021-02-22  9:41:37 0 [Note] Added new Master_info '' to hash table
+2021-02-22  9:41:37 0 [Note] mysqld: ready for connections.
+Version: '10.5.8-MariaDB-1:10.5.8+maria~focal'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
 ```
+
+From the above log, we can see the database is ready to accept connections.
+
+### Insert Sample Data
+
+Now, we are going to exec into the database pod and create some sample data. The sample-mariadb object creates a secret containing the credentials of MariaDB and set them as pod’s Environment varibles `MYSQL_ROOT_USERNAME` and `MYSQL_ROOT_PASSWORD`.
+
+Here, we are going to use the root user (`MYSQL_ROOT_USERNAME`) credential `MYSQL_ROOT_PASSWORD` to insert the sample data. Let’s exec into the database pod and insert some sample data,
+
+```bash
+$ kubectl exec -it -n demo sample-mariadb-0 -- bash
+root@sample-mariadb-0:/ mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD}
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 341
+Server version: 10.5.8-MariaDB-1:10.5.8+maria~focal mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+# Let's create a database named "company"
+MariaDB [(none)]>  create database company;
+Query OK, 1 row affected (0.000 sec)
+
+# Verify that the database has been created successfully
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+4 rows in set (0.001 sec)
+
+# Now, let's create a table called "employee" in the "company" table
+MariaDB [(none)]> create table company.employees ( name varchar(50), salary int);
+Query OK, 0 rows affected (0.018 sec)
+
+# Verify that the table has been created successfully
+MariaDB [(none)]> show tables in company;
++-------------------+
+| Tables_in_company |
++-------------------+
+| employees         |
++-------------------+
+1 row in set (0.007 sec)
+
+# Now, let's insert a sample row in the table
+MariaDB [(none)]> insert into company.employees values ('John Doe', 5000);
+Query OK, 1 row affected (0.003 sec)
+
+# Insert another sample row
+MariaDB [(none)]> insert into company.employees values ('James William', 7000);
+Query OK, 1 row affected (0.002 sec)
+
+# Verify that the rows have been inserted into the table successfully
+MariaDB [(none)]>  select * from company.employees;
++---------------+--------+
+| name          | salary |
++---------------+--------+
+| John Doe      |   5000 |
+| James William |   7000 |
++---------------+--------+
+2 rows in set (0.001 sec)
+
+MariaDB [(none)]> exit
+Bye
+```
+
+We have successfully deployed a MariaDB database and inserted some sample data into it.
+
+## Prepare Backup
+
+In this section, we are going to prepare the necessary resources (i.e. database connection information, backend information, etc.) before backup.
+
+### Verify Stash MariaDB Addon Installed
+
+When you install the Stash Enterprise edition, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
+
+### Ensure AppBinding
+
+Stash needs to know how to connect with the database. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the database. You have to point to the respective `AppBinding` as a target of backup instead of the database itself.
+
+Stash expect your database Secret to have `username` and `password` keys. If your database secret does not have them, the `AppBinding` can also help here. You can specify a `secretTransforms` section with the mapping between the current keys and the desired keys.
+
+You don’t need to worry about appbindings if you are using KubeDB. It creates an appbinding containing the necessary informations when you deploy the database. Let’s ensure the appbinding create by `KubeDB` operator.
+
+```bash
+$ kubectl get appbinding -n demo 
+NAME             TYPE                 VERSION   AGE
+sample-mariadb   kubedb.com/mariadb   10.5.8      62m
+```
+
+We have a appbinding named same as database name sample-mariadb. We will use this later for connecting into this database.
 
 ### Prepare Backend
 
-We are going to store our backed up data into an [GCS bucket](https://cloud.google.com/storage/). At first, we need to create a secret with the access credentials to our GCS bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed up data into a [GCS bucket](https://cloud.google.com/storage/). As we are using workload identity enabled cluster, we don't need the `GOOGLE_PROJECT_ID` and `GOOGLE_SERVICE_ACCOUNT_JSON_KEY` to access the GCS bucket.
 
+At first, we need to create a secret with a Restic password. Then, we have to create a `Repository` crd that will hold the information about our backend storage.
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
 **Create Secret:**
 
-Let's create a secret called `gcs-secret` with access credentials to our desired GCS bucket,
+Let's create a secret called `encryption-secret` with the Restic password,
 
 ```bash
 $ echo -n 'changeit' > RESTIC_PASSWORD
-$ echo -n '<your-project-id>' > GOOGLE_PROJECT_ID
-$ cat /path/to/downloaded-sa-key.json > GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-$ kubectl create secret generic -n demo gcs-secret \
+$ kubectl create secret generic -n demo encryption-secret \
     --from-file=./RESTIC_PASSWORD \
-    --from-file=./GOOGLE_PROJECT_ID \
-    --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
-secret "gcs-secret" created
+secret "encryption-secret" created
 ```
 
 Verify that the secret has been created successfully,
 
 ```bash
-$ kubectl get secret -n demo gcs-secret -o yaml
+$ kubectl get secret -n demo encryption-secret -o yaml
 ```
 
 ```yaml
 apiVersion: v1
 data:
-  GOOGLE_PROJECT_ID: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded google project id>
-  GOOGLE_SERVICE_ACCOUNT_JSON_KEY: dXNlIHlvdXIgb3duIGNyZWRlbnRpYWxz # <base64 encoded google service account json key>
   RESTIC_PASSWORD: Y2hhbmdlaXQ=
 kind: Secret
 metadata:
   creationTimestamp: "2019-07-22T08:49:20Z"
-  name: gcs-secret
+  name: encryption-secret
   namespace: demo
   resourceVersion: "33237"
-  selfLink: /api/v1/namespaces/demo/secrets/gcs-secret
+  selfLink: /api/v1/namespaces/demo/secrets/encryption-secret
   uid: 98f12a14-ac5d-11e9-8128-42010a800069
 type: Opaque
 ```
@@ -204,9 +259,9 @@ metadata:
 spec:
   backend:
     gcs:
-      bucket: appscode-qa
-      prefix: /source/data
-    storageSecretName: gcs-secret
+      bucket: stash-testing
+      prefix: /demo/mariadb/sample-mariadb
+    storageSecretName: encryption-secret
 ```
 
 Let's create the `Repository` we have shown above,
@@ -218,213 +273,124 @@ repository.stash.appscode.com/gcs-repo created
 
 Now, we are ready to backup our sample data into this backend.
 
-### Backup
+### Prepare ServiceAccount
 
-We have to create a `BackupConfiguration` crd targeting the `stash-demo` Deployment that we have deployed earlier. Stash will inject a sidecar container into the target. It will also create a `CronJob` to take a periodic backup of `/source/data` directory of the target.
+Now we are going create a Kubernetes service account and bind it with the IAM service account `storage-accessor-gsa` that we have created earlier. This binding allows the Kubernetes service account to act as the IAM service account.
+
+Lets create a serviceAccount,
+
+```bash
+$ kubectl create serviceaccount -n demo storage-accessor-ksa
+```
+
+Now Let's bind it with the IAM service account,
+
+```bash
+$ gcloud iam service-accounts add-iam-policy-binding storage-accessor-gsa@sample-project.iam.gserviceaccount.com \
+    --role roles/iam.workloadIdentityUser \
+    --member "serviceAccount:sample-project.svc.id.goog[demo/storage-accessor-ksa]"
+```
+
+Let's annotate the service account with the email address of the IAM service account,
+
+```bash
+$ kubectl annotate sa -n demo storage-accessor-ksa iam.gke.io/gcp-service-account="storage-accessor-gsa@appscode-testing.iam.gserviceaccount.com"
+```
+
+## Backup
+
+To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective AppBinding of our desired database. Then Stash will create a CronJob to periodically backup the database.
 
 **Create BackupConfiguration:**
 
-Below is the YAML of the `BackupConfiguration` crd that we are going to create,
+Below is the YAML for BackupConfiguration object we are going to use to backup the sample-mariadb database we have deployed earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: deployment-backup
+  name: sample-mariadb-backup
   namespace: demo
 spec:
+  runtimeSettings:
+    pod:
+      serviceAccountName: storage-accessor-ksa
+  schedule: "*/5 * * * *"
   repository:
     name: gcs-repo
-  schedule: "*/5 * * * *"
   target:
     ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: stash-demo
-    volumeMounts:
-    - name: source-data
-      mountPath: /source/data
-    paths:
-    - /source/data
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-mariadb
   retentionPolicy:
-    name: 'keep-last-5'
+    name: keep-last-5
     keepLast: 5
     prune: true
 ```
 
 Here,
 
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use to run the backup pod.
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
-- `spec.target.ref` refers to the `stash-demo` Deployment for backup target.
-- `spec.target.volumeMounts` specifies a list of volumes and their mountPath that contain the target paths.
-- `spec.target.paths` specifies list of file paths to backup.
+- `spec.target.ref`refers to the AppBinding object that holds the connection information of our targeted database.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/backupconfiguration.yaml
-backupconfiguration.stash.appscode.com/deployment-backup created
+backupconfiguration.stash.appscode.com/sample-mariadb-backup created
 ```
 
-**Verify Sidecar:**
+**Verify Backup Setup Successful:**
 
-If everything goes well, Stash will inject a sidecar container into the `stash-demo` Deployment to take backup of `/source/data` directory. Let’s check that the sidecar has been injected successfully,
+If everything goes well, the phase of the `BackupConfiguration` should be Ready. The Ready phase indicates that the backup setup is successful. Let’s verify the Phase of the `BackupConfiguration`,
 
 ```bash
-$ kubectl get pod -n demo
-NAME                         READY   STATUS    RESTARTS   AGE
-stash-demo-998db88b7-gqnzq   2/2     Running   0          48s
-```
-
-Look at the pod. It now has 2 containers. If you view the resource definition of this pod, you will see that there is a container named `stash` which is running `run-backup` command.
-
-```yaml
-$ kubectl get pod -n demo stash-demo-998db88b7-gqnzq -o yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  annotations:
-    stash.appscode.com/last-applied-backupconfiguration-hash: "16695904176112618119"
-  creationTimestamp: "2019-07-22T09:00:31Z"
-  generateName: stash-demo-998db88b7-
-  labels:
-    app: stash-demo
-    pod-template-hash: 998db88b7
-  name: stash-demo-998db88b7-gqnzq
-  namespace: demo
-  resourceVersion: "35168"
-  selfLink: /api/v1/namespaces/demo/pods/stash-demo-998db88b7-gqnzq
-  uid: 28a95f65-ac5f-11e9-8128-42010a800069
-  ...
-spec:
-  containers:
-  - args:
-    - echo sample_data > /source/data/data.txt && sleep 3000
-    command:
-    - /bin/sh
-    - -c
-    image: busybox
-    imagePullPolicy: IfNotPresent
-    name: busybox
-    resources: {}
-    terminationMessagePath: /dev/termination-log
-    terminationMessagePolicy: File
-    volumeMounts:
-    - mountPath: /source/data
-      name: source-data
-    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-      name: default-token-sszw7
-      readOnly: true
-  - args:
-    - run-backup
-    - --backup-configuration=deployment-backup
-    - --secret-dir=/etc/stash/repository/secret
-    - --enable-cache=true
-    - --max-connections=0
-    - --metrics-enabled=true
-    - --pushgateway-url=http://stash-operator.kube-system.svc:56789
-    - --enable-status-subresource=true
-    - --use-kubeapiserver-fqdn-for-aks=true
-    - --logtostderr=true
-    - --alsologtostderr=false
-    - --v=3
-    - --stderrthreshold=0
-    env:
-    - name: NODE_NAME
-      valueFrom:
-        fieldRef:
-          apiVersion: v1
-          fieldPath: spec.nodeName
-    - name: POD_NAME
-      valueFrom:
-        fieldRef:
-          apiVersion: v1
-          fieldPath: metadata.name
-    image: suaas21/stash:volumeTemp_linux_amd64
-    imagePullPolicy: IfNotPresent
-    name: stash
-    resources: {}
-    terminationMessagePath: /dev/termination-log
-    terminationMessagePolicy: File
-    volumeMounts:
-    - mountPath: /etc/stash
-      name: stash-podinfo
-    - mountPath: /etc/stash/repository/secret
-      name: stash-secret-volume
-    - mountPath: /tmp
-      name: tmp-dir
-    - mountPath: /source/data
-      name: source-data
-    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-      name: default-token-sszw7
-      readOnly: true
-  dnsPolicy: ClusterFirst
-  nodeName: gke-stash-gke-default-pool-9e2692ba-2hb9
-  volumes:
-  - name: source-data
-    persistentVolumeClaim:
-      claimName: source-pvc
-  - emptyDir: {}
-    name: tmp-dir
-  - downwardAPI:
-      defaultMode: 420
-      items:
-      - fieldRef:
-          apiVersion: v1
-          fieldPath: metadata.labels
-        path: labels
-    name: stash-podinfo
-  - name: stash-secret-volume
-    secret:
-      defaultMode: 420
-      secretName: gcs-secret
-  - name: default-token-sszw7
-    secret:
-      defaultMode: 420
-      secretName: default-token-sszw7
-  ...
-...
+$ kubectl get backupconfiguration -n demo
+NAME                    TASK                    SCHEDULE      PAUSED   PHASE      AGE
+sample-mariadb-backup   mariadb-backup-10.5.8   */5 * * * *            Ready      11s
 ```
 
 **Verify CronJob:**
 
-It will also create a `CronJob` with the schedule specified in `spec.schedule` field of `BackupConfiguration` crd.
+Stash will create a CronJob with the schedule specified in `spec.schedule` field of `BackupConfiguration` object.
 
-Verify that the `CronJob` has been created using the following command,
+Verify that the CronJob has been created using the following command,
 
 ```bash
 $ kubectl get cronjob -n demo
-NAME                SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-deployment-backup   */1 * * * *   False     0        13s             2m42s
+NAME                                 SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-backup-sample-mariadb-backup   */5 * * * *   False     0        15s             17s
 ```
 
 **Wait for BackupSession:**
 
-The `deployment-backup` CronJob will trigger a backup on each schedule by creating a `BackupSession` crd. The sidecar container will watch for the `BackupSession` crd. When it finds one, it will take backup immediately.
+The `sample-mariadb-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
 
-Wait for the next schedule for backup. Run the following command to watch `BackupSession` crd,
+Now, wait for a schedule to appear. Run the following command to watch for a `BackupSession` object,
 
 ```bash
-$ watch -n 3 kubectl get backupsession -n demo
-Every 3.0s: kubectl get backupsession -n-demo           suaas-appscode: Mon Jul 22 15:01:21 2019
+$ kubectl get backupsession -n demo -w
+NAME                               INVOKER-TYPE          INVOKER-NAME            PHASE     AGE
+sample-mariadb-backup-1606994706   BackupConfiguration   sample-mariadb-backup   Running   24s
+sample-mariadb-backup-1606994706   BackupConfiguration   sample-mariadb-backup   Running   75s
+sample-mariadb-backup-1606994706   BackupConfiguration   sample-mariadb-backup   Succeeded   103s
 
-NAME                           INVOKER-TYPE          INVOKER-NAME        PHASE       AGE
-deployment-backup-1571723708   BackupConfiguration   deployment-backup   Succeeded   36s
 ```
 
-We can see from the above output that the backup session has succeeded. Now, we are going to verify whether the backed up data has been stored in the backend.
+Here, the phase `Succeeded` means that the backup process has been completed successfully.
 
 **Verify Backup:**
-
-Once a backup is complete, Stash will update the respective `Repository` crd to reflect the backup. Check that the repository `gcs-repo` has been updated by the following command,
+Now, we are going to verify whether the backed up data is present in the backend or not. Once a backup is completed, Stash will update the respective `Repository` object to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
 
 ```bash
-$ kubectl get repository -n demo
-NAME       INTEGRITY   SIZE   SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-gcs-repo   true        8 B    1                3s                       1m15s
+$ kubectl get repository -n demo gcs-repo
+NAME       INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
+gcs-repo   true        1.327 MiB   1                60s                      8m
 ```
 
-Now, if we navigate to the GCS Bucket, we are going to see backed up data has been stored in `<bucket name>/source/data` directory as specified by `spec.backend.gcs.prefix` field of `Repository` crd.
+Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/mariadb/sample-mariadb` directory as specified by `.spec.backend.gcs.prefix` field of the Repository object.
 
 <figure align="center">
   <img alt="Backup data in GCS Bucket" src="/docs/images/guides/platforms/gke.png">
@@ -433,261 +399,237 @@ Now, if we navigate to the GCS Bucket, we are going to see backed up data has be
 
 > **Note:** Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Restore the Backed up Data
+## Restore
 
-This section will show you how to restore the backed up data from [GCS bucket](https://cloud.google.com/storage/) we have taken in the earlier section.
+In this section, we are going to show you how to restore in the same database which may be necessary when you have accidentally deleted any data from the running database.
 
-**Stop Taking Backup of the Old Deployment:**
+**Temporarily Pause Backup:**
 
-At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
+At first, let's stop taking any further backup of the database so that no backup runs after we delete the sample data. We are going to pause the `BackupConfiguration` object. Stash will stop taking any further backup when the `BackupConfiguration` is paused.
 
-Let's pause the `deployment-backup` BackupConfiguration,
-
-```bash
-$ kubectl patch backupconfiguration -n demo deployment-backup --type="merge" --patch='{"spec": {"paused": true}}'
-backupconfiguration.stash.appscode.com/deployment-backup patched
-```
-Now, wait for a moment. Stash will pause the BackupConfiguration. Verify that the BackupConfiguration  has been paused,
+Let's pause the `sample-mariadb-backup` BackupConfiguration,
 
 ```bash
-$ kubectl get backupconfiguration -n demo
-NAME                TASK   SCHEDULE      PAUSED   AGE
-deployment-backup          */1 * * * *   true     26m
+$ kubectl patch backupconfiguration -n demo sample-mariadb-backup--type="merge" --patch='{"spec": {"paused": true}}'
+backupconfiguration.stash.appscode.com/sample-mgo-rs-backup patched
 ```
 
-Notice the `PAUSED` column. Value `true` for this field means that the BackupConfiguration has been paused.
-
-**Deploy Deployment:**
-
-We are going to create a new Deployment named `stash-recovered` with a new PVC and restore the backed up data inside it.
-
-Below are the YAMLs of the Deployment and PVC that we are going to create,
-
-```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: restore-pvc
-  namespace: demo
-spec:
-  accessModes:
-  - ReadWriteOnce
-  storageClassName: standard
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: stash-recovered
-  name: stash-recovered
-  namespace: demo
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: stash-recovered
-  template:
-    metadata:
-      labels:
-        app: stash-recovered
-      name: busybox
-    spec:
-      containers:
-      - args:
-        - sleep
-        - "3600"
-        image: busybox
-        imagePullPolicy: IfNotPresent
-        name: busybox
-        volumeMounts:
-        - mountPath: /restore/data
-          name: restore-data
-      restartPolicy: Always
-      volumes:
-      - name: restore-data
-        persistentVolumeClaim:
-          claimName: restore-pvc
-```
-
-Let's create the Deployment and PVC we have shown above.
+Or you can use the Stash `kubectl` plugin to pause the `BackupConfiguration`,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/recovered_deployment.yaml
-persistentvolumeclaim/restore-pvc created
-deployment.apps/stash-recovered created
+$ kubectl stash pause backup -n demo --backupconfig=sample-mariadb-backup
+BackupConfiguration demo/sample-mariadb-backup has been paused successfully.
+```
+
+Verify that the `BackupConfiguration` has been paused,
+
+```bash
+$ kubectl get backupconfiguration -n demo sample-mariadb-backup
+NAME                   TASK                    SCHEDULE      PAUSED   PHASE   AGE
+sample-mariadb-backup  mariadb-backup-10.5.8   */5 * * * *   true     Ready   26m
+```
+
+Notice the `PAUSED` column. Value `true` for this field means that the `BackupConfiguration` has been paused.
+
+Stash will also suspend the respective CronJob.
+
+```bash
+$ kubectl get cronjob -n demo
+NAME                                 SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-backup-sample-mariadb-backup   */5 * * * *   True      0        2m59s           20m
+```
+
+**Simulate Disaster:**
+
+Now, let's simulate an accidental deletion scenario. Here, we are going to exec into the database pod and delete the `company` database we had created earlier.
+
+```bash
+$ kubectl exec -it -n demo sample-mariadb-0 -c mariadb -- bash
+root@sample-mariadb-0:/ mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD}
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 341
+Server version: 10.5.8-MariaDB-1:10.5.8+maria~focal mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+# View current databases
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+4 rows in set (0.001 sec)
+
+# Let's delete the "company" database
+MariaDB [(none)]> drop database company;
+Query OK, 1 row affected (0.268 sec)
+
+# Verify that the "company" database has been deleted
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+3 rows in set (0.000 sec)
+
+MariaDB [(none)]> exit
+Bye
 ```
 
 **Create RestoreSession:**
 
-Now, we need to create a `RestoreSession` crd targeting the `stash-recovered` Deployment.
+To restore the database, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted database.
 
-Below is the YAML of the `RestoreSesion` crd that we are going to create,
+Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `sample-mariadb` database.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: deployment-restore
+  name: sample-mariadb-restore
   namespace: demo
 spec:
+  runtimeSettings:
+    pod:
+      serviceAccountName: storage-accessor-ksa
   repository:
     name: gcs-repo
-  target: # target indicates where the recovered data will be stored
+  target:
     ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: stash-recovered
-    volumeMounts:
-    - name: restore-data
-      mountPath: /source/data
-    rules:
-    - paths:
-      - /source/data/
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-mariadb
+  rules:
+  - snapshots: [latest]
 ```
 
 Here,
 
-- `spec.repository.name` specifies the `Repository` crd that holds the backend information where our backed up data has been stored.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use to run the restore pod.
+- `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
+- `.spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
+- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
-- `spec.target.ref` refers to the target workload where the recovered data will be stored.
-- `spec.target.volumeMounts` specifies a list of volumes and their mountPath where the data will be restored.
-  - `mountPath` must be same `mountPath` as the original volume because Stash stores absolute path of the backed up files. If you use different `mountPath` for the restored volume the backed up files will not be restored into your desired volume.
-
-Let's create the `RestoreSession` crd we have shown above,
+Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/restoresession.yaml
-restoresession.stash.appscode.com/deployment-restore created
+restoresession.stash.appscode.com/sample-mariadb-restore created
 ```
 
-Once, you have created the `RestoreSession` crd, Stash will inject `init-container` into `stash-recovered` Deployment. The Deployment will restart and the `init-container` will restore the desired data on start-up.
-
-**Verify Init-Container:**
-
-Wait until the `init-container` has been injected into the `stash-recovered` Deployment. Let’s describe the Deployment to verify that `init-container` has been injected successfully.
-
-```yaml
-$ kubectl describe deployment -n demo stash-recovered
-Name:                   stash-recovered
-Namespace:              demo
-Labels:                 app=stash-recovered
-Selector:               app=stash-recovered
-Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
-...
-Pod Template:
-  Labels:       app=stash-recovered
-  Annotations:  stash.appscode.com/last-applied-restoresession-hash: 11756285575718611872
-  Init Containers:
-   stash-init:
-    Image:      suaas21/stash:volumeTemp_linux_amd64
-    Port:       <none>
-    Host Port:  <none>
-    Args:
-      restore
-      --restore-session=deployment-restore
-      --secret-dir=/etc/stash/repository/secret
-      --enable-cache=true
-      --max-connections=0
-      --metrics-enabled=true
-      --pushgateway-url=http://stash-operator.kube-system.svc:56789
-      --enable-status-subresource=true
-      --use-kubeapiserver-fqdn-for-aks=true
-      --logtostderr=true
-      --alsologtostderr=false
-      --v=3
-      --stderrthreshold=0
-    Environment:
-      NODE_NAME:   (v1:spec.nodeName)
-      POD_NAME:    (v1:metadata.name)
-    Mounts:
-      /etc/stash/repository/secret from stash-secret-volume (rw)
-      /source/data from restore-data (rw)
-      /tmp from tmp-dir (rw)
-  Containers:
-   busybox:
-    Image:      busybox
-    Port:       <none>
-    Host Port:  <none>
-    Args:
-      sleep
-      3600
-    Environment:  <none>
-    Mounts:
-      /restore/data from restore-data (rw)
-  Volumes:
-   restore-data:
-    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-    ClaimName:  restore-pvc
-    ReadOnly:   false
-   tmp-dir:
-    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
-    Medium:
-    SizeLimit:  <unset>
-   stash-podinfo:
-    Type:  DownwardAPI (a volume populated by information about the pod)
-    Items:
-      metadata.labels -> labels
-   stash-secret-volume:
-    Type:        Secret (a volume populated by a Secret)
-    SecretName:  gcs-secret
-    Optional:    false
-...
-```
-
-Notice the `Init-Containers` section. We can see that the init-container `stash-init` has been injected which is running `restore` command.
-
-**Wait for RestoreSession to Succeeded:**
-
-Now, wait for the restore process to complete. You can watch the `RestoreSession` phase using the following command,
+Once, you have created the `RestoreSession` object, Stash will create a restore Job. Run the following command to watch the phase of the `RestoreSession` object,
 
 ```bash
-$ watch -n 2 kubectl get restoresession -n demo
-Every 3.0s: kubectl get restoresession --all-namespaces                 suaas-appscode: Mon Jul 22 18:17:26 2019
-
-NAMESPACE   NAME                 REPOSITORY-NAME   PHASE       AGE
-demo        deployment-restore   gcs-repo          Succeeded   4m
+$ kubectl get restoresession -n demo -w
+NAME                     REPOSITORY   PHASE     AGE
+sample-mariadb-restore   gcs-repo     Running   15s
+sample-mariadb-restore   gcs-repo     Succeeded   18s
 ```
 
-So, we can see from the output of the above command that the restore process has succeeded.
-
-> **Note:** If you want to restore the backed up data inside the same Deployment whose volumes were backed up, you have to remove the corrupted data from the Deployment. Then, you have to create a RestoreSession targeting the Deployment.
+The `Succeeded` phase means that the restore process has been completed successfully.
 
 **Verify Restored Data:**
 
-In this section, we are going to verify that the desired data has been restored successfully. At first, check if the `stash-recovered` pod of the Deployment has gone into `Running` state by the following command,
+Now, let's exec into the database pod and verify whether data actual data was restored or not,
 
 ```bash
-$ kubectl get pod -n demo
-NAME                               READY   STATUS    RESTARTS   AGE
-stash-recovered-7876d7bbbb-w6t8f   1/1     Running   0          4m58s
+$ kubectl exec -it -n demo sample-mariadb-0 -c mariadb -- bash
+root@sample-mariadb-0:/ mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD}
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 341
+Server version: 10.5.8-MariaDB-1:10.5.8+maria~focal mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+# Verify that the "company" database has been restored
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+4 rows in set (0.001 sec)
+
+# Verify that the tables of the "company" database have been restored
+MariaDB [(none)]> show tables from company;
++-------------------+
+| Tables_in_company |
++-------------------+
+| employees         |
++-------------------+
+1 row in set (0.000 sec)
+
+# Verify that the sample data of the "employees" table has been restored
+MariaDB [(none)]> select * from company.employees;
++---------------+--------+
+| name          | salary |
++---------------+--------+
+| John Doe      |   5000 |
+| James William |   7000 |
++---------------+--------+
+2 rows in set (0.000 sec)
+
+MariaDB [(none)]> exit
+Bye
 ```
 
-Verify that the sample data has been restored in `/restore/data` directory of the `stash-recovered` pod of the Deployment using the following command,
+Hence, we can see from the above output that the deleted data has been restored successfully from the backup.
 
+**Resume Backup**
+
+Since our data has been restored successfully we can now resume our usual backup process. Resume the `BackupConfiguration` using following command,
 ```bash
-$ kubectl exec -n demo stash-recovered-7876d7bbbb-w6t8f -- cat /restore/data/data.txt
-sample_data
+$ kubectl patch backupconfiguration -n demo sample-mariadb-backup --type="merge" --patch='{"spec": {"paused": false}}'
+backupconfiguration.stash.appscode.com/sample-mariadb-backup patched
 ```
 
-## Cleaning Up
+Or you can use the Stash `kubectl` plugin to resume the `BackupConfiguration`,
+```bash
+$ kubectl stash resume -n demo --backupconfig=sample-mariadb-backup
+BackupConfiguration demo/sample-mariadb-backup has been resumed successfully.
+```
 
-To clean up the Kubernetes resources created by this tutorial, run:
+Verify that the `BackupConfiguration` has been resumed,
+```bash
+$ kubectl get backupconfiguration -n demo sample-mariadb-backup
+NAME                    TASK                    SCHEDULE      PAUSED   PHASE   AGE
+sample-mariadb-backup   mariadb-backup-10.5.8   */5 * * * *   false    Ready   29m
+```
+
+Here,  `false` in the `PAUSED` column means the backup has been resume successfully. The CronJob also should be resumed now.
 
 ```bash
-kubectl delete -n demo deployment stash-demo
-kubectl delete -n demo deployment stash-recovered
-kubectl delete -n demo backupconfiguration deployment-backup
-kubectl delete -n demo restoresession deployment-restore
+$ kubectl get cronjob -n demo
+NAME                                 SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-backup-sample-mariadb-backup   */5 * * * *   False     0        2m59s           29m
+```
+
+Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
+
+### Cleanup
+
+To cleanup the Kubernetes resources created by this tutorial, run:
+
+```bash
+kubectl delete -n demo backupconfiguration sample-mariadb-backup
+kubectl delete -n demo restoresession sample-mariadb-restore
+kubectl delete -n demo sa storage-accessor-ksa
+kubectl delete -n demo secret encryption-secret
 kubectl delete -n demo repository gcs-repo
-kubectl delete -n demo secret gcs-secret
-kubectl delete -n demo pvc --all
+kubectl delete -n demo mariadb sample-mariadb
+kubectl delete ns demo
 ```
-
-## Next Steps
-
-1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/workloads/statefulset.md).
-2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/workloads/daemonset.md).
-3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/volumes/pvc.md)
