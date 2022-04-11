@@ -1,6 +1,6 @@
 ---
-title: EKS | Stash
-description: Using Stash in Amazon EKS
+title: Using IRSA with Stash on Amazon EKS
+description: A guide on how to use EKS IRSA with Stash
 menu:
   docs_{{ .version }}:
     identifier: platforms-eks-irsa
@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Using Stash with Amazon EKS
+# Using IRSA with Stash on Amazon EKS
 
-This guide will show you how to use Stash to backup and restore a KubeDB database running in [Amazon Elastic Kubernetes Service (Amazon EKS)](https://aws.amazon.com/eks/). Here, we are going to backup a MariaDB database into [AWS S3 bucket](https://aws.amazon.com/s3/) using IRSA(IAM Roles for Service Accounts). Then, we are going to show how to restore this backed up data.
+This guide will show you how to use IRSA(IAM Roles for Service Accounts) of [Amazon Elastic Kubernetes Service (Amazon EKS)](https://aws.amazon.com/eks/) with Stash. Here, we are going to backup a MariaDB database and store the backed up data into a [AWS S3 bucket](https://aws.amazon.com/s3/).Then, we are going to show how to restore this backed up data.
 
 ## Before You Begin
 
@@ -167,6 +167,12 @@ In this section, we are going to prepare the necessary resources (i.e. database 
 
 When you install the Stash Enterprise edition, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
 
+```bash
+$ kubectl get tasks.stash.appscode.com | grep mariadb
+mariadb-backup-10.5.8    35s
+mariadb-restore-10.5.8   35s
+```
+
 ### Ensure AppBinding
 
 Stash needs to know how to connect with the database. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the database. You have to point to the respective `AppBinding` as a target of backup instead of the database itself.
@@ -185,7 +191,7 @@ We have a appbinding named same as database name sample-mariadb. We will use thi
 
 ### Prepare Backend
 
-We are going to store our backed up data into a [S3 bucket](https://aws.amazon.com/s3/). As we are using irsa, we don't need the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to access the S3 bucket.
+We are going to store our backed up data into a [S3 bucket](https://aws.amazon.com/s3/). As we are using IRSA, we don't need the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to access the S3 bucket.
 
 At first, we need to create a secret with a Restic password. Then, we have to create a `Repository` crd that will hold the information about our backend storage.
 
@@ -251,23 +257,50 @@ repository.stash.appscode.com/gcs-repo created
 
 Now, we are ready to backup our sample data into this backend.
 
-### Prepare IAM Role and ServiceAccount
+### Create IAM Policy
 
-We need an IAM role with a specified policy attached and a Kubernetes service account annotated with that IAM role. Use the following command to do all these steps at once.
+We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
+
+```bash
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 bucket.
+
+<figure align="center">
+  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-bucket-policy.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM policy (Step: 2)" src="/docs/images/guides/platforms/review-bucket-policy.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 2 </figcaption>
+</figure>
+
+### Create ServiceAccount
+
+We need an IAM role with the policy `bucket-accessor` attached and a Kubernetes service account annotated with that IAM role. Use the following command to do all these steps at once.
 
 ```bash
 eksctl create iamserviceaccount \
-
-       --name bucket-accessor \
-
+       --name bucket-accessor-ksa \
        --namespace demo \
-
-        --cluster irsa-demo \
-
-        --attach-policy-arn arn:aws:iam::123456789012:policy/bucket-accessor\
-
-        --approve
+       --cluster irsa-demo \
+       --attach-policy-arn arn:aws:iam::123456789012:policy/bucket-accessor\
+       --approve
 ```
+
+This command will create an IAM role with the `bucket-accessor` policy attaced and a service account `bucket-acessor-ksa` annotated with that IAM role in the demo namespace. We will use the service account in the `BackupConfiguration` and `RestoreSession` to enable backup and restore using IRSA.
 
 ## Backup
 
@@ -286,7 +319,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: bucket-accessor
+      serviceAccountName: bucket-accessor-ksa
   schedule: "*/5 * * * *"
   repository:
     name: s3-repo
@@ -303,7 +336,7 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use to run the backup pod.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use in the backup pod.
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
 - `spec.target.ref`refers to the AppBinding object that holds the connection information of our targeted database.
 
@@ -316,7 +349,7 @@ backupconfiguration.stash.appscode.com/sample-mariadb-backup created
 
 **Verify Backup Setup Successful:**
 
-If everything goes well, the phase of the `BackupConfiguration` should be Ready. The Ready phase indicates that the backup setup is successful. Let’s verify the Phase of the `BackupConfiguration`,
+If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let’s verify the Phase of the `BackupConfiguration`,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
@@ -354,6 +387,7 @@ sample-mariadb-backup-1606994706   BackupConfiguration   sample-mariadb-backup  
 Here, the phase `Succeeded` means that the backup process has been completed successfully.
 
 **Verify Backup:**
+
 Now, we are going to verify whether the backed up data is present in the backend or not. Once a backup is completed, Stash will update the respective `Repository` object to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
 
 ```bash
@@ -472,7 +506,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: bucket-accessor
+      serviceAccountName: bucket-accessor-ksa
   repository:
     name: s3-repo
   target:
@@ -487,10 +521,10 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use to run the restore pod.
-- `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
-- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use in the restore pod.
+- `spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
+- `spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
+- `spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
 Let's create the `RestoreSession` object object we have shown above,
 

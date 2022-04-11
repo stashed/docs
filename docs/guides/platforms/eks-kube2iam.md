@@ -1,26 +1,27 @@
 ---
-title: EKS | Stash
-description: Using Stash in Amazon EKS
+title: Using Kube2iam with Stash on Amazon EKS
+description: A guide on how to use EKS Kube2iam with Stash
 menu:
   docs_{{ .version }}:
     identifier: platforms-eks-kube2iam
     name: EKS Kub2iam
     parent: platforms
-    weight: 10
+    weight: 15
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Using Stash with Amazon EKS
+# Using Kube2iam with Stash on Amazon EKS
 
-This guide will show you how to use Stash to backup and restore a KubeDB database running in [Amazon Elastic Kubernetes Service (Amazon EKS)](https://aws.amazon.com/eks/). Here, we are going to backup a MariaDB database into [AWS S3 bucket](https://aws.amazon.com/s3/) using Kube2iam. Then, we are going to show how to restore this backed up data.
+This guide will show you how to use Kube2iam of [Amazon Elastic Kubernetes Service (Amazon EKS)](https://aws.amazon.com/eks/) with Stash. Here, we are going to backup a MariaDB database and store the backed up data into a [AWS S3 bucket](https://aws.amazon.com/s3/).Then, we are going to show how to restore this backed up data.
 
 ## Before You Begin
 
 - At first, you need to have an EKS cluster. If you don't already have a cluster, create one from [here](https://aws.amazon.com/eks/).
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 - Install `KubeDB` operator in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/).
+- Install [Kube2iam](https://github.com/jtblin/kube2iam) in your cluster.
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
   - [BackupSession](/docs/concepts/crds/backupsession.md)
@@ -36,104 +37,60 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-## Setup Kube2iam
+## Setting up the Roles and Policies in AWS
 
-At first, let's deploy Kube2iam in our cluster,
+### Create IAM Policy
 
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:  
-  name: kube2iam
-rules:
-  - apiGroups:
-    - ""
-    resources:
-    - namespaces
-    - pods
-    verbs:
-    - get
-    - watch
-    - list
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: kube2iam
-subjects:
-  - kind: ServiceAccount
-    name: kube2iam
-    namespace: default
-roleRef:
-  kind: ClusterRole
-  name: kube2iam
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: kube2iam
-  namespace: default
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:  
-  name: kube2iam  
-  namespace: default  
-  labels:    
-    app: kube2iam
-spec:  
-  selector:    
-    matchLabels:      
-      name: kube2iam  
-  updateStrategy:    
-    type: RollingUpdate  
-  template:    
-    metadata:      
-      labels:        
-        name: kube2iam    
-    spec:      
-      serviceAccountName: kube2iam      
-      hostNetwork: true      
-      containers:        
-        - image: jtblin/kube2iam:0.10.7          
-          imagePullPolicy: Always          
-          name: kube2iam          
-          args:            
-            - "--auto-discover-base-arn"            
-            - "--auto-discover-default-role=true"            
-            - "--iptables=true"            
-            - "--host-ip=$(HOST_IP)"            
-            - "--node=$(NODE_NAME)"            
-            - "--host-interface=eni+"          
-          env:            
-            - name: HOST_IP              
-              valueFrom:                
-                fieldRef:                  
-                  fieldPath: status.podIP            
-            - name: NODE_NAME              
-              valueFrom:                
-                fieldRef:                  
-                  fieldPath: spec.nodeName          
-          ports:            
-            - containerPort: 8181              
-              hostPort: 8181              
-              name: http          
-          securityContext:            
-            privileged: true
-```  
+We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/kube2iam.yaml
-clusterrole.rbac.authorization.k8s.io/kube2iam created
-clusterrolebinding.rbac.authorization.k8s.io/kube2iam created
-serviceaccount/kube2iam created
-daemonset.apps/kube2iam created
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": "*"
+        }
+    ]
+}
 ```
 
-## Setting up the Roles in AWS
+Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 buckets.
 
-The IAM role of the Kubernetes worker node should have the following Policy attached so that it can assume the role for accessing the bucket.
+<figure align="center">
+  <img alt="Create IAM policy" src="/docs/images/guides/platforms/create-bucket-policy.png">
+  <figcaption align="center">Fig: Create IAM policy</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Review IAM policy" src="/docs/images/guides/platforms/review-bucket-policy.png">
+  <figcaption align="center">Fig: Review IAM policy</figcaption>
+</figure>
+
+### Create Role
+
+Now, let's create an IAM role `bucket-accessor` attaching the above IAM policy,
+
+<figure align="center">
+  <img alt="Create IAM role (Step: 1)" src="/docs/images/guides/platforms/create-role-1.png">
+  <figcaption align="center">Fig: Create IAM Role (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM role (Step: 2)" src="/docs/images/guides/platforms/create-role-2.png">
+  <figcaption align="center">Fig: Create IAM Role (Step: 2)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM role (Step: 3)" src="/docs/images/guides/platforms/create-role-3.png">
+  <figcaption align="center">Fig: Create IAM Role (Step: 3)</figcaption>
+</figure>
+
+### Configure Roles
+
+We need to add the policy to allow our Kubernete worker nodes to assume roles that are not in their default role. We are going to create a new IAM policy `assume-policy` and attach it with the existing node role so that it can assume the role for accessing the bucket. Below is the `JSON` of the IAM policy we are going to create,
 
 ```bash
 {
@@ -150,7 +107,30 @@ The IAM role of the Kubernetes worker node should have the following Policy atta
 }
 ```
 
-The role for accessing the bucket should have the following Trust Policy to trust the role of your Kubernetes worker node.
+Let's navigate to the IAM management console to create `assume-policy`,
+
+<figure align="center">
+  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-assume-policy.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM policy(Step: 2) " src="/docs/images/guides/platforms/review-assume-policy.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 2)</figcaption>
+</figure>
+
+Now, let's attach the IAM policy to our exisiting node role,
+<figure align="center">
+  <img alt="Attach IAM policy(Step: 1" src="/docs/images/guides/platforms/attach-policy-1.png">
+  <figcaption align="center">Fig: Attach Policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Attach IAM policy(Step: 2" src="/docs/images/guides/platforms/attach-policy-2.png">
+  <figcaption align="center">Fig: Attach Policy (Step: 2)</figcaption>
+</figure>
+
+The `bucket-accessor` role needs the trust policy to trust the node role. Below is the `JSON` of the trust policy we are going to use,
 
 ```bash
 {
@@ -167,13 +147,25 @@ The role for accessing the bucket should have the following Trust Policy to trus
             "Sid": "",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::123456789012:role/kubernetes-worker-role"
+                "AWS": "arn:aws:iam::123456789012:role/kubernetes-node"
             },
             "Action": "sts:AssumeRole"
         }
     ]
 }
 ```
+
+Lets update the trust policy of `bucket-accessor` role,
+
+<figure align="center">
+  <img alt="Update Trust policy(Step: 1" src="/docs/images/guides/platforms/trust-policy-1.png">
+  <figcaption align="center">Fig: Update Trust Policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Update Trust policy(Step: 2" src="/docs/images/guides/platforms/trust-policy-2.png">
+  <figcaption align="center">Fig: Update Trust Policy (Step: 2)</figcaption>
+</figure>
 
 ## Prepare MariaDB
 
@@ -306,6 +298,12 @@ In this section, we are going to prepare the necessary resources (i.e. database 
 
 When you install the Stash Enterprise edition, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
 
+```bash
+$ kubectl get tasks.stash.appscode.com | grep mariadb
+mariadb-backup-10.5.8    35s
+mariadb-restore-10.5.8   35s
+```
+
 ### Ensure AppBinding
 
 Stash needs to know how to connect with the database. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the database. You have to point to the respective `AppBinding` as a target of backup instead of the database itself.
@@ -429,6 +427,8 @@ Here,
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
 - `spec.target.ref`refers to the AppBinding object that holds the connection information of our targeted database.
 
+> Notice the `spec.runtimeSettings.pod` section. We are now passing the respective IAM annotation via `podAnnotations` field. Stash will pass this annotation to the respective backup pod.
+
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
@@ -438,7 +438,7 @@ backupconfiguration.stash.appscode.com/sample-mariadb-backup created
 
 **Verify Backup Setup Successful:**
 
-If everything goes well, the phase of the `BackupConfiguration` should be Ready. The Ready phase indicates that the backup setup is successful. Let’s verify the Phase of the `BackupConfiguration`,
+If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let’s verify the Phase of the `BackupConfiguration`,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
@@ -476,6 +476,7 @@ sample-mariadb-backup-1606994706   BackupConfiguration   sample-mariadb-backup  
 Here, the phase `Succeeded` means that the backup process has been completed successfully.
 
 **Verify Backup:**
+
 Now, we are going to verify whether the backed up data is present in the backend or not. Once a backup is completed, Stash will update the respective `Repository` object to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
 
 ```bash
@@ -608,12 +609,14 @@ spec:
 
 ```
 
+> Notice the `spec.runtimeSettings.pod` section. We are now passing the respective IAM annotation via `podAnnotations` field. Stash will pass this annotation to the respective backup pod.
+
 Here,
 
 - `spec.runtimeSettins.pod.podAnnotations` refers to the annotations that will be attached with the respective pod.
-- `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
-- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
+- `spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
+- `spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
+- `spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
 Let's create the `RestoreSession` object object we have shown above,
 

@@ -331,7 +331,7 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use to run the backup pod.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use in the backup pod.
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
 - `spec.target.ref`refers to the AppBinding object that holds the connection information of our targeted database.
 
@@ -344,7 +344,7 @@ backupconfiguration.stash.appscode.com/sample-mariadb-backup created
 
 **Verify Backup Setup Successful:**
 
-If everything goes well, the phase of the `BackupConfiguration` should be Ready. The Ready phase indicates that the backup setup is successful. Let’s verify the Phase of the `BackupConfiguration`,
+If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let’s verify the Phase of the `BackupConfiguration`,
 
 ```bash
 $ kubectl get backupconfiguration -n demo
@@ -382,6 +382,7 @@ sample-mariadb-backup-1606994706   BackupConfiguration   sample-mariadb-backup  
 Here, the phase `Succeeded` means that the backup process has been completed successfully.
 
 **Verify Backup:**
+
 Now, we are going to verify whether the backed up data is present in the backend or not. Once a backup is completed, Stash will update the respective `Repository` object to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
 
 ```bash
@@ -514,10 +515,10 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use to run the restore pod.
-- `.spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
-- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use in the restore pod.
+- `spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
+- `spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
+- `spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
 Let's create the `RestoreSession` object object we have shown above,
 
