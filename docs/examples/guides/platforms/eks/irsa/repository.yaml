@@ -6,7 +6,8 @@ metadata:
 spec:
   backend:
     s3:
-      endpoint: 's3.amazonaws.com'
+      endpoint: "s3.amazonaws.com"
       bucket: stash-qa
-      prefix: /source/data
+      region: us-east-1
+      prefix: /demo/mariadb
     storageSecretName: s3-secret

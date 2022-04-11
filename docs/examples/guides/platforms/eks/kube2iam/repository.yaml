@@ -1,0 +1,13 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: s3-repo
+  namespace: demo
+spec:
+  backend:
+    s3:
+      endpoint: "s3.amazonaws.com"
+      bucket: stash-qa
+      region: us-east-1
+      prefix: /demo/mariadb
+    storageSecretName: s3-secret

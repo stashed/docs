@@ -1,0 +1,18 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: sample-mariadb-restore
+  namespace: demo
+spec:
+  runtimeSettings:
+    pod:
+      serviceAccountName: bucket-accessor
+  repository:
+    name: s3-repo
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: sample-mariadb
+  rules:
+  - snapshots: [latest]
