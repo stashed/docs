@@ -378,7 +378,7 @@ gcs-repo   true        1.327 MiB   1                60s                      8m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/mariadb/sample-mariadb` directory as specified by `.spec.backend.gcs.prefix` field of the Repository object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/guides/platforms/gke/images/gke.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/guides/platforms/eks-irsa/images/gcs.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
