@@ -6,13 +6,13 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: storage-accessor-ksa
+      serviceAccountName: bucket-accessor-ksa
   repository:
-    name: gcs-repo
+    name: s3-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-mariadb
   rules:
-  - snapshots: [latest]
+    - snapshots: [latest]

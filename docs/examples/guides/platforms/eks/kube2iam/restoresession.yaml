@@ -6,13 +6,14 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: storage-accessor-ksa
+      podAnnotations:
+        iam.amazonaws.com/role: "arn:aws:iam::452618475015:role/bucket-accessor"
   repository:
-    name: gcs-repo
+    name: s3-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
       name: sample-mariadb
   rules:
-  - snapshots: [latest]
+    - snapshots: [latest]
