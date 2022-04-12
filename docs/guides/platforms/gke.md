@@ -1,20 +1,20 @@
 ---
-title: GKE | Stash
-description: Using Stash in Google Kubernetes Engine
+title: Using Workload Idenity with Stash on GKE
+description: A guide on how to use GKE workload identity with Stash
 menu:
   docs_{{ .version }}:
     identifier: platforms-gke
     name: GKE Workload Identity
     parent: platforms
-    weight: 30
+    weight: 18
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Using Stash with Google Kubernetes Engine (GKE)
+# Using Workload Identity with Stash on Google Kubernetes Engine (GKE)
 
-This guide will show you how to use Stash to backup and restore a KubeDB database running in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) with Workload Identity enabled. Here, we are going to backup a MariaDB database into [GCS Bucket](https://cloud.google.com/storage/). Then, we are going to show how to restore this backed up data.
+This guide will show you how to use workload identity of [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) with Stash. Here, we are going to backup a MariaDB database and store the backed up data into a [GCS Bucket](https://cloud.google.com/storage/). Then, we are going to show how to restore this backed up data.
 
 ## Before You Begin
 
@@ -28,7 +28,7 @@ This guide will show you how to use Stash to backup and restore a KubeDB databas
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 - Install Google Cloud CLI following the steps [here](https://cloud.google.com/sdk/downloads).
-- You will need a [GCS Bucket](https://console.cloud.google.com/storage/) and [GCE persistent disk](https://console.cloud.google.com/compute/disks). GCE persistent disk must be in the same GCE project and zone as the cluster.
+- You will need a [GCS Bucket](https://console.cloud.google.com/storage/).
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -59,6 +59,8 @@ $ gcloud projects add-iam-policy-binding sample-project \
     --member "serviceAccount:storage-accessor-gsa@sample-project.iam.gserviceaccount.com" \
     --role "roles/storage.admin"
 ```
+
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
 ## Prepare MariaDB 
 
@@ -191,6 +193,12 @@ In this section, we are going to prepare the necessary resources (i.e. database 
 
 When you install the Stash Enterprise edition, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
 
+```bash
+$ kubectl get tasks.stash.appscode.com | grep mariadb
+mariadb-backup-10.5.8    35s
+mariadb-restore-10.5.8   35s
+```
+
 ### Ensure AppBinding
 
 Stash needs to know how to connect with the database. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the database. You have to point to the respective `AppBinding` as a target of backup instead of the database itself.
@@ -212,7 +220,6 @@ We have a appbinding named same as database name sample-mariadb. We will use thi
 We are going to store our backed up data into a [GCS bucket](https://cloud.google.com/storage/). As we are using workload identity enabled cluster, we don't need the `GOOGLE_PROJECT_ID` and `GOOGLE_SERVICE_ACCOUNT_JSON_KEY` to access the GCS bucket.
 
 At first, we need to create a secret with a Restic password. Then, we have to create a `Repository` crd that will hold the information about our backend storage.
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
 **Create Secret:**
 
@@ -223,27 +230,6 @@ $ echo -n 'changeit' > RESTIC_PASSWORD
 $ kubectl create secret generic -n demo encryption-secret \
     --from-file=./RESTIC_PASSWORD \
 secret "encryption-secret" created
-```
-
-Verify that the secret has been created successfully,
-
-```bash
-$ kubectl get secret -n demo encryption-secret -o yaml
-```
-
-```yaml
-apiVersion: v1
-data:
-  RESTIC_PASSWORD: Y2hhbmdlaXQ=
-kind: Secret
-metadata:
-  creationTimestamp: "2019-07-22T08:49:20Z"
-  name: encryption-secret
-  namespace: demo
-  resourceVersion: "33237"
-  selfLink: /api/v1/namespaces/demo/secrets/encryption-secret
-  uid: 98f12a14-ac5d-11e9-8128-42010a800069
-type: Opaque
 ```
 
 **Create Repository:**
@@ -277,10 +263,16 @@ Now, we are ready to backup our sample data into this backend.
 
 Now we are going create a Kubernetes service account and bind it with the IAM service account `storage-accessor-gsa` that we have created earlier. This binding allows the Kubernetes service account to act as the IAM service account.
 
-Lets create a serviceAccount,
+Lets create a `ServiceAccount`,
 
 ```bash
 $ kubectl create serviceaccount -n demo storage-accessor-ksa
+```
+
+Let's add the IAM annotations to the `ServiceAccount`,
+
+```bash
+$ kubectl annotate sa -n demo storage-accessor-ksa iam.gke.io/gcp-service-account="storage-accessor-gsa@appscode-testing.iam.gserviceaccount.com"
 ```
 
 Now Let's bind it with the IAM service account,
@@ -291,19 +283,13 @@ $ gcloud iam service-accounts add-iam-policy-binding storage-accessor-gsa@sample
     --member "serviceAccount:sample-project.svc.id.goog[demo/storage-accessor-ksa]"
 ```
 
-Let's annotate the service account with the email address of the IAM service account,
-
-```bash
-$ kubectl annotate sa -n demo storage-accessor-ksa iam.gke.io/gcp-service-account="storage-accessor-gsa@appscode-testing.iam.gserviceaccount.com"
-```
-
 ## Backup
 
 To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective AppBinding of our desired database. Then Stash will create a CronJob to periodically backup the database.
 
 **Create BackupConfiguration:**
 
-Below is the YAML for BackupConfiguration object we are going to use to backup the sample-mariadb database we have deployed earlier,
+Below is the `YAML` for BackupConfiguration object we are going to use to backup the sample-mariadb database we have deployed earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -331,7 +317,7 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use in the backup pod.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the `ServiceAccount` to use in the backup pod.
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
 - `spec.target.ref`refers to the AppBinding object that holds the connection information of our targeted database.
 
@@ -515,7 +501,7 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the ServiceAccount to use in the restore pod.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the `ServiceAccount` to use in the restore pod.
 - `spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
 - `spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
 - `spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.

@@ -337,27 +337,6 @@ $ kubectl create secret generic -n demo encryption-secret \
 secret "encryption-secret" created
 ```
 
-Verify that the secret has been created successfully,
-
-```bash
-$ kubectl get secret -n demo encryption-secret -o yaml
-```
-
-```yaml
-apiVersion: v1
-data:
-  RESTIC_PASSWORD: Y2hhbmdlaXQ=
-kind: Secret
-metadata:
-  creationTimestamp: "2019-07-22T08:49:20Z"
-  name: encryption-secret
-  namespace: demo
-  resourceVersion: "33237"
-  selfLink: /api/v1/namespaces/demo/secrets/encryption-secret
-  uid: 98f12a14-ac5d-11e9-8128-42010a800069
-type: Opaque
-```
-
 **Create Repository:**
 
 Now, let's create a `Repository` with the information of our desired S3 bucket. Below is the YAML of `Repository` crd we are going to create,
@@ -394,7 +373,7 @@ To schedule a backup, we have to create a `BackupConfiguration` object targeting
 
 **Create BackupConfiguration:**
 
-Below is the YAML for BackupConfiguration object we are going to use to backup the sample-mariadb database we have deployed earlier,
+Below is the `YAML` for BackupConfiguration object we are going to use to backup the sample-mariadb database we have deployed earlier,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -584,7 +563,7 @@ Bye
 
 To restore the database, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted database.
 
-Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `sample-mariadb` database.
+Here, is the `YAML` of the `RestoreSession` object that we are going to use for restoring our `sample-mariadb` database.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
