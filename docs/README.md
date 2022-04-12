@@ -71,7 +71,7 @@ Shows different uses cases of Stash like instant backup, pause backup, cross-nam
 - [Monitoring](/docs/guides/monitoring/overview/index.md): Shows how Prometheus monitoring works with Stash, what metrics Stash exports, and how to enable monitoring.
 - [Hooks](/docs/guides/hooks/overview.md): Shows how to execute different actions before/after the backup/restore process.
 - [CLI](/docs/guides/cli/cli.md): Shows how to manage Stash objects quickly and easily using Stash `kubectl` plugin.
-- [Troubleshooting](/docs/guides/troubleshooting/how-to-troubleshooot/index.md): Gives an overview of how you can gather the necessary information to identify the issue that causes the backup/restore failure.
+- [Troubleshooting](/docs/guides/troubleshooting/how-to-troubleshoot/index.md): Gives an overview of how you can gather the necessary information to identify the issue that causes the backup/restore failure.
 - [Security](/docs/guides/security/rbac.md): Describes different built-in cluster security support by Stash.
 
 We're always looking for help improving our documentation, so please don't hesitate to [file an issue](https://github.com/stashed/project/issues/new) if you see some problem.
