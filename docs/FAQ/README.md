@@ -50,6 +50,10 @@ kubectl patch backupconfiguration -n <namespace> <backupconfiguration name> --ty
 
 You don't need to delete the init containers after recovery.  If your workload restarts with the `stash-init` init-container for any reason, the init-container will skip running restore process if there is no pending RestoreSession for this workload. If you delete the RestoreSession, Stash will remove the `init-container` automatically. Beware that it will cause your workload to restart.
 
+## I am experiencing problem X. How do I fix this?
+
+Please check our troubleshooting guide [here](/docs/guides/troubleshooting/how-to-troubleshoot/index.md).
+
 ## Need More Help?
 
 To speak with us, please leave a message on [our website](https://appscode.com/contact/).
