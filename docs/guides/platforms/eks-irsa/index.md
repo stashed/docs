@@ -1,27 +1,26 @@
 ---
-title: Using Kube2iam with Stash on Amazon EKS
-description: A guide on how to use EKS Kube2iam with Stash
+title: Using IRSA with Stash on Amazon EKS
+description: A guide on how to use EKS IRSA with Stash
 menu:
   docs_{{ .version }}:
-    identifier: platforms-eks-kube2iam
-    name: EKS Kub2iam
+    identifier: platforms-eks-irsa
+    name: EKS IRSA
     parent: platforms
-    weight: 15
+    weight: 10
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Using Kube2iam with Stash on Amazon EKS
+# Using IRSA with Stash on Amazon EKS
 
-This guide will show you how to use Kube2iam of [Amazon Elastic Kubernetes Service (Amazon EKS)](https://aws.amazon.com/eks/) with Stash. Here, we are going to backup a MariaDB database and store the backed up data into a [AWS S3 bucket](https://aws.amazon.com/s3/).Then, we are going to show how to restore this backed up data.
+This guide will show you how to use IRSA(IAM Roles for Service Accounts) of [Amazon Elastic Kubernetes Service (Amazon EKS)](https://aws.amazon.com/eks/) with Stash. Here, we are going to backup a MariaDB database and store the backed up data into a [AWS S3 bucket](https://aws.amazon.com/s3/).Then, we are going to show how to restore this backed up data.
 
 ## Before You Begin
 
-- At first, you need to have an EKS cluster. If you don't already have a cluster, create one from [here](https://aws.amazon.com/eks/).
+- At first, you need to have an EKS cluster with [IRSA](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html) enabled. If you don't already have a cluster, create one from [here](https://aws.amazon.com/eks/).
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 - Install `KubeDB` operator in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/).
-- Install [Kube2iam](https://github.com/jtblin/kube2iam) in your cluster.
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
   - [BackupSession](/docs/concepts/crds/backupsession.md)
@@ -36,136 +35,6 @@ To keep everything isolated, we are going to use a separate namespace called `de
 $ kubectl create ns demo
 namespace/demo created
 ```
-
-## Setting up the Roles and Policies in AWS
-
-### Create IAM Policy
-
-We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
-
-```bash
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "VisualEditor0",
-            "Effect": "Allow",
-            "Action": "s3:*",
-            "Resource": "*"
-        }
-    ]
-}
-```
-
-Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 buckets.
-
-<figure align="center">
-  <img alt="Create IAM policy" src="/docs/images/guides/platforms/create-bucket-policy-1.png">
-  <figcaption align="center">Fig: Create IAM policy</figcaption>
-</figure>
-
-<figure align="center">
-  <img alt="Review IAM policy" src="/docs/images/guides/platforms/create-bucket-policy-2.png">
-  <figcaption align="center">Fig: Review IAM policy</figcaption>
-</figure>
-
-### Create Role
-
-Now, let's create an IAM role `bucket-accessor` attaching the above IAM policy,
-
-<figure align="center">
-  <img alt="Create IAM role (Step: 1)" src="/docs/images/guides/platforms/create-role-1.png">
-  <figcaption align="center">Fig: Create IAM Role (Step: 1)</figcaption>
-</figure>
-
-<figure align="center">
-  <img alt="Create IAM role (Step: 2)" src="/docs/images/guides/platforms/create-role-2.png">
-  <figcaption align="center">Fig: Create IAM Role (Step: 2)</figcaption>
-</figure>
-
-<figure align="center">
-  <img alt="Create IAM role (Step: 3)" src="/docs/images/guides/platforms/create-role-3.png">
-  <figcaption align="center">Fig: Create IAM Role (Step: 3)</figcaption>
-</figure>
-
-### Configure Roles
-
-We need to add the policy to allow our Kubernete worker nodes to assume roles that are not in their default role. We are going to create a new IAM policy `assume-policy` and attach it with the existing node role so that it can assume the role for accessing the bucket. Below is the `JSON` of the IAM policy we are going to create,
-
-```bash
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "sts:AssumeRole"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:iam::123456789012:role/bucket-accessor"
-    }
-  ]
-}
-```
-
-Let's navigate to the IAM management console to create `assume-policy`,
-
-<figure align="center">
-  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-assume-policy-1.png">
-  <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
-</figure>
-
-<figure align="center">
-  <img alt="Create IAM policy(Step: 2) " src="/docs/images/guides/platforms/create-assume-policy-2.png">
-  <figcaption align="center">Fig: Create IAM policy (Step: 2)</figcaption>
-</figure>
-
-Now, let's attach the IAM policy to our exisiting node role,
-<figure align="center">
-  <img alt="Attach IAM policy(Step: 1" src="/docs/images/guides/platforms/attach-policy-1.png">
-  <figcaption align="center">Fig: Attach Policy (Step: 1)</figcaption>
-</figure>
-
-<figure align="center">
-  <img alt="Attach IAM policy(Step: 2" src="/docs/images/guides/platforms/attach-policy-2.png">
-  <figcaption align="center">Fig: Attach Policy (Step: 2)</figcaption>
-</figure>
-
-The `bucket-accessor` role needs the trust policy to trust the node role. Below is the `JSON` of the trust policy we are going to use,
-
-```bash
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "ec2.amazonaws.com"
-            },
-            "Action": "sts:AssumeRole"
-        },
-        {
-            "Sid": "",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "arn:aws:iam::123456789012:role/kubernetes-node"
-            },
-            "Action": "sts:AssumeRole"
-        }
-    ]
-}
-```
-
-Lets update the trust policy of `bucket-accessor` role,
-
-<figure align="center">
-  <img alt="Update Trust policy(Step: 1" src="/docs/images/guides/platforms/trust-policy-1.png">
-  <figcaption align="center">Fig: Update Trust Policy (Step: 1)</figcaption>
-</figure>
-
-<figure align="center">
-  <img alt="Update Trust policy(Step: 2" src="/docs/images/guides/platforms/trust-policy-2.png">
-  <figcaption align="center">Fig: Update Trust Policy (Step: 2)</figcaption>
-</figure>
 
 ## Prepare MariaDB
 
@@ -196,7 +65,7 @@ spec:
 ```
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/mariadb.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-irsa/examples/mariadb.yaml
 mariadb.kubedb.com/sample-mariadb created
 ```
 
@@ -322,7 +191,7 @@ We have a appbinding named same as database name sample-mariadb. We will use thi
 
 ### Prepare Backend
 
-We are going to store our backed up data into a [S3 bucket](https://aws.amazon.com/s3/). As we are using Kube2iam, we don't need the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to access the S3 bucket.
+We are going to store our backed up data into a [S3 bucket](https://aws.amazon.com/s3/). As we are using IRSA, we don't need the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to access the S3 bucket.
 
 At first, we need to create a secret with a Restic password. Then, we have to create a `Repository` crd that will hold the information about our backend storage.
 
@@ -361,11 +230,56 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-irsa/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
 Now, we are ready to backup our sample data into this backend.
+
+### Create IAM Policy
+
+We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
+
+```bash
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 bucket.
+
+<figure align="center">
+  <img alt="Create IAM policy (Step: 1)" src="/docs/guides/platforms/eks-irsa/images/create-bucket-policy-1.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM policy (Step: 2)" src="/docs/guides/platforms/eks-irsa/images/create-bucket-policy-2.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 2 </figcaption>
+</figure>
+
+### Create ServiceAccount
+
+We need an IAM role with the policy `bucket-accessor` attached and a Kubernetes service account annotated with that IAM role. Use the following command to do all these steps at once.
+
+```bash
+eksctl create iamserviceaccount \
+       --name bucket-accessor-ksa \
+       --namespace demo \
+       --cluster irsa-demo \
+       --attach-policy-arn arn:aws:iam::123456789012:policy/bucket-accessor\
+       --approve
+```
+
+This command will create an IAM role with the `bucket-accessor` policy attaced and a service account `bucket-acessor-ksa` annotated with that IAM role in the demo namespace. We will use the service account in the `BackupConfiguration` and `RestoreSession` to enable backup and restore using IRSA.
 
 ## Backup
 
@@ -384,8 +298,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      podAnnotations:
-        iam.amazonaws.com/role: arn:aws:iam::452618475015:role/bucket-accessor
+      serviceAccountName: bucket-accessor-ksa
   schedule: "*/5 * * * *"
   repository:
     name: s3-repo
@@ -402,16 +315,14 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.podAnnotations` refers to the annotations that will be attached with the respective pod.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the `ServiceAccount` to use in the backup pod.
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
 - `spec.target.ref`refers to the AppBinding object that holds the connection information of our targeted database.
-
-> Notice the `spec.runtimeSettings.pod` section. We are now passing the respective IAM annotation via `podAnnotations` field. Stash will pass this annotation to the respective backup pod.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-irsa/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-mariadb-backup created
 ```
 
@@ -467,7 +378,7 @@ gcs-repo   true        1.327 MiB   1                60s                      8m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/mariadb/sample-mariadb` directory as specified by `.spec.backend.gcs.prefix` field of the Repository object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/platforms/gke.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/guides/platforms/gke/images/gke.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -574,8 +485,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      podAnnotations:
-        iam.amazonaws.com/role: "arn:aws:iam::452618475015:role/bucket-accessor"
+      serviceAccountName: bucket-accessor-ksa
   repository:
     name: s3-repo
   target:
@@ -588,11 +498,9 @@ spec:
 
 ```
 
-> Notice the `spec.runtimeSettings.pod` section. We are now passing the respective IAM annotation via `podAnnotations` field. Stash will pass this annotation to the respective backup pod.
-
 Here,
 
-- `spec.runtimeSettins.pod.podAnnotations` refers to the annotations that will be attached with the respective pod.
+- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the `ServiceAccount` to use in the restore pod.
 - `spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
 - `spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
 - `spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
@@ -600,7 +508,7 @@ Here,
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-irsa/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-mariadb-restore created
 ```
 

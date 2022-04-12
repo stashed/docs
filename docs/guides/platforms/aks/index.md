@@ -48,7 +48,7 @@ standard             kubernetes.io/azure-disk   3m
 
 Here, we have `standard` StorageClass in our cluster.
 
-> **Note:** YAML files used in this tutorial are stored in  [docs/examples/guides/platforms/aks](/docs/examples/guides/platforms/aks) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in  [docs/guides/platforms/aks/examples](/docs/guides/platforms/aks/examples) directory of [stashed/doc](https://github.com/stashed/doc) repository.
 
 ## Backup the Volume of a Deployment
 
@@ -80,7 +80,7 @@ spec:
 Let's create the PVC we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/aks/pvc.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/aks/examples/pvc.yaml
 persistentvolumeclaim/stash-sample-data created
 ```
 
@@ -128,7 +128,7 @@ spec:
 Let's create the Deployment we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/aks/deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/aks/examples/deployment.yaml
 deployment.apps/stash-demo created
 ```
 
@@ -212,7 +212,7 @@ spec:
 Let's create the Repository we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/aks/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/aks/examples/repository.yaml
 repository.stash.appscode.com/azure-repo created
 ```
 
@@ -262,7 +262,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/aks/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/aks/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -407,7 +407,7 @@ azure-repo   true        8 B    1                2s                       1m10s
 Now, if we navigate to the Azure blob container, we are going to see backed up data has been stored in `<storage account name>/source/data` directory as specified by `spec.backend.azure.prefix` field of `Repository` crd.
 
 <figure align="center">
-  <img alt="Backup data in Azure Blob Storage Container" src="/docs/images/guides/platforms/aks.png">
+  <img alt="Backup data in Azure Blob Storage Container" src="/docs/guides/platforms/aks/images/aks.png">
   <figcaption align="center">Fig: Backup data in Azure Blob Storage Container</figcaption>
 </figure>
 
@@ -496,7 +496,7 @@ spec:
 Let's create the Deployment and PVC we have shown above.
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/aks/recovered_deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/aks/examples/recovered_deployment.yaml
 persistentvolumeclaim/restore-pvc created
 deployment.apps/stash-recovered created
 ```
@@ -540,7 +540,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/aks/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/aks/examples/restoresession.yaml
 restoresession.stash.appscode.com/deployment-restore created
 ```
 

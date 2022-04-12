@@ -1,34 +1,34 @@
 ---
-title: Using Workload Idenity with Stash on GKE
-description: A guide on how to use GKE workload identity with Stash
+title: Using Kube2iam with Stash on Amazon EKS
+description: A guide on how to use EKS Kube2iam with Stash
 menu:
   docs_{{ .version }}:
-    identifier: platforms-gke
-    name: GKE Workload Identity
+    identifier: platforms-eks-kube2iam
+    name: EKS Kub2iam
     parent: platforms
-    weight: 18
+    weight: 15
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Using Workload Identity with Stash on Google Kubernetes Engine (GKE)
+# Using Kube2iam with Stash on Amazon EKS
 
-This guide will show you how to use workload identity of [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) with Stash. Here, we are going to backup a MariaDB database and store the backed up data into a [GCS Bucket](https://cloud.google.com/storage/). Then, we are going to show how to restore this backed up data.
+This guide will show you how to use Kube2iam of [Amazon Elastic Kubernetes Service (Amazon EKS)](https://aws.amazon.com/eks/) with Stash. Here, we are going to backup a MariaDB database and store the backed up data into a [AWS S3 bucket](https://aws.amazon.com/s3/).Then, we are going to show how to restore this backed up data.
 
 ## Before You Begin
 
-- At first, you need to have a Kubernetes cluster in the Google Cloud Platform with [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) enabled. If you don’t already have a cluster, create one from [here](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#console).
-
+- At first, you need to have an EKS cluster. If you don't already have a cluster, create one from [here](https://aws.amazon.com/eks/).
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 - Install `KubeDB` operator in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/).
+- Install [Kube2iam](https://github.com/jtblin/kube2iam) in your cluster.
 - You should be familiar with the following `Stash` concepts:
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
   - [BackupSession](/docs/concepts/crds/backupsession.md)
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
-- Install Google Cloud CLI following the steps [here](https://cloud.google.com/sdk/downloads).
-- You will need a [GCS Bucket](https://console.cloud.google.com/storage/).
+- You will need a [AWS S3 Bucket](https://aws.amazon.com/s3/) to store the backup snapshots.
+- Install `eksctl` following the steps [here](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html).
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -37,32 +37,137 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-## Prepare IAM Service Account
+## Setting up the Roles and Policies in AWS
 
-At first, let's create an IAM service account which will contain the roles for accessing GCS Bucket,
+### Create IAM Policy
 
-```bash
-$ gcloud iam service-accounts create storage-accessor-gsa \
-    --project=sample-project
-```
-
-Let's add the required roles to this service account for accessing the GCS bucket.
+We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
 
 ```bash
-$ gcloud projects add-iam-policy-binding sample-project \
-    --member "serviceAccount:storage-accessor-gsa@sample-project.iam.gserviceaccount.com" \
-    --role "roles/storage.objectAdmin"
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": "*"
+        }
+    ]
+}
 ```
+
+Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 buckets.
+
+<figure align="center">
+  <img alt="Create IAM policy" src="/docs/guides/platforms/eks-kube2iam/images/create-bucket-policy-1.png">
+  <figcaption align="center">Fig: Create IAM policy</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Review IAM policy" src="/docs/guides/platforms/eks-kube2iam/images/create-bucket-policy-2.png">
+  <figcaption align="center">Fig: Review IAM policy</figcaption>
+</figure>
+
+### Create Role
+
+Now, let's create an IAM role `bucket-accessor` attaching the above IAM policy,
+
+<figure align="center">
+  <img alt="Create IAM role (Step: 1)" src="/docs/guides/platforms/eks-kube2iam/images/create-role-1.png">
+  <figcaption align="center">Fig: Create IAM Role (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM role (Step: 2)" src="/docs/guides/platforms/eks-kube2iam/images/create-role-2.png">
+  <figcaption align="center">Fig: Create IAM Role (Step: 2)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM role (Step: 3)" src="/docs/guides/platforms/eks-kube2iam/images/create-role-3.png">
+  <figcaption align="center">Fig: Create IAM Role (Step: 3)</figcaption>
+</figure>
+
+### Configure Roles
+
+We need to add the policy to allow our Kubernete worker nodes to assume roles that are not in their default role. We are going to create a new IAM policy `assume-policy` and attach it with the existing node role so that it can assume the role for accessing the bucket. Below is the `JSON` of the IAM policy we are going to create,
 
 ```bash
-$ gcloud projects add-iam-policy-binding sample-project \
-    --member "serviceAccount:storage-accessor-gsa@sample-project.iam.gserviceaccount.com" \
-    --role "roles/storage.admin"
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "sts:AssumeRole"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:iam::123456789012:role/bucket-accessor"
+    }
+  ]
+}
 ```
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+Let's navigate to the IAM management console to create `assume-policy`,
 
-## Prepare MariaDB 
+<figure align="center">
+  <img alt="Create IAM policy (Step: 1)" src="/docs/guides/platforms/eks-kube2iam/images/create-assume-policy-1.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Create IAM policy(Step: 2) " src="/docs/guides/platforms/eks-kube2iam/images/create-assume-policy-2.png">
+  <figcaption align="center">Fig: Create IAM policy (Step: 2)</figcaption>
+</figure>
+
+Now, let's attach the IAM policy to our exisiting node role,
+<figure align="center">
+  <img alt="Attach IAM policy(Step: 1" src="/docs/guides/platforms/eks-kube2iam/images/attach-policy-1.png">
+  <figcaption align="center">Fig: Attach Policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Attach IAM policy(Step: 2" src="/docs/guides/platforms/eks-kube2iam/images/attach-policy-2.png">
+  <figcaption align="center">Fig: Attach Policy (Step: 2)</figcaption>
+</figure>
+
+The `bucket-accessor` role needs the trust policy to trust the node role. Below is the `JSON` of the trust policy we are going to use,
+
+```bash
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::123456789012:role/kubernetes-node"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+```
+
+Lets update the trust policy of `bucket-accessor` role,
+
+<figure align="center">
+  <img alt="Update Trust policy(Step: 1" src="/docs/guides/platforms/eks-kube2iam/images/trust-policy-1.png">
+  <figcaption align="center">Fig: Update Trust Policy (Step: 1)</figcaption>
+</figure>
+
+<figure align="center">
+  <img alt="Update Trust policy(Step: 2" src="/docs/guides/platforms/eks-kube2iam/images/trust-policy-2.png">
+  <figcaption align="center">Fig: Update Trust Policy (Step: 2)</figcaption>
+</figure>
+
+## Prepare MariaDB
 
 In this section, we are going to deploy a MariaDB database using KubeDB. Then, we are going to insert some sample data into it.
 
@@ -91,7 +196,7 @@ spec:
 ```
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/mariadb.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/mariadb.yaml
 mariadb.kubedb.com/sample-mariadb created
 ```
 
@@ -217,7 +322,7 @@ We have a appbinding named same as database name sample-mariadb. We will use thi
 
 ### Prepare Backend
 
-We are going to store our backed up data into a [GCS bucket](https://cloud.google.com/storage/). As we are using workload identity enabled cluster, we don't need the `GOOGLE_PROJECT_ID` and `GOOGLE_SERVICE_ACCOUNT_JSON_KEY` to access the GCS bucket.
+We are going to store our backed up data into a [S3 bucket](https://aws.amazon.com/s3/). As we are using Kube2iam, we don't need the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to access the S3 bucket.
 
 At first, we need to create a secret with a Restic password. Then, we have to create a `Repository` crd that will hold the information about our backend storage.
 
@@ -234,54 +339,33 @@ secret "encryption-secret" created
 
 **Create Repository:**
 
-Now, let's create a `Repository` with the information of our desired GCS bucket. Below is the YAML of `Repository` crd we are going to create,
+Now, let's create a `Repository` with the information of our desired S3 bucket. Below is the YAML of `Repository` crd we are going to create,
 
 ```yaml
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
-  name: gcs-repo
+  name: s3-repo
   namespace: demo
 spec:
   backend:
-    gcs:
-      bucket: stash-testing
-      prefix: /demo/mariadb/sample-mariadb
+    s3:
+      endpoint: 's3.amazonaws.com'
+      bucket: stash-qa
+      region: us-east-1
+      prefix: /demo/mariadb
     storageSecretName: encryption-secret
+
 ```
 
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
 Now, we are ready to backup our sample data into this backend.
-
-### Prepare ServiceAccount
-
-Now we are going create a Kubernetes service account and bind it with the IAM service account `storage-accessor-gsa` that we have created earlier. This binding allows the Kubernetes service account to act as the IAM service account.
-
-Lets create a `ServiceAccount`,
-
-```bash
-$ kubectl create serviceaccount -n demo storage-accessor-ksa
-```
-
-Let's add the IAM annotations to the `ServiceAccount`,
-
-```bash
-$ kubectl annotate sa -n demo storage-accessor-ksa iam.gke.io/gcp-service-account="storage-accessor-gsa@appscode-testing.iam.gserviceaccount.com"
-```
-
-Now Let's bind it with the IAM service account,
-
-```bash
-$ gcloud iam service-accounts add-iam-policy-binding storage-accessor-gsa@sample-project.iam.gserviceaccount.com \
-    --role roles/iam.workloadIdentityUser \
-    --member "serviceAccount:sample-project.svc.id.goog[demo/storage-accessor-ksa]"
-```
 
 ## Backup
 
@@ -300,10 +384,11 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: storage-accessor-ksa
+      podAnnotations:
+        iam.amazonaws.com/role: arn:aws:iam::452618475015:role/bucket-accessor
   schedule: "*/5 * * * *"
   repository:
-    name: gcs-repo
+    name: s3-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -317,14 +402,16 @@ spec:
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the `ServiceAccount` to use in the backup pod.
+- `spec.runtimeSettins.pod.podAnnotations` refers to the annotations that will be attached with the respective pod.
 - `spec.repository` refers to the `Repository` object `gcs-repo` that holds backend [GCS bucket](https://cloud.google.com/storage/) information.
 - `spec.target.ref`refers to the AppBinding object that holds the connection information of our targeted database.
+
+> Notice the `spec.runtimeSettings.pod` section. We are now passing the respective IAM annotation via `podAnnotations` field. Stash will pass this annotation to the respective backup pod.
 
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-mariadb-backup created
 ```
 
@@ -380,7 +467,7 @@ gcs-repo   true        1.327 MiB   1                60s                      8m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/mariadb/sample-mariadb` directory as specified by `.spec.backend.gcs.prefix` field of the Repository object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/platforms/gke.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/guides/platforms/gke/images/gke.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -476,7 +563,7 @@ Bye
 
 To restore the database, you have to create a `RestoreSession` object pointing to the `AppBinding` of the targeted database.
 
-Here, is the YAML of the `RestoreSession` object that we are going to use for restoring our `sample-mariadb` database.
+Here, is the `YAML` of the `RestoreSession` object that we are going to use for restoring our `sample-mariadb` database.
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -487,9 +574,10 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: storage-accessor-ksa
+      podAnnotations:
+        iam.amazonaws.com/role: "arn:aws:iam::452618475015:role/bucket-accessor"
   repository:
-    name: gcs-repo
+    name: s3-repo
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -497,11 +585,14 @@ spec:
       name: sample-mariadb
   rules:
   - snapshots: [latest]
+
 ```
+
+> Notice the `spec.runtimeSettings.pod` section. We are now passing the respective IAM annotation via `podAnnotations` field. Stash will pass this annotation to the respective backup pod.
 
 Here,
 
-- `spec.runtimeSettins.pod.serviceAccountName` refers to the name of the `ServiceAccount` to use in the restore pod.
+- `spec.runtimeSettins.pod.podAnnotations` refers to the annotations that will be attached with the respective pod.
 - `spec.repository.name` specifies the Repository object that holds the backend information where our backed up data has been stored.
 - `spec.target.ref` refers to the respective AppBinding of the `sample-mariadb` database.
 - `spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
@@ -509,7 +600,7 @@ Here,
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/gke/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-mariadb-restore created
 ```
 
@@ -614,7 +705,6 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 ```bash
 kubectl delete -n demo backupconfiguration sample-mariadb-backup
 kubectl delete -n demo restoresession sample-mariadb-restore
-kubectl delete -n demo sa storage-accessor-ksa
 kubectl delete -n demo secret encryption-secret
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo mariadb sample-mariadb
