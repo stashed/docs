@@ -278,12 +278,12 @@ We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM po
 Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 bucket.
 
 <figure align="center">
-  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-bucket-policy.png">
+  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-bucket-policy-1.png">
   <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Create IAM policy (Step: 2)" src="/docs/images/guides/platforms/review-bucket-policy.png">
+  <img alt="Create IAM policy (Step: 2)" src="/docs/images/guides/platforms/create-bucket-policy-2.png">
   <figcaption align="center">Fig: Create IAM policy (Step: 2 </figcaption>
 </figure>
 

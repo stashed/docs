@@ -60,12 +60,12 @@ We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM po
 Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 buckets.
 
 <figure align="center">
-  <img alt="Create IAM policy" src="/docs/images/guides/platforms/create-bucket-policy.png">
+  <img alt="Create IAM policy" src="/docs/images/guides/platforms/create-bucket-policy-1.png">
   <figcaption align="center">Fig: Create IAM policy</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Review IAM policy" src="/docs/images/guides/platforms/review-bucket-policy.png">
+  <img alt="Review IAM policy" src="/docs/images/guides/platforms/create-bucket-policy-2.png">
   <figcaption align="center">Fig: Review IAM policy</figcaption>
 </figure>
 
@@ -110,12 +110,12 @@ We need to add the policy to allow our Kubernete worker nodes to assume roles th
 Let's navigate to the IAM management console to create `assume-policy`,
 
 <figure align="center">
-  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-assume-policy.png">
+  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-assume-policy-1.png">
   <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Create IAM policy(Step: 2) " src="/docs/images/guides/platforms/review-assume-policy.png">
+  <img alt="Create IAM policy(Step: 2) " src="/docs/images/guides/platforms/create-assume-policy-2.png">
   <figcaption align="center">Fig: Create IAM policy (Step: 2)</figcaption>
 </figure>
 
