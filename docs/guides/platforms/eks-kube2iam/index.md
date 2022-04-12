@@ -60,12 +60,12 @@ We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM po
 Let's navigate to the IAM management console to create a policy `bucket-accessor` with full access permission to S3 buckets.
 
 <figure align="center">
-  <img alt="Create IAM policy" src="/docs/images/guides/platforms/create-bucket-policy-1.png">
+  <img alt="Create IAM policy" src="/docs/guides/platforms/eks-kube2iam/images/create-bucket-policy-1.png">
   <figcaption align="center">Fig: Create IAM policy</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Review IAM policy" src="/docs/images/guides/platforms/create-bucket-policy-2.png">
+  <img alt="Review IAM policy" src="/docs/guides/platforms/eks-kube2iam/images/create-bucket-policy-2.png">
   <figcaption align="center">Fig: Review IAM policy</figcaption>
 </figure>
 
@@ -74,17 +74,17 @@ Let's navigate to the IAM management console to create a policy `bucket-accessor
 Now, let's create an IAM role `bucket-accessor` attaching the above IAM policy,
 
 <figure align="center">
-  <img alt="Create IAM role (Step: 1)" src="/docs/images/guides/platforms/create-role-1.png">
+  <img alt="Create IAM role (Step: 1)" src="/docs/guides/platforms/eks-kube2iam/images/create-role-1.png">
   <figcaption align="center">Fig: Create IAM Role (Step: 1)</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Create IAM role (Step: 2)" src="/docs/images/guides/platforms/create-role-2.png">
+  <img alt="Create IAM role (Step: 2)" src="/docs/guides/platforms/eks-kube2iam/images/create-role-2.png">
   <figcaption align="center">Fig: Create IAM Role (Step: 2)</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Create IAM role (Step: 3)" src="/docs/images/guides/platforms/create-role-3.png">
+  <img alt="Create IAM role (Step: 3)" src="/docs/guides/platforms/eks-kube2iam/images/create-role-3.png">
   <figcaption align="center">Fig: Create IAM Role (Step: 3)</figcaption>
 </figure>
 
@@ -110,23 +110,23 @@ We need to add the policy to allow our Kubernete worker nodes to assume roles th
 Let's navigate to the IAM management console to create `assume-policy`,
 
 <figure align="center">
-  <img alt="Create IAM policy (Step: 1)" src="/docs/images/guides/platforms/create-assume-policy-1.png">
+  <img alt="Create IAM policy (Step: 1)" src="/docs/guides/platforms/eks-kube2iam/images/create-assume-policy-1.png">
   <figcaption align="center">Fig: Create IAM policy (Step: 1)</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Create IAM policy(Step: 2) " src="/docs/images/guides/platforms/create-assume-policy-2.png">
+  <img alt="Create IAM policy(Step: 2) " src="/docs/guides/platforms/eks-kube2iam/images/create-assume-policy-2.png">
   <figcaption align="center">Fig: Create IAM policy (Step: 2)</figcaption>
 </figure>
 
 Now, let's attach the IAM policy to our exisiting node role,
 <figure align="center">
-  <img alt="Attach IAM policy(Step: 1" src="/docs/images/guides/platforms/attach-policy-1.png">
+  <img alt="Attach IAM policy(Step: 1" src="/docs/guides/platforms/eks-kube2iam/images/attach-policy-1.png">
   <figcaption align="center">Fig: Attach Policy (Step: 1)</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Attach IAM policy(Step: 2" src="/docs/images/guides/platforms/attach-policy-2.png">
+  <img alt="Attach IAM policy(Step: 2" src="/docs/guides/platforms/eks-kube2iam/images/attach-policy-2.png">
   <figcaption align="center">Fig: Attach Policy (Step: 2)</figcaption>
 </figure>
 
@@ -158,12 +158,12 @@ The `bucket-accessor` role needs the trust policy to trust the node role. Below 
 Lets update the trust policy of `bucket-accessor` role,
 
 <figure align="center">
-  <img alt="Update Trust policy(Step: 1" src="/docs/images/guides/platforms/trust-policy-1.png">
+  <img alt="Update Trust policy(Step: 1" src="/docs/guides/platforms/eks-kube2iam/images/trust-policy-1.png">
   <figcaption align="center">Fig: Update Trust Policy (Step: 1)</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Update Trust policy(Step: 2" src="/docs/images/guides/platforms/trust-policy-2.png">
+  <img alt="Update Trust policy(Step: 2" src="/docs/guides/platforms/eks-kube2iam/images/trust-policy-2.png">
   <figcaption align="center">Fig: Update Trust Policy (Step: 2)</figcaption>
 </figure>
 
@@ -196,7 +196,7 @@ spec:
 ```
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/mariadb.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/mariadb.yaml
 mariadb.kubedb.com/sample-mariadb created
 ```
 
@@ -361,7 +361,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -411,7 +411,7 @@ Here,
 Let's create the `BackupConfiguration` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/backupconfiguration.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/backupconfiguration.yaml
 backupconfiguration.stash.appscode.com/sample-mariadb-backup created
 ```
 
@@ -467,7 +467,7 @@ gcs-repo   true        1.327 MiB   1                60s                      8m
 Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/mariadb/sample-mariadb` directory as specified by `.spec.backend.gcs.prefix` field of the Repository object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/images/guides/platforms/gke.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/guides/platforms/eks-kube2iam/images/gcs.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
@@ -600,7 +600,7 @@ Here,
 Let's create the `RestoreSession` object object we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/platforms/eks/kube2iam/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/platforms/eks-kube2iam/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-mariadb-restore created
 ```
 
