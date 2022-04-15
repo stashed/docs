@@ -84,3 +84,6 @@ Now, we are going to discuss what will happen when a hook fails or backup/restor
 - **Post-Task Hook Failed:** If the post-task hook fails to execute, the `BackupSession`/`RestoreSession` will be marked as `Failed` even if the actual backup/restore process has completed successfully. So, you may see backup data in the backend or restored data in the target even if the `BackupSession`/`RestoreSession` has marked as failed.
 
 If the hook's behavior does not comply with your use-cases or you want more fine-grained control over the hook's behavior, please feel free to file an issue [here](https://github.com/stashed/stash/issues).
+
+## Templating Support in Hook
+
