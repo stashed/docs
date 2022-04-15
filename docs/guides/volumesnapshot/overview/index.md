@@ -12,32 +12,16 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# How VolumeSnapshot works in Stash
+# VolumeSnapshot Using Stash
 
-This guide will show you how Stash takes snapshot of PersistentVolumeClaims and restore them from snapshot using Kubernetes VolumeSnapshot API.
-
-## Before You Begin
-
-- At first, you need to have a Kubernetes cluster and ensure that a CSI driver that implements snapshots is deployed on your cluster. You can find a list of CSI drivers that supports snapshots [here](https://kubernetes.io/blog/2019/01/17/update-on-volume-snapshot-alpha-for-kubernetes/). In this guide we are going to use [GCE Persistent Disk CSI Driver](https://github.com/kubernetes-sigs/gcp-compute-persistent-disk-csi-driver).
-
-- You need to enable the Kubernetes `VolumeSnapshotDataSource` alpha feature via Kubernetes feature gates
-  - `--feature-gates=VolumeSnapshotDataSource=true`
-- Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
-- You should be familiar with the following Stash concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-- You should be also familiar with the following Kubernetes concepts:
-  - [VolumeSnapshot](https://kubernetes.io/docs/concepts/storage/volume-snapshots/#volumesnapshots)
-  - [VolumeSnapshotContent](https://kubernetes.io/docs/concepts/storage/volume-snapshots/#volume-snapshot-contents)
-  - [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/)
+This guide will give you an overview of how VolumeSnapshot process works in Stash.
 
 ## How Backup Process Works?
 
 The following diagram shows how Stash creates VolumeSnapshot via Kubernetes native API. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/guides/volumesnapshot/volumesnapshot-overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/guides/volumesnapshot/overview/images/volumesnapshot-overview.svg">
 <figcaption align="center">Fig: Volume Snapshotting Process in Stash</figcaption>
 </figure>
 
@@ -71,7 +55,7 @@ The `VolumeSnapshot` process consists of the following steps:
 The following diagram shows how Stash restores PersistentVolumeClaims from snapshot using Kubernetes VolumeSnapshot API. Open the image in a new tab to see the enlarged version.
 
 <figure align="center">
-  <img alt="Stash Backup Flow" src="/docs/images/guides/volumesnapshot/restore-overview.svg">
+  <img alt="Stash Backup Flow" src="/docs/guides/volumesnapshot/overview/images/restore-overview.svg">
 <figcaption align="center">Fig: Restore process from snapshot in Stash</figcaption>
 </figure>
 
@@ -95,6 +79,6 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-1. See a step by step guide to snapshot the volumes of a Deployment [here](/docs/guides/volumesnapshot/deployment.md).
-2. See a step by step guide to snapshot the volumes of a StatefulSet [here](/docs/guides/volumesnapshot/statefulset.md).
-3. See a step by step guide to snapshot a stand-alone PVC [here](/docs/guides/volumesnapshot/pvc.md).
+1. See a step by step guide to snapshot the volumes of a Deployment [here](/docs/guides/volumesnapshot/deployment/index.md).
+2. See a step by step guide to snapshot the volumes of a StatefulSet [here](/docs/guides/volumesnapshot/statefulset/index.md).
+3. See a step by step guide to snapshot a stand-alone PVC [here](/docs/guides/volumesnapshot/pvc/index.md).

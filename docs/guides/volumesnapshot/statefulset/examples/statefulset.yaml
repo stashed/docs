@@ -52,7 +52,7 @@ spec:
     spec:
       accessModes:
       - ReadWriteOnce
-      storageClassName: standard
+      storageClassName: csi-standard
       resources:
         requests:
           storage: 1Gi
