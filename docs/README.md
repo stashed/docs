@@ -54,7 +54,7 @@ Guides show how to perform different operations with Stash.
 - [Stand-alone Volume Backup](/docs/guides/volumes/overview.md): Shows how to use Stash to backup and restore stand-alone volumes(i.e. `PersistentVolumeClaim`).
 - [Batch Backup](/docs/guides/batch-backup/overview.md): Shows how to backup multiple co-related components using a single configuration known as `BackupBatch`.
 - [Auto Backup](/docs/guides/auto-backup/overview.md): Shows how to configure automatic backup of any stateful workload in your cluster.
-- [Volume Snapshot](/docs/guides/volumesnapshot/overview.md): Shows how Stash takes snapshot of `PersistentVolumeClaim`s and restore them from snapshot using Kubernetes `VolumeSnapshot` API.
+- [Volume Snapshot](/docs/guides/volumesnapshot/overview/index.md): Shows how Stash takes snapshot of `PersistentVolumeClaim`s and restore them from snapshot using Kubernetes `VolumeSnapshot` API.
 
 - **Different Use Cases:**
 Shows different uses cases of Stash like instant backup, pause backup, cross-namespace backup and restore etc.

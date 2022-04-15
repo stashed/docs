@@ -10,24 +10,24 @@ spec:
       - metadata:
           name: restore-data
         spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "standard"
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: "csi-standard"
           resources:
             requests:
               storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
-            name: source-data-1563171247
+            name: source-data-fnbwz
             apiGroup: snapshot.storage.k8s.io
       - metadata:
           name: restore-config
         spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "standard"
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: "csi-standard"
           resources:
             requests:
               storage: 1Gi
           dataSource:
             kind: VolumeSnapshot
-            name: source-config-1563171247
+            name: source-config-fnbwz
             apiGroup: snapshot.storage.k8s.io
