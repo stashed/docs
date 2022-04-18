@@ -52,6 +52,22 @@ kubectl logs -n <operator namespace> <stash operator pod name> -c operator
 
 Now, inspect the log carefully. You should see the respective error in the log.
 
+### BackupConfiguration NotReady
+
+If the phase of the `BackupConfiguration` is `NotReady`, you should describe the respective `BackupConfiguration`,
+
+```bash
+kubectl describe backupconfiguration <backupconfiguration name> -n <namespace>
+```
+
+Now, check the `Status` section of `BackupConfiguration`. Make sure all the `conditions` are `True`. If there is any issue during backup setup, you should see the error in the respective condition. If any of the conditions is `False`, the backup stays in the `NotReady` phase. The conditions that may cause a `BackupConfiguration` to become `NotReady` are given bellow:
+
+| Reason                    | Message                       |
+| ------------------------- | ----------------------------- |
+| RepositoryNotAvailable    | Repository does not exist     |
+| BackendSecretNotAvailable | Backend Secret does not exist |
+| TargetNotAvailable        | Backup target does not exist  |
+
 ### Backup Failed
 
 If a backup fails, follow the following steps to identify the root cause.
@@ -89,6 +105,26 @@ kubectl logs -n <namespace> <backup pod name> --all-containers
 Inspect the log carefully. You should notice the respective error that leads to backup failure.
 
 ## Troubleshoot Restore Issues
+
+In this section, we are going to explain how to troubleshoot restore issues.
+
+### Restore Pending
+
+If the phase of the `RestoreSession` is `pending`, you should describe the respective `RestoreSession`,
+
+```bash
+kubectl describe restoresession <restoresession name> -n <namespace>
+```
+
+Now, check the `Status` section of `RestoreSession`. Make sure all the `conditions` are `True`. If there is any issue during restore setup, you should see the error in the respective condition. If any of the conditions is `False`, the `RestoreSession` stays in the `Pending` phase. The conditions that may cause a `RestoreSession` to stay in `Pending` phase are given bellow:
+
+| Reason                    | Message                       |
+| ------------------------- | ----------------------------- |
+| RepositoryNotAvailable    | Repository does not exist     |
+| BackendSecretNotAvailable | Backend Secret does not exist |
+| TargetNotAvailable        | Backup target does not exist  |
+
+### Restore Failed
 
 If a restore fails, follow the following steps to identify the root cause.
 
