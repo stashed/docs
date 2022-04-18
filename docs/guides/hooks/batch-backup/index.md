@@ -27,7 +27,7 @@ Here, we are going to demonstrate how to send a notification to a Slack channel 
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running production-grade databases on private and public clouds.
 - If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview/index.md).
-- Also, if you haven't read about how hooks work in Stash, please check it from [here](/docs/guides/hooks/overview.md).
+- Also, if you haven't read about how hooks work in Stash, please check it from [here](/docs/guides/hooks/overview/index.md).
 
 You should be familiar with the following `Stash` concepts:
 

@@ -226,7 +226,7 @@ A `RestoreSession` object has the following fields in the `spec` section.
 - **spec.hooks.preRestore:** `spec.hooks.preRestore` hooks are executed before the restore process.
 - **spec.hooks.postRestore:** `spec.hooks.postRestore` hooks are executed after the restore process.
 
-For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview.md).
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview/index.md).
 
 #### spec.runtimeSettings
 
