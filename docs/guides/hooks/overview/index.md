@@ -52,21 +52,21 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
 - **Sidecar Model:** In sidecar model, hooks are executed by the backup sidecar or restore init-container. The hook execution flow by sidecar/init-container is shown in the following diagram:
 
   <figure align="center">
-    <img alt="Hook Execution flow in sidecar model" src="/docs/images/guides/hooks/sidecar-model.svg">
+    <img alt="Hook Execution flow in sidecar model" src="images/sidecar-model.svg">
   <figcaption align="center">Fig: Hook Execution flow in sidecar model</figcaption>
   </figure>
 
 - **Job Model:** In Job model, `httpGet`, `httpPost` and `tcpSocket` are executed by the backup/restore job. However, the `exec` hook is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` points to an external URL, it is not possible for Stash to execute the `exec` hook. The hook execution flow in job model is shown in the following diagram:
 
   <figure align="center">
-    <img alt="Hook Execution flow in job model" src="/docs/images/guides/hooks/job-model.svg">
+    <img alt="Hook Execution flow in job model" src="images/job-model.svg">
   <figcaption align="center">Fig: Hook Execution flow in job model</figcaption>
   </figure>
 
 - **Batch Backup:** In batch backup using `BackupBatch` object, the global hooks are executed by the Stash operator itself. When Stash operator completes executing the global pre-task hook, the individual targets start executing their local pre-task hook. Then, they complete their backup process and executes their local post-task hook. Finally, the Stash operator executes global post-task hooks. The hook execution flow in batch backup is shown in the following diagram:
 
 <figure align="center">
-  <img alt="Hook Execution flow in batch backup" src="/docs/images/guides/hooks/batch-backup.svg">
+  <img alt="Hook Execution flow in batch backup" src="images/batch-backup.svg">
 <figcaption align="center">Fig: Hook Execution flow in batch backup</figcaption>
 </figure>
 
