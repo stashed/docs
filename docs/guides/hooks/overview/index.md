@@ -52,21 +52,21 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
 - **Sidecar Model:** In sidecar model, hooks are executed by the backup sidecar or restore init-container. The hook execution flow by sidecar/init-container is shown in the following diagram:
 
   <figure align="center">
-    <img alt="Hook Execution flow in sidecar model" src="/docs/images/guides/hooks/sidecar-model.svg">
+    <img alt="Hook Execution flow in sidecar model" src="images/sidecar-model.svg">
   <figcaption align="center">Fig: Hook Execution flow in sidecar model</figcaption>
   </figure>
 
 - **Job Model:** In Job model, `httpGet`, `httpPost` and `tcpSocket` are executed by the backup/restore job. However, the `exec` hook is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` points to an external URL, it is not possible for Stash to execute the `exec` hook. The hook execution flow in job model is shown in the following diagram:
 
   <figure align="center">
-    <img alt="Hook Execution flow in job model" src="/docs/images/guides/hooks/job-model.svg">
+    <img alt="Hook Execution flow in job model" src="images/job-model.svg">
   <figcaption align="center">Fig: Hook Execution flow in job model</figcaption>
   </figure>
 
 - **Batch Backup:** In batch backup using `BackupBatch` object, the global hooks are executed by the Stash operator itself. When Stash operator completes executing the global pre-task hook, the individual targets start executing their local pre-task hook. Then, they complete their backup process and executes their local post-task hook. Finally, the Stash operator executes global post-task hooks. The hook execution flow in batch backup is shown in the following diagram:
 
 <figure align="center">
-  <img alt="Hook Execution flow in batch backup" src="/docs/images/guides/hooks/batch-backup.svg">
+  <img alt="Hook Execution flow in batch backup" src="images/batch-backup.svg">
 <figcaption align="center">Fig: Hook Execution flow in batch backup</figcaption>
 </figure>
 
@@ -84,3 +84,82 @@ Now, we are going to discuss what will happen when a hook fails or backup/restor
 - **Post-Task Hook Failed:** If the post-task hook fails to execute, the `BackupSession`/`RestoreSession` will be marked as `Failed` even if the actual backup/restore process has completed successfully. So, you may see backup data in the backend or restored data in the target even if the `BackupSession`/`RestoreSession` has marked as failed.
 
 If the hook's behavior does not comply with your use-cases or you want more fine-grained control over the hook's behavior, please feel free to file an issue [here](https://github.com/stashed/stash/issues).
+
+## Templating Support in Hook
+
+Stash support [Go template](https://pkg.go.dev/text/template) in hook. This is particularly helpful when you want to send different message to a Slack webhook based on the backup / restore phase.
+
+Stash exposes a summary for a backup / restore process. The Go template variables are then resolved from the summary. Here, is an example of a summary exposed by Stash:
+
+```json
+{
+    "name": "deployment-backup-1646741400",
+    "namespace": "demo",
+    "invoker":{
+        "apiGroup": "stash.appscode.com",
+        "kind": "BackupConfiguration",
+        "name": "deployment-backup"
+    },
+    "target":{
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "stash-demo"
+    },
+    "status":{
+        "phase": "Failed",
+        "duration": "10s",
+        "error": "failed to backup host-0. Reason: path not found"
+    }
+}
+```
+
+The summary contains the following fields:
+
+- **name:** Name of the respective BackupSession or RestoreSession. You can access it in your template as `.Name` variable.
+- **namespace:** Namespace of the respective BackupSession or RestoreSession. You can access it in your template as `.Namespace` variable.
+- **invoker:** Contains the respective BackupConfiguration or RestoreSession information which is responsible for triggering this backup or restore process. It has the following fields:
+  - **apiVersion:** API version of the invoker. You can access it in your template as `.Invoker.ApiVersion` variable.
+  - **kind:** Kind of the invoker. You can access it in your template as `.Invoker.Kind` variable.
+  - **name:** Name of the invoker. You can access it in your template as `.Invoker.Name` variable.
+
+- **target:** Contains respective backup / restore target information. It has the following fields:
+  - **apiVersion:** API version of the target. You can access it in your template as `.Target.ApiVersion` variable.
+  - **kind:** Kind of the target. You can access it in your template as `.Target.Kind` variable.
+  - **name:** Name of the target. You can access it in your template as `.Target.Name` variable.
+
+- **status:** Specifies the backup / restore status. It has the following fields:
+  - **phase:** Phase of the backup / restore process. You can access it in your template as `.Status.Phase` variable.
+  - **duration:** Specifies how long it took to complete the backup / restore process. You can access it in your template as `Status.Duration` variable.
+  - **error:** If the backup / restore process fail, this field contains the reason why it failed. You can access it in your template as `.Status.Error` variable.
+
+Below is an example of using Go template in hook. Here, we are sending different message to a slack incoming webhook based on the backup phase.
+
+```yaml
+hooks:
+  postBackup:
+    httpPost:
+      host: hooks.slack.com
+      path: /services/XX/XXX/XXXX
+      port: 443
+      scheme: HTTPS
+      httpHeaders:
+        - name: Content-Type
+          value: application/json
+      body: |
+        {
+          "blocks": [
+              {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "
+                        {{if eq .Status.Phase `Succeeded`}}
+                            :white_check_mark: Backup succeeded for {{ .Namespace }}/{{.Target.Name}}
+                        {{else}}
+                            :x: Backup failed for {{ .Namespace }}/{{.Target.Name}} Reason: {{.Status.Error}}.
+                        {{end}}"
+                  }
+              }
+            ]
+        }
+```

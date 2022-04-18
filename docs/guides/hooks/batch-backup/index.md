@@ -27,7 +27,7 @@ Here, we are going to demonstrate how to send a notification to a Slack channel 
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running production-grade databases on private and public clouds.
 - If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview/index.md).
-- Also, if you haven't read about how hooks work in Stash, please check it from [here](/docs/guides/hooks/overview.md).
+- Also, if you haven't read about how hooks work in Stash, please check it from [here](/docs/guides/hooks/overview/index.md).
 
 You should be familiar with the following `Stash` concepts:
 
@@ -85,7 +85,7 @@ spec:
 Let's create the above database,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/batch-backup/wordpress-mysql.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/batch-backup/examples/wordpress-mysql.yaml
 mysql.kubedb.com/wordpress-mysql created
 ```
 
@@ -206,7 +206,7 @@ wordpress-deployment-586f94487c-nm8p5   1/1     Running   0          2m26s
 
 ## Prepare for Backup
 
-Now, let's prepare for the backup. Here, we are going to prepare the backend where we will store our backed up data and we are going to setup a [Slack Incoming Webhook](https://api.slack.com/messaging/webhooks) where we will send the notifications for backup.
+Now, let's prepare for the backup. Here, we are going to prepare the backend where we will store our backed up data and we are going to setup a [Slack Incoming Webhook](https://api.slack.com/messaging/webhooks) where we will send the notifications for backup. Configure a Slack incoming webhook following the guides from [here](/docs/guides/hooks/slack-notification/index.md).
 
 ### Prepare Backend
 
@@ -248,59 +248,9 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/batch-backup/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/batch-backup/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
-
-### Configure a Slack Incoming Webhook
-
-Now, we are going to setup a Slack incoming webhook for a channel. You can skip this part if you already have a webhook configured.
-
-Follow the following steps to configure an incoming webhook for a slack channel.
-
-- At first, go to the https://api.slack.com and click on the `Start Building` button.
-
-<figure align="center">
-  <img alt="Step 1 " src="/docs/images/guides/hooks/batch-backup/step-1.png">
-</figure>
-
-- Give a name to your app and select your workspace. Then, click on the `Create App` button.
-
-<figure align="center">
-  <img alt="Step 2 " src="/docs/images/guides/hooks/batch-backup/step-2.png">
-</figure>
-
-- Then, click on the `Incoming Webhooks` card.
-
-<figure align="center">
-  <img alt="Step 3 " src="/docs/images/guides/hooks/batch-backup/step-3.png">
-</figure>
-
-- Now, activate the webhook by turning on the toggle as shown in the  image below.
-
-<figure align="center">
-  <img alt="Step 4 " src="/docs/images/guides/hooks/batch-backup/step-4.png">
-</figure>
-
-- Scroll down a little bit and click on the `Add New Webhook to Workspace` button.
-
-<figure align="center">
-  <img alt="Step 5 " src="/docs/images/guides/hooks/batch-backup/step-5.png">
-</figure>
-
-- Then, select your desired channel where you want to send notification and click on the `Allow` button.
-
-<figure align="center">
-  <img alt="Step 6 " src="/docs/images/guides/hooks/batch-backup/step-6.png">
-</figure>
-
-- Finally, copy the webhook URL which will be used by Stash to send the notifications.
-
-<figure align="center">
-  <img alt="Step 7 " src="/docs/images/guides/hooks/batch-backup/step-7.png">
-</figure>
-
-Now, we are ready to send the backup notifications to our slack channel.
 
 ## Backup
 
@@ -397,7 +347,7 @@ You can customize the `body` section of `httpPost` hook to change the visual rep
 Let's create the above `BackupBatch` object,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/batch-backup/wordpress-backup.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/batch-backup/examples/wordpress-backup.yaml
 backupbatch.stash.appscode.com/wordpress-backup created
 ```
 
@@ -445,7 +395,7 @@ Here, `SNAPSHOT-COUNT` 2 indicates that one snapshot for each target has been ta
 Now, go to your slack channel. You should see that Stash has sent notification before and after the backup of WordPress application.
 
 <figure align="center">
-  <img alt="Backup Notification " src="/docs/images/guides/hooks/batch-backup/notification.png">
+  <img alt="Backup Notification " src="images/notification.png">
 </figure>
 
 ## Cleanup

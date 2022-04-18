@@ -25,7 +25,7 @@ Here, we are going to demonstrate how you can perform different actions before a
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want. We are using KubeDB because KubeDB simplifies many of the difficult or tedious management tasks of running production-grade databases on private and public clouds.
 - If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](/docs/addons/mysql/overview/index.md).
-- Also, if you haven't read about how hooks work in Stash, please check it from [here](/docs/guides/hooks/overview.md).
+- Also, if you haven't read about how hooks work in Stash, please check it from [here](/docs/guides/hooks/overview/index.md).
 
 You should be familiar with the following `Stash` concepts:
 
@@ -73,7 +73,7 @@ spec:
 Let's create the above `MySQL` CR,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/sample-mysql.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/backup-and-restore-hooks/examples/sample-mysql.yaml
 mysql.kubedb.com/sample-mysql created
 ```
 
@@ -270,7 +270,7 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/repository.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/backup-and-restore-hooks/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
 
@@ -322,7 +322,7 @@ spec:
 Let's create the above `BackupConfiguration`,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/pre_backup_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/backup-and-restore-hooks/examples/pre_backup_hook_demo.yaml
 backupconfiguration.stash.appscode.com/backup-hook-demo created
 ```
 
@@ -441,7 +441,7 @@ spec:
 Let's apply the update,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/post_backup_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/backup-and-restore-hooks/examples/post_backup_hook_demo.yaml
 backupconfiguration.stash.appscode.com/backup-hook-demo configured
 ```
 
@@ -575,7 +575,7 @@ spec:
 Let's create the above `RestoreSession`,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/pre_restore_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/backup-and-restore-hooks/examples/pre_restore_hook_demo.yaml
 restoresession.stash.appscode.com/pre-restore-hook-demo created
 ```
 
@@ -673,7 +673,7 @@ spec:
 Let's create the above `RestoreSession`,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/post_restore_hook_demo.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/backup-and-restore-hooks/examples/post_restore_hook_demo.yaml
 restoresession.stash.appscode.com/post-restore-hook-demo created
 ```
 

@@ -160,7 +160,7 @@ A `RestoreBatch` object has the following fields in the `spec` section.
 - **spec.hooks.preRestore:** `spec.hooks.preRestore` hooks are executed before restoring any of the members.
 - **spec.hooks.postRestore:** `spec.hooks.postRestore` hooks are executed after restoring all the members.
 
-For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview.md).
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview/index.md).
 
 ### RestoreBatch `Status`
 

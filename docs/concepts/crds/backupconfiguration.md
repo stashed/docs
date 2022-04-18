@@ -164,7 +164,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 - **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed before the backup process.
 - **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed after the backup process.
 
-For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview.md).
+For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview/index.md).
 
 #### spec.runtimeSettings
 

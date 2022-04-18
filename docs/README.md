@@ -69,7 +69,7 @@ Shows different uses cases of Stash like instant backup, pause backup, cross-nam
   - [Customize Backup and Restore](/docs/guides/use-cases/customize-backup-restore/index.md): Shows how to customize backup and restore processes in Stash according to your needs.
 - [Platforms](/docs/guides/platforms/eks-irsa/index.md): Shows how to use Stash to backup and restore volumes of a Kubernetes workload running in different platforms.
 - [Monitoring](/docs/guides/monitoring/overview/index.md): Shows how Prometheus monitoring works with Stash, what metrics Stash exports, and how to enable monitoring.
-- [Hooks](/docs/guides/hooks/overview.md): Shows how to execute different actions before/after the backup/restore process.
+- [Hooks](/docs/guides/hooks/overview/index.md): Shows how to execute different actions before/after the backup/restore process.
 - [CLI](/docs/guides/cli/cli.md): Shows how to manage Stash objects quickly and easily using Stash `kubectl` plugin.
 - [Troubleshooting](/docs/guides/troubleshooting/how-to-troubleshoot/index.md): Gives an overview of how you can gather the necessary information to identify the issue that causes the backup/restore failure.
 - [Security](/docs/guides/security/rbac.md): Describes different built-in cluster security support by Stash.
