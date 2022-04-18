@@ -87,3 +87,79 @@ If the hook's behavior does not comply with your use-cases or you want more fine
 
 ## Templating Support in Hook
 
+Stash support [Go template](https://pkg.go.dev/text/template) in hook. This is particularly helpful when you want to send different message to a Slack webhook based on the backup / restore phase.
+
+Stash exposes a summary for a backup / restore process. The Go template variables are then resolved from the summary. Here, is an example of a summary exposed by Stash:
+
+```json
+{
+    "name": "deployment-backup-1646741400",
+    "namespace": "demo",
+    "invoker":{
+        "apiGroup": "stash.appscode.com",
+        "kind": "BackupConfiguration",
+        "name": "deployment-backup"
+    },
+    "target":{
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "stash-demo"
+    },
+    "status":{
+        "phase": "Failed",
+        "duration": "10s",
+        "error": "failed to backup host-0. Reason: path not found"
+    }
+}
+```
+
+The summary contains the following fields:
+
+- **name:** Name of the respective BackupSession or RestoreSession. You can access it in your template as `.Name` variable.
+- **namespace:** Namespace of the respective BackupSession or RestoreSession. You can access it in your template as `.Namespace` variable.
+- **invoker:** Contains the respective BackupConfiguration or RestoreSession information which is responsible for triggering this backup or restore process. It has the following fields:
+  - **apiVersion:** API version of the invoker. You can access it in your template as `.Invoker.ApiVersion` variable.
+  - **kind:** Kind of the invoker. You can access it in your template as `.Invoker.Kind` variable.
+  - **name:** Name of the invoker. You can access it in your template as `.Invoker.Name` variable.
+
+- **target:** Contains respective backup / restore target information. It has the following fields:
+  - **apiVersion:** API version of the target. You can access it in your template as `.Target.ApiVersion` variable.
+  - **kind:** Kind of the target. You can access it in your template as `.Target.Kind` variable.
+  - **name:** Name of the target. You can access it in your template as `.Target.Name` variable.
+
+- **status:** Specifies the backup / restore status. It has the following fields:
+  - **phase:** Phase of the backup / restore process. You can access it in your template as `.Status.Phase` variable.
+  - **duration:** Specifies how long it took to complete the backup / restore process. You can access it in your template as `Status.Duration` variable.
+  - **error:** If the backup / restore process fail, this field contains the reason why it failed. You can access it in your template as `.Status.Error` variable.
+
+Below is an example of using Go template in hook. Here, we are sending different message to a slack incoming webhook based on the backup phase.
+
+```yaml
+hooks:
+  postBackup:
+    httpPost:
+      host: hooks.slack.com
+      path: /services/XX/XXX/XXXX
+      port: 443
+      scheme: HTTPS
+      httpHeaders:
+        - name: Content-Type
+          value: application/json
+      body: |
+        {
+          "blocks": [
+              {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "
+                        {{if eq .Status.Phase `Succeeded`}}
+                            :white_check_mark: Backup succeeded for {{ .Namespace }}/{{.Target.Name}}
+                        {{else}}
+                            :x: Backup failed for {{ .Namespace }}/{{.Target.Name}} Reason: {{.Status.Error}}.
+                        {{end}}"
+                  }
+              }
+            ]
+        }
+```
