@@ -47,7 +47,7 @@ namespace/staging created
 
 ## Backup 
 
-This section will demonstrate taking backup of a MySQL instance of `prod` namespace from the `dev` namespace.
+This section will demonstrate taking a backup of a MySQL instance of the `prod` namespace from the `dev` namespace.
 
 ### Deploy Sample MySQL Database
 
@@ -102,6 +102,8 @@ sample-mysql   kubedb.com/mysql   8.0.27    11m
 ```
 Stash uses the AppBinding CRD to connect with the target database. 
 
+> If you are not using KubeDB to deploy the database, create the AppBinding manually.
+
 **Insert Sample Data:**
 
 Now, we are going to exec into the database pod and create some sample data. At first, find out the database Pod using the following command,
@@ -112,7 +114,7 @@ NAME             READY   STATUS    RESTARTS   AGE
 sample-mysql-0   1/1     Running   0          33m
 ```
 
-And copy the user name and password of the `root` user to access into `mysql` shell.
+And copy the user name and password of the `root` user to access the `mysql` shell.
 
 ```bash
 $ kubectl get secret -n prod  sample-mysql-auth -o jsonpath='{.data.username}'| base64 -d
@@ -188,7 +190,7 @@ We are going to store our backed-up data into a GCS bucket. We have to create a 
 
 If you want to use a different backend, please read the doc [here](/docs/guides/backends/overview.md).
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For the GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
 **Create Secret:**
 
@@ -233,11 +235,11 @@ Now, we are ready to backup our sample data into this backend.
 
 ### Configure Backup
 
-We are going to create a `BackupConfiguration` object in the `dev` namespace targeting the `sample-mysql` database of `prod` namespace. BackupConfiguration object does not have required RBAC permissions to take backup of target from another namespace. We are going to grant the necessary RBAC permissions through a ServiceAccount object. Let's create the RBAC resources first.
+We are going to create a `BackupConfiguration` object in the `dev` namespace targeting the `sample-mysql` database of the `prod` namespace. The backupConfiguration object does not have the required RBAC permissions to take backup of a target from another namespace. We are going to grant the necessary RBAC permissions through a ServiceAccount object. Let's create the RBAC resources first.
 
 **Create ServiceAccount:**
 
-We are going to create a ServiceAccount in the `dev` namespace. This ServiceAccount will refer to the granted permissions of `prod` namespace. Here is the YAML of the ServiceAccount,
+We are going to create a ServiceAccount in the `dev` namespace. This ServiceAccount will refer to the granted permissions of the `prod` namespace. Here is the YAML of the ServiceAccount,
 
 ```yaml
 apiVersion: v1
@@ -338,7 +340,7 @@ spec:
     keepLast: 5
     prune: true
 ```
-Note that, we have mentioned our ServiceAccount's name we have created earlier in the `spec.runtimeSettings.pod.serviceAccountName` section of the BackupConfiguration object. We are granting necesssary permissions to perform backup from `dev` namespace targetting an object of `prod` namespace through this ServiceAccount. 
+Note that, we have mentioned our ServiceAccount's name we have created earlier in the `spec.runtimeSettings.pod.serviceAccountName` section of the BackupConfiguration object. We are granting necessary permissions to perform a backup from the `dev` namespace targetting an object of the `prod` namespace through this ServiceAccount. 
 
 Let's create the `BackupConfiguration` object we have shown above,
 
@@ -359,9 +361,9 @@ sample-mysql-backup           */5 * * * *            Ready   13s
 
 ### Verify Backup
 
-The `sample-mysql-backup` BackupConfiguration will create a CronJob in `dev` namespace and that will trigger a backup on each scheduled slot by creating a `BackupSession` object.
+The `sample-mysql-backup` BackupConfiguration will create a CronJob in the `dev` namespace and that will trigger a backup on each scheduled slot by creating a `BackupSession` object.
 
-Wait for the next schedule for the backup. Run the following command to watch `BackupSession` object,
+Wait for the next schedule for the backup. Run the following command to watch the `BackupSession` object,
 
 ```bash
 $ kubectl get backupsession -n dev -w
@@ -373,15 +375,15 @@ sample-mysql-backup-1650452100   BackupConfiguration   sample-mysql-backup   Run
 sample-mysql-backup-1650452100   BackupConfiguration   sample-mysql-backup   Succeeded   33s        32s
 ```
 
-We can see from the above that the Phase of the  BackupSession  is Succeeded. It indicates that Stash has successfully taken backup of our target. 
+We can see from the above that the Phase of the  BackupSession is Succeeded. It indicates that Stash has successfully taken a backup of our target. 
 
 ## Restore
 
-In this section, we are going to restore the database  in the `staging` namespace from the backup we have taken in the previous section. We are going to deploy a new database and initialize it from the backup.
+In this section, we are going to restore the database in the `staging` namespace from the backup we have taken in the previous section. We are going to deploy a new database and initialize it from the backup.
 
 **Stop Taking Backup of the Old Database:**
 
-At first, let's stop taking any further backup of the old database so that no backup is taken during restore process.
+At first, let's stop taking any further backup of the old database so that no backup is taken during the restore process.
 
 Let's pause the `sample-mysql-backup` BackupConfiguration,
 
@@ -402,9 +404,9 @@ Notice the `PAUSED` column. Value `true` for this field means that the BackupCon
 
 ### Deploy Recovery MySQL Database
 
-Now, we are going to deploy a new database in the `staging` namespace similarly as we have deployed the `sample-mysql` database. However, this time we are going to specify `spec.init.waitForInitialRestore: true` which will tell KubeDB to wait until the first restore to complete before marking this database as ready to use.
+Now, we are going to deploy a new database in the `staging` namespace.
 
-Below is the YAML for `MySQL` CRD we are going deploy to initialize from backup,
+Below is the YAML for the MySQL database,
 
 ```yaml
 apiVersion: kubedb.com/v1alpha2
@@ -423,8 +425,6 @@ spec:
     resources:
       requests:
         storage: 1Gi
-  init:
-    waitForInitialRestore: true
   terminationPolicy: WipeOut
 ```
 
@@ -435,29 +435,40 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 mysql.kubedb.com/mysql-recovery created
 ```
 
-If you check the database status, you will see it is stuck in `Provisioning` state.
+Let's check the database status,
 
 ```bash
 $ kubectl get my -n staging mysql-recovery
-NAME             VERSION   STATUS         AGE
-mysql-recovery   8.0.27    Provisioning   75s
+NAME             VERSION   STATUS   AGE
+mysql-recovery   8.0.27    Ready    36s
 ```
+
+**Verify AppBinding:**
+
+Check that AppBinding object has been created for the `mysql-recovery` database,
+
+```bash
+$ kubectl get appbindings -n staging
+NAME             TYPE               VERSION   AGE
+mysql-recovery   kubedb.com/mysql   8.0.27    2m
+```
+
+> If you are not using KubeDB to deploy database, create the AppBinding manually.
 
 ### Configure Restore
 
-We are going to create a `RestoreSession` object in the `dev` namespace targeting the `mysql-recovery` database of `staging` namespace. Similar to BackupConfiguration, we need to grant the necessary RBAC permissions through a ServiceAccount object to the RestoreSession for performing restoration in a different namespace. Let's create the RBAC resources first.
-
+We are going to create a `RestoreSession` object in the `dev` namespace targeting the `mysql-recovery` database of `staging` namespace. Similar to BackupConfiguration, we need to grant the necessary RBAC permissions through a ServiceAccount object to the RestoreSession for performing restore process into a different namespace. Let's create the RBAC resources first.
 
 **Create Role**
 
-We are going to create a Role in `prod` namespace with the necessary permissions to perform the restore. Here is the YAML of the Role,
+We are going to create a Role in `staging` namespace with the necessary permissions to perform the restore. Here is the YAML of the Role,
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: restore-mysql-role
-  namespace: prod
+  namespace: staging
 rules:
 - apiGroups: [""]
   resources: ["secrets", "endpoints", "pods"]
@@ -473,59 +484,49 @@ rules:
 Let's create the Role we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-target/examples/role.yaml
-role.rbac.authorization.k8s.io/mysql-role created
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-target/examples/restore_role.yaml
+role.rbac.authorization.k8s.io/restore-mysql-role created
 ```
 
 **Create RoleBinding:**
 
-We are going to create a RoleBinding in the `staging` namespace. This RoleBinding will refer to the `mysql-role` as roleref and `mysql-sa` as a subject which we have created earlier. Here is the YAML of the RoleBinding we are going to create,
+We are going to create a RoleBinding in the `staging` namespace referring to the `restore-mysql-role` of the `staging` namespace as roleref and `mysql-sa` of the `dev` namespace as a subject. Here is the YAML of the RoleBinding,
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: mysql-rolebinding
-  namespace: prod
+  name: restore-mysql-rolebinding
+  namespace: staging
 subjects:
 - kind: ServiceAccount
   name: mysql-sa
   namespace: dev
 roleRef:
   kind: Role
-  name: mysql-role
+  name: restore-mysql-role
   apiGroup: rbac.authorization.k8s.io
 ```
 
 Let's create the above RoleBinding,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-target/examples/rolebinding.yaml
-rolebinding.rbac.authorization.k8s.io/mysql-rolebinding created
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-target/examples/restore_rolebinding.yaml
+rolebinding.rbac.authorization.k8s.io/restore-mysql-rolebinding created
 ```
 
 **Create RestoreSession:**
 
-Now, we need to create a RestoreSession CRD pointing to the AppBinding for this restored database.
+Now, we are going to create a RestoreSession object in the `dev` namespace targetting the AppBinding of the `mysql-recovery`  of the `staging` database.
 
-Using the following command, check that another AppBinding object has been created for the `restored-mysql` object,
-
-```bash
-$ kubectl get appbindings -n demo restored-mysql
-NAME             AGE
-restored-mysql   6m6s
-```
-
-> If you are not using KubeDB to deploy database, create the AppBinding manually.
-
-Below is the contents of YAML file of the RestoreSession CRD that we are going to create to restore backed up data into the newly created database provisioned by MySQL CRD named `restored-mysql`.
+Here is the YAML of the RestoreSession,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
   name: sample-mysql-restore
-  namespace: demo
+  namespace: dev
 spec:
   task:
     name: mysql-restore-8.0.21
@@ -535,75 +536,63 @@ spec:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: restored-mysql
+      name: mysql-recovery
+      namespace: staging
+  runtimeSettings:
+    pod:
+      serviceAccountName: mysql-sa 
   rules:
     - snapshots: [latest]
 ```
 
-Here,
+Note, that similarly to the BackupConfiguration we have mentioned a ServiceAccount here in the `spec.runtimeSettings.pod` section to grant necessary permissions to the RestoreSession.
 
-- `.spec.task.name` specifies the name of the Task CRD that specifies the necessary Functions and their execution order to restore a MySQL database.
-- `.spec.repository.name` specifies the Repository CRD that holds the backend information where our backed up data has been stored.
-- `.spec.target.ref` refers to the newly created AppBinding object for the `restored-mysql` MySQL object.
-- `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
-
-Let's create the RestoreSession CRD object we have shown above,
+Let's create the RestoreSession object,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/mysql/standalone/examples/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/cross-namespace-target/examples/restoresession.yaml
 restoresession.stash.appscode.com/sample-mysql-restore created
 ```
 
-Once, you have created the RestoreSession object, Stash will create a restore Job. We can watch the phase of the RestoreSession object to check whether the restore process has succeeded or not.
-
-Run the following command to watch the phase of the RestoreSession object,
+Let's run the following command to watch the phase of the RestoreSession object,
 
 ```bash
-$ watch -n 1 kubectl get restoresession -n demo restore-sample-mysql
+$ kubectl get restoresession -n dev sample-mysql-restore -w
 
-Every 1.0s: kubectl get restoresession -n demo  restore-sample-mysql    workstation: Fri Sep 27 11:18:51 2019
-NAMESPACE   NAME                   REPOSITORY-NAME   PHASE       AGE
-demo        restore-sample-mysql   gcs-repo          Succeeded   59s
+NAME                   REPOSITORY   PHASE     DURATION   AGE
+sample-mysql-restore   gcs-repo     Running              2s
+sample-mysql-restore   gcs-repo     Running              20s
+sample-mysql-restore   gcs-repo     Succeeded   20s        20s
 ```
 
-Here, we can see from the output of the above command that the restore process succeeded.
+Here, we can see that the restore process has succeeded.
 
 **Verify Restored Data:**
 
-In this section, we are going to verify whether the desired data has been restored successfully. We are going to connect to the database server and check whether the database and the table we created earlier in the original database are restored.
+In this section, we are going to verify whether the desired data has been restored successfully.
 
-At first, check if the database has gone into **`Running`** state by the following command,
+Let's find out the database Pod by the following command,
 
 ```bash
-$ kubectl get my -n demo restored-mysql
-NAME             VERSION   STATUS    AGE
-restored-mysql   8.0.14    Ready     34m
+$ kubectl get pods -n staging --selector="app.kubernetes.io/instance=mysql-recovery"
+NAME               READY   STATUS    RESTARTS    AGE
+mysql-recovery-0   1/1     Running   0           39m
 ```
 
-Now, find out the database Pod by the following command,
+Copy the username and password of the `root` user to access into `mysql` shell.
 
 ```bash
-$ kubectl get pods -n demo --selector="app.kubernetes.io/instance=restored-mysql"
-NAME               READY   STATUS    RESTARTS   AGE
-restored-mysql-0   1/1     Running   0          39m
-```
-
-And then copy the user name and password of the `root` user to access into `mysql` shell.
-
-> Notice: We used the same Secret for the `restored-mysql` object. So, we will use the same commands as before.
-
-```bash
-$ kubectl get secret -n demo  sample-mysql-auth -o jsonpath='{.data.username}'| base64 -d
+$ kubectl get secret -n staging  mysql-recovery-auth -o jsonpath='{.data.username}'| base64 -d
 root⏎
 
-$ kubectl get secret -n demo  sample-mysql-auth -o jsonpath='{.data.password}'| base64 -d
-5HEqoozyjgaMO97N⏎
+$ kubectl get secret -n staging  mysql-recovery-auth -o jsonpath='{.data.password}'| base64 -d
+EaEq*P2QmHp*_j(E⏎
 ```
 
 Now, let's exec into the Pod to enter into `mysql` shell and create a database and a table,
 
 ```bash
-$ kubectl exec -it -n demo restored-mysql-0 -- mysql --user=root --password=5HEqoozyjgaMO97N
+$ kubectl exec -it -n staging mysql-recovery-0 -- mysql --user=root --password="EaEq*P2QmHp*_j(E"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 9
@@ -649,16 +638,33 @@ mysql> exit
 Bye
 ```
 
-So, from the above output, we can see that the `playground` database and the `equipment` table we created earlier in the original database and now, they are restored successfully.
+So, from the above output, we can see that the `playground` database and the `equipment` table we created earlier are restored successfully.
 
 ## Cleanup
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```bash
-kubectl delete backupconfiguration -n demo sample-mysql-backup
-kubectl delete restoresession -n demo restore-sample-mysql
-kubectl delete repository -n demo gcs-repo
-kubectl delete my -n demo restored-mysql
-kubectl delete my -n demo sample-mysql
+$ kubectl delete backupconfiguration -n dev sample-mysql-backup
+backupconfiguration.stash.appscode.com "sample-mysql-backup" deleted
+$ kubectl delete restoresession -n dev sample-mysql-restore
+restoresession.stash.appscode.com "sample-mysql-restore" deleted
+$ kubectl delete repository -n dev gcs-repo
+repository.stash.appscode.com "gcs-repo" deleted
+$ kubectl delete secret -n dev gcs-secret
+secret "gcs-secret" deleted
+$ kubectl delete sa -n dev mysql-sa
+serviceaccount "mysql-sa" deleted
+$ kubectl delete role -n staging restore-mysql-role
+role.rbac.authorization.k8s.io "restore-mysql-role" deleted
+$ kubectl delete rolebinding -n staging restore-mysql-rolebinding
+rolebinding.rbac.authorization.k8s.io "restore-mysql-rolebinding" deleted
+$ kubectl delete role -n prod mysql-role
+role.rbac.authorization.k8s.io "mysql-role" deleted
+$ kubectl delete rolebinding -n prod mysql-rolebinding
+rolebinding.rbac.authorization.k8s.io "mysql-rolebinding" deleted
+$ kubectl delete my -n staging mysql-recovery
+mysql.kubedb.com "mysql-recovery" deleted
+$ kubectl delete my -n prod sample-mysql
+mysql.kubedb.com "sample-mysql" deleted
 ```
