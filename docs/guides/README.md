@@ -34,9 +34,14 @@ Shows different uses cases of Stash like instant backup, pause backup, cross-nam
   - [Pause Backup](/docs/guides/use-cases/pause-backup.md): Shows how to pause a backup temporarily.
   - [Clone Data Volumes](/docs/guides/use-cases/clone-pvc.md): Shows how to clone data volumes of a workload into a different namespace in a cluster using Stash.
   - [File Ownership](/docs/guides/use-cases/ownership.md): Explains when and how ownership of the restored files can be changed.
-  - [Cross-Namespace Backup and Restore](/docs/guides/use-cases/cross-namespace-backup/index.md): Shows how to take backup and restore across namespaces using Stash.
   - [Cross-Cluster Backup and Restore](/docs/guides/use-cases/cross-cluster-backup/index.md): Shows how to take backup and restore across clusters using Stash.
   - [Customize Backup and Restore](/docs/guides/use-cases/customize-backup-restore/index.md): Shows how to customize backup and restore processes in Stash according to your needs.
+
+- **Managed Backup**
+Shows how backup and restore can be managed in some specific scenerios.
+  - [Dedicated Backup Namespace](/docs/guides/managed-backup/dedicated-backup-namespace/index.md): Shows you how to manage backup and restore from a dedicated namespace for targets of different namespaces using Stash.
+  - [Dedicated Storage Namespace](/docs/guides/managed-backup/dedicated-storage-namespace/index.md): Shows you how to take backup and restore by keeping the storage resources (Repository and backend Secret) in a dedicated namespace using Stash.
+
 - [Platforms](/docs/guides/platforms/eks-irsa/index.md): Shows how to use Stash to backup and restore volumes of a Kubernetes workload running in different platforms.
 - [Monitoring](/docs/guides/monitoring/overview/index.md): Shows how Prometheus monitoring works with Stash, what metrics Stash exports, and how to enable monitoring.
 - [Hooks](/docs/guides/hooks/overview/index.md): Shows how to execute different actions before/after the backup/restore process.

@@ -1,6 +1,6 @@
 ---
 title: Cross-Namespace Backup and Restore | Stash
-description: A guide on how to use backup and restore keeping the storage resources in a separate namespace in Stash.
+description: A guide on how to use backup and restore by keeping the storage resources in a separate namespace in Stash.
 menu:
   docs_{{ .version }}:
     identifier: managed-backup-dedicated-storage-namespace
@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Backup and Restore Using a Dedicated Storage Namespace
 
-This guide will show you how to take backup and restore keeping the storage resources (Repository and backend Secret) in a dedicated namespace using Stash.
+This guide will show you how to take backup and restore by keeping the storage resources (Repository and backend Secret) in a dedicated namespace using Stash.
 
 ## Before You Begin
 
@@ -28,7 +28,7 @@ This guide will show you how to take backup and restore keeping the storage reso
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-To demonstrate the cross-namespace capability of Storage resources, we are going to keep our Repository and the backend Secret in a separate namespace called `storage`. Then, we will use the `prod` namespace for taking backup and restore the backed-up data in the `staging` namespace.
+To demonstrate the cross-namespace capability of Storage resources, we are going to keep our Repository and the backend Secret in a separate namespace called `storage`. Then, we will use the `prod` namespace for taking backup and restoring the backed-up data in the `staging` namespace.
 
 Let's create the above-mentioned namespaces,
 
@@ -147,7 +147,7 @@ We are going to store our backed-up data into a GCS bucket. We have to create a 
 
 If you want to use a different backend, please read the doc [here](/docs/guides/backends/overview.md).
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For the GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 
 **Create Secret:**
 
@@ -185,7 +185,7 @@ spec:
       from: All
 ```
 
-Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace or to a group of namespaces. Please, check the following guide from [here](/docs/concepts/crds/repository.md) for more details.
+Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace or a group of namespaces. Please, check the following guide from [here](/docs/concepts/crds/repository.md) for more details.
 
 Let's create the Repository we have shown above,
 
@@ -272,7 +272,7 @@ stash-trigger-ss-backup   */5 * * * *   False     0        4m55s           3m14s
 
 The `stash-trigger-ss-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object. The sidecar container watches for the `BackupSession` object. When it finds one, it will take backup immediately.
 
-Wait for the next schedule for the backup. Run the following command to watch `BackupSession` object,
+Wait for the next schedule for the backup. Run the following command to watch the `BackupSession` object,
 
 ```bash
 $ kubectl get backupsession -n prod -w
@@ -387,7 +387,7 @@ statefulset.apps/stash-recovered created
 
 ### Configure Restore
 
-Now, we need to create a `RestoreSession` object targeting the `stash-recovered` StatefulSet to restore the backed-up data inside it. Similar to the BackupConfiguration we, will use the Repository of `storage` namespace here.
+Now, we need to create a `RestoreSession` object targeting the `stash-recovered` StatefulSet to restore the backed-up data inside it. Similar to the BackupConfiguration, we will use the Repository of `storage` namespace here.
 
 **Create RestoreSession:**
 
@@ -431,7 +431,7 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 restoresession.stash.appscode.com/ss-restore created
 ```
 
-Now, wait for the RestoreSession phase to go into `Succeeded` state.
+Now, wait for the RestoreSession phase to go into the `Succeeded` state.
 
 **Wait for RestoreSession to Succeeded:**
 
