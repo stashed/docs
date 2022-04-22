@@ -1,10 +1,10 @@
 ---
-title: Manage Backup/Restore from a Dedicated Namespace | Stash
+title: Manage Backup/Restore CRDs from a Dedicated Namespace | Stash
 description: A guide on how to manage backup and restore from a dedicated namespace for targets of different namespaces using Stash.
 menu:
   docs_{{ .version }}:
     identifier: managed-backup-dedicated-backup-namespace
-    name: Manage Backup/Restore from a Dedicated Namespace
+    name: Manage Backup/Restore CRDs from a Dedicated Namespace
     parent: managed-backup
     weight: 20
 product_name: stash

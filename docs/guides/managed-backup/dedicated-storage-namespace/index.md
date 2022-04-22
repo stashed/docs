@@ -1,10 +1,10 @@
 ---
-title: Cross-Namespace Backup and Restore | Stash
+title: Backup/Restore Using a Dedicated Storage Namespace | Stash
 description: A guide on how to use backup and restore by keeping the storage resources in a separate namespace in Stash.
 menu:
   docs_{{ .version }}:
     identifier: managed-backup-dedicated-storage-namespace
-    name: Cross-Namespace Backup and Restore
+    name: Backup/Restore Using a Dedicated Storage Namespace
     parent: managed-backup
     weight: 10
 product_name: stash
