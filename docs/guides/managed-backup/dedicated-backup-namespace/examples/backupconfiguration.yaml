@@ -2,7 +2,7 @@ apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
   name: sample-mysql-backup
-  namespace: dev
+  namespace: backup
 spec:
   schedule: "*/5 * * * *"
   repository:
@@ -15,7 +15,7 @@ spec:
       namespace: prod
   runtimeSettings:
     pod:
-      serviceAccountName: mysql-sa
+      serviceAccountName: cross-namespace-target-reader
   retentionPolicy:
     name: keep-last-5
     keepLast: 5

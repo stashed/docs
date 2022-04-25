@@ -2,7 +2,7 @@ apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
   name: sample-mysql-restore
-  namespace: dev
+  namespace: backup
 spec:
   task:
     name: mysql-restore-8.0.21
@@ -16,6 +16,6 @@ spec:
       namespace: staging
   runtimeSettings:
     pod:
-      serviceAccountName: mysql-sa 
+      serviceAccountName: cross-namespace-target-reader
   rules:
     - snapshots: [latest]

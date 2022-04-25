@@ -1,18 +1,18 @@
 ---
-title: Backup/Restore Using a Dedicated Storage Namespace | Stash
+title: Dedicated Storage Namespace | Stash
 description: A guide on how to use backup and restore by keeping the storage resources in a separate namespace in Stash.
 menu:
   docs_{{ .version }}:
     identifier: managed-backup-dedicated-storage-namespace
-    name: Backup/Restore Using a Dedicated Storage Namespace
+    name: Dedicated Storage Namespace
     parent: managed-backup
-    weight: 10
+    weight: 20
 product_name: stash
 menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Backup and Restore Using a Dedicated Storage Namespace
+# Using Dedicated Namespace for Storage
 
 This guide will show you how to take backup and restore by keeping the storage resources (Repository and backend Secret) in a dedicated namespace using Stash.
 
@@ -28,7 +28,7 @@ This guide will show you how to take backup and restore by keeping the storage r
   - [RestoreSession](/docs/concepts/crds/restoresession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-To demonstrate the cross-namespace capability of Storage resources, we are going to keep our Repository and the backend Secret in a separate namespace called `storage`. Then, we will use the `prod` namespace for taking backup and restoring the backed-up data in the `staging` namespace.
+We are going to take a backup from the `prod` namespace and restore it to the `staging` namespace. We are going to keep our Repository and the backend Secret in the `storage` namespace.
 
 Let's create the above-mentioned namespaces,
 
@@ -185,7 +185,7 @@ spec:
       from: All
 ```
 
-Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace or a group of namespaces. Please, check the following guide from [here](/docs/concepts/crds/repository.md) for more details.
+Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace or a group of namespaces. For more details, please follow the guide from [here](/docs/concepts/crds/repository.md).
 
 Let's create the Repository we have shown above,
 
@@ -193,6 +193,7 @@ Let's create the Repository we have shown above,
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/managed-backup/dedicated-storage-namespace/examples/repository.yaml
 repository.stash.appscode.com/gcs-repo created
 ```
+
 Now, we are ready to backup our sample data into this backend.
 
 ### Configure Backup

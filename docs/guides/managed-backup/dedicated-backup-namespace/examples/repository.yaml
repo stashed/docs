@@ -2,7 +2,7 @@ apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
   name: gcs-repo
-  namespace: dev
+  namespace: backup
 spec:
   backend:
     gcs:
