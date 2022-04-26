@@ -1,10 +1,10 @@
 ---
-title: Auto Backup in Dedicated Backup Namespace | Stash
-description: A guide on how to use dedicated backup namespace for automatic backup of targets of different namespaces using Stash.
+title: Define Cluster Wide Backup Policy using Stash Auto-backup
+description: A guide on how to define cluster wide backup policy using Stash auto-backup.
 menu:
   docs_{{ .version }}:
     identifier: managed-backup-dedicated-backup-namespace-auto-backup
-    name: Auto Backup in Dedicated Backup Namespace
+    name: Define Cluster Wide Backup Policy using Stash Auto-backup
     parent: managed-backup
     weight: 30
 product_name: stash
@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-# Auto Backup in a Dedicated Namespace
+# Define Cluster Wide Backup Policy using Stash Auto-backup
 
-This guide will show you how you can use a dedicated backup namespace for Auto Backup to keep your backup resources isolated from your workloads.
+This guide will show you how you can define cluster wide backup policy using Stash Auto-backup.
 
 ## Before You Begin
 
