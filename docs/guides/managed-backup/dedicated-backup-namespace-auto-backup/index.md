@@ -27,7 +27,7 @@ This guide will show you how you can use a dedicated backup namespace for Auto B
   - [BackupSession](/docs/concepts/crds/backupsession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-Here, we are going to take backup from the `prod-1`, `prod-2` and prod-3` namespaces and manage the backup from `backup` namespace using Auto Backup.
+Here, we are going to take backup from the `prod-1`, `prod-2` and `prod-3` namespaces and manage the backup from `backup` namespace using Auto Backup.
 
 Let's create the above-mentioned namespaces,
 
@@ -50,6 +50,10 @@ namespace/backup created
 
 ## Prepare Backup Blueprint
 
+In this section, we are going to prepare our Backup Blueprint object.
+
+### Prepare Backend
+
 We are going to use [GCS Backend](/docs/guides/backends/gcs.md) to store the backed up data. You can use any supported backend you prefer. You just have to configure Storage Secret and `spec.backend` section of `BackupBlueprint` to match your backend. To learn which backends are supported by Stash and how to configure them, please visit [here](/docs/guides/backends/overview.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
@@ -68,6 +72,8 @@ $ kubectl create secret generic -n backup gcs-secret \
     --from-file=./GOOGLE_SERVICE_ACCOUNT_JSON_KEY
 secret/gcs-secret created
 ```
+
+### Prepare RBAC
 
 Stash does not grant necessary RBAC permissions to the backup job for taking backup from a different namespace. In this case, we have to provide the RBAC permissions manually. This helps to prevent unauthorized namespaces from getting access to a database via Stash.
 
@@ -133,7 +139,7 @@ The above RBAC permissions will allow ServiceAccounts to grant necessary backup 
 
 Alternatively, you can create Role and RoleBinding with the same permissions in case you want to restrict the ServiceAccounts to backup targets from only a definite namespace.
 
-**Create BackupBlueprint:**
+### Create BackupBlueprint
 
 Now, we have to create a `BackupBlueprint` crd with a blueprint for `Repository` and `BackupConfiguration` object.
 
@@ -171,15 +177,16 @@ Let's create the `BackupBlueprint` that we have shown above,
 kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/examples/backupblueprint.yaml
 backupblueprint.stash.appscode.com/mysql-backup-blueprint created
 ```
+
 Now, automatic backup is configured for MySQL database. We just have to add some annotations to the targeted databases to enable periodic backup.
 
 ## Backup
 
-In this section, we are going to backup three MySQL databases from the `prod-1`, `prod-2`, `prod-3`, namespaces.
+In this section, we are going to backup three MySQL databases from the `prod-1`, `prod-2`, and `prod-3` namespaces.
 
 ### Deploy MySQL Databases
 
-We are going to use KubeDB for deploying a sample MySQL Databases. Let's deploy three different MySQL databases in `prod-1`, `prod-2`, `prod-3` namespaces,
+We are going to use KubeDB for deploying sample MySQL Databases. Let's deploy three different MySQL databases in `prod-1`, `prod-2`, and `prod-3` namespaces,
 
 ```yaml
 apiVersion: kubedb.com/v1alpha2
@@ -241,7 +248,7 @@ spec:
 
 ```
 
-Notice the metadata.annotations field. We have specified to use mysql-backup-blueprint BackupBlueprint for creating `Repository` and `BackupConfiguration` for the MySQL databases. BackupBlueprint is a non-namespaced resource, so we just need to specify the name of the blueprint.
+Notice the metadata.annotations field. We have specified to use `mysql-backup-blueprint` BackupBlueprint for creating `Repository` and `BackupConfiguration` for the MySQL databases. BackupBlueprint is a non-namespaced resource, so we just need to specify the name of the blueprint.
 
 Let's create the above `MySQL` objects,
 
@@ -253,7 +260,7 @@ mysql.kubedb.com/sample-mysql-3 created
 ```
 
 If everything goes well, Stash will create a Repository and a BackupConfiguration for each MySQL database with the name in the following format:
-<target-namespace><target-kind>-<target-name>.
+`<target-namespace><target-kind>-<target-name>`.
 
 **Verify Repository:**
 
@@ -279,7 +286,7 @@ prod-2-app-sample-mysql-2          */5 * * * *            Ready   11m
 prod-3-app-sample-mysql-3          */5 * * * *            Ready   11m
 ```
 
-Let's check the YAML of one of the `BackupConfiguration`s,
+Let's check the YAML of one of these `BackupConfiguration`s,
 
 ```bash
 $ kubectl get backupconfiguration -n backup prod-1-app-sample-mysql-1 -o yaml
@@ -334,9 +341,7 @@ prod-3-app-sample-mysql-3-1650885602   BackupConfiguration   prod-3-app-sample-m
 
 ```
 
->Note: Respective CronJob creates `BackupSession` crd with the following label `stash.appscode.com/backup-configuration=<BackupConfiguration crd name>`. We can use this label to watch only the `BackupSession` of our desired `BackupConfiguration`.ore
-
-In this section, we are going to restore the database into the `staging` namespace from the backup we have taken in the previous section.
+Here, the phase `Succeeded` means that the backup process has been completed successfully.
 
 **Verify Backup:**
 
@@ -352,21 +357,21 @@ prod-2-app-sample-mysql-2   true        7.283 MiB   5                2m50s      
 prod-3-app-sample-mysql-3   true        4.701 MiB   5                2m50s                    50m
 ```
 
-If we navigate to `stash-backup/prod-1/sample-mysql-1`, `stash-backup/prod-2/sample-mysql-2` and `stash-backup/prod-3/sample-mysql-3`  directories of our GCS bucket, we are going to see that the snapshots of the databases `sample-mysql-1`, `sample-mysql-2` and`sample-mysql-3` have been stored there respectively.
+If we navigate to `stash-backup/prod-1/sample-mysql-1`, `stash-backup/prod-2/sample-mysql-2`, and `stash-backup/prod-3/sample-mysql-3`  directories of our GCS bucket, we are going to see that the snapshots of the databases `sample-mysql-1`, `sample-mysql-2` and`sample-mysql-3` have been stored there respectively.
 
 <figure align="center">
-  <img alt="Backup data in GCS backend" src="/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/images/gcs-prod-1.png">
-  <figcaption align="center">Fig: Backup data of `sample-mysql-1` in GCS backend</figcaption>
+  <img alt="Backup data of sample-mysql-1 GCS backend" src="/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/images/gcs-prod-1.png">
+  <figcaption align="center">Fig: Backup data of sample-mysql-1 in GCS backend</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Backup data in GCS backend" src="/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/images/gcs-prod-2.png">
-  <figcaption align="center">Fig: Backup data of `sample-mysql-2` in GCS backend</figcaption>
+  <img alt="Backup data of sample-mysql-2 GCS backend" src="/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/images/gcs-prod-2.png">
+  <figcaption align="center">Fig: Backup data of sample-mysql-2 in GCS backend</figcaption>
 </figure>
 
 <figure align="center">
-  <img alt="Backup data in GCS backend" src="/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/images/gcs-prod-3.png">
-  <figcaption align="center">Fig: Backup data of `sample-mysql-3` in GCS backend</figcaption>
+  <img alt="Backup data of sample-mysql-3 GCS backend" src="/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/images/gcs-prod-3.png">
+  <figcaption align="center">Fig: Backup data of sample-mysql-3 in GCS backend</figcaption>
 </figure>
 
 
