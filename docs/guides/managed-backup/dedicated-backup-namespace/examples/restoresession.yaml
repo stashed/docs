@@ -1,0 +1,21 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: sample-mysql-restore
+  namespace: backup
+spec:
+  task:
+    name: mysql-restore-8.0.21
+  repository:
+    name: gcs-repo
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: mysql-recovery
+      namespace: staging
+  runtimeSettings:
+    pod:
+      serviceAccountName: cross-namespace-target-reader
+  rules:
+    - snapshots: [latest]
