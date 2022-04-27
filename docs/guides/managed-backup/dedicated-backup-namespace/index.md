@@ -239,7 +239,7 @@ We are going to create a `BackupConfiguration` object in the `backup` namespace 
 
 **Create ServiceAccount:**
 
-At first, we are going to create a ServiceAccount in the `backup` namespace. This ServiceAccount will refer to the granted permissions for taking backup. Here is the YAML of the ServiceAccount,
+At first, we are going to create a ServiceAccount in the `backup` namespace. We will grant necessary RBAC permissions to this ServiceAccount and use it in the backup job.
 
 ```yaml
 apiVersion: v1
@@ -264,7 +264,7 @@ We are going to create a ClusterRole and ClusterRoleBinding with the necessary p
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: cross-namespace-target-clusterrole
+  name: cross-namespace-target-reader
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -276,14 +276,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: cross-namespace-target-clusterrolebinding
+  name: cross-namespace-target-reader
 subjects:
 - kind: ServiceAccount
   name: cross-namespace-target-reader
   namespace: backup
 roleRef:
   kind: ClusterRole
-  name: cross-namespace-target-clusterrole
+  name: cross-namespace-target-reader
   apiGroup: rbac.authorization.k8s.io
 ```
 
@@ -291,13 +291,13 @@ Let's create the ClusterRole and ClusterRoleBinding we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/managed-backup/dedicated-backup-namespace/examples/clusterrole_clusterrolebinding.yaml
-clusterrole.rbac.authorization.k8s.io/cross-namespace-target-clusterrole created
-clusterrolebinding.rbac.authorization.k8s.io/cross-namespace-target-clusterrolebinding created
+clusterrole.rbac.authorization.k8s.io/cross-namespace-target-reader created
+clusterrolebinding.rbac.authorization.k8s.io/cross-namespace-target-reader created
 ```
 
-The above RBAC permissions will allow ServiceAccounts to grant necessary backup job permissions from any namespace.
+The above RBAC permissions will allow the ServiceAccounts to perform backup targets from any namespace.
 
-Alternatively, you can create Role and RoleBinding with the same permissions in case you want to restrict the ServiceAccounts to backup targets from only a definite namespace.
+Alternatively, you can create Role and RoleBinding with the same permissions in case you want to restrict the ServiceAccounts to backup targets from only a specific namespace.
 
 **Create BackupConfiguration:**
 
@@ -583,11 +583,11 @@ repository.stash.appscode.com "gcs-repo" deleted
 $ kubectl delete secret -n backup gcs-secret
 secret "gcs-secret" deleted
 $ kubectl delete sa -n backup cross-namespace-target-reader
-serviceaccount "mysql-sa" deleted
-$ kubectl delete clusterrole cross-namespace-target-clusterrole
-role.rbac.authorization.k8s.io "mysql-role" deleted
-$ kubectl delete clusterrolebinding cross-namespace-target-clusterrolebinding
-rolebinding.rbac.authorization.k8s.io "mysql-rolebinding" deleted
+serviceaccount "cross-namespace-target-reader" deleted
+$ kubectl delete clusterrole cross-namespace-target-reader
+role.rbac.authorization.k8s.io "cross-namespace-target-reader" deleted
+$ kubectl delete clusterrolebinding cross-namespace-target-reader
+rolebinding.rbac.authorization.k8s.io "cross-namespace-target-reader" deleted
 $ kubectl delete my -n staging mysql-recovery
 mysql.kubedb.com "mysql-recovery" deleted
 $ kubectl delete my -n prod sample-mysql
