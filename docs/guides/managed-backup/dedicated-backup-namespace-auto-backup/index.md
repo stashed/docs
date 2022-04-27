@@ -3,8 +3,8 @@ title: Define Cluster Wide Backup Policy using Stash Auto-backup
 description: A guide on how to define cluster wide backup policy using Stash auto-backup.
 menu:
   docs_{{ .version }}:
-    identifier: managed-backup-dedicated-backup-namespace-auto-backup
-    name: Define Cluster Wide Backup Policy using Stash Auto-backup
+    identifier: managed-backup-auto-backup
+    name: Managed Auto-Backup
     parent: managed-backup
     weight: 30
 product_name: stash
@@ -14,7 +14,7 @@ section_menu_id: guides
 
 # Define Cluster Wide Backup Policy using Stash Auto-backup
 
-This guide will show you how you can define cluster wide backup policy using Stash Auto-backup.
+This guide will show you how you can define cluster wide backup policy using Stash Auto-backup. Here, we are going to define a backup policy for MySQL databases. Then, we will demonstrate how users from different namespaces can use that policy to backup their own MySQL instances.
 
 ## Before You Begin
 
@@ -27,9 +27,9 @@ This guide will show you how you can define cluster wide backup policy using Sta
   - [BackupSession](/docs/concepts/crds/backupsession.md)
   - [Repository](/docs/concepts/crds/repository.md)
 
-Here, we are going to take backup from the `prod-1`, `prod-2` and `prod-3` namespaces and manage the backup from `backup` namespace using Auto Backup.
+We are going to take backup from the `prod-1`, `prod-2` and `prod-3` namespaces. We want to create our backup resources in `backup` namespace.
 
-Let's create the above-mentioned namespaces,
+Let's create the above mentioned namespaces,
 
 ```bash
 $ kubectl create ns prod-1
@@ -50,7 +50,7 @@ namespace/backup created
 
 ## Prepare Backup Blueprint
 
-In this section, we are going to prepare our Backup Blueprint object.
+Stash allows defining a backup template using `BackupBlueprint` CR. In this section, we are going to configure a `BackupBlueprint` for taking backup of MySQL databases.
 
 ### Prepare Backend
 
@@ -79,7 +79,7 @@ Stash does not grant necessary RBAC permissions to the backup job for taking bac
 
 **Create ServiceAccount:**
 
-At first, we are going to create a ServiceAccount in the `backup` namespace. This ServiceAccount will refer to the granted permissions for taking backup. Here is the YAML of the ServiceAccount,
+At first, we are going to create a `ServiceAccount` in the `backup` namespace. We will grant necessary RBAC permissions to this ServiceAccount and use it in the backup job. Here is the YAML of the ServiceAccount,
 
 ```yaml
 apiVersion: v1
@@ -104,7 +104,7 @@ We are going to create a ClusterRole and ClusterRoleBinding with the necessary p
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: cross-namespace-target-clusterrole
+  name: cross-namespace-target-reader
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -116,14 +116,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: cross-namespace-target-clusterrolebinding
+  name: cross-namespace-target-reader
 subjects:
 - kind: ServiceAccount
   name: cross-namespace-target-reader
   namespace: backup
 roleRef:
   kind: ClusterRole
-  name: cross-namespace-target-clusterrole
+  name: cross-namespace-target-reader
   apiGroup: rbac.authorization.k8s.io
 ```
 
@@ -131,13 +131,13 @@ Let's create the ClusterRole and ClusterRoleBinding we have shown above,
 
 ```bash
 $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/examples/clusterrole_clusterrolebinding.yaml
-clusterrole.rbac.authorization.k8s.io/cross-namespace-target-clusterrole created
-clusterrolebinding.rbac.authorization.k8s.io/cross-namespace-target-clusterrolebinding created
+clusterrole.rbac.authorization.k8s.io/cross-namespace-target-reader created
+clusterrolebinding.rbac.authorization.k8s.io/cross-namespace-target-reader created
 ```
 
-The above RBAC permissions will allow ServiceAccounts to grant necessary backup job permissions from any namespace.
+The above RBAC permissions will allow the ServiceAccounts to perform backup of targets from any namespace.
 
-Alternatively, you can create Role and RoleBinding with the same permissions in case you want to restrict the ServiceAccounts to backup targets from only a definite namespace.
+Alternatively, you can create Role and RoleBinding with the same permissions in case you want to restrict the ServiceAccounts to backup targets from only a specific namespace.
 
 ### Create BackupBlueprint
 
@@ -149,7 +149,7 @@ Below is the YAML of the `BackupBlueprint` object that we are going to create,
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: mysql-backup-blueprint
+  name: mysql-backup
 spec:
   backupNamespace: backup
   # ============== Blueprint for Repository ==========================
@@ -169,13 +169,18 @@ spec:
       serviceAccountName: cross-namespace-target-reader
 ```
 
-Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. Since the resolved prefix will be different for different target, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-blueprint).
+Here,
+
+- `spec.backupNamespace` refers to the namepspace where the backup resources will be created.
+- `spec.runtimeSettings.pod.serviceAccountName` refers to the name of the `ServiceAccount` to use in the backup pod.
+
+Note that we have used some variables (format: `${<variable name>}`) in `spec.backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. Since the resolved prefix will be different for different target, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-blueprint).
 
 Let's create the `BackupBlueprint` that we have shown above,
 
 ```bash
 kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/managed-backup/dedicated-backup-namespace-auto-backup/examples/backupblueprint.yaml
-backupblueprint.stash.appscode.com/mysql-backup-blueprint created
+backupblueprint.stash.appscode.com/mysql-backup created
 ```
 
 Now, automatic backup is configured for MySQL database. We just have to add some annotations to the targeted databases to enable periodic backup.
@@ -195,7 +200,7 @@ metadata:
   name: sample-mysql-1
   namespace: prod-1
   annotations:
-    stash.appscode.com/backup-blueprint: mysql-backup-blueprint
+    stash.appscode.com/backup-blueprint: mysql-backup
 spec:
   version: "8.0.27"
   replicas: 1
@@ -214,7 +219,7 @@ metadata:
   name: sample-mysql-2
   namespace: prod-2
   annotations:
-    stash.appscode.com/backup-blueprint: mysql-backup-blueprint
+    stash.appscode.com/backup-blueprint: mysql-backup
 spec:
   version: "8.0.27"
   replicas: 1
@@ -233,7 +238,7 @@ metadata:
   name: sample-mysql-3
   namespace: prod-3
   annotations:
-    stash.appscode.com/backup-blueprint: mysql-backup-blueprint
+    stash.appscode.com/backup-blueprint: mysql-backup
 spec:
   version: "8.0.27"
   replicas: 1
@@ -248,7 +253,7 @@ spec:
 
 ```
 
-Notice the metadata.annotations field. We have specified to use `mysql-backup-blueprint` BackupBlueprint for creating `Repository` and `BackupConfiguration` for the MySQL databases. BackupBlueprint is a non-namespaced resource, so we just need to specify the name of the blueprint.
+Notice the `metadata.annotations` field. We have specified to use `mysql-backup` BackupBlueprint for creating `Repository` and `BackupConfiguration` for the MySQL databases. BackupBlueprint is a non-namespaced resource, so we just need to specify the name of the blueprint.
 
 Let's create the above `MySQL` objects,
 
@@ -260,7 +265,10 @@ mysql.kubedb.com/sample-mysql-3 created
 ```
 
 If everything goes well, Stash will create a Repository and a BackupConfiguration for each MySQL database with the name in the following format:
-`<target-namespace><target-kind>-<target-name>`.
+
+```bash
+<Target Namespace>-<Target Kind>-<Target Name>
+````
 
 **Verify Repository:**
 
@@ -380,8 +388,8 @@ If we navigate to `stash-backup/prod-1/sample-mysql-1`, `stash-backup/prod-2/sam
 To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```bash
-$ kubectl delete backupblueprint mysql-backup-blueprint
-backupblueprint.stash.appscode.com "mysql-backup-blueprint" deleted
+$ kubectl delete backupblueprint mysql-backup
+backupblueprint.stash.appscode.com "mysql-backup" deleted
 $ kubectl delete backupconfiguration -n backup --all
 backupconfiguration.stash.appscode.com "prod-1-app-sample-mysql-1" deleted
 backupconfiguration.stash.appscode.com "prod-2-app-sample-mysql-2" deleted
@@ -394,9 +402,9 @@ $ kubectl delete secret -n backup gcs-secret
 secret "gcs-secret" deleted
 $ kubectl delete sa -n backup cross-namespace-target-reader
 serviceaccount "mysql-sa" deleted
-$ kubectl delete clusterrole cross-namespace-target-clusterrole
+$ kubectl delete clusterrole cross-namespace-target-reader
 role.rbac.authorization.k8s.io "mysql-role" deleted
-$ kubectl delete clusterrolebinding cross-namespace-target-clusterrolebinding
+$ kubectl delete clusterrolebinding cross-namespace-target-reader
 rolebinding.rbac.authorization.k8s.io "mysql-rolebinding" deleted
 $ kubectl delete my -n prod-1 sample-mysql-1
 mysql.kubedb.com "sample-mysql-1" deleted
