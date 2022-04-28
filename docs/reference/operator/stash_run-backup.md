@@ -19,18 +19,19 @@ stash run-backup [flags]
 ### Options
 
 ```
-      --enable-cache             Specify whether to enable caching for restic (default true)
-  -h, --help                     help for run-backup
-      --host string              Name of the host that will be backed up
-      --invoker-kind string      Kind of the backup invoker
-      --invoker-name string      Name of the respective backup invoker
-      --kubeconfig string        Path to kubeconfig file with authorization information (the master location is set by the master flag).
-      --master string            The address of the Kubernetes API server (overrides any value in kubeconfig)
-      --max-connections int      Specify maximum concurrent connections for GCS, Azure and B2 backend
-      --metrics-enabled          Specify whether to export Prometheus metrics
-      --pushgateway-url string   URL of Prometheus pushgateway used to cache backup metrics
-      --target-kind string       Kind of the Target
-      --target-name string       Name of the Target
+      --enable-cache              Specify whether to enable caching for restic (default true)
+  -h, --help                      help for run-backup
+      --host string               Name of the host that will be backed up
+      --invoker-kind string       Kind of the backup invoker
+      --invoker-name string       Name of the respective backup invoker
+      --kubeconfig string         Path to kubeconfig file with authorization information (the master location is set by the master flag).
+      --master string             The address of the Kubernetes API server (overrides any value in kubeconfig)
+      --max-connections int       Specify maximum concurrent connections for GCS, Azure and B2 backend
+      --metrics-enabled           Specify whether to export Prometheus metrics
+      --pushgateway-url string    URL of Prometheus pushgateway used to cache backup metrics
+      --target-kind string        Kind of the Target
+      --target-name string        Name of the Target
+      --target-namespace string   Namespace of the Target
 ```
 
 ### Options inherited from parent commands
