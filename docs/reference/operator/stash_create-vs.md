@@ -19,14 +19,15 @@ stash create-vs [flags]
 ### Options
 
 ```
-      --backupsession string     Name of the respective BackupSession object
-  -h, --help                     help for create-vs
-      --kubeconfig string        Path to kubeconfig file with authorization information (the master location is set by the master flag).
-      --master string            The address of the Kubernetes API server (overrides any value in kubeconfig)
-      --metrics-enabled          Specify whether to export Prometheus metrics (default true)
-      --pushgateway-url string   Pushgateway URL where the metrics will be pushed
-      --target-kind string       Kind of the Target
-      --target-name string       Name of the Target
+      --backupsession string      Name of the respective BackupSession object
+  -h, --help                      help for create-vs
+      --kubeconfig string         Path to kubeconfig file with authorization information (the master location is set by the master flag).
+      --master string             The address of the Kubernetes API server (overrides any value in kubeconfig)
+      --metrics-enabled           Specify whether to export Prometheus metrics (default true)
+      --pushgateway-url string    Pushgateway URL where the metrics will be pushed
+      --target-kind string        Kind of the Target
+      --target-name string        Name of the Target
+      --target-namespace string   Namespace of the Target
 ```
 
 ### Options inherited from parent commands

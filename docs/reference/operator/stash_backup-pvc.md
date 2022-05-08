@@ -50,6 +50,7 @@ stash backup-pvc [flags]
       --storage-secret-namespace string   Namespace of the StorageSecret
       --target-kind string                Kind of the Target
       --target-name string                Name of the Target
+      --target-namespace string           Namespace of the Target
 ```
 
 ### Options inherited from parent commands
