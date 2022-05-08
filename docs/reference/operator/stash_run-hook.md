@@ -33,6 +33,7 @@ stash run-hook [flags]
       --output-dir string                Directory where output.json file will be written (keep empty if you don't need to write output in file)
       --target-kind string               Kind of the Target
       --target-name string               Name of the Target
+      --target-namespace string          Namespace of the Target
 ```
 
 ### Options inherited from parent commands

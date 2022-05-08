@@ -42,6 +42,7 @@ stash update-status [flags]
       --storage-secret-namespace string   Namespace of the Repository
       --target-kind string                Kind of the target
       --target-name string                Name of the target
+      --target-namespace string           Namespace of the target
 ```
 
 ### Options inherited from parent commands

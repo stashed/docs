@@ -32,6 +32,7 @@ stash restore [flags]
       --restore-model string        Specify whether using job or init-container to restore (default init-container) (default "init-container")
       --target-kind string          Kind of the Target
       --target-name string          Name of the Target
+      --target-namespace string     Namespace of the Target
 ```
 
 ### Options inherited from parent commands
