@@ -25,8 +25,10 @@ In order to upgrade from Stash `v2021.xx.xx` to `{{< param "info.version" >}}`, 
 Helm [does not upgrade the CRDs](https://github.com/helm/helm/issues/6581) bundled in a Helm chart if the CRDs already exist. So, to upgrade the Stash catalog CRDs, please run the following commands below:
 
 ```bash
+# Update catalog CRDs
 $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/crds/stash-catalog-crds.yaml
 
+# Update metrics CRDs
 $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/charts/stash-metrics/crds/metrics.appscode.com_metricsconfigurations.yaml
 ```
 
