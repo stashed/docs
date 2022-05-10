@@ -1,10 +1,10 @@
 ---
-title: Application KubeDumps Backup | Stash
+title: Application KubeDump Backup | Stash
 description: Backup application manifests using Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-kubedump-application
-    name: Application KubeDumps Backup
+    name: Application KubeDump Backup
     parent: stash-kubedump
     weight: 40
 product_name: stash
@@ -216,7 +216,7 @@ spec:
 ```
 
 
-# Backup KubeDumps of an Application using Stash
+# Backup KubeDump of an Application using Stash
 
 Stash can be configured to automatically backup any Redis database in your cluster. Stash enables cluster administrators to deploy backup blueprints ahead of time so that the database owners can easily backup their database with just a few annotations.
 

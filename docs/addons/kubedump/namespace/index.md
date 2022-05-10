@@ -1,6 +1,6 @@
 ---
-title: Backup Namespace KubeDumps | Stash
-description: Backup Namespace KubeDumps using Stash
+title: Backup Namespace KubeDump | Stash
+description: Backup Namespace KubeDump using Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-kubedump-namespace
@@ -12,7 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup KubeDumps of a Namespace using Stash
+# Backup KubeDump of a Namespace using Stash
 
 Stash can be configured to automatically backup any Redis database in your cluster. Stash enables cluster administrators to deploy backup blueprints ahead of time so that the database owners can easily backup their database with just a few annotations.
 

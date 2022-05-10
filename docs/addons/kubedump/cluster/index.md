@@ -1,6 +1,6 @@
 ---
-title: Backup Cluster KubeDumps | Stash
-description: Take backup of cluster manifests using Stash
+title: Backup resource YAMLs of entire cluster | Stash
+description: Take backup of cluster resources YAMLs using Stash
 menu:
   docs_{{ .version }}:
     identifier: stash-kubedump-helm
@@ -12,240 +12,50 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-# Backup KubeDumps of Entire Cluster using Stash
+# Backup resource YAMLs of entire cluster using Stash
 
-Stash `{{< param "info.version" >}}` supports backup and restoration of Redis databases. This guide will show you how you can take a logical backup of your Redis databases and restore them using Stash.
+Stash `{{< param "info.version" >}}` supports taking backup of the resource YAMLs using `kubedump` plugin. This guide will show you how you can take a backup of the resource YAMLs of your entire cluster using Stash.
 
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
-- If you are not familiar with how Stash backup and restore Redis databases, please check the following guide [here](/docs/addons/redis/overview/index.md).
+- Install Stash `kubectl` plugin in your local machine following the steps [here](/docs/setup/install/kubectl_plugin.md).
+- If you are not familiar with how Stash backup the resource YAMLs, please check the following guide [here](/docs/addons/kubedump/overview/index.md).
 
-You have to be familiar with following custom resources:
+You have to be familiar with the following custom resources:
 
 - [AppBinding](/docs/concepts/crds/appbinding.md)
 - [Function](/docs/concepts/crds/function.md)
 - [Task](/docs/concepts/crds/task.md)
 - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
 - [BackupSession](/docs/concepts/crds/backupsession.md)
-- [RestoreSession](/docs/concepts/crds/restoresession.md)
 
-To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create `demo` namespace if you haven't created already.
+To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create the `demo` namespace if you haven't created it already.
 
 ```bash
 $ kubectl create ns demo
 namespace/demo created
 ```
 
-> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/redis/helm/examples).
+> Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/kubedump/cluster/examples).
 
-## Prepare Redis
+### Prepare for Backup
 
-In this section, we are going to deploy a Redis database. Then, we are going to insert some sample data into it.
+In this section, we are going to configure a backup for all the resource YAMLs of our cluster.
 
-### Deploy Redis
+#### Ensure `kubedump` Addon
 
-At first, let's deploy a Redis database. Here, we are going to use [bitnami/redis](https://artifacthub.io/packages/helm/bitnami/redis)  chart from [ArtifactHub](https://artifacthub.io/).
-
-Let's deploy a Redis database named `sample-redis` using Helm as below,
+When you install the Stash Enterprise version, it will automatically install all the official addons. Make sure that `kubedump` addon was installed properly using the following command.
 
 ```bash
-# Add bitnami chart registry
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-# Update helm registries
-$ helm repo update
-# Install bitnami/redis chart into demo namespace
-$ helm install sample-redis bitnami/redis -n demo
+❯ kubectl get tasks.stash.appscode.com | grep kubedump
+kubedump-backup-0.1.0          23s
 ```
 
-This chart will create the necessary StatefulSet, Secret, Service etc. for the database. You can easily view all the resources created by chart using [ketall](https://github.com/corneliusweig/ketall) `kubectl` plugin as below,
+#### Prepare Backend
 
-```bash
-❯ kubectl get-all -n demo -l app.kubernetes.io/instance=sample-redis
-NAME                                                        NAMESPACE  AGE
-configmap/sample-redis-configuration                        demo       117s  
-configmap/sample-redis-health                               demo       117s  
-configmap/sample-redis-scripts                              demo       117s  
-endpoints/sample-redis-headless                             demo       117s  
-endpoints/sample-redis-master                               demo       117s  
-endpoints/sample-redis-replicas                             demo       117s  
-persistentvolumeclaim/redis-data-sample-redis-master-0      demo       117s  
-persistentvolumeclaim/redis-data-sample-redis-replicas-0    demo       117s  
-persistentvolumeclaim/redis-data-sample-redis-replicas-1    demo       79s   
-persistentvolumeclaim/redis-data-sample-redis-replicas-2    demo       51s   
-pod/sample-redis-master-0                                   demo       117s  
-pod/sample-redis-replicas-0                                 demo       117s  
-pod/sample-redis-replicas-1                                 demo       79s   
-pod/sample-redis-replicas-2                                 demo       51s   
-secret/sample-redis                                         demo       117s  
-serviceaccount/sample-redis                                 demo       117s  
-service/sample-redis-headless                               demo       117s  
-service/sample-redis-master                                 demo       117s  
-service/sample-redis-replicas                               demo       117s  
-controllerrevision.apps/sample-redis-master-755dd8b64d      demo       117s  
-controllerrevision.apps/sample-redis-replicas-7b8c7694bf    demo       117s  
-statefulset.apps/sample-redis-master                        demo       117s  
-statefulset.apps/sample-redis-replicas                      demo       117s  
-endpointslice.discovery.k8s.io/sample-redis-headless-6bvt2  demo       117s  
-endpointslice.discovery.k8s.io/sample-redis-master-78wcv    demo       117s  
-endpointslice.discovery.k8s.io/sample-redis-replicas-vhc7z  demo       117s 
-```
-
-Now, wait for the database pod `sample-redis-master-0` to go into `Running` state,
-
-```bash
-❯ kubectl get pod -n demo sample-redis-master-0
-NAME                    READY   STATUS    RESTARTS   AGE
-sample-redis-master-0   1/1     Running   0          2m57s
-```
-
-Once the database pod is in `Running` state, verify that the database is ready to accept the connections.
-
-```bash
-❯ kubectl logs -n demo sample-redis-master-0
-1:C 28 Jul 2021 13:03:28.191 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-1:C 28 Jul 2021 13:03:28.191 # Redis version=6.2.5, bits=64, commit=00000000, modified=0, pid=1, just started
-1:C 28 Jul 2021 13:03:28.191 # Configuration loaded
-1:M 28 Jul 2021 13:03:28.192 * monotonic clock: POSIX clock_gettime
-1:M 28 Jul 2021 13:03:28.192 * Running mode=standalone, port=6379.
-1:M 28 Jul 2021 13:03:28.192 # Server initialized
-1:M 28 Jul 2021 13:03:28.193 * Ready to accept connections
-```
-
-From the above log, we can see the database is ready to accept connections.
-
-### Insert Sample Data
-
-Now, we are going to exec into the database pod and create some sample data. The helm chart has created a secret with access credentials. Let's find out the credentials from the Secret,
-
-```yaml
-❯ kubectl get secret -n demo sample-redis -o yaml
-apiVersion: v1
-data:
-  redis-password: WTFZTENrZmNpcw==
-kind: Secret
-metadata:
-  annotations:
-    meta.helm.sh/release-name: sample-redis
-    meta.helm.sh/release-namespace: demo
-  creationTimestamp: "2021-07-28T13:03:23Z"
-  labels:
-    app.kubernetes.io/instance: sample-redis
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    helm.sh/chart: redis-14.8.6
-  name: sample-redis
-  namespace: demo
-  resourceVersion: "530037"
-  uid: a48ce23a-105d-4d92-9067-c80623cbe269
-type: Opaque
-
-```
-
-Here, we are going to use `redis-password` to authenticate and insert the sample data.
-
-At first, let's export the password as environment variables to make further commands re-usable.
-
-```bash
-export PASSWORD=$(kubectl get secrets -n demo sample-redis -o jsonpath='{.data.\redis-password}' | base64 -d)
-```
-
-Now, let's exec into the database pod and insert some sample data,
-
-```bash
-❯ kubectl exec -it -n demo sample-redis-master-0 -- redis-cli -a $PASSWORD
-Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
-# insert some key value pairs
-127.0.0.1:6379> set key1 value1
-OK
-127.0.0.1:6379> set key2 value2
-OK
-# check the inserted data
-127.0.0.1:6379> get key1
-"value1"
-127.0.0.1:6379> get key2
-"value2"
-# exit from redis-cli
-127.0.0.1:6379> exit
-```
-
-We have successfully deployed a Redis database and inserted some sample data into it. In the subsequent sections, we are going to backup these data using Stash.
-
-## Prepare for Backup
-
-In this section, we are going to prepare the necessary resources (i.e. database connection information, backend information, etc.) before backup.
-
-### Ensure Redis Addon
-
-When you install Stash Enterprise version, it will automatically install all the official database addons. Make sure that Redis addon was installed properly using the following command.
-
-```bash
-❯ kubectl get tasks.stash.appscode.com | grep redis
-redis-backup-6.2.5            24m
-redis-restore-6.2.5           24m
-```
-
-This addon should be able to take backup of the databases with matching major versions as discussed in [Addon Version Compatibility](/docs/addons/redis/README.md#addon-version-compatibility).
-
-### Create AppBinding
-
-Stash needs to know how to connect with the database. An `AppBinding` exactly provides this information. It holds the Service and Secret information of the database. You have to point to the respective `AppBinding` as a target of backup instead of the database itself.
-
-Stash expect your database Secret to have `password` keys. If your database secret does not have the expected key, the `AppBinding` can also help here. You can specify a `secretTransforms` section with the mapping between the current keys and the desired keys.
-
-Here, is the YAML of the `AppBinding` that we are going to create for the Redis database we have deployed earlier.
-
-```yaml
-apiVersion: appcatalog.appscode.com/v1alpha1
-kind: AppBinding
-metadata:
-  name: sample-redis
-  namespace: demo
-spec:
-  clientConfig:
-    service:
-      name: sample-redis-master
-      path: /
-      port: 6379
-      scheme: http
-  secret:
-    name: sample-redis
-  secretTransforms:
-  - renameKey:
-      from: redis-password
-      to: password
-  type: redis
-  version: 6.2.5
-```
-
-Here,
-
-- **.spec.clientConfig.service** specifies the Service information to use to connects with the database.
-- **.spec.secret** specifies the name of the Secret that holds necessary credentials to access the database. If your Redis is not using authentication, then don't provide this field.
-- **.spec.secretTransforms** specifies the transformations required to achieve the desired keys from the current Secret. You can apply the following transformations here:
-  - **addKey**: If your database Secret does not have an equivalent key expected by Stash, you can add the key using `addKey` transformation.
-  - **renameKey**: If your database Secret does not have a key expected by Stash but it has an equivalent key that is used for the same purpose, you can use `renameKey` transformation to specify the mapping between the keys. For example, our Redis Secret didn't have `password` key but it has an equivalent `redis-password` key that contains password for the database. Hence, we are telling Stash using `renameKey` transformation that the `redis-password` should be used as `password` key.
-  - **addKeysFrom**: You can also merge keys from another Secret using `addKeysFrom` transformation. You have to specify the respective Secret name and namespace as below:
-    ```yaml
-    addKeysFrom:
-      name: <secret name>
-      namespace: <secret namespace>
-    ```
-- `spec.type` specifies the type of the database. This is particularly helpful in auto-backup where you want to use different path prefixes for different types of database.
-
-Let's create the `AppBinding` we have shown above,
-
-```bash
-$ kubectl apply -f https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/redis/helm/examples/appbinding.yaml
-appbinding.appcatalog.appscode.com/sample-redis created
-```
-
->The `secretTransforms` does not modify your original database Secret. Stash just uses those transformations to obtain the desired keys from the original Secret.
-
-### Prepare Backend
-
-We are going to store our backed up data into a GCS bucket. So, we need to create a Secret with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed-up data into a GCS bucket. So, we need to create a Secret with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
 
 **Create Storage Secret:**
 
@@ -270,7 +80,7 @@ Now, crete a `Repository` object with the information of your desired bucket. Be
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
-  name: gcs-repo
+  name: cluster-resource-storage
   namespace: demo
 spec:
   backend:
@@ -283,39 +93,80 @@ spec:
 Let's create the `Repository` we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}❯/docs/addons/kubedump/cluster/examples/repository.yaml
-repository.stash.appscode.com/gcs-repo created
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/kubedump/cluster/examples/repository.yaml
+repository.stash.appscode.com/cluster-resource-storage created
 ```
 
-Now, we are ready to backup our database into our desired backend.
+#### Create RBAC
+
+The `kubedump` plugin requires read permission for all the cluster resources. By default, Stash does not grant such cluster-wide permissions. We have to provide the necessary permissions manually.
+
+Here, is the YAML of the `ServiceAccount`, `ClusterRole`, and `ClusterRoleBinding` that we are going to use for granting the necessary permissions.
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cluster-resource-reader
+  namespace: demo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-resource-reader
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["get","list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-resource-reader
+subjects:
+- kind: ServiceAccount
+  name: cluster-resource-reader
+  namespace: demo
+roleRef:
+  kind: ClusterRole
+  name: cluster-resource-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+Let's create the RBAC resources we have shown above,
 
 ```bash
-❯ kubectl apply -f ./docs/addons/kubedump/cluster/examples/rbac.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/kubedump/cluster/examples/rbac.yaml
 serviceaccount/cluster-resource-reader created
 clusterrole.rbac.authorization.k8s.io/cluster-resource-reader created
 clusterrolebinding.rbac.authorization.k8s.io/cluster-resource-reader created
 ```
 
+Now, we are ready for backup. In the next section, we are going to schedule a backup for our cluster resources.
+
 ### Backup
 
-To schedule a backup, we have to create a `BackupConfiguration` object targeting the respective `AppBinding` of our desired database. Then Stash will create a CronJob to periodically backup the database.
+To schedule a backup, we have to create a `BackupConfiguration` object. Then Stash will create a CronJob to periodically backup the database.
 
 #### Create BackupConfiguration
 
-Below is the YAML for `BackupConfiguration` object we care going to use to backup the `sample-redis` database we have deployed earlier,
+Below is the YAML for `BackupConfiguration` object we care going to use to backup the YAMLs of the cluster resources,
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: cluster-kubedump
+  name: cluster-resources-backup
   namespace: demo
 spec:
   schedule: "*/5 * * * *"
   task:
     name: kubedump-backup-0.1.0
   repository:
-    name: gcs-repo
+    name: cluster-resource-storage
+  runtimeSettings:
+    pod:
+      serviceAccountName: cluster-resource-reader
   retentionPolicy:
     name: keep-last-5
     keepLast: 5
@@ -324,28 +175,26 @@ spec:
 
 Here,
 
-- `.spec.schedule` specifies that we want to backup the database at 5 minutes intervals.
-- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup a Redis database.
+- `.spec.schedule` specifies that we want to backup the cluster resources at 5 minutes intervals.
+- `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup the resource YAMLs.
 - `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
-- `.spec.target.ref` refers to the AppBinding object that holds the connection information of our targeted database.
 - `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
 
 Let's create the `BackupConfiguration` object we have shown above,
 
 ```bash
-$ kubectl create -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/kubedump/cluster/examples/backupconfiguration.yaml
-backupconfiguration.stash.appscode.com/cluster-kubedump created
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/addons/kubedump/cluster/examples/backupconfiguration.yaml
+backupconfiguration.stash.appscode.com/cluster-resources-backup created
 ```
-
 
 #### Verify Backup Setup Successful
 
 If everything goes well, the phase of the `BackupConfiguration` should be `Ready`. The `Ready` phase indicates that the backup setup is successful. Let's verify the `Phase` of the BackupConfiguration,
 
 ```bash
-$ kubectl get backupconfiguration -n demo
-NAME                  TASK                       SCHEDULE      PAUSED   PHASE      AGE
-sample-redis-backup   redis-backup-6.2.5         */5 * * * *            Ready      11s
+❯ kubectl get backupconfiguration -n demo
+NAME                       TASK                    SCHEDULE      PAUSED   PHASE   AGE
+cluster-resources-backup   kubedump-backup-0.1.0   */5 * * * *            Ready   18s
 ```
 
 #### Verify CronJob
@@ -356,121 +205,282 @@ Verify that the CronJob has been created using the following command,
 
 ```bash
 ❯ kubectl get cronjob -n demo
-NAME                               SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-stash-backup-sample-redis-backup   */5 * * * *   False     0        <none>          14s
+NAME                                     SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+stash-trigger-cluster-resources-backup   */5 * * * *   False     0        <none>          49s
 ```
 
 #### Wait for BackupSession
 
-The `sample-redis-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
+The `stash-trigger-cluster-resources-backup` CronJob will trigger a backup on each scheduled slot by creating a `BackupSession` object.
 
 Now, wait for a schedule to appear. Run the following command to watch for a `BackupSession` object,
 
 ```bash
-❯ kubectl get backupsession --all-namespaces -w
-NAMESPACE   NAME                                 INVOKER-TYPE          INVOKER-NAME              PHASE   DURATION   AGE
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump                      0s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Pending              0s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Running              0s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Running              19s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Running              53s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Running              70s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Running              70s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Running              70s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Running              70s
-demo        cluster-kubedump-1651049400   BackupConfiguration   cluster-kubedump   Succeeded   1m10s
+❯ kubectl get backupsession -n demo -w
+NAME                                  INVOKER-TYPE          INVOKER-NAME               PHASE   DURATION   AGE
+cluster-resources-backup-1652164800   BackupConfiguration   cluster-resources-backup                      0s
+cluster-resources-backup-1652164800   BackupConfiguration   cluster-resources-backup   Pending              0s
+cluster-resources-backup-1652164800   BackupConfiguration   cluster-resources-backup   Running              0s
+cluster-resources-backup-1652164800   BackupConfiguration   cluster-resources-backup   Running              69s
+cluster-resources-backup-1652164800   BackupConfiguration   cluster-resources-backup   Succeeded   1m9s       69s
 ```
 
 Here, the phase `Succeeded` means that the backup process has been completed successfully.
 
 #### Verify Backup
 
-Now, we are going to verify whether the backed up data is present in the backend or not. Once a backup is completed, Stash will update the respective `Repository` object to reflect the backup completion. Check that the repository `gcs-repo` has been updated by the following command,
+Now, we are going to verify whether the backed-up data is present in the backend or not. Once a backup is completed, Stash will update the respective `Repository` object to reflect the backup completion. Check that the repository `cluster-resource-storage` has been updated by the following command,
 
 ```bash
 ❯ kubectl get repository -n demo
-NAME       INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
-gcs-repo   true        2.525 MiB   1                108s                     89m
+NAME                       INTEGRITY   SIZE        SNAPSHOT-COUNT   LAST-SUCCESSFUL-BACKUP   AGE
+cluster-resource-storage   true        2.324 MiB   1                70s                      54m
 
 ```
 
-Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `demo/redis/sample-redis` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
+Now, if we navigate to the GCS bucket, we will see the backed up data has been stored in `/manifest/cluster` directory as specified by `.spec.backend.gcs.prefix` field of the `Repository` object.
 
 <figure align="center">
-  <img alt="Backup data in GCS Bucket" src="/docs/addons/redis/helm/images/sample-redis-backup.png">
+  <img alt="Backup data in GCS Bucket" src="/docs/addons/kubedump/cluster/images/cluster_manifests_backup.png">
   <figcaption align="center">Fig: Backup data in GCS Bucket</figcaption>
 </figure>
 
-> Note: Stash keeps all the backed up data encrypted. So, data in the backend will not make any sense until they are decrypted.
+> Note: Stash keeps all the backed-up data encrypted. So, data in the backend will not make any sense until they are decrypted.
 
-## Downloads KubeDumps
+## Restore
+
+Stash does not provide any automatic mechanism to restore the cluster resources from the backed-up YAMLs. Your application might be managed by Helm or by an operator. In such cases, just applying the YAMLs is not enough to restore the application. Furthermore, there might be an order issue. Some resources must be applied before others. It is difficult to generalize and codify various application-specific logic.
+
+Therefore, it is the user's responsibility to download the backed-up YAMLs and take the necessary steps based on his application to restore it properly.
+
+### Download the YAMLs
+
+Stash provides a [kubectl plugin](https://stash.run/docs/v2022.05.12/guides/cli/cli/#download-snapshots) for making it easy to download a snapshot locally.
+
+Now, let's download the latest Snapshot from our backed-up data into the `$HOME/Downloads/stash` folder of our local machine.
 
 ```bash
-❯ kubectl stash download -n demo gcs-repo  --destination=$HOME/Downloads/stash --snapshots="latest"
+❯ kubectl stash download -n demo cluster-resource-storage  --destination=$HOME/Downloads/stash --snapshots="latest"
 I0427 16:01:16.874481  698253 download.go:176] Running docker with args: [run --rm -u 1000 -v /tmp/scratch:/tmp/scratch -v /home/emruz/Downloads/stash:/tmp/destination --env HTTP_PROXY= --env HTTPS_PROXY= --env-file /tmp/scratch/config/restic-envs stashed/restic:latest --no-cache restore latest --target /tmp/destination/latest]
 I0427 16:02:19.413197  698253 download.go:181] Output: restoring <Snapshot ae2de1c2 of [/tmp/manifests] at 2022-04-27 10:00:23.19484503 +0000 UTC by @host-0> to /tmp/destination/latest
 
-I0427 16:02:19.413215  698253 download.go:137] Snapshots: [latest] of Repository demo/gcs-repo restored in path /home/emruz/Downloads/stash
-❯ cd $HOME/Downloads/stash
-❯ ls
-latest
-❯ cd latest/
-❯ ls
-tmp
-❯ cd tmp/manifests/
-❯ ls
-global  namespaces
-❯ ls global
-APIService   ClusterRoleBinding  CSINode                   FlowSchema  MetricsConfiguration          Namespace  PodSecurityPolicy  PriorityLevelConfiguration  Task
-ClusterRole  ComponentStatus     CustomResourceDefinition  Function    MutatingWebhookConfiguration  Node       PriorityClass      StorageClass                ValidatingWebhookConfiguration
-❯ ls namespaces
-default  demo  kube-node-lease  kube-public  kube-system  local-path-storage  stash-e2e-z1ggg4-restore
-❯ ls global/ClusterRole
-admin.yaml                                 system:aggregate-to-admin.yaml                                             system:controller:ephemeral-volume-controller.yaml    system:coredns.yaml
-appscode:license-checker.yaml              system:aggregate-to-edit.yaml                                              system:controller:expand-controller.yaml              system:discovery.yaml
-appscode:license-reader.yaml               system:aggregate-to-view.yaml                                              system:controller:generic-garbage-collector.yaml      system:heapster.yaml
-appscode:metrics:edit.yaml                 system:auth-delegator.yaml                                                 system:controller:horizontal-pod-autoscaler.yaml      system:kube-aggregator.yaml
-appscode:metrics:view.yaml                 system:basic-user.yaml                                                     system:controller:job-controller.yaml                 system:kube-controller-manager.yaml
-appscode:stash:edit.yaml                   system:certificates.k8s.io:certificatesigningrequests:nodeclient.yaml      system:controller:namespace-controller.yaml           system:kube-dns.yaml
-appscode:stash:garbage-collector.yaml      system:certificates.k8s.io:certificatesigningrequests:selfnodeclient.yaml  system:controller:node-controller.yaml                system:kubelet-api-admin.yaml
-appscode:stash:view.yaml                   system:certificates.k8s.io:kube-apiserver-client-approver.yaml             system:controller:persistent-volume-binder.yaml       system:kube-scheduler.yaml
-cluster-admin.yaml                         system:certificates.k8s.io:kube-apiserver-client-kubelet-approver.yaml     system:controller:pod-garbage-collector.yaml          system:monitoring.yaml
-cluster-resource-reader.yaml               system:certificates.k8s.io:kubelet-serving-approver.yaml                   system:controller:pvc-protection-controller.yaml      system:node-bootstrapper.yaml
-edit.yaml                                  system:certificates.k8s.io:legacy-unknown-approver.yaml                    system:controller:pv-protection-controller.yaml       system:node-problem-detector.yaml
-kindnet.yaml                               system:controller:attachdetach-controller.yaml                             system:controller:replicaset-controller.yaml          system:node-proxier.yaml
-kubeadm:get-nodes.yaml                     system:controller:certificate-controller.yaml                              system:controller:replication-controller.yaml         system:node.yaml
-local-path-provisioner-role.yaml           system:controller:clusterrole-aggregation-controller.yaml                  system:controller:resourcequota-controller.yaml       system:persistent-volume-provisioner.yaml
-stash-backup-job.yaml                      system:controller:cronjob-controller.yaml                                  system:controller:root-ca-cert-publisher.yaml         system:public-info-viewer.yaml
-stash-cron-job.yaml                        system:controller:daemon-set-controller.yaml                               system:controller:route-controller.yaml               system:service-account-issuer-discovery.yaml
-stash-restore-init-container.yaml          system:controller:deployment-controller.yaml                               system:controller:service-account-controller.yaml     system:volume-scheduler.yaml
-stash-restore-job.yaml                     system:controller:disruption-controller.yaml                               system:controller:service-controller.yaml             view.yaml
-stash-sidecar.yaml                         system:controller:endpoint-controller.yaml                                 system:controller:statefulset-controller.yaml
-stash-stash-enterprise-crd-installer.yaml  system:controller:endpointslice-controller.yaml                            system:controller:ttl-after-finished-controller.yaml
-stash-stash-enterprise.yaml                system:controller:endpointslicemirroring-controller.yaml                   system:controller:ttl-controller.yaml
-❯ cat  global/ClusterRole/appscode:license-reader.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation
-  name: appscode:license-reader
-rules:
-- apiGroups:
-  - apiregistration.k8s.io
-  resources:
-  - apiservices
-  verbs:
-  - get
-- nonResourceURLs:
-  - /appscode/license
-  verbs:
-  - get
-❯ ls namespaces/kube-system
-ConfigMap  ControllerRevision  DaemonSet  Deployment  Endpoints  EndpointSlice  Lease  Pod  ReplicaSet  Role  RoleBinding  Secret  Service  ServiceAccount
-❯ ls namespaces/kube-system/ConfigMap
-coredns.yaml  extension-apiserver-authentication.yaml  kubeadm-config.yaml  kubelet-config-1.21.yaml  kube-proxy.yaml  kube-root-ca.crt.yaml
-❯ cat namespaces/kube-system/ConfigMap/kubeadm-config.yaml
+I0427 16:02:19.413215  698253 download.go:137] Snapshots: [latest] of Repository demo/cluster-resource-storage restored in path /home/emruz/Downloads/stash
+```
+
+Now, lets use [tree](https://linux.die.net/man/1/tree) command to inspect downloaded YAMLs files.
+
+```bash
+❯ tree $HOME/Downloads/stash
+/home/emruz/Downloads/stash
+└── latest
+    └── tmp
+        └── resources
+            ├── global
+            │   ├── APIService
+            │   │   ├── v1.admissionregistration.k8s.io.yaml
+            │   │   ├── v1alpha1.admission.stash.appscode.com.yaml
+            │   │   ├── v1alpha1.metrics.appscode.com.yaml
+            │   │   ├── v1alpha1.repositories.stash.appscode.com.yaml
+            │   ├── ClusterRole
+            │   │   ├── admin.yaml
+            │   │   ├── system:heapster.yaml
+            │   │   └── view.yaml
+            │   ├── ClusterRoleBinding
+            │   │   ├── appscode:license-reader-demo-cluster-resource-reader.yaml
+            │   │   ├── appscode:stash:garbage-collector.yaml
+            │   │   ├── cluster-admin.yaml
+            │   │   ├── cluster-resource-reader.yaml
+            │   │   ├── kindnet.yaml
+            │   ├── ComponentStatus
+            │   │   ├── controller-manager.yaml
+            │   │   ├── etcd-0.yaml
+            │   │   └── scheduler.yaml
+            │   ├── CSINode
+            │   │   └── kind-control-plane.yaml
+            │   ├── CustomResourceDefinition
+            │   │   ├── appbindings.appcatalog.appscode.com.yaml
+            │   │   ├── backupbatches.stash.appscode.com.yaml
+            │   │   ├── backupblueprints.stash.appscode.com.yaml
+            │   │   ├── backupconfigurations.stash.appscode.com.yaml
+            │   ├── FlowSchema
+            │   │   ├── catch-all.yaml
+            │   │   ├── exempt.yaml
+            │   │   ├── global-default.yaml
+            │   │   ├── kube-controller-manager.yaml
+            │   │   ├── kube-scheduler.yaml
+            │   ├── Function
+            │   │   ├── elasticsearch-backup-5.6.4.yaml
+            │   │   ├── mongodb-restore-5.0.3.yaml
+            │   │   ├── mysql-backup-5.7.25.yaml
+            │   │   └── update-status.yaml
+            │   ├── MetricsConfiguration
+            │   │   ├── stash-appscode-com-backupconfiguration.yaml
+            │   ├── MutatingWebhookConfiguration
+            │   │   └── admission.stash.appscode.com.yaml
+            │   ├── Namespace
+            │   │   ├── default.yaml
+            │   │   ├── demo.yaml
+            │   │   ├── kube-node-lease.yaml
+            │   │   ├── kube-public.yaml
+            │   │   ├── kube-system.yaml
+            │   │   └── local-path-storage.yaml
+            │   ├── Node
+            │   │   └── kind-control-plane.yaml
+            │   ├── StorageClass
+            │   │   └── standard.yaml
+            │   ├── Task
+            │   │   ├── elasticsearch-backup-5.6.4.yaml
+            │   │   ├── redis-restore-5.0.13.yaml
+            │   │   └── redis-restore-6.2.5.yaml
+            │   └── ValidatingWebhookConfiguration
+            │       └── admission.stash.appscode.com.yaml
+            └── namespaces
+                ├── default
+                │   ├── ConfigMap
+                │   │   └── kube-root-ca.crt.yaml
+                │   ├── Endpoints
+                │   │   └── kubernetes.yaml
+                │   ├── EndpointSlice
+                │   │   └── kubernetes.yaml
+                │   ├── Secret
+                │   │   └── default-token-7lpm6.yaml
+                │   ├── Service
+                │   │   └── kubernetes.yaml
+                │   └── ServiceAccount
+                │       └── default.yaml
+                ├── demo
+                │   ├── BackupConfiguration
+                │   │   └── cluster-resources-backup.yaml
+                │   ├── BackupSession
+                │   │   ├── cluster-resources-backup-1652176500.yaml
+                │   │   └── cluster-resources-backup-1652176800.yaml
+                │   ├── ConfigMap
+                │   │   └── kube-root-ca.crt.yaml
+                │   ├── CronJob
+                │   │   └── stash-trigger-cluster-resources-backup.yaml
+                │   ├── Event
+                │   │   ├── cluster-resources-backup-1652173200.16edb2d9e21556ba.yaml
+                │   ├── Job
+                │   │   ├── stash-backup-cluster-resources-backup-1652176500-0.yaml
+                │   │   └── stash-backup-cluster-resources-backup-1652176800-0.yaml
+                │   ├── Pod
+                │   │   ├── stash-backup-cluster-resources-backup-1652176500-0-vmx94.yaml
+                │   │   └── stash-backup-cluster-resources-backup-1652176800-0-5v4k9.yaml
+                │   ├── Repository
+                │   │   └── cluster-resource-storage.yaml
+                │   ├── RoleBinding
+                │   │   ├── backupconfiguration-cluster-resources-backup-0.yaml
+                │   │   └── stash-trigger-cluster-resources-backup.yaml
+                │   ├── Secret
+                │   │   ├── cluster-resource-reader-token-rqf6n.yaml
+                │   │   ├── default-token-rbrqt.yaml
+                │   │   └── gcs-secret.yaml
+                │   ├── ServiceAccount
+                │   │   ├── cluster-resource-reader.yaml
+                │   │   └── default.yaml
+                │   └── Snapshot
+                │       ├── cluster-resource-storage-5085e316.yaml
+                │       ├── cluster-resource-storage-6034bdcf.yaml
+                │       ├── cluster-resource-storage-706e8f46.yaml
+                ├── kube-node-lease
+                │   ├── ConfigMap
+                │   │   └── kube-root-ca.crt.yaml
+                │   ├── Lease
+                │   │   └── kind-control-plane.yaml
+                │   ├── Secret
+                │   │   └── default-token-69n9s.yaml
+                │   └── ServiceAccount
+                │       └── default.yaml
+                ├── kube-public
+                │   ├── ConfigMap
+                │   │   ├── cluster-info.yaml
+                │   │   └── kube-root-ca.crt.yaml
+                │   ├── Role
+                │   │   ├── kubeadm:bootstrap-signer-clusterinfo.yaml
+                │   │   └── system:controller:bootstrap-signer.yaml
+                │   ├── RoleBinding
+                │   │   ├── kubeadm:bootstrap-signer-clusterinfo.yaml
+                │   │   └── system:controller:bootstrap-signer.yaml
+                │   ├── Secret
+                │   │   └── default-token-jqv4n.yaml
+                │   └── ServiceAccount
+                │       └── default.yaml
+                ├── kube-system
+                │   ├── ConfigMap
+                │   │   ├── coredns.yaml
+                │   │   ├── extension-apiserver-authentication.yaml
+                │   │   ├── kubeadm-config.yaml
+                │   │   ├── kubelet-config-1.21.yaml
+                │   │   ├── kube-proxy.yaml
+                │   │   └── kube-root-ca.crt.yaml
+                │   ├── ControllerRevision
+                │   │   ├── kindnet-5b547684d9.yaml
+                │   │   └── kube-proxy-6bc6858f58.yaml
+                │   ├── DaemonSet
+                │   │   ├── kindnet.yaml
+                │   │   └── kube-proxy.yaml
+                │   ├── Deployment
+                │   │   ├── coredns.yaml
+                │   │   └── stash-stash-enterprise.yaml
+                │   ├── Endpoints
+                │   │   ├── kube-dns.yaml
+                │   │   └── stash-stash-enterprise.yaml
+                │   ├── EndpointSlice
+                │   │   ├── kube-dns-m2s5c.yaml
+                │   │   └── stash-stash-enterprise-k28h6.yaml
+                │   ├── Lease
+                │   │   ├── kube-controller-manager.yaml
+                │   │   └── kube-scheduler.yaml
+                │   ├── Pod
+                │   │   ├── coredns-558bd4d5db-hdsw9.yaml
+                │   │   ├── coredns-558bd4d5db-wk9tx.yaml
+                │   │   ├── etcd-kind-control-plane.yaml
+                │   │   └── stash-stash-enterprise-567dd95f5b-6xtxg.yaml
+                │   ├── ReplicaSet
+                │   │   ├── coredns-558bd4d5db.yaml
+                │   │   └── stash-stash-enterprise-567dd95f5b.yaml
+                │   ├── Role
+                │   │   ├── extension-apiserver-authentication-reader.yaml
+                │   │   ├── kubeadm:kubelet-config-1.21.yaml
+                │   │   └── system::leader-locking-kube-scheduler.yaml
+                │   ├── RoleBinding
+                │   │   ├── kubeadm:kubelet-config-1.21.yaml
+                │   │   ├── kubeadm:nodes-kubeadm-config.yaml
+                │   │   ├── kube-proxy.yaml
+                │   ├── Service
+                │   │   ├── kube-dns.yaml
+                │   │   └── stash-stash-enterprise.yaml
+                │   └── ServiceAccount
+                │       ├── attachdetach-controller.yaml
+                │       ├── bootstrap-signer.yaml
+                └── local-path-storage
+                    ├── ConfigMap
+                    │   ├── kube-root-ca.crt.yaml
+                    │   └── local-path-config.yaml
+                    ├── Deployment
+                    │   └── local-path-provisioner.yaml
+                    ├── Endpoints
+                    │   └── rancher.io-local-path.yaml
+                    ├── Pod
+                    │   └── local-path-provisioner-547f784dff-jb9tq.yaml
+                    ├── ReplicaSet
+                    │   └── local-path-provisioner-547f784dff.yaml
+                    ├── Secret
+                    │   ├── default-token-bnk6x.yaml
+                    │   └── local-path-provisioner-service-account-token-fvkxj.yaml
+                    └── ServiceAccount
+                        ├── default.yaml
+                        └── local-path-provisioner-service-account.yaml
+
+77 directories, 776 files
+```
+
+Here, the non-namespaced resources have been grouped under the `global` directory and the namespaced resources have been grouped inside the namespace specific folder under the `namespaces` directory.
+
+Let's inspect the YAML of `kubeadm-config.yaml` file under `kube-system` namespace.
+
+```yaml
+❯ cat $HOME/Downloads/stash/latest/tmp/resources/namespaces/kube-system/ConfigMap/kubeadm-config.yaml
 apiVersion: v1
 data:
   ClusterConfiguration: |
@@ -515,14 +525,16 @@ metadata:
   namespace: kube-system
 ```
 
+Now, you can use these YAML files to re-create your desired application.
+
 ## Cleanup
 
 To cleanup the Kubernetes resources created by this tutorial, run:
 
 ```bash
-kubectl delete -n demo backupconfiguration sample-redis-backup
-kubectl delete -n demo restoresession sample-redis-restore
-kubectl delete -n demo repository gcs-repo
-# delete the database chart
-helm delete sample-redis -n demo
+kubectl delete -n demo backupconfiguration cluster-resources-backup
+kubectl delete -n demo repository cluster-resource-storage
+kubectl delete -n demo serviceaccount cluster-resource-reader
+kubectl delete -n demo clusterrole cluster-resource-reader
+kubectl delete -n demo clusterolebinding cluster-resource-reader
 ```
