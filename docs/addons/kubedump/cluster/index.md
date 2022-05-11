@@ -533,5 +533,5 @@ kubectl delete -n demo backupconfiguration cluster-resources-backup
 kubectl delete -n demo repository cluster-resource-storage
 kubectl delete -n demo serviceaccount cluster-resource-reader
 kubectl delete -n demo clusterrole cluster-resource-reader
-kubectl delete -n demo clusterolebinding cluster-resource-reader
+kubectl delete -n demo clusterrolebinding cluster-resource-reader
 ```

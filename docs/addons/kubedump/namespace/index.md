@@ -14,7 +14,7 @@ section_menu_id: stash-addons
 
 # Backup resource YAMLs of a Namespace using Stash
 
-Stash `{{< param "info.version" >}}` supports taking backup of the resource YAMLs using `kubedump` plugin. This guide will show you how you can take a backup of the resource YAMLs a particular namespace using Stash.
+Stash `{{< param "info.version" >}}` supports taking backup of the resource YAMLs using `kubedump` plugin. This guide will show you how you can take a backup of the resource YAMLs of a particular namespace using Stash.
 
 ## Before You Begin
 
@@ -40,10 +40,9 @@ namespace/demo created
 
 > Note: YAML files used in this tutorial are stored [here](https://github.com/stashed/docs/tree/{{< param "info.version" >}}/docs/addons/kubedump/namespace/examples).
 
-
 ### Prepare for Backup
 
-In this section, we are going to configure a backup for all the resource YAMLs of our cluster.
+In this section, we are going to configure a backup for all the resource YAMLs of `kube-system` namespace.
 
 #### Ensure `kubedump` Addon
 
@@ -396,5 +395,5 @@ kubectl delete -n demo backupconfiguration kube-system-backup
 kubectl delete -n demo repository namespace-resource-storage
 kubectl delete -n demo serviceaccount cluster-resource-reader
 kubectl delete -n demo clusterrole cluster-resource-reader
-kubectl delete -n demo clusterolebinding cluster-resource-reader
+kubectl delete -n demo clusterrolebinding cluster-resource-reader
 ```
