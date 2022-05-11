@@ -3,7 +3,7 @@ title: Backup resource YAMLs of entire cluster | Stash
 description: Take backup of cluster resources YAMLs using Stash
 menu:
   docs_{{ .version }}:
-    identifier: stash-kubedump-helm
+    identifier: stash-kubedump-cluster
     name: Cluster Backup
     parent: stash-kubedump
     weight: 20
@@ -178,6 +178,7 @@ Here,
 - `.spec.schedule` specifies that we want to backup the cluster resources at 5 minutes intervals.
 - `.spec.task.name` specifies the name of the Task object that specifies the necessary Functions and their execution order to backup the resource YAMLs.
 - `.spec.repository.name` specifies the Repository CR name we have created earlier with backend information.
+- `.spec.runtimeSettings.pod.serviceAccountName` specifies the ServiceAccount name that we have created earlier with cluster-wide resource reading permission.
 - `.spec.retentionPolicy` specifies a policy indicating how we want to cleanup the old backups.
 
 Let's create the `BackupConfiguration` object we have shown above,
@@ -261,10 +262,6 @@ Now, let's download the latest Snapshot from our backed-up data into the `$HOME/
 
 ```bash
 ❯ kubectl stash download -n demo cluster-resource-storage  --destination=$HOME/Downloads/stash --snapshots="latest"
-I0427 16:01:16.874481  698253 download.go:176] Running docker with args: [run --rm -u 1000 -v /tmp/scratch:/tmp/scratch -v /home/emruz/Downloads/stash:/tmp/destination --env HTTP_PROXY= --env HTTPS_PROXY= --env-file /tmp/scratch/config/restic-envs stashed/restic:latest --no-cache restore latest --target /tmp/destination/latest]
-I0427 16:02:19.413197  698253 download.go:181] Output: restoring <Snapshot ae2de1c2 of [/tmp/manifests] at 2022-04-27 10:00:23.19484503 +0000 UTC by @host-0> to /tmp/destination/latest
-
-I0427 16:02:19.413215  698253 download.go:137] Snapshots: [latest] of Repository demo/cluster-resource-storage restored in path /home/emruz/Downloads/stash
 ```
 
 Now, lets use [tree](https://linux.die.net/man/1/tree) command to inspect downloaded YAMLs files.
