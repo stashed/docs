@@ -1,0 +1,23 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: kube-system-backup
+  namespace: demo
+spec:
+  schedule: "*/5 * * * *"
+  task:
+    name: kubedump-backup-0.1.0
+  repository:
+    name: namespace-resource-storage
+  target:
+    ref:
+      apiVersion: v1
+      kind: Namespace
+      name: kube-system
+  runtimeSettings:
+    pod:
+      serviceAccountName: cluster-resource-reader
+  retentionPolicy:
+    name: keep-last-5
+    keepLast: 5
+    prune: true

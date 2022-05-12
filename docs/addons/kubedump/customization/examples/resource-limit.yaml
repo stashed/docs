@@ -1,0 +1,26 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: cluster-resources-backup
+  namespace: demo
+spec:
+  schedule: "*/5 * * * *"
+  task:
+    name: kubedump-backup-0.1.0
+  repository:
+    name: cluster-resource-storage
+  runtimeSettings:
+    pod:
+      serviceAccountName: cluster-resource-reader
+    container:
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "1Gi"
+        limits:
+          cpu: "200m"
+          memory: "1Gi"
+  retentionPolicy:
+    name: keep-last-5
+    keepLast: 5
+    prune: true

@@ -1,0 +1,11 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: cluster-resource-storage
+  namespace: demo
+spec:
+  backend:
+    gcs:
+      bucket: stash-testing
+      prefix: /manifests/cluster
+    storageSecretName: gcs-secret

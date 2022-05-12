@@ -1,0 +1,11 @@
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: application-resource-storage
+  namespace: demo
+spec:
+  backend:
+    gcs:
+      bucket: stash-testing
+      prefix: /manifests/applications/kube-system/stash-enterprise
+    storageSecretName: gcs-secret
