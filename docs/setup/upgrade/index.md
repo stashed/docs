@@ -32,9 +32,24 @@ $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.vers
 $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/charts/stash-metrics/crds/metrics.appscode.com_metricsconfigurations.yaml
 ```
 
-#### 2. Cleanup Auto-Backup Resources
+#### 2. Cleanup old Auto-Backup resources
 
-You may have Automatically created BackupConfigurations or Repositories in your cluster by Auto-Backup. If you are upgading to `Stash v2022.05.12` or later versions from an older version and are going to use the cross-namespace-target feauture with Auto-Backup, then please cleanup those automatically created old BackupConfigurations and Repositories manually.
+You need to follow this step if all of the following conditions apply to you:
+- You are going to upgrade to Stash v2022.05.12 or later from an older version
+- You have existing BackupConfigurations or Repositories in your cluster created by Auto-Backup
+- You are going to use the cross-namespace-target feature with Auto-Backup
+
+If all of the above conditions apply to you, please clean up all of those automatically created old BackupConfigurations and Repositories. 
+
+To cleanup the BackupConfigurations and the Repositories,
+
+```bash
+# Delete a particular backupconfiguration
+$ kubectl delete backupconfiguration -n <namespace_name> <backupconfiguration_name>
+
+# Delete a particular repository
+$ kubectl delete repository -n <namespace_name> <repository_name>
+```
 
 #### 3. Upgrade Stash Operator
 
