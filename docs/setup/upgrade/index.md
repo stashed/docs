@@ -32,26 +32,7 @@ $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.vers
 $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/charts/stash-metrics/crds/metrics.appscode.com_metricsconfigurations.yaml
 ```
 
-#### 2. Cleanup old Auto-Backup resources
-
-You need to follow this step if all of the following conditions apply to you:
-- You are going to upgrade to Stash `v2022.05.12` or later from an older version
-- You have existing BackupConfigurations or Repositories in your cluster created by Auto-Backup
-- You are going to use the cross-namespace-target feature with Auto-Backup
-
-If each of the above conditions apply to you, please clean up all the automatically created old BackupConfigurations and Repositories of your cluster. 
-
-To cleanup the BackupConfigurations and the Repositories,
-
-```bash
-# Delete a particular backupconfiguration
-$ kubectl delete backupconfiguration -n <namespace_name> <backupconfiguration_name>
-
-# Delete a particular repository
-$ kubectl delete repository -n <namespace_name> <repository_name>
-```
-
-#### 3. Upgrade Stash Operator
+#### 2. Upgrade Stash Operator
 
 Now, upgrade the Stash helm chart using the following command. You can find the latest installation guide [here](/docs/setup/README.md).
 
@@ -72,6 +53,20 @@ $ helm upgrade stash appscode/stash \
     --namespace kube-system \
     --set features.enterprise=true                \
     --set-file global.license=/path/to/the/license.txt
+```
+
+#### 3. Post uprade cleanup
+
+If you were using Stash Auto-backup with cross-namespace-repository then you may have existing Repositories in the `repoNamespace` and BackupNamespace in your application's namespace. Now, if you are going to use `backupNamespace` in Auto-Backup, those previously existing Repositories will create conflict. in this case,you need to cleanup the old BackupConfigurations and Repositories manually.
+
+To cleanup the BackupConfigurations and the Repositories,
+
+```bash
+# Delete a particular backupconfiguration
+$ kubectl delete backupconfiguration -n <namespace_name> <backupconfiguration_name>
+
+# Delete a particular repository
+$ kubectl delete repository -n <namespace_name> <repository_name>
 ```
 
 ## Upgrading Stash from `v0.11.x` and older to `v0.12.x`
