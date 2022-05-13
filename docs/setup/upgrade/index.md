@@ -55,6 +55,20 @@ $ helm upgrade stash appscode/stash \
     --set-file global.license=/path/to/the/license.txt
 ```
 
+#### 3. Post uprade cleanup
+
+We have changed the name format for auto-backup resources to support dedicated backup or storage namespace. If you were using a dedicated storage namespace for your auto-backup through the `repoNamespace` field, you might see a new BackupConfiguration and Repository has been created with a new name format. Unfortunately, Stash can't remove the old BackupConfiguration and Repository before creating a new one due to a flaw in how we handled them previously. In this case, you can safely remove the old BackupConfiguration and Repository. Your backed-up data will be intact.
+
+To cleanup the BackupConfigurations and the Repositories,
+
+```bash
+# Delete a particular backupconfiguration
+$ kubectl delete backupconfiguration -n <namespace_name> <backupconfiguration_name>
+
+# Delete a particular repository
+$ kubectl delete repository -n <namespace_name> <repository_name>
+```
+
 ## Upgrading Stash from `v0.11.x` and older to `v0.12.x`
 
 In Stash `v0.11.x` and prior versions, Stash used separate charts for Stash community edition, Stash enterprise edition, and Stash Addons catalogs. In Stash `v0.12.x`, we have moved to a single combined chart for all the components for a better user experience. This enables seamless migration between the Stash community edition and Stash enterprise edition. It also removes the burden of installing individual database addons manually.
