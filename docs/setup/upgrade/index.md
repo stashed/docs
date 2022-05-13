@@ -35,11 +35,11 @@ $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.vers
 #### 2. Cleanup old Auto-Backup resources
 
 You need to follow this step if all of the following conditions apply to you:
-- You are going to upgrade to Stash v2022.05.12 or later from an older version
+- You are going to upgrade to Stash `v2022.05.12` or later from an older version
 - You have existing BackupConfigurations or Repositories in your cluster created by Auto-Backup
 - You are going to use the cross-namespace-target feature with Auto-Backup
 
-If all of the above conditions apply to you, please clean up all of those automatically created old BackupConfigurations and Repositories. 
+If each of the above conditions apply to you, please clean up all the automatically created old BackupConfigurations and Repositories of your cluster. 
 
 To cleanup the BackupConfigurations and the Repositories,
 
