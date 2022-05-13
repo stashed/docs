@@ -32,7 +32,11 @@ $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.vers
 $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.version" >}}/charts/stash-metrics/crds/metrics.appscode.com_metricsconfigurations.yaml
 ```
 
-#### 2. Upgrade Stash Operator
+#### 2. Cleanup Auto-Backup Resources
+
+You may have Automatically created BackupConfigurations or Repositories in your cluster by Auto-Backup. If you are upgading to `Stash v2022.05.12` or later versions from an older version and are going to use the cross-namespace-target feauture with Auto-Backup, then please cleanup those automatically created old BackupConfigurations and Repositories manually.
+
+#### 3. Upgrade Stash Operator
 
 Now, upgrade the Stash helm chart using the following command. You can find the latest installation guide [here](/docs/setup/README.md).
 
