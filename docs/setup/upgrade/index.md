@@ -57,7 +57,7 @@ $ helm upgrade stash appscode/stash \
 
 #### 3. Post uprade cleanup
 
-If you were using Stash Auto-backup with cross-namespace-repository, you may have existing Repositories in the `repoNamespace` and BackupNamespace in your application's namespace. If you use `backupNamespace` in Auto-Backup, those previously existing Repositories will create conflict. In this case, you need to clean up the old BackupConfigurations and Repositories manually.
+We have changed the name format for auto-backup resources to support dedicated backup or storage namespace. If you were using a dedicated storage namespace for your auto-backup through the `repoNamespace` field, you might see a new BackupConfiguration and Repository has been created with a new name format. Unfortunately, Stash can't remove the old BackupConfiguration and Repository before creating a new one due to a flaw in how we handled them previously. In this case, you can safely remove the old BackupConfiguration and Repository. Your backed-up data will be intact.
 
 To cleanup the BackupConfigurations and the Repositories,
 
