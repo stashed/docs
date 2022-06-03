@@ -69,6 +69,7 @@ status:
     type: RepositoryMetricsPushed
   phase: Succeeded
   sessionDuration: 22.575920065s
+  sessionDeadline: "2020-07-25T17:46:28Z"
   targets:
   - phase: Succeeded
     preBackupActions:

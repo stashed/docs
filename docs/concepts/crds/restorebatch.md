@@ -62,6 +62,7 @@ spec:
 status:
   phase: Succeeded
   sessionDuration: 15.145032437s
+  sessionDeadline: "2020-07-25T17:46:52Z"
   conditions:
   - lastTransitionTime: "2020-07-25T17:41:52Z"
     message: Repository demo/minio-repo exist.

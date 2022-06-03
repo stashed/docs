@@ -105,6 +105,7 @@ status:
   totalHosts: 5
   phase: Succeeded
   sessionDuration: 2m40.595857548s
+  sessionDeadline: "2022-02-25T18:00:56Z"
   conditions:
   - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Repository demo/minio-repo exist.
