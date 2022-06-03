@@ -80,6 +80,7 @@ spec:
     name: 'keep-last-10'
     keepLast: 10
     prune: true
+  timeOut: 5m
 ```
 
 Here, we are going to describe the various sections of `BackupBatch` crd.
@@ -144,6 +145,10 @@ For more details on how hooks work in Stash and how to configure different types
 #### spec.retentionPolicy
 
 `spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. For more details, please see [here](/docs/concepts/crds/backupconfiguration.md#specretentionpolicy).
+
+#### spec.timeOut
+
+`spec.timeOut` specifies the maximum duration of the backup. `BackupSession` will be considered `Failed` if the backup does not complete within this time limit. By default, Stash don't set any timeout for the backup.
 
 ### BackupBatch `Status`
 

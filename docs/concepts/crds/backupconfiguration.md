@@ -99,6 +99,7 @@ spec:
     name: 'keep-last-5'
     keepLast: 5
     prune: true
+  timeOut: 5m
 ```
 
 Here, we are going to describe the various sections of `BackupConfiguration` crd.
@@ -237,6 +238,10 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 | `keepTags`    | array   | --keep-tag <tag>             | Keep all snapshots which have all tags specified by this option (can be specified multiple times). |
 | `prune`       | bool    | --prune                      | If set `true`, Stash will cleanup unreferenced data from the backend.                              |
 | `dryRun`      | bool    | --dry-run                    | Stash will not remove anything but print which snapshots would be removed.                         |
+
+#### spec.timeOut
+
+`spec.timeOut` specifies the maximum duration of backup. `BackupSession` will be considered `Failed` if the backup does not complete within this time limit. By default, Stash don't set any timeout for the backup.
 
 ### BackupConfiguration `Status`
 
