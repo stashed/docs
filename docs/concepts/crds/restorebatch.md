@@ -58,9 +58,11 @@ spec:
         - latest
     task:
       name: mysql-restore-8.0.14
+  timeOut: 5m
 status:
   phase: Succeeded
   sessionDuration: 15.145032437s
+  sessionDeadline: "2020-07-25T17:46:52Z"
   conditions:
   - lastTransitionTime: "2020-07-25T17:41:52Z"
     message: Repository demo/minio-repo exist.
@@ -162,6 +164,10 @@ A `RestoreBatch` object has the following fields in the `spec` section.
 
 For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview/index.md).
 
+#### spec.timeOut
+
+`spec.timeOut` specifies the maximum duration of the restore. `RestoreBatch` will be considered `Failed` if the restore does not complete within this time limit. By default, Stash don't set any timeout for the restore.
+
 ### RestoreBatch `Status`
 
 A `RestoreBatch` object has the following fields in the `status` section.
@@ -169,6 +175,8 @@ A `RestoreBatch` object has the following fields in the `status` section.
 - **phase :** `phase` shows the overall phase of the restore process. It will be `Succeeded` only if all the targets are restored successfully.
 
 - **sessionDuration :** `sessionDuration` shows the total time taken to complete the entire restoration process.
+
+- **sessionDeadline :** `sessionDeadline` indicates the the deadline of the restore process. `RestoreBatch` will be considered `Failed` if the restore does not complete within this deadline.
 
 - **conditions :** The `conditions` field shows conditions of different steps of the restore process. The following conditions are set by the Stash operator for a RestoreBatch:
 
@@ -178,6 +186,7 @@ A `RestoreBatch` object has the following fields in the `status` section.
 | `BackendSecretFound`             | Indicates whether the respective backend secret was found or not.             |
 | `GlobalPreRestoreHookSucceeded`  | Indicates whether the global PreRestoreHook was executed successfully or not. |
 | `GlobalPostRestoreHookSucceeded` | Indicates whether the global PostRestoreHook was executed successfully or no. |
+| `DeadlineExceeded`   | Indicates whether the session deadline was exceeded or not.|
 
 - **members :** `members` section shows the restore status of the individual members. Each entry has the following fields:
   - **ref :** `ref` points to the respective target whose status is shown here.

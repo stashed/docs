@@ -69,6 +69,7 @@ status:
     type: RepositoryMetricsPushed
   phase: Succeeded
   sessionDuration: 22.575920065s
+  sessionDeadline: "2020-07-25T17:46:28Z"
   targets:
   - phase: Succeeded
     preBackupActions:
@@ -158,6 +159,10 @@ A `BackupSession` object has the following fields in the `spec` section:
 
 `status.sessionDuration` indicates the total time taken to complete the backup of all targets in this session.
 
+#### status.sessionDeadline
+
+`status.sessionDeadline` indicates the the deadline of the backup process. `BackupSession` will be considered `Failed` if the backup does not complete within this deadline.
+
 #### status.conditions
 
 `status.conditions` shows the conditions of different operations/steps of the backup process. The following conditions are set by the Stash operator on a BackupSession.
@@ -170,6 +175,7 @@ A `BackupSession` object has the following fields in the `spec` section:
 | `RepositoryMetricsPushed`       | Indicates whether the Repository metrics for this backup session were pushed or not.                                         |
 | `GlobalPreBackupHookSucceeded`  | Indicates whether the global PreBackupHook was executed successfully or not. Only available during backup using BackupBatch. |
 | `GlobalPostBackupHookSucceeded` | Indicates whether the global PostBackupHook was executed successfully or not. Only available during backup BackupBatch.      |
+| `DeadlineExceeded`   | Indicates whether the session deadline was exceeded or not.|
 
 #### status.targets
 

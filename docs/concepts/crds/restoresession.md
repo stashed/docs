@@ -100,10 +100,12 @@ spec:
     disableCaching: false
     medium: Memory
     sizeLimit: 2Gi
+  timeOut: 5m
 status:
   totalHosts: 5
   phase: Succeeded
   sessionDuration: 2m40.595857548s
+  sessionDeadline: "2022-02-25T18:00:56Z"
   conditions:
   - lastTransitionTime: "2022-02-25T17:55:56Z"
     message: Repository demo/minio-repo exist.
@@ -277,6 +279,10 @@ Stash mounts an `emptyDir` for holding temporary files. It is also used for `cac
 - **spec.tempDir.sizeLimit :** Maximum limit of storage for this volume.
 - **spec.tempDir.disableCaching :** Disable caching while restoring. This may negatively impact restore performance. This field is set to `false` by default.
 
+#### spec.timeOut
+
+`spec.timeOut` specifies the maximum duration of the restore. `RestoreSession` will be considered `Failed` if the restore does not complete within this time limit. By default, Stash don't set any timeout for the restore.
+
 #### spec.interimVolumeTemplate
 
 For some targets (i.e. some databases), Stash can't directly pipe the restored data into the target. In this case, it has to store the restored data temporarily before injecting into the target. `spec.interimVolumeTemplate` specifies a PVC template for holding those data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted automatically if you delete the `RestoreSession`.
@@ -299,6 +305,11 @@ Not every pod or replica of the target will run the restore process. Thus, we re
 
 `status.sessionDuration` indicates the total time taken to complete the restoration of all hosts.
 
+#### status.sessionDeadline
+
+`status.sessionDeadline` indicates the the deadline of the restore process. `RestoreSession` will be considered `Failed` if the restore does not complete within this deadline.
+
+
 #### status.conditions
 
 `status.conditions` shows the conditions of various steps of the restore process. Stash sets the following conditions for a RestoreSession:
@@ -312,6 +323,7 @@ Not every pod or replica of the target will run the restore process. Thus, we re
 | `RestorerEnsured`          | Indicates whether the Restorer job/init-container was created or not.                                      |
 | `ValidationPassed`   | Indicates whether the resource has passed validation checks or not. |
 | ` MetricsPushed`     | Indicates whether the metrics have been pushed to the Pushgateway or not. |
+| `DeadlineExceeded`   | Indicates whether the session deadline was exceeded or not.|
 
 #### status.stats
 
