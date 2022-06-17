@@ -37,8 +37,9 @@ kubectl-stash pause backup [flags]
 ### Options inherited from parent commands
 
 ```
-      --as string                        Username to impersonate for the operation
+      --as string                        Username to impersonate for the operation. User could be a regular user or a service account in a namespace.
       --as-group stringArray             Group to impersonate for the operation, this flag can be repeated to specify multiple groups.
+      --as-uid string                    UID to impersonate for the operation.
       --backupbatch string               Name of the BackupBatch to pause
       --backupconfig string              Name of the BackupConfiguration to pause
       --cache-dir string                 Default cache directory (default "/home/runner/.kube/cache")
