@@ -579,18 +579,21 @@ Hence, we can see from the above output that the deleted data has been restored 
 **Resume Backup**
 
 Since our data has been restored successfully we can now resume our usual backup process. Resume the `BackupConfiguration` using following command,
+
 ```bash
 $ kubectl patch backupconfiguration -n demo sample-mariadb-backup --type="merge" --patch='{"spec": {"paused": false}}'
 backupconfiguration.stash.appscode.com/sample-mariadb-backup patched
 ```
 
 Or you can use the Stash `kubectl` plugin to resume the `BackupConfiguration`,
+
 ```bash
 $ kubectl stash resume -n demo --backupconfig=sample-mariadb-backup
 BackupConfiguration demo/sample-mariadb-backup has been resumed successfully.
 ```
 
 Verify that the `BackupConfiguration` has been resumed,
+
 ```bash
 $ kubectl get backupconfiguration -n demo sample-mariadb-backup
 NAME                    TASK                    SCHEDULE      PAUSED   PHASE   AGE
@@ -606,6 +609,30 @@ stash-backup-sample-mariadb-backup   */5 * * * *   False     0        2m59s     
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
+
+## Allow Operator to List Snapshots
+
+Stash operator uses its own `ServiceAccount` to list the snapshots from the backend. Therefore, this `ServiceAccount` should be binded with the IAM service account as well.  Run the following command to get the service account used by the Stash operator,
+
+```bash
+kubectl get serviceaccount -n stash stash-stash-enterprise
+NAME                                   SECRETS   AGE
+stash-stash-enterprise                 1         9m52s
+```
+
+Let's add the IAM annotations to the `ServiceAccount`,
+
+```bash
+$ kubectl annotate sa -n stash stash-stash-enterprise iam.gke.io/gcp-service-account="storage-accessor-gsa@appscode-testing.iam.gserviceaccount.com"
+```
+
+Now Let's bind it with the IAM service account,
+
+```bash
+$ gcloud iam service-accounts add-iam-policy-binding storage-accessor-gsa@sample-project.iam.gserviceaccount.com \
+    --role roles/iam.workloadIdentityUser \
+    --member "serviceAccount:sample-project.svc.id.goog[stash/stash-stash-enterprise]"
+```
 
 ### Cleanup
 
