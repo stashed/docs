@@ -272,7 +272,7 @@ We need an IAM role with the policy `bucket-accessor` attached and a Kubernetes 
 
 ```bash
 eksctl create iamserviceaccount \
-       --name bucket-accessor-ksa \
+       --name bucket-user \
        --namespace demo \
        --cluster irsa-demo \
        --attach-policy-arn arn:aws:iam::123456789012:policy/bucket-accessor\
@@ -298,7 +298,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: bucket-accessor-ksa
+      serviceAccountName: bucket-user
   schedule: "*/5 * * * *"
   repository:
     name: s3-repo
@@ -485,7 +485,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: bucket-accessor-ksa
+      serviceAccountName: bucket-user
   repository:
     name: s3-repo
   target:
@@ -608,6 +608,9 @@ stash-backup-sample-mariadb-backup   */5 * * * *   False     0        2m59s     
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
+
+## Allow Operator to List Snapshots
+
 
 ### Cleanup
 
