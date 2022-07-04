@@ -42,7 +42,7 @@ namespace/demo created
 At first, let's create an IAM service account which will contain the roles for accessing GCS Bucket,
 
 ```bash
-$ gcloud iam service-accounts create storage-accessor-gsa \
+$ gcloud iam service-accounts create bucket-accessor \
     --project=sample-project
 ```
 
@@ -50,13 +50,13 @@ Let's add the required roles to this service account for accessing the GCS bucke
 
 ```bash
 $ gcloud projects add-iam-policy-binding sample-project \
-    --member "serviceAccount:storage-accessor-gsa@sample-project.iam.gserviceaccount.com" \
+    --member "serviceAccount:bucket-accessor@sample-project.iam.gserviceaccount.com" \
     --role "roles/storage.objectAdmin"
 ```
 
 ```bash
 $ gcloud projects add-iam-policy-binding sample-project \
-    --member "serviceAccount:storage-accessor-gsa@sample-project.iam.gserviceaccount.com" \
+    --member "serviceAccount:bucket-accessor@sample-project.iam.gserviceaccount.com" \
     --role "roles/storage.admin"
 ```
 
@@ -261,26 +261,26 @@ Now, we are ready to backup our sample data into this backend.
 
 ### Prepare ServiceAccount
 
-Now we are going create a Kubernetes service account and bind it with the IAM service account `storage-accessor-gsa` that we have created earlier. This binding allows the Kubernetes service account to act as the IAM service account.
+Now we are going create a Kubernetes service account and bind it with the IAM service account `bucket-accessor` that we have created earlier. This binding allows the Kubernetes service account to act as the IAM service account.
 
 Lets create a `ServiceAccount`,
 
 ```bash
-$ kubectl create serviceaccount -n demo storage-accessor-ksa
+$ kubectl create serviceaccount -n demo bucket-user
 ```
 
 Let's add the IAM annotations to the `ServiceAccount`,
 
 ```bash
-$ kubectl annotate sa -n demo storage-accessor-ksa iam.gke.io/gcp-service-account="storage-accessor-gsa@appscode-testing.iam.gserviceaccount.com"
+$ kubectl annotate sa -n demo bucket-user iam.gke.io/gcp-service-account="bucket-accessor@appscode-testing.iam.gserviceaccount.com"
 ```
 
 Now Let's bind it with the IAM service account,
 
 ```bash
-$ gcloud iam service-accounts add-iam-policy-binding storage-accessor-gsa@sample-project.iam.gserviceaccount.com \
+$ gcloud iam service-accounts add-iam-policy-binding bucket-accessor@sample-project.iam.gserviceaccount.com \
     --role roles/iam.workloadIdentityUser \
-    --member "serviceAccount:sample-project.svc.id.goog[demo/storage-accessor-ksa]"
+    --member "serviceAccount:sample-project.svc.id.goog[demo/bucket-user]"
 ```
 
 ## Backup
@@ -300,7 +300,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: storage-accessor-ksa
+      serviceAccountName: bucket-user
   schedule: "*/5 * * * *"
   repository:
     name: gcs-repo
@@ -487,7 +487,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: storage-accessor-ksa
+      serviceAccountName: bucket-user
   repository:
     name: gcs-repo
   target:
@@ -623,13 +623,13 @@ stash-stash-enterprise                 1         9m52s
 Let's add the IAM annotations to the `ServiceAccount`,
 
 ```bash
-$ kubectl annotate sa -n stash stash-stash-enterprise iam.gke.io/gcp-service-account="storage-accessor-gsa@appscode-testing.iam.gserviceaccount.com"
+$ kubectl annotate sa -n stash stash-stash-enterprise iam.gke.io/gcp-service-account="bucket-accessor@appscode-testing.iam.gserviceaccount.com"
 ```
 
 Now Let's bind it with the IAM service account,
 
 ```bash
-$ gcloud iam service-accounts add-iam-policy-binding storage-accessor-gsa@sample-project.iam.gserviceaccount.com \
+$ gcloud iam service-accounts add-iam-policy-binding bucket-accessor@sample-project.iam.gserviceaccount.com \
     --role roles/iam.workloadIdentityUser \
     --member "serviceAccount:sample-project.svc.id.goog[stash/stash-stash-enterprise]"
 ```
@@ -641,7 +641,7 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 ```bash
 kubectl delete -n demo backupconfiguration sample-mariadb-backup
 kubectl delete -n demo restoresession sample-mariadb-restore
-kubectl delete -n demo sa storage-accessor-ksa
+kubectl delete -n demo sa bucket-user
 kubectl delete -n demo secret encryption-secret
 kubectl delete -n demo repository gcs-repo
 kubectl delete -n demo mariadb sample-mariadb
