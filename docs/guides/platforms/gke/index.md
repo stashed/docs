@@ -612,10 +612,11 @@ Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended a
 
 ## Allow Operator to List Snapshots
 
-Stash operator uses its own `ServiceAccount` to list the snapshots from the backend. Therefore, this `ServiceAccount` should be binded with the IAM service account as well.  Run the following command to get the service account used by the Stash operator,
+When you list Snapshots using `kubectl get snapshot` command, Stash operator itself read the Snapshots directly from the backend. So, the operator needs permission to access the bucket.
+Stash operator has it own's `ServiceAccount`. Therefore, this `ServiceAccount` should be binded with the IAM service account as well.  Run the following command to get the service account used by the Stash operator,
 
 ```bash
-kubectl get serviceaccount -n stash stash-stash-enterprise
+$ kubectl get serviceaccount -n stash stash-stash-enterprise
 NAME                                   SECRETS   AGE
 stash-stash-enterprise                 1         9m52s
 ```

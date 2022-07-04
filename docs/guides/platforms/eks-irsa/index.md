@@ -578,18 +578,21 @@ Hence, we can see from the above output that the deleted data has been restored 
 **Resume Backup**
 
 Since our data has been restored successfully we can now resume our usual backup process. Resume the `BackupConfiguration` using following command,
+
 ```bash
 $ kubectl patch backupconfiguration -n demo sample-mariadb-backup --type="merge" --patch='{"spec": {"paused": false}}'
 backupconfiguration.stash.appscode.com/sample-mariadb-backup patched
 ```
 
 Or you can use the Stash `kubectl` plugin to resume the `BackupConfiguration`,
+
 ```bash
 $ kubectl stash resume -n demo --backupconfig=sample-mariadb-backup
 BackupConfiguration demo/sample-mariadb-backup has been resumed successfully.
 ```
 
 Verify that the `BackupConfiguration` has been resumed,
+
 ```bash
 $ kubectl get backupconfiguration -n demo sample-mariadb-backup
 NAME                    TASK                    SCHEDULE      PAUSED   PHASE   AGE
