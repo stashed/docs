@@ -267,7 +267,7 @@ metadata:
   name: cross-namespace-target-reader
 rules:
 - apiGroups: [""]
-  resources: ["secrets"]
+  resources: ["secrets","pods","endpoints"]
   verbs: ["get","list"]
 - apiGroups: ["appcatalog.appscode.com"]
   resources: ["appbindings"]
