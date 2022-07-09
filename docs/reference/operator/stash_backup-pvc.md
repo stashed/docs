@@ -19,6 +19,7 @@ stash backup-pvc [flags]
 ### Options
 
 ```
+      --args strings                      Arguments to pass to the backup command.
       --backup-paths strings              List of paths to backup
       --backupsession string              Name of the Backup Session
       --bucket string                     Name of the cloud bucket/container (keep empty for local backend)
