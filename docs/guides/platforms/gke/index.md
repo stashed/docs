@@ -39,7 +39,7 @@ namespace/demo created
 
 ## Prepare IAM Service Account
 
-At first, let's create an IAM service account which will contain the roles for accessing GCS Bucket,
+At first, let's create a IAM service account which will contain the roles for accessing GCS Bucket,
 
 ```bash
 $ gcloud iam service-accounts create bucket-accessor \

@@ -238,7 +238,7 @@ Now, we are ready to backup our sample data into this backend.
 
 ### Create IAM Policy
 
-We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
+We need a IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
 
 ```bash
 {
@@ -268,7 +268,7 @@ Let's navigate to the IAM management console to create a policy `bucket-accessor
 
 ### Create ServiceAccount
 
-We need an IAM role with the policy `bucket-accessor` attached and a Kubernetes service account annotated with that IAM role. Use the following command to do all these steps at once.
+We need a IAM role with the policy `bucket-accessor` attached and a Kubernetes service account annotated with that IAM role. Use the following command to do all these steps at once.
 
 ```bash
 eksctl create iamserviceaccount \
@@ -279,7 +279,7 @@ eksctl create iamserviceaccount \
        --approve
 ```
 
-This command will create an IAM role with the `bucket-accessor` policy attaced and a service account `bucket-acessor-ksa` annotated with that IAM role in the demo namespace. We will use the service account in the `BackupConfiguration` and `RestoreSession` to enable backup and restore using IRSA.
+This command will create a IAM role with the `bucket-accessor` policy attaced and a service account `bucket-acessor-ksa` annotated with that IAM role in the demo namespace. We will use the service account in the `BackupConfiguration` and `RestoreSession` to enable backup and restore using IRSA.
 
 ## Backup
 
@@ -611,6 +611,27 @@ Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended a
 
 ## Allow Operator to List Snapshots
 
+When you list Snapshots using `kubectl get snapshot` command, Stash operator itself read the Snapshots directly from the backend. So, the operator needs permission to access the bucket. Stash operator has it own's `ServiceAccount`. Therefore, this `ServiceAccount` should be binded with a IAM role with access to S3 as well.  
+
+Run the following command to get the service account used by the Stash operator,
+
+```bash
+$ kubectl get serviceaccount -n stash stash-stash-enterprise
+NAME                                   SECRETS   AGE
+stash-stash-enterprise                 1         9m52s
+```
+
+Run the following command to create a IAM role bound to the operator service account, 
+
+```bash
+eksctl create iamserviceaccount \
+       --name stash-stash-enterprise \
+       --namespace stash \
+       --cluster irsa-demo \
+       --attach-policy-arn arn:aws:iam::452618475015:policy/bucket-accessor\
+       --approve
+       --override-existing-serviceaccounts
+```
 
 ### Cleanup
 

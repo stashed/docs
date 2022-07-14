@@ -41,7 +41,7 @@ namespace/demo created
 
 ### Create IAM Policy
 
-We need an IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
+We need a IAM policy for accessing S3 buckets. Below is the `JSON`of the IAM policy we are going to create,
 
 ```bash
 {
@@ -71,7 +71,7 @@ Let's navigate to the IAM management console to create a policy `bucket-accessor
 
 ### Create Role
 
-Now, let's create an IAM role `bucket-accessor` attaching the above IAM policy,
+Now, let's create a IAM role `bucket-accessor` attaching the above IAM policy,
 
 <figure align="center">
   <img alt="Create IAM role (Step: 1)" src="/docs/guides/platforms/eks-kube2iam/images/create-role-1.png">
