@@ -275,7 +275,7 @@ eksctl create iamserviceaccount \
        --name bucket-user \
        --namespace demo \
        --cluster irsa-demo \
-       --attach-policy-arn arn:aws:iam::123456789012:policy/bucket-accessor\
+       --attach-policy-arn arn:aws:iam::452618475015:policy/bucket-accessor\
        --approve
 ```
 

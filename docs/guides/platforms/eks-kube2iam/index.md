@@ -101,7 +101,7 @@ We need to add the policy to allow our Kubernete worker nodes to assume roles th
         "sts:AssumeRole"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:iam::123456789012:role/bucket-accessor"
+      "Resource": "arn:aws:iam::452618475015:role/bucket-accessor"
     }
   ]
 }
@@ -147,7 +147,7 @@ The `bucket-accessor` role needs the trust policy to trust the node role. Below 
             "Sid": "",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::123456789012:role/kubernetes-node"
+                "AWS": "arn:aws:iam::452618475015:role/kubernetes-node"
             },
             "Action": "sts:AssumeRole"
         }
