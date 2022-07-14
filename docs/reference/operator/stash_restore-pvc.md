@@ -19,6 +19,7 @@ stash restore-pvc [flags]
 ### Options
 
 ```
+      --args strings                      Arguments to pass to the restore command.
       --bucket string                     Name of the cloud bucket/container (keep empty for local backend)
       --enable-cache                      Specify whether to enable caching for restic
       --endpoint string                   Endpoint for s3/s3 compatible backend or REST server URL
