@@ -46,5 +46,5 @@ Clone Kubernetes resources
 ### SEE ALSO
 
 * [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
-* [kubectl-stash clone pvc](/docs/reference/cli/kubectl-stash_clone_pvc/index.md)	 - Clone PVC
+* [kubectl-stash clone pvc](/docs/reference/cli/kubectl-stash_clone_pvc.md)	 - Clone PVC
 
