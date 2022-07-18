@@ -23,10 +23,10 @@ This guide will show you how you can use a dedicated backup namespace to keep yo
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 
 Here, we are going to take a backup from the `prod` namespace and restore it to the `staging` namespace. We are going to manage the backup and restore from a separate `backup` namespace.
 
@@ -188,9 +188,9 @@ Now, we are ready to backup the database.
 
 We are going to store our backed-up data into a GCS bucket. We have to create a Secret with the necessary credentials and a Repository CRD to use this backend. 
 
-If you want to use a different backend, please read the doc [here](/docs/guides/backends/overview.md).
+If you want to use a different backend, please read the doc [here](/docs/guides/backends/overview/index.md).
 
-> For the GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For the GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs/index.md).
 
 **Create Secret:**
 

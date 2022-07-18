@@ -31,12 +31,12 @@ Here, we are going to demonstrate how to send a notification to a Slack channel 
 
 You should be familiar with the following `Stash` concepts:
 
-- [BackupBatch](/docs/concepts/crds/backupbatch.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [Repository](/docs/concepts/crds/repository.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
-- [AppBinding](/docs/concepts/crds/appbinding.md)
+- [BackupBatch](/docs/concepts/crds/backupbatch/index.md)
+- [BackupSession](/docs/concepts/crds/backupsession/index.md)
+- [Repository](/docs/concepts/crds/repository/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
+- [AppBinding](/docs/concepts/crds/appbinding/index.md)
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -190,7 +190,7 @@ spec:
 Let's create the above resources,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/batch-backup/wordpress-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/batch-backup/examples/wordpress-deployment.yaml
 
 persistentvolumeclaim/wordpress-pvc created
 deployment.apps/wordpress-deployment created
@@ -210,7 +210,7 @@ Now, let's prepare for the backup. Here, we are going to prepare the backend whe
 
 ### Prepare Backend
 
-We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` CR. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` CR. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Storage Secret:**
 

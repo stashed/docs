@@ -279,7 +279,7 @@ Forwarding from [::1]:9090 -> 9090
 Now, you can access the Web UI at `localhost:9090`. Open [http://localhost:9090/targets](http://localhost:9090/targets) in your browser. You should see `pushgateway` and `api` endpoints of the Stash operator are among the targets. This verifies that the Prometheus server is scrapping Stash metrics.
 
 <figure align="center">
-  <img alt="Stash Monitoring Flow" src="/docs/guides/monitoring/prom-operator/images/prom_operator_web_ui.png">
+  <img alt="Stash Monitoring Flow" src="images/prom_operator_web_ui.png">
 <figcaption align="center">Fig: Prometheus Web UI</figcaption>
 </figure>
 
