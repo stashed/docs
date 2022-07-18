@@ -27,7 +27,7 @@ In this tutorial, we are going to show how you can configure a backup blueprint 
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want.
 - If you are not familiar with how Stash backup and restore PostgreSQL databases, please check the following guide [here](/docs/addons/postgres/overview/index.md).
 - If you are not familiar with how auto-backup works in Stash, please check the following guide [here](/docs/guides/auto-backup/overview/index.md).
-- If you are not familiar with the available auto-backup options for databases in Stash, please check the following guide [here](/docs/guides/auto-backup/database.md).
+- If you are not familiar with the available auto-backup options for databases in Stash, please check the following guide [here](/docs/guides/auto-backup/database/index.md).
 
 You should be familiar with the following `Stash` concepts:
 
@@ -108,7 +108,7 @@ Let's create the `BackupBlueprint` we have shown above,
 backupblueprint.stash.appscode.com/postgres-backup-template created
 ```
 
-Now, we are ready to backup our PostgreSQL databases using few annotations. You can check available auto-backup annotations for a database from [here](/docs/guides/auto-backup/database.md#available-auto-backup-annotations-for-database).
+Now, we are ready to backup our PostgreSQL databases using few annotations. You can check available auto-backup annotations for a database from [here](/docs/guides/auto-backup/database/index.md#available-auto-backup-annotations-for-database).
 
 ## Auto-backup with default configurations
 

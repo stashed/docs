@@ -140,7 +140,7 @@ $ kubectl get snapshot -n demo local-repo-02b0ed42 -o yaml
 
 1. Stash provides `Snapshots` listing facility with the help of an Aggregated API Server. Your cluster must support Aggregated API Server. Otherwise, you won't be able to perform `get` or `list` operation on `Snapshot`.
 
-2. If you are using [local](/docs/guides/backends/local.md) backend, the respective pod that took the backup must be in `Running` state. It is not necessary if you use cloud backends.
+2. If you are using [local](/docs/guides/backends/local/index.md) backend, the respective pod that took the backup must be in `Running` state. It is not necessary if you use cloud backends.
 
 ## Next Steps
 

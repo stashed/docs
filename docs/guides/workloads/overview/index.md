@@ -82,6 +82,6 @@ The restore process consists of the following steps:
 
 ## Next Steps
 
-1. See a step by step guide to backup/restore volumes of a Deployment [here](/docs/guides/workloads/deployment.md).
-2. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/workloads/statefulset.md).
-3. See a step by step guide to backup/restore a Daemonset's volumes [here](/docs/guides/workloads/daemonset.md).
+1. See a step by step guide to backup/restore volumes of a Deployment [here](/docs/guides/workloads/deployment/index.md).
+2. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/workloads/statefulset/index.md).
+3. See a step by step guide to backup/restore a Daemonset's volumes [here](/docs/guides/workloads/daemonset/index.md).

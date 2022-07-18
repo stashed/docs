@@ -190,7 +190,7 @@ We are going to store our backed-up data into a GCS bucket. We have to create a 
 
 If you want to use a different backend, please read the doc [here](/docs/guides/backends/overview/index.md).
 
-> For the GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For the GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs/index.md).
 
 **Create Secret:**
 

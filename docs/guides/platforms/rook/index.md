@@ -445,7 +445,7 @@ This section will show you how to restore the backed up data from [Ceph Storage 
 
 **Stop Taking Backup of the Old Deployment:**
 
-At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup/index.md)
 
 Let's pause the `deployment-backup` BackupConfiguration,
 
@@ -702,6 +702,6 @@ kubectl delete -n demo pvc --all
 
 # Next Steps
 
-1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/workloads/statefulset.md).
-2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/workloads/daemonset.md).
-3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/volumes/pvc.md)
+1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/workloads/statefulset/index.md).
+2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/workloads/daemonset/index.md).
+3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/volumes/pvc/index.md)

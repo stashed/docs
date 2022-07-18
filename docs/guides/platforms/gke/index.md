@@ -60,7 +60,7 @@ $ gcloud projects add-iam-policy-binding sample-project \
     --role "roles/storage.admin"
 ```
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs/index.md).
 
 ## Prepare MariaDB 
 

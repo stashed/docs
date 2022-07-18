@@ -42,10 +42,10 @@ You will see all snapshots taken by Stash at `/snapshot` directory of this repos
 
 ## Next Steps
 
-- Learn how to configure `Kubernetes Volume` as backend from [here](/docs/guides/backends/local.md).
-- Learn how to configure `AWS S3/Minio/Rook` backend from [here](/docs/guides/backends/s3.md).
-- Learn how to configure `Google Cloud Storage (GCS)` backend from [here](/docs/guides/backends/gcs.md).
-- Learn how to configure `Microsoft Azure Storage` backend from [here](/docs/guides/backends/azure.md).
-- Learn how to configure `OpenStack Swift` backend from [here](/docs/guides/backends/swift.md).
-- Learn how to configure `Backblaze B2` backend from [here](/docs/guides/backends/b2.md).
-- Learn how to configure `REST` backend from [here](/docs/guides/backends/rest.md).
+- Learn how to configure `Kubernetes Volume` as backend from [here](/docs/guides/backends/local/index.md).
+- Learn how to configure `AWS S3/Minio/Rook` backend from [here](/docs/guides/backends/s3/index.md).
+- Learn how to configure `Google Cloud Storage (GCS)` backend from [here](/docs/guides/backends/gcs/index.md).
+- Learn how to configure `Microsoft Azure Storage` backend from [here](/docs/guides/backends/azure/index.md).
+- Learn how to configure `OpenStack Swift` backend from [here](/docs/guides/backends/swift/index.md).
+- Learn how to configure `Backblaze B2` backend from [here](/docs/guides/backends/b2/index.md).
+- Learn how to configure `REST` backend from [here](/docs/guides/backends/rest/index.md).

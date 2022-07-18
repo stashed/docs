@@ -31,12 +31,12 @@ Stash is a Kubernetes operator for restic. For more information, visit here: htt
 
 ### SEE ALSO
 
-* [stash backup-pvc](/docs/reference/operator/stash_backup-pvc.md)	 - Takes a backup of Persistent Volume Claim
+* [stash backup-pvc](/docs/reference/operator/stash_backup-pvc/index.md)	 - Takes a backup of Persistent Volume Claim
 * [stash create-backupsession](/docs/reference/operator/stash_create-backupsession.md)	 - create a BackupSession
 * [stash create-vs](/docs/reference/operator/stash_create-vs.md)	 - Take snapshot of PersistentVolumeClaims
 * [stash forget](/docs/reference/operator/stash_forget.md)	 - Delete snapshots from a restic repository
 * [stash restore](/docs/reference/operator/stash_restore.md)	 - Restore from backup
-* [stash restore-pvc](/docs/reference/operator/stash_restore-pvc.md)	 - Takes a restore of Persistent Volume Claim
+* [stash restore-pvc](/docs/reference/operator/stash_restore-pvc/index.md)	 - Takes a restore of Persistent Volume Claim
 * [stash restore-vs](/docs/reference/operator/stash_restore-vs.md)	 - Restore PVC from VolumeSnapshot
 * [stash run](/docs/reference/operator/stash_run.md)	 - Launch Stash Controller
 * [stash run-backup](/docs/reference/operator/stash_run-backup.md)	 - Take backup of workload paths

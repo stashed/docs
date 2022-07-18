@@ -65,6 +65,6 @@ Currently, you can't pass retention policy via annotation. So, if different targ
 
 ## Next Step
 
-- Learn how to configure automatic backup for workloads from [here](/docs/guides/auto-backup/workload.md).
-- Learn how to configure automatic backup for PVCs from [here](/docs/guides/auto-backup/pvc.md).
-- Learn how to configure automatic backup for databases from [here](/docs/guides/auto-backup/database.md).
+- Learn how to configure automatic backup for workloads from [here](/docs/guides/auto-backup/workload/index.md).
+- Learn how to configure automatic backup for PVCs from [here](/docs/guides/auto-backup/pvc/index.md).
+- Learn how to configure automatic backup for databases from [here](/docs/guides/auto-backup/database/index.md).

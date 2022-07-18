@@ -85,7 +85,7 @@ spec:
         runAsGroup: 2000
 ```
 
->If you are using [local](/docs/guides/backends/local.md) backend to store backed up data, then the original container, backup container and restore container all of them must be run as same user. By default, Stash runs backup container as `stash(1005)` user. You can change this to match with the user of your original container using `securityContext` field under `runtimeSettings` of `BackupConfiguration` object.
+>If you are using [local](/docs/guides/backends/local/index.md) backend to store backed up data, then the original container, backup container and restore container all of them must be run as same user. By default, Stash runs backup container as `stash(1005)` user. You can change this to match with the user of your original container using `securityContext` field under `runtimeSettings` of `BackupConfiguration` object.
 
 The second method is necessary when the backup container was not run as the same user as the original container. This is similar to the process when the restored files user is different than the original user. In this case, you have to change the ownership of restored files using `chown` after restore.
 

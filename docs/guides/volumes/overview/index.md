@@ -80,4 +80,4 @@ You might be wondering why we have used [Function](/docs/concepts/crds/function/
 
 ## Next Steps
 
-- Learn how to backup and restore a stand-alone PVC from [here](/docs/guides/volumes/pvc.md).
+- Learn how to backup and restore a stand-alone PVC from [here](/docs/guides/volumes/pvc/index.md).

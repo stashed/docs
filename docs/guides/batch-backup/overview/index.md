@@ -71,4 +71,4 @@ The batch restore process consists of the following steps:
 
 ## Next Steps
 
-- See a step by step guide to backup application with multiple co-related components [here](/docs/guides/batch-backup/batch-backup.md).
+- See a step by step guide to backup application with multiple co-related components [here](/docs/guides/batch-backup/batch-backup/index.md).

@@ -161,7 +161,7 @@ We are going to store our backed-up data into a GCS bucket. We have to create a 
 
 If you want to use a different backend, please read the respective backend configuration doc [here](/docs/guides/backends/overview/index.md).
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs/index.md).
 
 **Create Secret:**
 
@@ -303,7 +303,7 @@ This section will demonstrate restoring the backed-up data into the `staging` cl
 
 **Stop Taking Backup of the Old Deployment:**
 
-At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created earlier. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created earlier. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup/index.md)
 
 Let's pause the `deployment-backup` BackupConfiguration,
 

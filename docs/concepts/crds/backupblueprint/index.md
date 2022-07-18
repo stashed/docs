@@ -108,7 +108,7 @@ You can provide a blueprint for the `BackupConfiguration` object that will be cr
 
 - **spec.backupHistoryLimit :** `spec.backupHistoryLimit` specifies a limit for backup history to keep for debugging purposes. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specbackuphistroylimit).
 
-- **spec.task :** `spec.task` specifies the name and the parameters of [Task](/docs/concepts/crds/task/index.md) to use to backup the target. You can template the name field with `TARGET_APP_VERSION` variable for database backup. Stash will replace this variable with respective database version. This will allow you to backup multiple database versions with the same `BackupBlueprint`. For more details, please check the following [guide](/docs/guides/auto-backup/database.md).
+- **spec.task :** `spec.task` specifies the name and the parameters of [Task](/docs/concepts/crds/task/index.md) to use to backup the target. You can template the name field with `TARGET_APP_VERSION` variable for database backup. Stash will replace this variable with respective database version. This will allow you to backup multiple database versions with the same `BackupBlueprint`. For more details, please check the following [guide](/docs/guides/auto-backup/database/index.md).
 
 - **spec.runtimeSettings :** `spec.runtimeSettings` allows to configure runtime environment for backup sidecar or job. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specruntimesettings).
 
@@ -120,6 +120,6 @@ You can provide a blueprint for the `BackupConfiguration` object that will be cr
 
 ## Next Steps
 
-- Learn how to use `BackupBlueprint` for auto backup of workloads data from [here](/docs/guides/auto-backup/workload.md).
-- Learn how to use `BackupBlueprint` for auto backup of database from [here](/docs/guides/auto-backup/database.md).
-- Learn how to use `BackupBlueprint` for auto backup of stand-alone PVC from [here](/docs/guides/auto-backup/pvc.md).
+- Learn how to use `BackupBlueprint` for auto backup of workloads data from [here](/docs/guides/auto-backup/workload/index.md).
+- Learn how to use `BackupBlueprint` for auto backup of database from [here](/docs/guides/auto-backup/database/index.md).
+- Learn how to use `BackupBlueprint` for auto backup of stand-alone PVC from [here](/docs/guides/auto-backup/pvc/index.md).

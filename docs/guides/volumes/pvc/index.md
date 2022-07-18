@@ -229,7 +229,7 @@ hello from pod 2.
 
 Now, we are going to backup the PVC `nfs-pvc` in a GCS bucket using Stash. We have to create a Secret and a `Repository` object with access credentials and backend information respectively.
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs/index.md).
 
 **Create Storage Secret:**
 
@@ -379,7 +379,7 @@ This section will show you how to restore the backed up data inside a stand-alon
 
 **Stop Taking Backup of the PVC:**
 
-At first, let's stop taking any further backup of the PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `nfs-pvc` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md).
+At first, let's stop taking any further backup of the PVC so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `nfs-pvc` PVC. Then, Stash will stop taking any further backup for this PVC. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup/index.md).
 
 Let's pause the `nfs-pvc-backup` BackupConfiguration,
 
