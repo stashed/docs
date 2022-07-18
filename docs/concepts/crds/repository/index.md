@@ -17,7 +17,7 @@ section_menu_id: concepts
 
 ## What is Repository
 
-A `Repository` is a Kubernetes `CustomResourceDefinition`(CRD) which represents [backend](/docs/guides/backends/overview.md) information in a Kubernetes native way.
+A `Repository` is a Kubernetes `CustomResourceDefinition`(CRD) which represents [backend](/docs/guides/backends/overview/index.md) information in a Kubernetes native way.
 
 You have to create a `Repository` object for each backup target. Since v1beta1 api, a `Repository` object has 1-1 mapping with a target. Thus, only one target can be backed up into one `Repository`.
 
@@ -59,7 +59,7 @@ Here, we are going to describe the various sections of the `Repository` crd.
 `Repository` CRD has the following fields in the `.spec` section.
 
 - **spec.backend**
-`spec.backend` specifies the storage location where the backed up snapshots will be stored. To learn how to configure `Repository` crd for  various backends, please visit [here](/docs/guides/backends/overview.md).
+`spec.backend` specifies the storage location where the backed up snapshots will be stored. To learn how to configure `Repository` crd for  various backends, please visit [here](/docs/guides/backends/overview/index.md).
 
 - **backend prefix/subPath**
 `prefix` of any backend denotes the directory inside the backend where the backed up snapshots will be stored. In case of **Local** backend, `subPath` is used for this purpose.
@@ -169,6 +169,6 @@ You can browse your backend storage bucket to verify that the backed up data has
 
 ## Next Steps
 
-- Learn how to create `Repository` crd for different backends from [here](/docs/guides/backends/overview.md).
+- Learn how to create `Repository` crd for different backends from [here](/docs/guides/backends/overview/index.md).
 - Learn how Stash backup workloads data from [here](/docs/guides/workloads/overview.md).
 - Learn how Stash backup databases from [here](/docs/guides/addons/overview.md).

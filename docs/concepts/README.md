@@ -21,7 +21,7 @@ Concepts help you to learn about the different parts of the Stash and the abstra
 This concept section is divided into the following modules:
 
 - What is Stash?
-  - [Overview](/docs/concepts/what-is-stash/overview.md) provides an introduction to Stash. It also give an overview of the features it provides.
+  - [Overview](/docs/concepts/what-is-stash/overview/index.md) provides an introduction to Stash. It also give an overview of the features it provides.
   - [Architecture](/docs/concepts/what-is-stash/architecture.md) provides a visual representation of Stash architecture. It also provides a brief overview of the components it uses.
 
 - Declarative API

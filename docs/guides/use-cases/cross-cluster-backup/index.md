@@ -159,7 +159,7 @@ sample_data
 
 We are going to store our backed-up data into a GCS bucket. We have to create a Secret with the necessary credentials and a Repository CRD to use this backend. 
 
-If you want to use a different backend, please read the respective backend configuration doc [here](/docs/guides/backends/overview.md).
+If you want to use a different backend, please read the respective backend configuration doc [here](/docs/guides/backends/overview/index.md).
 
 > For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
 

@@ -210,7 +210,7 @@ Now, let's prepare for the backup. Here, we are going to prepare the backend whe
 
 ### Prepare Backend
 
-We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` CR. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` CR. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Storage Secret:**
 

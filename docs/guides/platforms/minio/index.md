@@ -151,7 +151,7 @@ sample_data
 
 ### Prepare Backend
 
-We are going to store our backed up data into an [Minio Bucket](https://min.io/). At first, we need to create a secret with the access credentials to our Minio bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed up data into an [Minio Bucket](https://min.io/). At first, we need to create a secret with the access credentials to our Minio bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Secret:**
 

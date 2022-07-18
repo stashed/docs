@@ -55,7 +55,7 @@ kubedump-backup-0.1.0          23s
 
 #### Prepare Backend
 
-We are going to store our backed-up data into a GCS bucket. So, we need to create a Secret with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed-up data into a GCS bucket. So, we need to create a Secret with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Storage Secret:**
 

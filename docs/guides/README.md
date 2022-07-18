@@ -19,7 +19,7 @@ aliases:
 
 Guides show how to perform different operations with Stash. We have divided guides section into the following sub-sections:
 
-- [Supported Backends](/docs/guides/backends/overview.md): Describes how to configure different storage for storing backed up data.
+- [Supported Backends](/docs/guides/backends/overview/index.md): Describes how to configure different storage for storing backed up data.
 - [Workload Volume Backup](/docs/guides/workloads/overview.md): Shows how to use Stash to backup and restore volumes of a workload (i.e. `Deployment`, `StatefulSet`, `DaemonSet`, etc).
 - [Stand-alone Volume Backup](/docs/guides/volumes/overview.md): Shows how to use Stash to backup and restore stand-alone volumes(i.e. `PersistentVolumeClaim`).
 - [Batch Backup](/docs/guides/batch-backup/overview.md): Shows how to backup multiple co-related components using a single configuration known as `BackupBatch`.
