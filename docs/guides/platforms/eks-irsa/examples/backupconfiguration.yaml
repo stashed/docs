@@ -6,7 +6,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: bucket-accessor-ksa
+      serviceAccountName: bucket-user
   schedule: "*/5 * * * *"
   repository:
     name: s3-repo

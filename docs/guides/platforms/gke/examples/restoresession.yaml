@@ -6,7 +6,7 @@ metadata:
 spec:
   runtimeSettings:
     pod:
-      serviceAccountName: storage-accessor-ksa
+      serviceAccountName: bucket-user
   repository:
     name: gcs-repo
   target:
