@@ -21,10 +21,10 @@ This guide will show you how to take backup and restore across clusters using St
 - At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters. We will use kind clusters throughout this tutorial. To know more about kind clusters, follow this doc [here](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 
 ## Backup from `prod` Cluster
 
@@ -159,9 +159,9 @@ sample_data
 
 We are going to store our backed-up data into a GCS bucket. We have to create a Secret with the necessary credentials and a Repository CRD to use this backend. 
 
-If you want to use a different backend, please read the respective backend configuration doc [here](/docs/guides/backends/overview.md).
+If you want to use a different backend, please read the respective backend configuration doc [here](/docs/guides/backends/overview/index.md).
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs/index.md).
 
 **Create Secret:**
 
@@ -303,7 +303,7 @@ This section will demonstrate restoring the backed-up data into the `staging` cl
 
 **Stop Taking Backup of the Old Deployment:**
 
-At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created earlier. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created earlier. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup/index.md)
 
 Let's pause the `deployment-backup` BackupConfiguration,
 

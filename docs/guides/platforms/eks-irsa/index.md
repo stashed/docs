@@ -22,10 +22,10 @@ This guide will show you how to use IRSA(IAM Roles for Service Accounts) of [Ama
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 - Install `KubeDB` operator in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/).
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 - You will need a [AWS S3 Bucket](https://aws.amazon.com/s3/) to store the backup snapshots.
 - Install `eksctl` following the steps [here](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html).
 

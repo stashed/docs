@@ -24,12 +24,12 @@ Stash `{{< param "info.version" >}}` supports backup and restoration of Etcd dat
 
 You have to be familiar with following custom resources:
 
-- [AppBinding](/docs/concepts/crds/appbinding.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [RestoreSession](/docs/concepts/crds/restoresession.md)
+- [AppBinding](/docs/concepts/crds/appbinding/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
+- [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+- [BackupSession](/docs/concepts/crds/backupsession/index.md)
+- [RestoreSession](/docs/concepts/crds/restoresession/index.md)
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create `demo` namespace if you haven't created that already.
 
@@ -281,7 +281,7 @@ appbinding.appcatalog.appscode.com/etcd-appbinding created
 
 ### Prepare Backend
 
-We are going to store our backed up data into a GCS bucket. So, we need to create a Secret with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed up data into a GCS bucket. So, we need to create a Secret with GCS credentials and a `Repository` object with the bucket information. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Storage Secret:**
 
