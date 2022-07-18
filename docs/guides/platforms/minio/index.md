@@ -23,10 +23,10 @@ Minio is an open-source object storage server compatible with [AWS S3](https://a
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 - You will need a TLS secured Minio server to store backed up data. If you already do not have a Minio server running, deploy one following the tutorial from [here](https://github.com/appscode/third-party-tools/blob/master/storage/minio/README.md). For this tutorial, we have deployed Minio server in `storage` namespace and it is accessible through `minio.storage.svc` dns.
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
@@ -151,7 +151,7 @@ sample_data
 
 ### Prepare Backend
 
-We are going to store our backed up data into an [Minio Bucket](https://min.io/). At first, we need to create a secret with the access credentials to our Minio bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed up data into an [Minio Bucket](https://min.io/). At first, we need to create a secret with the access credentials to our Minio bucket. Then, we have to create a `Repository` crd that will hold the information about our backend storage. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Secret:**
 
@@ -450,7 +450,7 @@ This section will show you how to restore the backed up data from [Minio bucket]
 
 **Stop Taking Backup of the Old Deployment:**
 
-At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup.md)
+At first, let's stop taking any further backup of the old Deployment so that no backup is taken during the restore process. We are going to pause the `BackupConfiguration` that we created to backup the `stash-demo` Deployment. Then, Stash will stop taking any further backup for this Deployment. You can learn more how to pause a scheduled backup [here](/docs/guides/use-cases/pause-backup/index.md)
 
 Let's pause the `deployment-backup` BackupConfiguration,
 
@@ -703,6 +703,6 @@ kubectl delete -n demo pvc --all
 
 ## Next Steps
 
-1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/workloads/statefulset.md).
-2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/workloads/daemonset.md).
-3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/volumes/pvc.md)
+1. See a step by step guide to backup/restore volumes of a StatefulSet [here](/docs/guides/workloads/statefulset/index.md).
+2. See a step by step guide to backup/restore volumes of a DaemonSet [here](/docs/guides/workloads/daemonset/index.md).
+3. See a step by step guide to Backup/restore Stand-alone PVC [here](/docs/guides/volumes/pvc/index.md)

@@ -39,13 +39,13 @@ Based on the execution order, we can categorize the hooks into two different pha
 
 - **Post-Task Hook:** Post task hooks are executed after the backup or restore process. `postBackup` and `postRestore` are the post-task hooks.
 
-However, there is one more type of hooks for [BackupBatch](/docs/concepts/crds/backupbatch.md) object. We call them **Global Hooks**. They get executed before any other individual target's hooks get executed (for the pre-task hooks) or after all the individual target's hooks has executed (for the post-task hooks).
+However, there is one more type of hooks for [BackupBatch](/docs/concepts/crds/backupbatch/index.md) object. We call them **Global Hooks**. They get executed before any other individual target's hooks get executed (for the pre-task hooks) or after all the individual target's hooks has executed (for the post-task hooks).
 
 ## Who Executes the Hooks
 
 You might be familiar that Stash uses two different models to take backup of the target based on their type. For Kubernetes workloads (i.e. Deployment, DaemonSet, StatefulSet etc.), Stash injects a sidecar into the workload that takes backup. However, for databases and standalone PVC backup, Stash creates a job for the task. The hooks are executed differently for these two different models.
 
-Furthermore, we have introduced [BackupBatch](/docs/concepts/crds/backupbatch.md) which allows to specify multiple target simultaneously. The individual targets may follow the sidecar model or the job model. The `BackupBatch` object allows specifying a global hook for all the targets as well as some local hooks for individual targets. This type of hooks also handled differently.
+Furthermore, we have introduced [BackupBatch](/docs/concepts/crds/backupbatch/index.md) which allows to specify multiple target simultaneously. The individual targets may follow the sidecar model or the job model. The `BackupBatch` object allows specifying a global hook for all the targets as well as some local hooks for individual targets. This type of hooks also handled differently.
 
 Here, we are going to discuss how Stash executes the hooks in different scenarios.
 

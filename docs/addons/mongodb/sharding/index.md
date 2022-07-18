@@ -27,11 +27,11 @@ Stash 0.9.0+ supports taking [backup](https://docs.mongodb.com/manual/tutorial/b
 
 You have to be familiar with following custom resources:
 
-- [AppBinding](/docs/concepts/crds/appbinding.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [RestoreSession](/docs/concepts/crds/restoresession.md)
+- [AppBinding](/docs/concepts/crds/appbinding/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
+- [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+- [RestoreSession](/docs/concepts/crds/restoresession/index.md)
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create `demo` namespace if you haven't created yet.
 
@@ -117,7 +117,7 @@ sample-mgo-sh-shard1-gvr      ClusterIP   None            <none>        27017/TC
 sample-mgo-sh-shard2-gvr      ClusterIP   None            <none>        27017/TCP   36m
 ```
 
-KubeDB creates an [AppBinding](/docs/concepts/crds/appbinding.md) crd that holds the necessary information to connect with the database.
+KubeDB creates an [AppBinding](/docs/concepts/crds/appbinding/index.md) crd that holds the necessary information to connect with the database.
 
 **Verify AppBinding:**
 
@@ -238,7 +238,7 @@ Now, we are ready to backup this sample database.
 
 ### Prepare Backend
 
-We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` crd. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` crd. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Storage Secret:**
 

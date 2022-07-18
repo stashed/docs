@@ -23,10 +23,10 @@ This guide will show you how to use workload identity of [Google Kubernetes Engi
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 - Install `KubeDB` operator in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/).
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 - Install Google Cloud CLI following the steps [here](https://cloud.google.com/sdk/downloads).
 - You will need a [GCS Bucket](https://console.cloud.google.com/storage/).
 
@@ -60,7 +60,7 @@ $ gcloud projects add-iam-policy-binding sample-project \
     --role "roles/storage.admin"
 ```
 
-> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs.md).
+> For GCS backend, if the bucket does not exist, Stash needs `Storage Object Admin` role permissions to create the bucket. For more details, please check the following [guide](/docs/guides/backends/gcs/index.md).
 
 ## Prepare MariaDB 
 

@@ -24,17 +24,17 @@ In this tutorial, we are going to show how you can configure a backup blueprint 
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
 - Install [KubeDB](https://kubedb.com) in your cluster following the steps [here](https://kubedb.com/docs/latest/setup/). This step is optional. You can deploy your database using any method you want.
 - If you are not familiar with how Stash backup and restore Elasticsearch databases, please check the following guide [here](/docs/addons/elasticsearch/overview/index.md).
-- If you are not familiar with how auto-backup works in Stash, please check the following guide [here](/docs/guides/auto-backup/overview.md).
-- If you are not familiar with the available auto-backup options for databases in Stash, please check the following guide [here](/docs/guides/auto-backup/database.md).
+- If you are not familiar with how auto-backup works in Stash, please check the following guide [here](/docs/guides/auto-backup/overview/index.md).
+- If you are not familiar with the available auto-backup options for databases in Stash, please check the following guide [here](/docs/guides/auto-backup/database/index.md).
 
 You should be familiar with the following `Stash` concepts:
 
-- [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [Repository](/docs/concepts/crds/repository.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
+- [BackupBlueprint](/docs/concepts/crds/backupblueprint/index.md)
+- [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+- [BackupSession](/docs/concepts/crds/backupsession/index.md)
+- [Repository](/docs/concepts/crds/repository/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
 
 In this tutorial, we are going to show backup of three different Elasticsearch databases on three different namespaces named `demo`, `demo-2`, and `demo-3`. Create the namespaces as below if you haven't done it already.
 
@@ -123,7 +123,7 @@ Let's create the `BackupBlueprint` we have shown above,
 backupblueprint.stash.appscode.com/elasticsearch-backup-template created
 ```
 
-Now, we are ready to backup our Elasticsearch databases using few annotations. You can check available auto-backup annotations for a databases from [here](/docs/guides/auto-backup/database.md#available-auto-backup-annotations-for-database).
+Now, we are ready to backup our Elasticsearch databases using few annotations. You can check available auto-backup annotations for a databases from [here](/docs/guides/auto-backup/database/index.md#available-auto-backup-annotations-for-database).
 
 ## Auto-backup with default configurations
 

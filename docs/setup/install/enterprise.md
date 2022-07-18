@@ -14,7 +14,7 @@ section_menu_id: setup
 
 # Install Stash Enterprise Edition
 
-Stash Enterprise edition is the open core version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Database Backup](/docs/guides/addons/overview.md), [Auto-Backup](/docs/guides/auto-backup/overview.md), [Batch Backup](/docs/guides/batch-backup/overview.md), and [Local Backend](/docs/guides/backends/local.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview.md).
+Stash Enterprise edition is the open core version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Database Backup](/docs/guides/addons/overview/index.md), [Auto-Backup](/docs/guides/auto-backup/overview/index.md), [Batch Backup](/docs/guides/batch-backup/overview/index.md), and [Local Backend](/docs/guides/backends/local/index.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview/index.md).
 
 If you are willing to try Stash Enterprise Edition, you can grab a **30 days trial** license from [here](https://license-issuer.appscode.com/?p=stash-enterprise).
 
@@ -23,7 +23,7 @@ If you are willing to try Stash Enterprise Edition, you can grab a **30 days tri
 - **Kubernetes version**: Stash is compatible with any Kubernetes cluster with version `1.16` or later.
 - **Extended API server**: Your cluster needs to support Kubernetes extended API server.
 - **Webhook support**: Your cluster must support Kubernetes validation and mutation webhooks.
-- **RBAC permissions**: Stash operator needs a few RBAC permissions on your cluster. You can find the list of the required RBAC permissions [here](/docs/guides/security/rbac.md).
+- **RBAC permissions**: Stash operator needs a few RBAC permissions on your cluster. You can find the list of the required RBAC permissions [here](/docs/guides/security/rbac/index.md).
 - **Installing on GKE cluster**: To install Stash on your GKE cluster, please check the requirements [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/troubleshoting/#installing-in-gke-cluster).
 - **NFS volume**: If you are willing to use NFS volume as a backend, you need to customize the Stash installation like [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/troubleshoting/#configuring-network-volume-accessor).
 
@@ -47,7 +47,7 @@ kubectl get ns kube-system -o=jsonpath='{.metadata.uid}'
 Here is a screenshot of the license form.
 
 <figure align="center">
-  <img alt="Stash Backend Overview" src="/docs/images/setup/enterprise_license_form.png">
+  <img alt="Stash Backend Overview" src="images/enterprise_license_form.png">
   <figcaption align="center">Fig: Stash License Form</figcaption>
 </figure>
 
