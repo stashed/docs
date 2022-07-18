@@ -186,7 +186,7 @@ spec:
   replicas: 1
   storageType: Durable
   storage:
-    storageClassName: "standard"
+    storageClassName: "gp2"
     accessModes:
     - ReadWriteOnce
     resources:
@@ -670,18 +670,21 @@ Hence, we can see from the above output that the deleted data has been restored 
 **Resume Backup**
 
 Since our data has been restored successfully we can now resume our usual backup process. Resume the `BackupConfiguration` using following command,
+
 ```bash
 $ kubectl patch backupconfiguration -n demo sample-mariadb-backup --type="merge" --patch='{"spec": {"paused": false}}'
 backupconfiguration.stash.appscode.com/sample-mariadb-backup patched
 ```
 
 Or you can use the Stash `kubectl` plugin to resume the `BackupConfiguration`,
+
 ```bash
 $ kubectl stash resume -n demo --backupconfig=sample-mariadb-backup
 BackupConfiguration demo/sample-mariadb-backup has been resumed successfully.
 ```
 
 Verify that the `BackupConfiguration` has been resumed,
+
 ```bash
 $ kubectl get backupconfiguration -n demo sample-mariadb-backup
 NAME                    TASK                    SCHEDULE      PAUSED   PHASE   AGE
@@ -697,6 +700,19 @@ stash-backup-sample-mariadb-backup   */5 * * * *   False     0        2m59s     
 ```
 
 Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended and will trigger in the next schedule.
+
+## Allow Operator to List Snapshots
+
+When you list Snapshots using `kubectl get snapshot` command, Stash operator itself read the Snapshots directly from the backend. So, the operator needs permission to access the bucket. Therefore, stash operator pod should be annotated with the IAM Role. Run the following command to annotate the Stash operator pod using Helm,
+
+```bash
+ helm upgrade stash appscode/stash \
+      --version v2022.06.27 \
+      --namespace stash --create-namespace \
+      --set features.enterprise=true \
+      --set-file global.license=/home/sayem/Downloads/stash.txt  \
+      --set  stash-enterprise.podAnnotations.'iam\.amazonaws\.com/role'=arn:aws:iam::452618475015:role/bucket-accessor
+```
 
 ### Cleanup
 
