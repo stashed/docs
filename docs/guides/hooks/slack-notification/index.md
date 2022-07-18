@@ -23,11 +23,11 @@ In this guide, we are going to show you how to send backup notifications to a Sl
 
 You should be familiar with the following `Stash` concepts:
 
-- [BackupBatch](/docs/concepts/crds/backupbatch.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [Repository](/docs/concepts/crds/repository.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
+- [BackupBatch](/docs/concepts/crds/backupbatch/index.md)
+- [BackupSession](/docs/concepts/crds/backupsession/index.md)
+- [Repository](/docs/concepts/crds/repository/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -170,7 +170,7 @@ Our application is ready with some sample data. In the next section, we are goin
 
 ## Prepare Backend
 
-We are going to store our backed-up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` CR. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview.md).
+We are going to store our backed-up data into a GCS bucket. At first, we need to create a secret with GCS credentials then we need to create a `Repository` CR. If you want to use a different backend, please read the respective backend configuration doc from [here](/docs/guides/backends/overview/index.md).
 
 **Create Storage Secret:**
 
