@@ -242,28 +242,22 @@ spec:
     - /source/data
   hooks:
     postBackup:
+      executionPolicy: Always
       httpPost:
         host: hooks.slack.com
-        path: /services/XXXX/XXXXX/XXXXX
+        path: /services/XX/XXX/XXXX
         port: 443
         scheme: HTTPS
         httpHeaders:
           - name: Content-Type
             value: application/json
         body: |
+          {{- $msg := dict  "type" "mrkdwn" "text" (printf "Backup completed for %s/%s Status: %s." .Namespace .Target.Name .Status.Phase) -}}
           {
             "blocks": [
                 {
                   "type": "section",
-                  "text": {
-                      "type": "mrkdwn",
-                      "text": "
-                          {{if eq .Status.Phase `Succeeded`}}
-                              :white_check_mark: Backup succeeded for {{ .Namespace }}/{{.Target.Name}}
-                          {{else}}
-                              :x: Backup failed for {{ .Namespace }}/{{.Target.Name}} Reason: {{.Status.Error}}.
-                          {{end}}"
-                    }
+                  "text": {{ toJson $msg }}
                 }
               ]
           }
@@ -275,12 +269,12 @@ spec:
 
 Notice the `hooks` section. We have setup a `postBackup` hook which sends an HTTP POST request. In the `path` field of the `httpPost` section, we have specified the Slack incoming webhook path that we copied in the last step of configuring Slack incoming webhook.
 
-Also, notice the `body` field of the `httpPost` section. We have used Go template to conditionally send different messages based on the backup phase. If the backup fails, we have sent the respective error message in the notification body.
+Also, notice the `body` field of the `httpPost` section. We have used Go template to include information about the backup target and status.
 
 Let's create the BackupConfiguration we have shown above,
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/slack-notification/examples/backupconfiguration.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/slack-notification/examples/all_backup_notification.yaml
 backupconfiguration.stash.appscode.com/deployment-backup created
 ```
 
@@ -297,21 +291,19 @@ demo        deployment-backup-1650277200   BackupConfiguration   deployment-back
 demo        deployment-backup-1650277200   BackupConfiguration   deployment-backup   Succeeded   31s      30s
 ```
 
-We can see from the above output that the backup session has succeeded. Now, we are going to verify whether the notification was sent properly or not.
+We can see from the above output that the backup session has succeeded.
 
 **Verify Notification:**
 
 Now, if we go to the Slack channel we have configured for notification. We should see a notification similar to this:
 
 <figure align="center">
-  <img alt="Successfull backup notification" src="images/notification_1.png">
+  <img alt="Successfull backup notification" src="images/all_notification.png">
 </figure>
 
-### Backup Failure Notification
+### Sending Only Backup Failure Notification
 
-Now, let's force the backup process to fail so that we can verify the backup failure notification contains the failure reason too.
-
-We are going to provide an invalid path in the `paths` field of the `target` section. This will force the backup to fail. Here, is the YAML of the updated BackupConfiguration:
+We can also use the `executionPolicy` to send notification only for the failed backups. Check the following BackupConfiguration:
 
 ```yaml
 apiVersion: stash.appscode.com/v1beta1
@@ -335,6 +327,7 @@ spec:
     - /path/does/not/exist
   hooks:
     postBackup:
+      executionPolicy: OnFailure
       httpPost:
         host: hooks.slack.com
         path: /services/XX/XXX/XXXX
@@ -344,19 +337,12 @@ spec:
           - name: Content-Type
             value: application/json
         body: |
+          {{- $msg := dict  "type" "mrkdwn" "text" (printf ":x: Backup failed for %s/%s Reason: %s." .Namespace .Target.Name .Status.Error) -}}
           {
             "blocks": [
                 {
                   "type": "section",
-                  "text": {
-                      "type": "mrkdwn",
-                      "text": "
-                          {{if eq .Status.Phase `Succeeded`}}
-                              :white_check_mark: Backup succeeded for {{ .Namespace }}/{{.Target.Name}}
-                          {{else}}
-                              :x: Backup failed for {{ .Namespace }}/{{.Target.Name}} Reason: {{.Status.Error}}.
-                          {{end}}"
-                    }
+                  "text": {{ toJson $msg }}
                 }
               ]
           }
@@ -366,10 +352,14 @@ spec:
     prune: true
 ```
 
+Here, we have provided an invalid path in the `paths` field of the `target` section. This will force the backup to fail.
+
+Notice that, this time we have specified the `executionPolicy` field to `OnFailure`. This will tell Stash to send the notification only if the backup fail. In the message body, we have included information about target and reason of failure.
+
 Let's apply the above BackupConfiguration:
 
 ```bash
-❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/slack-notification/examples/backupconfiguration.yaml
+❯ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/slack-notification/examples/failed_backup_notification.yaml
 backupconfiguration.stash.appscode.com/deployment-backup configured
 ```
 
@@ -393,7 +383,7 @@ As we can see that the backup has failed this time. Let's verify the failure not
 If we go to the Slack channel, we should see a new notification has been sent. This time it indicates a failure and also contains the failure reason.
 
 <figure align="center">
-  <img alt="Failed backup notification" src="images/notification_2.png">
+  <img alt="Failed backup notification" src="images/failed_notification.png">
 </figure>
 
 ## Cleanup
