@@ -177,4 +177,4 @@ The following conditions are set for the members of a `BackupBatch`.
 
 ## Next Steps
 
-- Learn how to configure `BackupBatch` to backup data from [here](/docs/guides/batch-backup/overview.md).
+- Learn how to configure `BackupBatch` to backup data from [here](/docs/guides/batch-backup/overview/index.md).

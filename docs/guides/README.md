@@ -20,10 +20,10 @@ aliases:
 Guides show how to perform different operations with Stash. We have divided guides section into the following sub-sections:
 
 - [Supported Backends](/docs/guides/backends/overview/index.md): Describes how to configure different storage for storing backed up data.
-- [Workload Volume Backup](/docs/guides/workloads/overview.md): Shows how to use Stash to backup and restore volumes of a workload (i.e. `Deployment`, `StatefulSet`, `DaemonSet`, etc).
-- [Stand-alone Volume Backup](/docs/guides/volumes/overview.md): Shows how to use Stash to backup and restore stand-alone volumes(i.e. `PersistentVolumeClaim`).
-- [Batch Backup](/docs/guides/batch-backup/overview.md): Shows how to backup multiple co-related components using a single configuration known as `BackupBatch`.
-- [Auto Backup](/docs/guides/auto-backup/overview.md): Shows how to configure automatic backup of any stateful workload in your cluster.
+- [Workload Volume Backup](/docs/guides/workloads/overview/index.md): Shows how to use Stash to backup and restore volumes of a workload (i.e. `Deployment`, `StatefulSet`, `DaemonSet`, etc).
+- [Stand-alone Volume Backup](/docs/guides/volumes/overview/index.md): Shows how to use Stash to backup and restore stand-alone volumes(i.e. `PersistentVolumeClaim`).
+- [Batch Backup](/docs/guides/batch-backup/overview/index.md): Shows how to backup multiple co-related components using a single configuration known as `BackupBatch`.
+- [Auto Backup](/docs/guides/auto-backup/overview/index.md): Shows how to configure automatic backup of any stateful workload in your cluster.
 - [Volume Snapshot](/docs/guides/volumesnapshot/overview/index.md): Shows how Stash takes snapshot of `PersistentVolumeClaim`s and restore them from snapshot using Kubernetes `VolumeSnapshot` API.
 
 - **Different Use Cases:**

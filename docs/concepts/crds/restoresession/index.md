@@ -342,6 +342,6 @@ Individual host stats entry consists of the following fields:
 
 ## Next Steps
 
-- Learn how restore of workloads data works from [here](/docs/guides/workloads/overview.md).
-- Learn how restore of databases works from [here](/docs/guides/addons/overview.md).
-- Learn how restore stand-alone PVC works from [here](/docs/guides/volumes/overview.md).
+- Learn how restore of workloads data works from [here](/docs/guides/workloads/overview/index.md).
+- Learn how restore of databases works from [here](/docs/guides/addons/overview/index.md).
+- Learn how restore stand-alone PVC works from [here](/docs/guides/volumes/overview/index.md).

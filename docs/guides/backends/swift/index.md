@@ -153,6 +153,6 @@ Now, we are ready to use this backend to backup our desired data using Stash.
 
 ## Next Steps
 
-- Learn how to use Stash to backup workloads data from [here](/docs/guides/workloads/overview.md).
-- Learn how to use Stash to backup databases from [here](/docs/guides/addons/overview.md).
-- Learn how to use Stash to backup stand-alone PVC from [here](/docs/guides/volumes/overview.md).
+- Learn how to use Stash to backup workloads data from [here](/docs/guides/workloads/overview/index.md).
+- Learn how to use Stash to backup databases from [here](/docs/guides/addons/overview/index.md).
+- Learn how to use Stash to backup stand-alone PVC from [here](/docs/guides/volumes/overview/index.md).

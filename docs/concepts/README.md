@@ -25,7 +25,7 @@ This concept section is divided into the following modules:
   - [Architecture](/docs/concepts/what-is-stash/architecture.md) provides a visual representation of Stash architecture. It also provides a brief overview of the components it uses.
 
 - Declarative API
-  - [Repository](/docs/concepts/crds/repository.md) introduces the concept of `Repository` crd that holds backend information in a Kubernetes native way.
+  - [Repository](/docs/concepts/crds/repository/index.md) introduces the concept of `Repository` crd that holds backend information in a Kubernetes native way.
   - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md) introduces the concept of `BackupConfiguration` crd that is used to configure backup for a target resource in a Kubernetes native way.
   - [BackupBatch](/docs/concepts/crds/backupbatch/index.md) introduces the concept of `BackupBatch` crd that is used to setup backup of multiple co-related targets under single configuration.
   - [BackupSession](/docs/concepts/crds/backupsession/index.md) introduces the concept of `BackupSession` crd that represents a backup run of a target resource for the respective `BackupConfiguration` or `BackupBatch` object.

@@ -23,7 +23,7 @@ In this tutorial, we are going to show how you can configure a backup blueprint 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
 - Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
 - If you are not familiar with how Stash backup and restore Redis databases, please check the following guide [here](/docs/addons/redis/overview/index.md).
-- If you are not familiar with how auto-backup works in Stash, please check the following guide [here](/docs/guides/auto-backup/overview.md).
+- If you are not familiar with how auto-backup works in Stash, please check the following guide [here](/docs/guides/auto-backup/overview/index.md).
 - If you are not familiar with the available auto-backup options for databases in Stash, please check the following guide [here](/docs/guides/auto-backup/database.md).
 
 You should be familiar with the following `Stash` concepts:

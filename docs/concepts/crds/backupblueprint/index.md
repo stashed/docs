@@ -62,7 +62,7 @@ spec:
     prune: true
 ```
 
-The sample `BackupBlueprint` that has been shown above can be used to backup Deployments, DaemonSets, StatefulSets, ReplicaSets and ReplicationControllers. You only have to add some annotations to these workloads. For more details on how auto backup works in Stash, please visit [here](/docs/guides/auto-backup/overview.md).
+The sample `BackupBlueprint` that has been shown above can be used to backup Deployments, DaemonSets, StatefulSets, ReplicaSets and ReplicationControllers. You only have to add some annotations to these workloads. For more details on how auto backup works in Stash, please visit [here](/docs/guides/auto-backup/overview/index.md).
 
 Here, we are going to describe the various sections of `BackupBlueprint` crd.
 
@@ -74,7 +74,7 @@ We can divide BackupBlueprint's `.spec` section into two parts. One part specifi
 
 You can configure `Repository` blueprint using `spec.backend` field and `spec.wipeOut` field.
 
-- **spec.backend :** `spec.backend` field is backend specification similar to [spec.backend](/docs/concepts/crds/repository.md#specbackend) field of a `Repository` crd. There is only one difference. You can now templatize `prefix` section (`subPath` for local volume) of the backend to store backed up data of different workloads at different directory. You can use the following variables to templatize `spec.backend` field:
+- **spec.backend :** `spec.backend` field is backend specification similar to [spec.backend](/docs/concepts/crds/repository/index.md#specbackend) field of a `Repository` crd. There is only one difference. You can now templatize `prefix` section (`subPath` for local volume) of the backend to store backed up data of different workloads at different directory. You can use the following variables to templatize `spec.backend` field:
 
 |       Variable        |                                                              Usage                                                              |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -98,7 +98,7 @@ The following variables are available only for database backup.
 
 >Note: `BackupBlueprint` is a non-namespaced crd. So, you can use a `BackupBlueprint` to backup targets in multiple namespaces. However, Storage Secret is a namespaced object. So, you have to manually create the secret in each namespace where you have a target for backup.
 
-- **spec.wipeOut :** `spec.wipeOut` indicates whether Stash should delete the respective backed up data from the backend if a user deletes a `Repository` crd. For more details, please visit [here](/docs/concepts/crds/repository.md#specwipeout).
+- **spec.wipeOut :** `spec.wipeOut` indicates whether Stash should delete the respective backed up data from the backend if a user deletes a `Repository` crd. For more details, please visit [here](/docs/concepts/crds/repository/index.md#specwipeout).
 
 #### BackupConfiguration Blueprint
 

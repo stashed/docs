@@ -71,7 +71,7 @@ When a user creates a [RestoreSession](#restoresession) object, Stash injects an
 
 Stash uses [Custom Resource Definition(CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) to specify targets and behaviors of backup and restore process in a Kubernetes native way. This section will give you a brief overview of the custom resources used by Stash.
 
-- **Repository:** A `Repository` specifies the backend storage system where the backed up data will be stored. A user has to create `Repository` object for each backup target. Only one target can be backed up into one `Repository`. For details about `Repository`, please visit [here](/docs/concepts/crds/repository.md).
+- **Repository:** A `Repository` specifies the backend storage system where the backed up data will be stored. A user has to create `Repository` object for each backup target. Only one target can be backed up into one `Repository`. For details about `Repository`, please visit [here](/docs/concepts/crds/repository/index.md).
 
 - **BackupConfiguration:** A `BackupConfiguration` specifies the backup target, behaviors (schedule, retention policy etc.), `Repository` object that holds backend information etc. A user has to create one `BackupConfiguration` object for each backup target. When a user creates a `BackupConfiguration`, Stash creates a CronJob for it and injects backup sidecar to the target if it is a workload (i.e. Deployment, DaemonSet, StatefulSet etc.). For more details about `BackupConfiguration`, please visit [here](/docs/concepts/crds/backupconfiguration/index.md).
 

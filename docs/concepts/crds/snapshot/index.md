@@ -144,6 +144,6 @@ $ kubectl get snapshot -n demo local-repo-02b0ed42 -o yaml
 
 ## Next Steps
 
-- Learn how to configure `BackupConfiguration` to backup workloads data from [here](/docs/guides/workloads/overview.md).
-- Learn how to configure `BackupConfiguration` to backup databases from [here](/docs/guides/addons/overview.md).
-- Learn how to configure `BackupConfiguration` to backup stand-alone PVC from [here](/docs/guides/volumes/overview.md).
+- Learn how to configure `BackupConfiguration` to backup workloads data from [here](/docs/guides/workloads/overview/index.md).
+- Learn how to configure `BackupConfiguration` to backup databases from [here](/docs/guides/addons/overview/index.md).
+- Learn how to configure `BackupConfiguration` to backup stand-alone PVC from [here](/docs/guides/volumes/overview/index.md).

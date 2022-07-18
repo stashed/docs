@@ -138,4 +138,4 @@ You can configure following fields in `spec.clientConfig` section:
 
 ## Next Steps
 
-- Learn how to backup/restore databases using Stash from [here](/docs/guides/addons/overview.md).
+- Learn how to backup/restore databases using Stash from [here](/docs/guides/addons/overview/index.md).

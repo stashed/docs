@@ -41,7 +41,7 @@ The automatic backup process consists of the following steps:
 4. Stash operator watches for workloads. When it finds a workload with annotations for automatic backup, it finds out the respective `BackupBlueprint`.
 5. Then, Stash operator resolves the blueprint by replacing variable fields of the blueprint with respective information from the workload.
 6. Then, it creates a `Repository` and a `BackupConfiguration` object for the workload according to the resolved blueprint.
-7. Finally, Stash starts rest of the standard backup process as discussed in [here](/docs/guides/workloads/overview.md).
+7. Finally, Stash starts rest of the standard backup process as discussed in [here](/docs/guides/workloads/overview/index.md).
 
 > Note: `BackupBlueprint` is a non-namespaced crd. So, you can use a `BackupBlueprint` to backup targets in multiple namespaces. However, Storage Secret is a namespaced object. So, you have to manually create the secret in each namespace where you have a target for backup. Please give us your feedback on how to improve the ux of this aspect of Stash on [GitHub](https://github.com/stashed/stash/issues/842).
 
