@@ -41,6 +41,7 @@ spec:
           - echo "Sample PreRestore hook demo"
       containerName: stash-init
     postRestore:
+      executionPolicy: Always
       exec:
         command:
           - /bin/sh

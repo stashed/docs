@@ -1,25 +1,24 @@
 apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
+kind: BackupConfiguration
 metadata:
-  name: deployment-restore
+  name: deployment-backup
   namespace: demo
 spec:
   repository:
     name: gcs-repo
+  schedule: "*/5 * * * *"
   target:
     ref:
       apiVersion: apps/v1
       kind: Deployment
       name: stash-demo
     volumeMounts:
-    - name:  source-data
-      mountPath:  /source/data
-    rules:
-    - paths:
-      - /source/data/
-      # - /path/does/not/exist
+    - name: source-data
+      mountPath: /source/data
+    paths:
+    - /path/does/not/exist
   hooks:
-    postRestore:
+    postBackup:
       executionPolicy: OnFailure
       httpPost:
         host: hooks.slack.com
@@ -30,7 +29,7 @@ spec:
           - name: Content-Type
             value: application/json
         body: |
-          {{- $msg := dict  "type" "mrkdwn" "text" (printf ":x: Restore failed for %s/%s Reason: %s." .Namespace .Target.Name .Status.Error) -}}
+          {{- $msg := dict  "type" "mrkdwn" "text" (printf ":x: Backup failed for %s/%s Reason: %s." .Namespace .Target.Name .Status.Error) -}}
           {
             "blocks": [
                 {
@@ -39,3 +38,7 @@ spec:
                 }
               ]
           }
+  retentionPolicy:
+    name: 'keep-last-5'
+    keepLast: 5
+    prune: true
