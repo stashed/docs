@@ -19,11 +19,11 @@ Stash 0.9.0+ supports extending its functionality through addons. This guide wil
 
 Stash 0.9.0+ uses two different models for backup/restore based on target types. One of them is **sidecar model** where Stash injects a `sidecar`/`init-container` into the targeted workload for backup/restore. Another is **job model** where backup or restore is done via an external job.
 
-The job model is further divided into two categories. In the first category, the targeted resource is well known to Stash (example, a PVC). Hence, the Stash operator itself can create the required job to backup/restore the target. In the second category, Stash follows `Function-Task` model where the targeted resource is not known to Stash. In this case, the user creates some [Function](/docs/concepts/crds/function.md) which resembles a step of backup/restore process and a [Task](/docs/concepts/crds/task.md) which specifies the order of execution of these steps. Stash uses these `Function` and `Task` to generate the required job definition to backup/restore the target.
+The job model is further divided into two categories. In the first category, the targeted resource is well known to Stash (example, a PVC). Hence, the Stash operator itself can create the required job to backup/restore the target. In the second category, Stash follows `Function-Task` model where the targeted resource is not known to Stash. In this case, the user creates some [Function](/docs/concepts/crds/function/index.md) which resembles a step of backup/restore process and a [Task](/docs/concepts/crds/task/index.md) which specifies the order of execution of these steps. Stash uses these `Function` and `Task` to generate the required job definition to backup/restore the target.
 
 The `Function-Task` model enables Stash to backup/restore the resources that the operator itself is not aware of. Users can extend Stash by creating respective `Function`, `Task`, and docker images for respective `Function` to backup their desired resources.
 
-A Stash addon is a collection of [Functions](/docs/concepts/crds/function.md) and a [Task](/docs/concepts/crds/task.md) to backup & restore a specific resource.
+A Stash addon is a collection of [Functions](/docs/concepts/crds/function/index.md) and a [Task](/docs/concepts/crds/task/index.md) to backup & restore a specific resource.
 
 ## How Addons Work
 

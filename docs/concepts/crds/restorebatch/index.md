@@ -129,7 +129,7 @@ A `RestoreBatch` object has the following fields in the `spec` section.
 
 #### spec.driver
 
-`spec.driver` indicates the mechanism used to restore. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`. For more details, please see [here](/docs/concepts/crds/restoresession.md#specdriver).
+`spec.driver` indicates the mechanism used to restore. Currently, Stash supports `Restic` and `VolumeSnapshotter` as drivers. The default value of this field is `Restic`. For more details, please see [here](/docs/concepts/crds/restoresession/index.md#specdriver).
 
 #### spec.repository
 
@@ -143,17 +143,17 @@ A `RestoreBatch` object has the following fields in the `spec` section.
 
 `spec.members` field specifies a list of targets to restore. Each member consists of the following fields:
 
-- **target :** Each member has a target specification. The target specification of a member is the same as the target specification of a `RestoreSession` explained [here](/docs/concepts/crds/restoresession.md#spectarget).
+- **target :** Each member has a target specification. The target specification of a member is the same as the target specification of a `RestoreSession` explained [here](/docs/concepts/crds/restoresession/index.md#spectarget).
 
-- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to restore the member. For more details, please see [here](/docs/concepts/crds/restoresession.md#spectask).
+- **task :** `task` specifies the name and parameters of the [Task](/docs/concepts/crds/task/index.md) crd to use to restore the member. For more details, please see [here](/docs/concepts/crds/restoresession/index.md#spectask).
 
-- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment for the restore init-container or job. You can specify runtime settings at both pod level and container level. For more details, please see [here](/docs/concepts/crds/restoresession.md#specruntimesettings).
+- **runtimeSettings :** `runtimeSettings` allows to configure runtime environment for the restore init-container or job. You can specify runtime settings at both pod level and container level. For more details, please see [here](/docs/concepts/crds/restoresession/index.md#specruntimesettings).
 
-- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster restore performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/restoresession.md#spectempdir).
+- **tempDir :** Stash mounts an `emptyDir` for holding temporary files. It is also used for `caching` for faster restore performance. You can configure the `emptyDir` using `tempDir` section. You can also disable `caching` using this field. For more details, please see [here](/docs/concepts/crds/restoresession/index.md#spectempdir).
 
 - **interimVolumeTemplate :** For some targets (i.e. some databases), Stash can't directly pipe the restored data into the target. In this case, it has to store the restored data temporarily before injecting into the target. `spec.interimVolumeTemplate` specifies a PVC template for holding those data temporarily. Stash will create a PVC according to the template and use it to store the data temporarily. This PVC will be deleted automatically if you delete the `RestoreBatch`.
 
-- **hooks :** Each member has it's own `hooks` field which allows you to execute member-specific pre-restore or post-restore hooks. For more details about hooks, please visit [here](/docs/concepts/crds/restoresession.md#spechooks).
+- **hooks :** Each member has it's own `hooks` field which allows you to execute member-specific pre-restore or post-restore hooks. For more details about hooks, please visit [here](/docs/concepts/crds/restoresession/index.md#spechooks).
 
 #### spec.hooks
 
@@ -201,7 +201,7 @@ A `RestoreBatch` object has the following fields in the `status` section.
 
   - **totalHosts :** `totalHosts` field specifies the total number of hosts that will be restored for this member.
   - **stats :** `stats` section is an array of restore statistics of individual hosts. Individual host stats entry consists of the following fields:
-    - **hostname :** `hostname` indicates the name of the host. Usually it is the `alias` or `alias-<workload-specific-suffix>`. For more details, please visit [here](/docs/concepts/crds/backupsession.md#hosts-of-a-backup-process).
+    - **hostname :** `hostname` indicates the name of the host. Usually it is the `alias` or `alias-<workload-specific-suffix>`. For more details, please visit [here](/docs/concepts/crds/backupsession/index.md#hosts-of-a-backup-process).
     - **phase :** `phase` indicates the restore phase of this host.
     - **duration :** `duration` indicates the total time taken to complete the restore process for this host.
     - **error :** `error` shows the reason for failure if the restore process fails for this host.

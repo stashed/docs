@@ -25,7 +25,7 @@ The following diagram shows how Stash sidecar container accesses and backs up da
   <figcaption align="center">Fig: Stash Backend Overview</figcaption>
 </figure>
 
-You have to create a [Repository](/docs/concepts/crds/repository.md) object which contains backend information and a `Secret` which contains necessary credentials to access the backend.
+You have to create a [Repository](/docs/concepts/crds/repository/index.md) object which contains backend information and a `Secret` which contains necessary credentials to access the backend.
 
 Stash sidecar/backup job reads backend information from the `Repository` and retrieves access credentials from the `Secret`. Then on the first backup session, Stash will initialize a repository in the backend.
 

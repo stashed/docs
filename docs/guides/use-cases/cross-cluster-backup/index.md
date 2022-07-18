@@ -21,10 +21,10 @@ This guide will show you how to take backup and restore across clusters using St
 - At first, you need to have running Kubernetes clusters, and the `kubectl` command-line tool must be configured to communicate with your clusters. We will use kind clusters throughout this tutorial. To know more about kind clusters, follow this doc [here](https://kind.sigs.k8s.io/docs/user/quick-start/).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 
 ## Backup from `prod` Cluster
 

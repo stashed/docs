@@ -25,11 +25,11 @@ Stash 0.9.0+ supports backup and restoration of MySQL databases. This guide will
 
 You have to be familiar with following custom resources:
 
-- [AppBinding](/docs/concepts/crds/appbinding.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [RestoreSession](/docs/concepts/crds/restoresession.md)
+- [AppBinding](/docs/concepts/crds/appbinding/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
+- [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+- [RestoreSession](/docs/concepts/crds/restoresession/index.md)
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial. Create `demo` namespace if you haven't created yet.
 
@@ -101,7 +101,7 @@ sample-mysql       ClusterIP   10.101.2.138   <none>        3306/TCP   5m33s
 sample-mysql-gvr   ClusterIP   None           <none>        3306/TCP   5m33s
 ```
 
-Here, we have to use service `sample-mysql` and secret `sample-mysql-auth` to connect with the database. KubeDB creates an [AppBinding](/docs/concepts/crds/appbinding.md) CRD that holds the necessary information to connect with the database.
+Here, we have to use service `sample-mysql` and secret `sample-mysql-auth` to connect with the database. KubeDB creates an [AppBinding](/docs/concepts/crds/appbinding/index.md) CRD that holds the necessary information to connect with the database.
 
 **Verify AppBinding:**
 

@@ -24,12 +24,12 @@ This tutorial will show you how to configure automatic backup for PersistentVolu
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 - You will need to have a PVC with `ReadWriteMany` access permission. Here, we are going to use an NFS server to provision a PVC with `ReadWriteMany` access. If you don't have an NFS server running, deploy one by following the guide [here](https://github.com/appscode/third-party-tools/blob/master/storage/nfs/README.md).
 - You should be familiar with the following `Stash` concepts:
-  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
-  - [Function](/docs/concepts/crds/function.md)
-  - [Task](/docs/concepts/crds/task.md)
+  - [BackupBlueprint](/docs/concepts/crds/backupblueprint/index.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
+  - [Function](/docs/concepts/crds/function/index.md)
+  - [Task](/docs/concepts/crds/task/index.md)
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -116,7 +116,7 @@ Here,
 
 - `spec.task.name` specifies the `Task` crd name that will be used to backup the targeted PVC.
 
-Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-blueprint).
+Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint/index.md#repository-blueprint).
 
 Let's create the `BackupBlueprint` that we have shown above,
 

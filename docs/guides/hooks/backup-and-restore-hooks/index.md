@@ -29,12 +29,12 @@ Here, we are going to demonstrate how you can perform different actions before a
 
 You should be familiar with the following `Stash` concepts:
 
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [Repository](/docs/concepts/crds/repository.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
-- [AppBinding](/docs/concepts/crds/appbinding.md)
+- [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+- [BackupSession](/docs/concepts/crds/backupsession/index.md)
+- [Repository](/docs/concepts/crds/repository/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
+- [AppBinding](/docs/concepts/crds/appbinding/index.md)
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 

@@ -31,12 +31,12 @@ In this tutorial, we are going to show how you can configure a backup blueprint 
 
 You should be familiar with the following `Stash` concepts:
 
-- [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
-- [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-- [BackupSession](/docs/concepts/crds/backupsession.md)
-- [Repository](/docs/concepts/crds/repository.md)
-- [Function](/docs/concepts/crds/function.md)
-- [Task](/docs/concepts/crds/task.md)
+- [BackupBlueprint](/docs/concepts/crds/backupblueprint/index.md)
+- [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+- [BackupSession](/docs/concepts/crds/backupsession/index.md)
+- [Repository](/docs/concepts/crds/repository/index.md)
+- [Function](/docs/concepts/crds/function/index.md)
+- [Task](/docs/concepts/crds/task/index.md)
 
 In this tutorial, we are going to show backup of three different PostgreSQL databases on three different namespaces named `demo`, `demo-2`, and `demo-3`. Create the namespaces as below if you haven't done it already.
 

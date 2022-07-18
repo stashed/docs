@@ -23,10 +23,10 @@ This guide will show you how you can use a dedicated backup namespace to keep yo
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 
 Here, we are going to take a backup from the `prod` namespace and restore it to the `staging` namespace. We are going to manage the backup and restore from a separate `backup` namespace.
 

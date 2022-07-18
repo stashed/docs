@@ -74,9 +74,9 @@ The restore process consists of the following steps:
 
 ### Why use Function-Task model to backup or restore a volume
 
-You might be wondering why we have used [Function](/docs/concepts/crds/function.md) and [Task](/docs/concepts/crds/task.md) to backup or restore a volume. Well, let us explain.
+You might be wondering why we have used [Function](/docs/concepts/crds/function/index.md) and [Task](/docs/concepts/crds/task/index.md) to backup or restore a volume. Well, let us explain.
 
-`Function-Task` model gives you the flexibility to customize the backup/restore process. For example, it enables you to execute some logic to prepare your apps before backup or execute logic to delete corrupted data before restore. For more details about what are the others benefits of `Function-Task` model, please visit [here](/docs/concepts/crds/task.md##why-function-and-task).
+`Function-Task` model gives you the flexibility to customize the backup/restore process. For example, it enables you to execute some logic to prepare your apps before backup or execute logic to delete corrupted data before restore. For more details about what are the others benefits of `Function-Task` model, please visit [here](/docs/concepts/crds/task/index.md##why-function-and-task).
 
 ## Next Steps
 

@@ -17,7 +17,7 @@ section_menu_id: concepts
 
 ## What is Task
 
-An entire backup or restore process needs an ordered execution of one or more steps. A [Function](/docs/concepts/crds/function.md) represents a step of a backup or restore process. A `Task` is a Kubernetes `CustomResourceDefinition`(CRD) which specifies a sequence of functions along with their parameters in a Kubernetes native way.
+An entire backup or restore process needs an ordered execution of one or more steps. A [Function](/docs/concepts/crds/function/index.md) represents a step of a backup or restore process. A `Task` is a Kubernetes `CustomResourceDefinition`(CRD) which specifies a sequence of functions along with their parameters in a Kubernetes native way.
 
 When you install Stash, some `Task`s will be pre-installed for supported targets like databases, etc. However, you can create your own `Task` to customize or extend the backup/restore process. Stash will execute these steps in the order you have specified.
 
@@ -62,7 +62,7 @@ A `Task` object has the following fields in the `spec` section:
 
 #### spec.steps
 
-`spec.steps` section specifies a list of functions and their parameters in the order they should be executed. You can also templatize this section using the [variables](/docs/concepts/crds/function.md#stash-provided-variables) that Stash can resolve itself. Stash will resolve all the variables and create a pod definition with a container specification for each `Function` specified in `steps` section.
+`spec.steps` section specifies a list of functions and their parameters in the order they should be executed. You can also templatize this section using the [variables](/docs/concepts/crds/function/index.md#stash-provided-variables) that Stash can resolve itself. Stash will resolve all the variables and create a pod definition with a container specification for each `Function` specified in `steps` section.
 
 Each `step` consists of the following fields:
 

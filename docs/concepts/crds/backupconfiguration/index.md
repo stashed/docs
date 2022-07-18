@@ -148,7 +148,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 #### spec.task
 
-`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to backup the target.
+`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task/index.md) crd to use to backup the target.
 
 - **spec.task.name:** `spec.task.name` indicates the name of the `Task` to use for this backup process.
 - **spec.task.params:** `spec.task.params` is an array of custom parameters to use to configure the task.

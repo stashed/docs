@@ -104,19 +104,19 @@ The following variables are available only for database backup.
 
 You can provide a blueprint for the `BackupConfiguration` object that will be created for respective target using the following fields:
 
-- **spec.schedule :** `spec.schedule` is the schedule that will be used to create `BackupConfiguration` for respective target. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specschedule).
+- **spec.schedule :** `spec.schedule` is the schedule that will be used to create `BackupConfiguration` for respective target. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specschedule).
 
-- **spec.backupHistoryLimit :** `spec.backupHistoryLimit` specifies a limit for backup history to keep for debugging purposes. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specbackuphistroylimit).
+- **spec.backupHistoryLimit :** `spec.backupHistoryLimit` specifies a limit for backup history to keep for debugging purposes. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specbackuphistroylimit).
 
-- **spec.task :** `spec.task` specifies the name and the parameters of [Task](/docs/concepts/crds/task.md) to use to backup the target. You can template the name field with `TARGET_APP_VERSION` variable for database backup. Stash will replace this variable with respective database version. This will allow you to backup multiple database versions with the same `BackupBlueprint`. For more details, please check the following [guide](/docs/guides/auto-backup/database.md).
+- **spec.task :** `spec.task` specifies the name and the parameters of [Task](/docs/concepts/crds/task/index.md) to use to backup the target. You can template the name field with `TARGET_APP_VERSION` variable for database backup. Stash will replace this variable with respective database version. This will allow you to backup multiple database versions with the same `BackupBlueprint`. For more details, please check the following [guide](/docs/guides/auto-backup/database.md).
 
-- **spec.runtimeSettings :** `spec.runtimeSettings` allows to configure runtime environment for backup sidecar or job. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specruntimesettings).
+- **spec.runtimeSettings :** `spec.runtimeSettings` allows to configure runtime environment for backup sidecar or job. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specruntimesettings).
 
-- **spec.tempDir :** `spec.tempDir` specifies the temporary volume setting that will be used to create respective `BackupConfiguration` object. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#spectempdir).
+- **spec.tempDir :** `spec.tempDir` specifies the temporary volume setting that will be used to create respective `BackupConfiguration` object. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#spectempdir).
 
-- **spec.interimVolumeTemplate :** `spec.interimVolumeTemplate` specifies a PVC template for holding data temporarily before uploading to the backend. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specinterimvolumetemplate).
+- **spec.interimVolumeTemplate :** `spec.interimVolumeTemplate` specifies a PVC template for holding data temporarily before uploading to the backend. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specinterimvolumetemplate).
 
-- **spec.retentionPolicy :** `spec.retentionPolicy` specifies the retention policies that will be used to create respective `BackupConfiguration` object. For more details, please visit [here](/docs/concepts/crds/backupconfiguration.md#specretentionpolicy).
+- **spec.retentionPolicy :** `spec.retentionPolicy` specifies the retention policies that will be used to create respective `BackupConfiguration` object. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specretentionpolicy).
 
 ## Next Steps
 

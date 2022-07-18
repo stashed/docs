@@ -25,10 +25,10 @@ This tutorial will show you how to configure automatic backup for Kubernetes wor
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following Stash concepts:
-  - [Repository](/docs/concepts/crds/repository.md)
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupBlueprint](/docs/concepts/crds/backupblueprint.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupBlueprint](/docs/concepts/crds/backupblueprint/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
 
 To keep things isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 
@@ -84,7 +84,7 @@ spec:
     prune: true
 ```
 
-Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. Since the resolved prefix will be different for different workload, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint.md#repository-blueprint).
+Note that we have used some variables (format: `${<variable name>}`) in `backend.gcs.prefix` field. Stash will substitute these variables with values from the respective target. Since the resolved prefix will be different for different workload, the backed up data will be stored in different directory inside the bucket. To know which variable you can use in this `prefix` field, please visit [here](/docs/concepts/crds/backupblueprint/index.md#repository-blueprint).
 
 Let's create the `BackupBlueprint` that we have shown above,
 

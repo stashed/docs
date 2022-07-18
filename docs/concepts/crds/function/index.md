@@ -224,4 +224,4 @@ If you are using a [PSP enabled cluster](https://kubernetes.io/docs/concepts/pol
 
 ## Next Steps
 
-- Learn how to use `Function` to create a `Task` from [here](/docs/concepts/crds/task.md).
+- Learn how to use `Function` to create a `Task` from [here](/docs/concepts/crds/task/index.md).

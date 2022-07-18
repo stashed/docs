@@ -76,7 +76,7 @@ Here, we are going to describe the various sections of a `Snapshot` object.
 `status.gid` indicates the group identifier of the user who took this backup.
 
 - **status.hostname**
-`status.hostname` indicates the host identifier whose data has been backed up in this snapshot. In order to know how this host identifier are generated, please visit [here](/docs/concepts/crds/backupsession.md#hosts-of-a-backup-process).
+`status.hostname` indicates the host identifier whose data has been backed up in this snapshot. In order to know how this host identifier are generated, please visit [here](/docs/concepts/crds/backupsession/index.md#hosts-of-a-backup-process).
 
 - **status.paths**
 `status.paths` indicates the paths that have been backed up in this snapshot.

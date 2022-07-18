@@ -23,10 +23,10 @@ This guide will show you how to use Stash to backup and restore volumes of a Kub
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 - You will need a [Rook](https://rook.io/docs/rook/v1.7/quickstart.html) deployment with [Ceph Object Storage](https://rook.io/docs/rook/v1.7/ceph-object.html) and [Ceph Block Storage](https://rook.io/docs/rook/v1.7/ceph-block.html) configured. If you do not already have a Rook Storage Service configured, you can create one by following this [quickstart](https://rook.io/docs/rook/v1.7/quickstart.html) guide.
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.

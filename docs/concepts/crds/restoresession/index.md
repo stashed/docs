@@ -215,7 +215,7 @@ A `RestoreSession` object has the following fields in the `spec` section.
 
 #### spec.task
 
-`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task.md) crd to use to restore the target data.
+`spec.task` specifies the name and parameters of the [Task](/docs/concepts/crds/task/index.md) crd to use to restore the target data.
 
 - **spec.task.name:** `spec.task.name` indicates the name of the `Task` template to use for this restore process.
 - **spec.task.params:** `spec.task.params` is an array of custom parameters to use to configure the task.
@@ -335,7 +335,7 @@ Not every pod or replica of the target will run the restore process. Thus, we re
 
 Individual host stats entry consists of the following fields:
 
-- **hostname :** `hostname` indicates the name of the host. Usually, it is the `alias` or `alias-<workload-specific-suffix>`. For more details, please visit [here](/docs/concepts/crds/backupsession.md#hosts-of-a-backup-process).
+- **hostname :** `hostname` indicates the name of the host. Usually, it is the `alias` or `alias-<workload-specific-suffix>`. For more details, please visit [here](/docs/concepts/crds/backupsession/index.md#hosts-of-a-backup-process).
 - **phase :** `phase` indicates the restore phase of this host.
 - **duration :** `duration` indicates the total time taken to complete the restore process for this host.
 - **error :** `error` shows the reason for failure if the restore process fails for this host.

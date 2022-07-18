@@ -26,13 +26,13 @@ This tutorial will demonstrate how to use Stash to take backup of an application
 - If you are not familiar with how Stash backup and restore MySQL databases, please check the following guide [here](https://stash.run/docs/v0.9.0-rc.2/addons/mysql/overview/).
 
 - You should be familiar with the following `Stash` concepts:
-  - [Appbinding](/docs/concepts/crds/appbinding.md)
-  - [Function](/docs/concepts/crds/function.md)
-  - [Task](/docs/concepts/crds/task.md)
-  - [BackupBatch](/docs/concepts/crds/backupbatch.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
-  - [RestoreBatch](/docs/concepts/crds/restorebatch.md)
+  - [Appbinding](/docs/concepts/crds/appbinding/index.md)
+  - [Function](/docs/concepts/crds/function/index.md)
+  - [Task](/docs/concepts/crds/task/index.md)
+  - [BackupBatch](/docs/concepts/crds/backupbatch/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
+  - [RestoreBatch](/docs/concepts/crds/restorebatch/index.md)
 
 To keep everything isolated, we are going to use a separate namespace called `demo` throughout this tutorial.
 

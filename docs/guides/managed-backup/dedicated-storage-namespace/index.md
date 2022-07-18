@@ -23,10 +23,10 @@ This guide will show you how to take backup and restore by keeping the storage r
 - Install `Stash` in your cluster following the steps [here](/docs/setup/README.md).
 
 - You should be familiar with the following `Stash` concepts:
-  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration.md)
-  - [BackupSession](/docs/concepts/crds/backupsession.md)
-  - [RestoreSession](/docs/concepts/crds/restoresession.md)
-  - [Repository](/docs/concepts/crds/repository.md)
+  - [BackupConfiguration](/docs/concepts/crds/backupconfiguration/index.md)
+  - [BackupSession](/docs/concepts/crds/backupsession/index.md)
+  - [RestoreSession](/docs/concepts/crds/restoresession/index.md)
+  - [Repository](/docs/concepts/crds/repository/index.md)
 
 We are going to take a backup from the `prod` namespace and restore it to the `staging` namespace. We are going to keep our Repository and the backend Secret in the `storage` namespace.
 
@@ -185,7 +185,7 @@ spec:
       from: All
 ```
 
-Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace or a group of namespaces. For more details, please follow the guide from [here](/docs/concepts/crds/repository.md).
+Notice the `spec.usagePolicy` section. Here, we are allowing all namespaces to refer to this repository. You can restrict this capability to a particular namespace or a group of namespaces. For more details, please follow the guide from [here](/docs/concepts/crds/repository/index.md).
 
 Let's create the Repository we have shown above,
 
