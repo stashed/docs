@@ -47,7 +47,7 @@ kubectl get ns kube-system -o=jsonpath='{.metadata.uid}'
 Here is a screenshot of the license form.
 
 <figure align="center">
-  <img alt="Stash Backend Overview" src="/docs/images/setup/enterprise_license_form.png">
+  <img alt="Stash Backend Overview" src="images/enterprise_license_form.png">
   <figcaption align="center">Fig: Stash License Form</figcaption>
 </figure>
 
