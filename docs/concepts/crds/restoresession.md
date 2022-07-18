@@ -71,6 +71,7 @@ spec:
           - echo "Sample PreRestore hook demo"
       containerName: stash-init
     postRestore:
+      executionPolicy: Always
       exec:
         command:
           - /bin/sh
@@ -226,7 +227,10 @@ A `RestoreSession` object has the following fields in the `spec` section.
 `spec.hooks` allows performing some actions before and after the restoration process. You can send HTTP requests to a remote server via `httpGet` or `httpPost` hooks. You can check whether a TCP socket is open using `tcpSocket` hook. You can also execute some commands into your application pod using `exec` hook.
 
 - **spec.hooks.preRestore:** `spec.hooks.preRestore` hooks are executed before the restore process.
-- **spec.hooks.postRestore:** `spec.hooks.postRestore` hooks are executed after the restore process.
+- **spec.hooks.postRestore:** `spec.hooks.postRestore` hooks are executed after the restore process. Unlike the `preRestore` hook, `postRestore` hook has an extra field named `executionPolicy` which let you execute hook based on the restore status. Currently, it support the following values:
+  - `Always`: The hook will be executed after the restore process no matter the restore has failed or succeeded. This is the default behavior.
+  - `OnSuccess`: The hook will be executed after the restore process only if the restore has succeeded.
+  - `OnFailure`: The hook will be executed after the restore process only if the restore has failed.
 
 For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview/index.md).
 

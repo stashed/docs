@@ -74,22 +74,29 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
 
 Now, we are going to discuss what will happen when a hook fails or backup/restore process fails.
 
-- **Pre-Task Hook Failed:** If a pre-task hook fails to execute, the rest of the backup/restore process will be skipped and the respective `BackupSession`/`RestoreSession` will be marked as `Failed`. You may see the following things happen in addition to skipping the backup process:
-  - **Backup Sidecar:** If the pre-task hook fails in the backup sidecar, the sidecar will just log the failure and continue watching for `BackupSession` for the next backup.
-  - **Restore Init-Container:** If the pre-task hook fails in restore init-container, the container will crash. Hence, your workload will be stuck in the initialization phase.
-  - **Backup or Restore Job:** If the pre-task hook fails in backup or restore job, the container will fail. Hence, the job will never go to the completed stage. You may see the job creating multiple pods to retry.
+### `preBackup` or `preRestore` hook
 
-- **Backup/Restore Process Failed:** The post-task hook will be executed even if the backup/restore process failed. This is to cover the scenario where you have paused your application in a pre-task hook and want to resume it in a post-task hook.
+If a `preBackup` or `preRestore` hook fails to execute, the rest of the backup/restore process will be skipped and the respective `BackupSession`/`RestoreSession` will be marked as `Failed`. You may see the following things happen in addition to skipping the backup process:
 
-- **Post-Task Hook Failed:** If the post-task hook fails to execute, the `BackupSession`/`RestoreSession` will be marked as `Failed` even if the actual backup/restore process has completed successfully. So, you may see backup data in the backend or restored data in the target even if the `BackupSession`/`RestoreSession` has marked as failed.
+- **Backup Sidecar:** If the `preBackup` hook fails in the backup sidecar, the sidecar will just log the failure and continue watching for `BackupSession` for the next backup.
+- **Restore Init-Container:** If the `preRestore` hook fails in restore init-container, the container will crash. Hence, your workload will be stuck in the initialization phase.
+- **Backup or Restore Job:** If the `preBackup` or `preRestore` hook fails in backup/restore job, the container will fail. Hence, the job will never go into completed stage. You may see the job creating multiple pods to retry.
 
-If the hook's behavior does not comply with your use-cases or you want more fine-grained control over the hook's behavior, please feel free to file an issue [here](https://github.com/stashed/stash/issues).
+### `postBackup` or `postRestore` hook
+
+If the backup or restore process fails then the respective `postBackup` or `postRestore` hook will be executed according to the policy specified in the `executionPolicy` field of the respective hook. The current acceptable values and behaviors are:
+
+- `Always`: The hook will be executed after the backup/restore process no matter the backup/restore has failed or succeeded. This is the default behavior.
+- `OnSuccess`: The hook will be executed after the backup/restore process only if the backup/restore has succeeded.
+- `OnFailure`: The hook will be executed after the backup/restore process only if the backup/restore has failed.
+
+If the `postBackup` or `postRestore` hook fails, the respective BackupSession or RestoreSession will be marked as `Failed`.
 
 ## Templating Support in Hook
 
-Stash support [Go template](https://pkg.go.dev/text/template) in hook. This is particularly helpful when you want to send different message to a Slack webhook based on the backup / restore phase.
+Stash support [Go template](https://pkg.go.dev/text/template) in hook. This is particularly helpful when you want to send custom message to a Slack webhook with information about the backup/restore session.
 
-Stash exposes a summary for a backup / restore process. The Go template variables are then resolved from the summary. Here, is an example of a summary exposed by Stash:
+Stash exposes a summary for a backup/restore process. The Go template variables are then resolved from the summary. Here, is an example of a summary exposed by Stash:
 
 ```json
 {
@@ -122,21 +129,22 @@ The summary contains the following fields:
   - **kind:** Kind of the invoker. You can access it in your template as `.Invoker.Kind` variable.
   - **name:** Name of the invoker. You can access it in your template as `.Invoker.Name` variable.
 
-- **target:** Contains respective backup / restore target information. It has the following fields:
+- **target:** Contains respective backup/restore target information. It has the following fields:
   - **apiVersion:** API version of the target. You can access it in your template as `.Target.ApiVersion` variable.
   - **kind:** Kind of the target. You can access it in your template as `.Target.Kind` variable.
   - **name:** Name of the target. You can access it in your template as `.Target.Name` variable.
 
-- **status:** Specifies the backup / restore status. It has the following fields:
-  - **phase:** Phase of the backup / restore process. You can access it in your template as `.Status.Phase` variable.
-  - **duration:** Specifies how long it took to complete the backup / restore process. You can access it in your template as `Status.Duration` variable.
-  - **error:** If the backup / restore process fail, this field contains the reason why it failed. You can access it in your template as `.Status.Error` variable.
+- **status:** Specifies the backup/restore status. It has the following fields:
+  - **phase:** Phase of the backup/restore process. You can access it in your template as `.Status.Phase` variable.
+  - **duration:** Specifies how long it took to complete the backup/restore process. You can access it in your template as `Status.Duration` variable.
+  - **error:** If the backup/restore process fail, this field contains the reason why it failed. You can access it in your template as `.Status.Error` variable.
 
-Below is an example of using Go template in hook. Here, we are sending different message to a slack incoming webhook based on the backup phase.
+Below is an example of using Go template in hook. Here, we are sending a message to a slack incoming webhook if the backup process fails.
 
 ```yaml
 hooks:
   postBackup:
+    executionPolicy: OnFailure
     httpPost:
       host: hooks.slack.com
       path: /services/XX/XXX/XXXX
@@ -146,20 +154,13 @@ hooks:
         - name: Content-Type
           value: application/json
       body: |
-        {
-          "blocks": [
-              {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "
-                        {{if eq .Status.Phase `Succeeded`}}
-                            :white_check_mark: Backup succeeded for {{ .Namespace }}/{{.Target.Name}}
-                        {{else}}
-                            :x: Backup failed for {{ .Namespace }}/{{.Target.Name}} Reason: {{.Status.Error}}.
-                        {{end}}"
-                  }
-              }
-            ]
-        }
+          {{- $msg := dict  "type" "mrkdwn" "text" (printf ":x: Backup failed for %s/%s Reason: %s." .Namespace .Target.Name .Status.Error) -}}
+          {
+            "blocks": [
+                {
+                  "type": "section",
+                  "text": {{ toJson $msg }}
+                }
+              ]
+          }
 ```

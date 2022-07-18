@@ -66,6 +66,7 @@ spec:
           - echo "Sample PreBackup hook demo"
       containerName: my-app-container
     postBackup:
+      executionPolicy: Always
       exec:
         command:
           - /bin/sh
@@ -163,7 +164,10 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 `spec.hooks` allows performing some actions before and after the backup process. You can send HTTP requests to a remote server via `httpGet` or `httpPost` hooks. You can check whether a TCP socket is open using `tcpSocket` hook. You can also execute some commands into your application pod using `exec` hook.
 
 - **spec.hooks.preBackup:** `spec.hooks.preBackup` hooks are executed before the backup process.
-- **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed after the backup process.
+- **spec.hooks.postBackup:** `spec.hooks.postBackup` hooks are executed after the backup process. Unlike the `preBackup` hook, `postBackup` hook has an extra field named `executionPolicy` which let you execute hook based on the backup status. Currently, it support the following values:
+  - `Always`: The hook will be executed after the backup process no matter the backup has failed or succeeded. This is the default behavior.
+  - `OnSuccess`: The hook will be executed after the backup process only if the backup has succeeded.
+  - `OnFailure`: The hook will be executed after the backup process only if the backup has failed.
 
 For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview/index.md).
 
