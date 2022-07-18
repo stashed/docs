@@ -45,6 +45,6 @@ Shows how backup and restore can be managed in some specific scenerios.
 - [Platforms](/docs/guides/platforms/eks-irsa/index.md): Shows how to use Stash to backup and restore volumes of a Kubernetes workload running in different platforms.
 - [Monitoring](/docs/guides/monitoring/overview/index.md): Shows how Prometheus monitoring works with Stash, what metrics Stash exports, and how to enable monitoring.
 - [Hooks](/docs/guides/hooks/overview/index.md): Shows how to execute different actions before/after the backup/restore process.
-- [CLI](/docs/guides/cli/cli/kubectl-plugin/index.md): Shows how to manage Stash objects quickly and easily using Stash `kubectl` plugin.
+- [CLI](/docs/guides/cli/kubectl-plugin/index.md): Shows how to manage Stash objects quickly and easily using Stash `kubectl` plugin.
 - [Troubleshooting](/docs/guides/troubleshooting/how-to-troubleshoot/index.md): Gives an overview of how you can gather the necessary information to identify the issue that causes the backup/restore failure.
 - [Security](/docs/guides/security/rbac/index.md): Describes different built-in cluster security support by Stash.

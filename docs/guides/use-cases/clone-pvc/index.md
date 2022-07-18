@@ -35,7 +35,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [/docs/examples/guides/use-cases/clone-pvc](/docs/examples/guides/use-cases/clone-pvc) directory of [stashed/docs](https://github.com/stashed/docs) repository.
+> **Note:** YAML files used in this tutorial are stored in [/docs/guides/use-cases/clone-pvc/examples](https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/clone-pvc/examples/) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Clone the Volumes of a Deployment
 

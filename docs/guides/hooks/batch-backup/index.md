@@ -190,7 +190,7 @@ spec:
 Let's create the above resources,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/guides/hooks/batch-backup/wordpress-deployment.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/hooks/batch-backup/examples/wordpress-deployment.yaml
 
 persistentvolumeclaim/wordpress-pvc created
 deployment.apps/wordpress-deployment created

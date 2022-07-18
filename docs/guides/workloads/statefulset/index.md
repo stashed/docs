@@ -536,7 +536,7 @@ Here,
 Let's create the `RestoreSession` crd we have shown above,
 
 ```bash
-$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/examples/workloads/statefulset/restoresession.yaml
+$ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/workloads/statefulset/examples/restoresession.yaml
 restoresession.stash.appscode.com/ss-restore created
 ```
 
