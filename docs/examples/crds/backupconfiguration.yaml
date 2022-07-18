@@ -36,6 +36,7 @@ spec:
           - echo "Sample PreBackup hook demo"
       containerName: my-app-container
     postBackup:
+      executionPolicy: Always
       exec:
         command:
           - /bin/sh
