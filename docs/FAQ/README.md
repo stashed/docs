@@ -56,6 +56,4 @@ Please check our troubleshooting guide [here](/docs/guides/troubleshooting/how-t
 
 ## Need More Help?
 
-To speak with us, please leave a message on [our website](https://appscode.com/contact/).
-
-To join public discussions with the Stash community, join us in the [AppsCode Slack team](https://appscode.slack.com/messages/C8NCX6N23/details/) channel `#stash`. To sign up, use our [Slack inviter](https://slack.appscode.com/).
+To speak with us, please leave a message on [our website](https://appscode.com/contact/). To receive product announcements, follow us on [Twitter](https://twitter.com/KubeStash).
