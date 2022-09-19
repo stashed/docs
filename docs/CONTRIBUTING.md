@@ -21,7 +21,7 @@ Want to contribute to Stash?
 
 ## Getting Help
 
-If you have a question about Stash or having problem using it, you can contact us on the [AppsCode Slack team](https://appscode.slack.com/messages/C8NCX6N23/details/) channel `#stash`. Follow [this link](https://slack.appscode.com) to get invitation to our Slack channel.
+To speak with us, please leave a message on [our website](https://appscode.com/contact/). To receive product announcements, follow us on [Twitter](https://twitter.com/KubeStash).
 
 ## Bugs/Feature request
 
@@ -29,4 +29,4 @@ If you have found a bug with Stash or want to request for new features, please [
 
 ## Spread the word
 
-If you have written blog post or tutorial on Stash, please share it with us on [Twitter](https://twitter.com/AppsCodeHQ) or [Slack](https://slack.appscode.com).
+If you have written blog post or tutorial on Stash, please share it with us on [Twitter](https://twitter.com/KubeStash).
