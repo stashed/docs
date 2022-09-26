@@ -278,7 +278,7 @@ Stash mounts an `emptyDir` for holding temporary files. It is also used for `cac
 - Seconds `30s`
 - Minutes `10m`
 - Hours  `1h`
-- Combination of seconds, minutes hour 10m30s, `1h30m` etc.
+- Combination of seconds, minutes, and hours `10m30s`, `1h30m` etc.
 
 Stash does not support providing days (`d`) in the `timeOut` field. Use the equivalent hours instead.
 

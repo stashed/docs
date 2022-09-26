@@ -160,7 +160,7 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 - Seconds `30s`
 - Minutes `10m`
 - Hours  `1h`
-- Combination of seconds, minutes hour 10m30s, `1h30m` etc.
+- Combination of seconds, minutes, and hours `10m30s`, `1h30m`  etc.
 
 Stash does not support providing days (`d`) in the `timeOut` field. Use the equivalent hours instead.
 
@@ -249,11 +249,11 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 `spec.retryConfig` is an optional field the let users to specify a retry logic for failed backup. It has the following fields:
 
 - `spec.retryConfig.maxRetry` specifies the maximum number of times Stash should retry a failed backup.
-- `spec.retryConfig.delay` specify the amount of time to wait before retrying a failed backup. You can specify the delay in the following format:
+- `spec.retryConfig.delay` specifies the amount of time to wait before retrying a failed backup. You can specify the delay in the following format:
   - Seconds `30s`
   - Minutes `10m`
   - Hours  `1h`
-  - Combination of seconds, minutes hour 10m30s, `1h30m` etc.
+  - Combination of seconds, minutes, and hours `10m30s`, `1h30m`  etc.
 
   Stash does not support providing days (`d`) in the `delay` field. Use the equivalent hours instead.
 
