@@ -33,6 +33,7 @@ spec:
   driver: Restic
   repository:
     name: minio-repo
+    namespace: demo
   executionOrder: Parallel
   members:
   - target:
@@ -58,11 +59,10 @@ spec:
         - latest
     task:
       name: mysql-restore-8.0.14
-  timeOut: 5m
+  timeOut: 30m
 status:
   phase: Succeeded
   sessionDuration: 15.145032437s
-  sessionDeadline: "2020-07-25T17:46:52Z"
   conditions:
   - lastTransitionTime: "2020-07-25T17:41:52Z"
     message: Repository demo/minio-repo exist.
@@ -166,8 +166,7 @@ For more details on how hooks work in Stash and how to configure different types
 
 #### spec.timeOut
 
-`spec.timeOut` specifies the maximum duration of the restore. `RestoreBatch` will be considered `Failed` if the restore does not complete within this time limit. By default, Stash don't set any timeout for the restore.
-
+`spec.timeOut` specifies the amount of time to wait for the restore to complete. For more details, please visit [here](/docs/concepts/crds/restoresession/index.md#spectimeout).
 ### RestoreBatch `Status`
 
 A `RestoreBatch` object has the following fields in the `status` section.

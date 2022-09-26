@@ -13,6 +13,7 @@ spec:
     apiGroup: stash.appscode.com
     kind: BackupBatch
     name: wordpress-backup
+  retryLeft: 2
 status:
   conditions:
   - lastTransitionTime: "2020-07-25T17:41:31Z"
@@ -37,6 +38,7 @@ status:
     type: RepositoryMetricsPushed
   phase: Succeeded
   sessionDuration: 22.575920065s
+  sessionDeadline: "2020-07-25T17:46:28Z"
   targets:
   - phase: Succeeded
     preBackupActions:

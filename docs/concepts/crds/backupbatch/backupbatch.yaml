@@ -6,6 +6,7 @@ metadata:
 spec:
   repository:
     name: minio-repo
+    namespace: demo
   schedule: "*/3 * * * *"
   members:
   - target:
@@ -46,6 +47,10 @@ spec:
           - -c
           - echo "Sample PostBackup hook demo"
       containerName: my-database-container
+  retryConfig:
+    maxRetry: 3
+    delay: 10m
+  timeOut: 1h30m
   retentionPolicy:
     name: 'keep-last-10'
     keepLast: 10

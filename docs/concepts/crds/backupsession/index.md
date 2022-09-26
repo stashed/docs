@@ -45,6 +45,7 @@ spec:
     apiGroup: stash.appscode.com
     kind: BackupBatch
     name: wordpress-backup
+  retryLeft: 2
 status:
   conditions:
   - lastTransitionTime: "2020-07-25T17:41:31Z"
@@ -147,6 +148,10 @@ A `BackupSession` object has the following fields in the `spec` section:
 
 `spec.invoker` specifies the `apiGroup`, `kind`, and `name` of the respective object which is responsible for invoking this backup session.
 
+#### spec.retryLeft
+
+`spec.retryLeft` specifies the number of retry attempt left for this backup session.
+
 ### BackupSession `Status`
 
 `.status` section of `BackupSession` shows stats and progress of backup process in this session.A backup sidecar container or job updates the respective fields under `.status` section after it completes its task. `.status` section consists of the following fields:
@@ -162,6 +167,14 @@ A `BackupSession` object has the following fields in the `spec` section:
 #### status.sessionDeadline
 
 `status.sessionDeadline` indicates the the deadline of the backup process. `BackupSession` will be considered `Failed` if the backup does not complete within this deadline.
+
+#### status.retried
+
+`status.retried` is a boolean field which specifies whether this session was retried or not in case of failed backup.
+
+#### status.nextRetry
+
+`status.nextRetry` specifies the timestamp when this backup will be retried if it has failed.
 
 #### status.conditions
 

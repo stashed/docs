@@ -37,6 +37,7 @@ spec:
   driver: Restic
   repository:
     name: minio-repo
+    namespace: demo
   # task:
   #   name: workload-restore # task field is not required for workload data backup but it is necessary for database backup.
   target:
@@ -101,48 +102,32 @@ spec:
     disableCaching: false
     medium: Memory
     sizeLimit: 2Gi
-  timeOut: 5m
+  timeOut: 30m
 status:
   totalHosts: 5
   phase: Succeeded
   sessionDuration: 2m40.595857548s
-  sessionDeadline: "2022-02-25T18:00:56Z"
   conditions:
-  - lastTransitionTime: "2022-02-25T17:55:56Z"
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
     message: Repository demo/minio-repo exist.
     reason: RepositoryAvailable
     status: "True"
     type: RepositoryFound
-  - lastTransitionTime: "2022-02-25T17:55:56Z"
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
     message: Backend Secret demo/minio-secret exist.
     reason: BackendSecretAvailable
     status: "True"
     type: BackendSecretFound
-  - lastTransitionTime: "2022-02-25T17:55:56Z"  
-    message: Successfully validated.
-    reason:  ResourceValidationPassed
-    status:  "True"
-    type:    ValidationPassed
-  - lastTransitionTime: "2022-02-25T17:55:56Z"
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
     message: Restore target apps/v1 statefulset/recovered-statefulset found.
     reason: TargetAvailable
     status: "True"
     type: RestoreTargetFound
-  - lastTransitionTime: "2022-02-25T17:55:56Z"
-    message: Restorer job/init-container has been ensured successfully for StatefulSet demo/recovered-statefulset.
-    reason:  SuccessfullyEnsuredRestorerEntity
-    status:  "True"
-    type:    RestorerEnsured
-  - lastTransitionTime: "2022-02-25T17:55:56Z"
+  - lastTransitionTime: "2020-07-25T17:55:56Z"
     message: Successfully injected stash init-container.
     reason: InitContainerInjectionSucceeded
     status: "True"
     type: StashInitContainerInjected
-  - lastTransitionTime: "2022-02-25T17:55:56Z"
-    message: Successfully pushed metrics.
-    reason:  SuccessfullyPushedMetrics
-    status:  "True"
-    type:    MetricsPushed
   stats:
   - duration: 884.431745ms
     hostname: host-1
@@ -211,7 +196,10 @@ A `RestoreSession` object has the following fields in the `spec` section.
 
 #### spec.repository
 
-`spec.repository.name` indicates the `Repository` crd name that holds necessary backend information from where data will be restored.
+`spec.repository` specifies the name and namespace of the Repository CR that holds the necessary backend information where the backed up data has been stored.
+
+- `spec.repository.name` specifies the name of the Repository CR.
+- `spec.repository.namespace` specifies the namespace of the Repository. If you don't provide this field, Stash will look for the Repository CR in the same namespace as the RestoreSession.
 
 #### spec.task
 
@@ -285,7 +273,14 @@ Stash mounts an `emptyDir` for holding temporary files. It is also used for `cac
 
 #### spec.timeOut
 
-`spec.timeOut` specifies the maximum duration of the restore. `RestoreSession` will be considered `Failed` if the restore does not complete within this time limit. By default, Stash don't set any timeout for the restore.
+`spec.timeOut` specifies the maximum amount of time to wait for the restore to complete. If the restore doesn't complete within this time limit, Stash will mark the respective RestoreSession as `Failed`. You can specify the timeout in the following format:
+
+- Seconds `30s`
+- Minutes `10m`
+- Hours  `1h`
+- Combination of seconds, minutes, and hours `10m30s`, `1h30m` etc.
+
+Stash does not support providing days (`d`) in the `timeOut` field. Use the equivalent hours instead.
 
 #### spec.interimVolumeTemplate
 
