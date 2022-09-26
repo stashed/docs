@@ -7,6 +7,7 @@ spec:
   driver: Restic
   repository:
     name: minio-repo
+    namespace: demo
   # task:
   #   name: workload-restore # task field is not required for workload data backup but it is necessary for database backup.
   target:
@@ -71,6 +72,7 @@ spec:
     disableCaching: false
     medium: Memory
     sizeLimit: 2Gi
+  timeOut: 30m
 status:
   totalHosts: 5
   phase: Succeeded

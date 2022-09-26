@@ -42,9 +42,14 @@ spec:
       prefix: stash/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
   wipeOut: false
+  # backupNamespace: stash
   # ============== Blueprint for BackupConfiguration =================
   schedule: "* * * * *"
   backupHistoryLimit: 3
+  timeOut: 30m
+  retryConfig:
+    maxRetry: 3
+    delay: 10m
   # task: # no task section is required for workload data backup
   #   name: workload-backup
   runtimeSettings:
@@ -107,6 +112,10 @@ You can provide a blueprint for the `BackupConfiguration` object that will be cr
 - **spec.schedule :** `spec.schedule` is the schedule that will be used to create `BackupConfiguration` for respective target. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specschedule).
 
 - **spec.backupHistoryLimit :** `spec.backupHistoryLimit` specifies a limit for backup history to keep for debugging purposes. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specbackuphistroylimit).
+
+- **spec.backupNamespace :**  `spec.backupNamespace` specifies the namespace where the backup resources (i.e. BackupConfiguration, BackupSession, Job, Repository etc.) will be created.
+
+- **spec.retryConfig :** `spec.retryConfig` specifies a retry logic for failed backup. For more details, please visit [here](/docs/concepts/crds/backupconfiguration/index.md#specretryconfig).
 
 - **spec.task :** `spec.task` specifies the name and the parameters of [Task](/docs/concepts/crds/task/index.md) to use to backup the target. You can template the name field with `TARGET_APP_VERSION` variable for database backup. Stash will replace this variable with respective database version. This will allow you to backup multiple database versions with the same `BackupBlueprint`. For more details, please check the following [guide](/docs/guides/auto-backup/database/index.md).
 

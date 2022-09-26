@@ -10,9 +10,14 @@ spec:
       prefix: stash/${TARGET_NAMESPACE}/${TARGET_KIND}/${TARGET_NAME}
     storageSecretName: gcs-secret
   wipeOut: false
+  # backupNamespace: stash
   # ============== Blueprint for BackupConfiguration =================
   schedule: "* * * * *"
   backupHistoryLimit: 3
+  timeOut: 30m
+  retryConfig:
+    maxRetry: 3
+    delay: 10m
   # task: # no task section is required for workload data backup
   #   name: workload-backup
   runtimeSettings:

@@ -37,11 +37,13 @@ spec:
   driver: Restic
   repository:
     name: local-repo
+    namespace: demo
   # task:
   #   name: workload-backup # task field is not required for workload data backup but it is necessary for database backup.
   schedule: "* * * * *" # backup at every minutes
   paused: false
   backupHistoryLimit: 3
+  timeOut: 2h
   target:
     alias: app-data
     ref:
@@ -96,11 +98,13 @@ spec:
     medium: "Memory"
     sizeLimit: "2Gi"
     disableCaching: false
+  retryConfig:
+    maxRetry: 3
+    delay: 10m
   retentionPolicy:
     name: 'keep-last-5'
     keepLast: 5
     prune: true
-  timeOut: 5m
 ```
 
 Here, we are going to describe the various sections of `BackupConfiguration` crd.
@@ -136,7 +140,10 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 
 #### spec.repository
 
-`spec.repository.name` indicates the `Repository` crd name that holds necessary backend information where the backed up data will be stored.
+`spec.repository` specifies the name and namespace of the Repository CR that holds the necessary backend information where the backed up data will be stored.
+
+- `spec.repository.name` specifies the name of the Repository CR.
+- `spec.repository.namespace` specifies the namespace of the Repository. If you don't provide this field, Stash will look for the Repository CR in the same namespace as the BackupConfiguration.
 
 #### spec.schedule
 
@@ -145,6 +152,17 @@ A `BackupConfiguration` object has the following fields in the `spec` section.
 #### spec.backupHistoryLimit
 
 `spec.backupHistoryLimit` specifies the number of `BackupSession` and its associate resources (Job, PVC etc.) to keep for debugging purposes. The default value of this field is 1. Stash will cleanup the old `BackupSession` and it's associate resources after each backup session according to `backupHistoryLimit`. Stash will always keep the last completed BackupSession when `backuphistorylimit>0`. It will keep the last completed BackupSession even if it exceeds the history limit. This will help to keep the backup history when a backup gets skipped due to another running backup.
+
+#### spec.timeOut
+
+`spec.timeOut` specifies the maximum amount of time to wait for the backup to complete. If the backup doesn't complete within this time limit, Stash will mark the respective BackupSession as `Failed`. You can specify the timeout in the following format:
+
+- Seconds `30s`
+- Minutes `10m`
+- Hours  `1h`
+- Combination of seconds, minutes hour 10m30s, `1h30m` etc.
+
+Stash does not support providing days (`d`) in the `timeOut` field. Use the equivalent hours instead.
 
 #### spec.task
 
@@ -226,6 +244,19 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 
 >Note that the usage of this field is different than `spec.tempDir` which is used for caching purpose. Stash has introduced this field because the `emptyDir` volume that is used for `spec.tempDir` does not play nice with large databases( i.e. 100Gi database). Also, it provides debugging capability as Stash keeps it until it hits the limit specified in `spec.backupHistoryLimit`.
 
+#### spec.retryConfig
+
+`spec.retryConfig` is an optional field the let users to specify a retry logic for failed backup. It has the following fields:
+
+- `spec.retryConfig.maxRetry` specifies the maximum number of times Stash should retry a failed backup.
+- `spec.retryConfig.delay` specify the amount of time to wait before retrying a failed backup. You can specify the delay in the following format:
+  - Seconds `30s`
+  - Minutes `10m`
+  - Hours  `1h`
+  - Combination of seconds, minutes hour 10m30s, `1h30m` etc.
+
+  Stash does not support providing days (`d`) in the `delay` field. Use the equivalent hours instead.
+
 #### spec.retentionPolicy
 
 `spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. Following options are available to configure retention policy:
@@ -243,9 +274,6 @@ For some targets (i.e. some databases), Stash can't directly pipe the dumped dat
 | `prune`       | bool    | --prune                      | If set `true`, Stash will cleanup unreferenced data from the backend.                              |
 | `dryRun`      | bool    | --dry-run                    | Stash will not remove anything but print which snapshots would be removed.                         |
 
-#### spec.timeOut
-
-`spec.timeOut` specifies the maximum duration of backup. `BackupSession` will be considered `Failed` if the backup does not complete within this time limit. By default, Stash don't set any timeout for the backup.
 
 ### BackupConfiguration `Status`
 

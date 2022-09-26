@@ -36,8 +36,8 @@ metadata:
 spec:
   repository:
     name: minio-repo
+    namespace: demo
   schedule: "*/3 * * * *"
-  executionOrder: Parallel
   members:
   - target:
       alias: db
@@ -61,6 +61,7 @@ spec:
       exclude:
       - /var/www/html/my-file.html
       - /var/www/html/*.json
+  executionOrder: Parallel
   hooks:
     preBackup:
       exec:
@@ -76,11 +77,14 @@ spec:
           - -c
           - echo "Sample PostBackup hook demo"
       containerName: my-database-container
+  retryConfig:
+    maxRetry: 3
+    delay: 10m
+  timeOut: 1h30m
   retentionPolicy:
     name: 'keep-last-10'
     keepLast: 10
     prune: true
-  timeOut: 5m
 ```
 
 Here, we are going to describe the various sections of `BackupBatch` crd.
@@ -146,9 +150,14 @@ For more details on how hooks work in Stash and how to configure different types
 
 `spec.retentionPolicy` specifies the policy to follow for cleaning old snapshots. For more details, please see [here](/docs/concepts/crds/backupconfiguration/index.md#specretentionpolicy).
 
+
+#### spec.retryConfig
+
+`spec.retryConfig` specifies a retry logic for failed backup. For more details, please see [here](/docs/concepts/crds/backupconfiguration/index.md#specretryconfig).
+
 #### spec.timeOut
 
-`spec.timeOut` specifies the maximum duration of the backup. `BackupSession` will be considered `Failed` if the backup does not complete within this time limit. By default, Stash don't set any timeout for the backup.
+`spec.timeOut` specifies the maximum duration of the backup. For more details, please see [here](/docs/concepts/crds/backupconfiguration/index.md#spectimeout).
 
 ### BackupBatch `Status`
 
