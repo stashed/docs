@@ -42,6 +42,12 @@ The following auto-backup annotations are available for the databases:
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
+You can also specify multiple BackupBlueprint name separated by comma (`,`). For example:
+
+```yaml
+stash.appscode.com/backup-blueprint: daily-gcs-backup,weekly-s3-backup
+```
+
 - **Schedule:** You can specify a custom schedule for a target to overwrite the schedule of the BackupBlueprint through this annotation.
 
 ```yaml

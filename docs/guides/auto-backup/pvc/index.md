@@ -137,6 +137,12 @@ You have to add the auto-backup annotations to the PVC that you want to backup. 
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
 ```
 
+You can also specify multiple BackupBlueprint name separated by comma (`,`). For example:
+
+```yaml
+stash.appscode.com/backup-blueprint: daily-gcs-backup,weekly-s3-backup
+```
+
 - **Schedule:** You can specify a schedule to backup this target through this annotation. If you don't specify this annotation, schedule from the `BackupBlueprint` will be used.
 
 ```yaml
