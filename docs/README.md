@@ -35,14 +35,14 @@ Concept explains some significant aspect of Stash. This is where you can learn a
 Setup contains instruction for installing, uninstalling, and upgrading Stash.
 
 - **Install Stash:** Provides installation instructions for Stash and its various components.
-  - [Community Edition](/docs/setup/install/community.md): Provides installation instructions for Stash Community Edition.
-  - [Enterprise Edition](/docs/setup/install/enterprise.md): Provides installation instructions for Stash Enterprise Edition.
-  - [Stash kubectl Plugin](/docs/setup/install/kubectl_plugin.md): Provides installation instructions for Stash `kubectl` plugin.
-  - [Troubleshooting](/docs/setup/install/troubleshoting.md): Provides troubleshooting guide for various installation problems.
+  - [Community Edition](/docs/setup/install/community/index.md): Provides installation instructions for Stash Community Edition.
+  - [Enterprise Edition](/docs/setup/install/enterprise/index.md): Provides installation instructions for Stash Enterprise Edition.
+  - [Stash kubectl Plugin](/docs/setup/install/kubectl-plugin/index.md): Provides installation instructions for Stash `kubectl` plugin.
+  - [Troubleshooting](/docs/setup/install/troubleshooting/index.md): Provides troubleshooting guide for various installation problems.
 - **Uninstall Stash:** Provides uninstallation instructions for Stash and its various components.
-  - [Community Edition](/docs/setup/uninstall/community.md): Provides uninstallation instructions for Stash Community Edition.
-  - [Enterprise Edition](/docs/setup/uninstall/enterprise.md): Provides uninstallation instructions for Stash Enterprise Edition.
-  - [Stash kubectl Plugin](/docs/setup/uninstall/kubectl_plugin.md): Provides uninstallation instructions for Stash `kubectl` plugin.
+  - [Community Edition](/docs/setup/uninstall/community/index.md): Provides uninstallation instructions for Stash Community Edition.
+  - [Enterprise Edition](/docs/setup/uninstall/enterprise/index.md): Provides uninstallation instructions for Stash Enterprise Edition.
+  - [Stash kubectl Plugin](/docs/setup/uninstall/kubectl-plugin/index.md): Provides uninstallation instructions for Stash `kubectl` plugin.
 - [Upgrade Stash](/docs/setup/upgrade/index.md): Provides instruction for updating Stash license and upgrading between various Stash versions.
 
 ## [Guides](/docs/guides/)

@@ -12,7 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise.md) to try this feature." >}}
+{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise/index.md) to try this feature." >}}
 
 # Auto Backup for Database
 
@@ -40,6 +40,12 @@ The following auto-backup annotations are available for the databases:
 
 ```yaml
 stash.appscode.com/backup-blueprint: <BackupBlueprint name>
+```
+
+You can also specify multiple BackupBlueprint name separated by comma (`,`). For example:
+
+```yaml
+stash.appscode.com/backup-blueprint: daily-gcs-backup,weekly-s3-backup
 ```
 
 - **Schedule:** You can specify a custom schedule for a target to overwrite the schedule of the BackupBlueprint through this annotation.
