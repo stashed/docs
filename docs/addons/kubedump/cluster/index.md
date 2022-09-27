@@ -19,8 +19,8 @@ Stash `{{< param "info.version" >}}` supports taking backup of the resource YAML
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
-- Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise.md).
-- Install Stash `kubectl` plugin in your local machine following the steps [here](/docs/setup/install/kubectl_plugin.md).
+- Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise/index.md).
+- Install Stash `kubectl` plugin in your local machine following the steps [here](/docs/setup/install/kubectl-plugin/index.md).
 - If you are not familiar with how Stash backup the resource YAMLs, please check the following guide [here](/docs/addons/kubedump/overview/index.md).
 
 You have to be familiar with the following custom resources:
