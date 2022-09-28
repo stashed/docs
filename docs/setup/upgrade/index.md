@@ -263,7 +263,11 @@ Follow the below instructions to update the license:
 #### Using Helm 3
 
 ```bash
-helm upgrade stash -n kube-system appscode/stash \
+# detect current version
+helm ls -A | grep stash
+
+# update license key keeping the current version
+helm upgrade stash -n kube-system appscode/stash --version=<cur_version> \
   --reuse-values \
   --set-file global.license=/path/to/new/license.txt
 ```
@@ -276,7 +280,11 @@ helm upgrade stash -n kube-system appscode/stash \
 **Update License of Community Edition:**
 
 ```bash
-helm template stash -n kube-system appscode/stash \
+# detect current version
+helm ls -A | grep stash
+
+# update license key keeping the current version
+helm template stash -n kube-system appscode/stash --version=<cur_version> \
   --set features.community=true \
   --set global.skipCleaner=true \
   --show-only appscode/stash-community/templates/license.yaml \
@@ -286,7 +294,11 @@ helm template stash -n kube-system appscode/stash \
 **Update License of Enterprise Edition:**
 
 ```bash
-helm template stash appscode/stash -n kube-system \
+# detect current version
+helm ls -A | grep stash
+
+# update license key keeping the current version
+helm template stash appscode/stash -n kube-system --version=<cur_version> \
   --set features.enterprise=true \
   --set global.skipCleaner=true \
   --show-only appscode/stash-enterprise/templates/license.yaml \
