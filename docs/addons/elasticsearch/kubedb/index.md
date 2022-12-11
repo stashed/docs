@@ -778,7 +778,7 @@ namespace/restored created
 
 #### Install `stash` kubectl plugin
 
-Now, we are going to use `stash` kubectl plugin to help us copying the `Repository` and backend `Secret` from our `demo` namespace into `restored` namespace. If you haven't already installed the `stash` kubectl-plugin, please install it by following the guide from [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/kubectl_plugin/).
+Now, we are going to use `stash` kubectl plugin to help us copying the `Repository` and backend `Secret` from our `demo` namespace into `restored` namespace. If you haven't already installed the `stash` kubectl-plugin, please install it by following the guide from [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/kubectl-plugin/).
 
 Verify that the `stash` kubectl plugin has been installed properly,
 
