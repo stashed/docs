@@ -568,11 +568,11 @@ And then copy the user name and password of the `root` user to access into `mysq
 > Notice: We used the same Secret for the `restored-mysql` object. So, we will use the same commands as before.
 
 ```bash
-$ kubectl get secret -n demo  sample-mysql-auth -o jsonpath='{.data.username}'| base64 -d
+$ kubectl get secret -n demo  restored-mysql-auth -o jsonpath='{.data.username}'| base64 -d
 root⏎
 
-$ kubectl get secret -n demo  sample-mysql-auth -o jsonpath='{.data.password}'| base64 -d
-5HEqoozyjgaMO97N⏎
+$ kubectl get secret -n demo  restored-mysql-auth -o jsonpath='{.data.password}'| base64 -d
+x*Tw66CEDZ_kj16y⏎
 ```
 
 Now, let's exec into the Pod to enter into `mysql` shell and create a database and a table,
