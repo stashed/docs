@@ -79,7 +79,8 @@ To create a `BackupConfiguration`, you need to provide `BackupConfiguration` nam
 | `--target-apiversion`   | Specify API-Version of the target resource.                                                    |
 | `--target-kind`         | Specify kind of the target resource.                                                           |
 | `--target-name`         | Specify name of the target resource.                                                           |
-| `--repository`          | Specify name of the `Repository` that will be created.                                         |
+| `--repo-name`          | Specify name of the `Repository` that will be created.                                         |
+| `--repo-namespace` | Specify namespace of the `Repository` that will be created. |
 | `--schedule`            | Specify schedule of the backup.                                                                |
 | `--driver`              | `Driver` indicates the mechanism used to backup (i.e. VolumeSnapshotter, Restic)               |
 | `--task`                | Specify name of a `Task`                                                                       |
@@ -107,7 +108,7 @@ kubectl stash create <backupconfig-name> [flags]
 **Example:**
 
 ```bash
-$ kubectl stash create backupconfig ss-backup --namespace=demo --repository=gcs-repo --schedule="*/4 * * * *" --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-demo --paths=/source/data --volume-mounts=source-data:/source/data --keep-last=5 --prune=true
+$ kubectl stash create backupconfig ss-backup --namespace=demo --repo-name=gcs-repo --schedule="*/4 * * * *" --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-demo --paths=/source/data --volume-mounts=source-data:/source/data --keep-last=5 --prune=true
 ```
 
 ### Create RestoreSession
@@ -120,7 +121,8 @@ To create a `RestoreSession`, you need to provide a `Repository` name, Target or
 | `--target-apiversion`  | API-Version of the target resource.                                            |
 | `--target-kind`        | Specify kind of the target resource.                                           |
 | `--target-name`        | Specify name of the target resource.                                           |
-| `--repository`         | specify name of the `Repository`.                                              |
+| `--repo-name`         | specify name of the `Repository`.                                              |
+| `--repo-namespace` | specify namespace of the `Repository` |
 | `--driver`             | Driver indicates the mechanism used to backup (i.e. VolumeSnapshotter, Restic) |
 | `--task`               | Name of the Task                                                               |
 | `--replica`            | Replica specifies the number of replicas whose data should be backed up.       |
@@ -145,7 +147,7 @@ kubectl stash create restoresession <restoresession-name> [flags]
 **Example:**
 
 ```bash
-$ kubectl stash create restoresession ss-restore --namespace=demo --repository=gcs-repo --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-recovered --paths=/source/data --volume-mounts=source-data:/source/data
+$ kubectl stash create restoresession ss-restore --namespace=demo --repo-name=gcs-repo --target-apiversion=apps/v1 --target-kind=StatefulSet --target-name=stash-recovered --paths=/source/data --volume-mounts=source-data:/source/data
 ```
 
 ## Copy Command
