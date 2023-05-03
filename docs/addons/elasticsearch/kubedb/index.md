@@ -451,7 +451,7 @@ Here,
 - `spec.interimVolumeTemplate` specifies a PVC template that will be used by Stash to hold the dumped data temporarily before uploading it into the cloud bucket.
 - `spec.runtimeSettings.pod` specifies the runtime environment for the backup job at the pod level.
 
-> Note: When running a backup with Stash, it defaults to using the "nobody" user, which can cause permission issues when trying to access the interim volume directory. To avoid this problem, you can include the "fsGroup" of the Stash default user (which is 65534) in the "runtimeSettings.pod.securityContext" section.
+> Note: When running a backup with Stash, it defaults to using the `nobody` user, which can cause permission issues when trying to access the interim volume directory. To avoid this problem, you can include the `fsGroup` of the Stash default user (which is `65534`) in the `runtimeSettings.pod.securityContext` section.
 
 Let's create the `BackupConfiguration` object we have shown above,
 
@@ -630,7 +630,7 @@ Here,
 - `.spec.runtimeSettings.pod` specifies the runtime environment for the restore job at the pod level.
 - `.spec.rules` specifies that we are restoring data from the latest backup snapshot of the database.
 
-> Note: When running a restore with Stash, it defaults to using the `nobody` user, which can cause permission issues when trying to access the interim volume directory. To avoid this problem, you can include the "fsGroup" of the Stash default user (which is 65534) in the "runtimeSettings.pod.securityContext" section.
+> Note: When running a restore with Stash, it defaults to using the `nobody` user, which can cause permission issues when trying to access the interim volume directory. To avoid this problem, you can include the `fsGroup` of the Stash default user (which is `65534`) in the `runtimeSettings.pod.securityContext` section.
 
 Let's create the `RestoreSession` object object we have shown above,
 
