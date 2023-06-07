@@ -57,7 +57,9 @@ $ helm upgrade stash appscode/stash \
 
 #### 3. Post uprade cleanup
 
-We have changed the name format for auto-backup resources to support dedicated backup or storage namespace. If you were using a dedicated storage namespace for your auto-backup through the `repoNamespace` field, you might see a new BackupConfiguration and Repository has been created with a new name format. Unfortunately, Stash can't remove the old BackupConfiguration and Repository before creating a new one due to a flaw in how we handled them previously. In this case, you can safely remove the old BackupConfiguration and Repository. Your backed-up data will be intact.
+If you are upgrading Stash from version `v2022.03.29` to a newer version, please follow the post-upgrade step below:
+
+We have introduced a new name format for auto-backup resources to support dedicated backup or storage namespaces. If you were previously using a dedicated storage namespace for your auto-backup by specifying the `repoNamespace` field, you might notice that a new BackupConfiguration and Repository have been created with the new name format. Due to a flaw in how we handled these resources in the past, Stash is unable to automatically remove the old BackupConfiguration and Repository before creating the new ones. However, you can safely remove the old BackupConfiguration and Repository manually. Your backed-up data will be intact.
 
 To cleanup the BackupConfigurations and the Repositories,
 
