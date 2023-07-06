@@ -613,10 +613,10 @@ spec:
       resources:
         requests:
           storage: 1Gi
-    runtimeSettings:
-      pod:
-        securityContext:
-          fsGroup: 65534
+  runtimeSettings:
+    pod:
+      securityContext:
+        fsGroup: 65534
   rules:
   - snapshots: [latest]
 ```
