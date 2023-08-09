@@ -40,7 +40,7 @@ namespace/demo created
 
 At first, let's configure a Slack incoming webhook. We are going to send the notifications to a channel named `notification-test`. Now, follow the steps below:
 
-- Go to https://api.slack.com/ and click the `Create an app` button as highlighted in the red rectangle in the following image.
+- Go to https://api.slack.com/messaging/webhooks and click the `Create an app` button as highlighted in the red rectangle in the following image.
 
 <figure align="center">
   <img alt="Step 1 " src="images/step_1.png">
