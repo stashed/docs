@@ -89,6 +89,7 @@ If the backup or restore process fails then the respective `postBackup` or `post
 - `Always`: The hook will be executed after the backup/restore process no matter the backup/restore has failed or succeeded. This is the default behavior.
 - `OnSuccess`: The hook will be executed after the backup/restore process only if the backup/restore has succeeded.
 - `OnFailure`: The hook will be executed after the backup/restore process only if the backup/restore has failed.
+- `OnFinalRetryFailure`: The hook will be executed after the backup process only if the backup has failed with no more retry attempts left.
 
 If the `postBackup` or `postRestore` hook fails, the respective BackupSession or RestoreSession will be marked as `Failed`.
 

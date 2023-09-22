@@ -186,7 +186,7 @@ Stash does not support providing days (`d`) in the `timeOut` field. Use the equi
   - `Always`: The hook will be executed after the backup process no matter the backup has failed or succeeded. This is the default behavior.
   - `OnSuccess`: The hook will be executed after the backup process only if the backup has succeeded.
   - `OnFailure`: The hook will be executed after the backup process only if the backup has failed.
-
+  - `OnFinalRetryFailure`: The hook will be executed after the backup process only if the backup has failed with no more retry attempts left.
 For more details on how hooks work in Stash and how to configure different types of hook, please visit [here](/docs/guides/hooks/overview/index.md).
 
 #### spec.runtimeSettings
