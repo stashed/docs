@@ -90,8 +90,7 @@ $ kubectl apply -f https://github.com/stashed/docs/raw/{{< param "info.version" 
 mongodb.kubedb.com/sample-mgo-sh created
 ```
 
-According to MongoDB [docs](https://www.mongodb.com/docs/manual/core/replica-set-members/#replica-set-members), we should always have at least 3 replicas in the replicaSet.
-As one secondary gets locked while running mongodump utility, This is a must, in case of configServer while taking backup. There can be various issues like sharding commands get stucked, primary-secondary syncing issue etc. if you don't specify >= 3  replicas in `.spec.shardTopology.configServer.replicas` field. 
+MongoDB [recommends](https://www.mongodb.com/docs/manual/core/replica-set-members/#replica-set-members) that there should be at least 3 replicas for a replicaSet configuration. For a sharded MongoDB setup, a secondary configserver is locked while running `mongodump` utility for backup. This can result in various issues like sharding commands get stucked, primary-secondary syncing issue etc. So, ensure at least 3 configServer replicas by specifying >= 3 replicas in `.spec.shardTopology.configServer.replicas` field. 
 
 KubeDB will deploy a MongoDB database according to the above specification. It will also create the necessary secrets and services to access the database.
 
