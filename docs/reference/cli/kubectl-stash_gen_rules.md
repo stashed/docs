@@ -1,25 +1,32 @@
 ---
-title: Unlock
+title: Gen Rules
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-unlock
-    name: Unlock
+    identifier: kubectl-stash-gen-rules
+    name: Gen Rules
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash unlock
+## kubectl-stash gen rules
 
-Unlock restic repository
+Generate restore rules from nearest snapshots at a specific time.
+
+### Synopsis
+
+Generate restore rules for a repository based on the closest snapshots to a specific time
 
 ```
-kubectl-stash unlock [flags]
+kubectl-stash gen rules [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for unlock
+      --group-interval string    Snaspshot grouping interval (default "4m")
+  -h, --help                     help for rules
+      --request-timeout string   Request timeout duration for the kubectl command
+      --timestamp string         Timestamp to find the closest snapshots
 ```
 
 ### Options inherited from parent commands
@@ -38,7 +45,6 @@ kubectl-stash unlock [flags]
       --kubeconfig string              Path to the kubeconfig file to use for CLI requests.
       --match-server-version           Require server version to match client version
   -n, --namespace string               If present, the namespace scope for this CLI request
-      --request-timeout string         The length of time to wait before giving up on a single server request. Non-zero values should contain a corresponding time unit (e.g. 1s, 2m, 3h). A value of zero means don't timeout requests. (default "0")
   -s, --server string                  The address and port of the Kubernetes API server
       --tls-server-name string         Server name to use for server certificate validation. If it is not provided, the hostname used to contact the server is used
       --token string                   Bearer token for authentication to the API server
@@ -47,5 +53,5 @@ kubectl-stash unlock [flags]
 
 ### SEE ALSO
 
-* [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
+* [kubectl-stash gen](/docs/reference/cli/kubectl-stash_gen.md)	 - generate stash resources
 

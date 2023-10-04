@@ -1,25 +1,28 @@
 ---
-title: Unlock
+title: Key Add
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-unlock
-    name: Unlock
+    identifier: kubectl-stash-key-add
+    name: Key Add
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash unlock
+## kubectl-stash key add
 
-Unlock restic repository
+Add a new key (password) to a restic repository
 
 ```
-kubectl-stash unlock [flags]
+kubectl-stash key add [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for unlock
+  -h, --help                       help for add
+      --host string                Host for the new key
+      --new-password-file string   File from which to read the new password
+      --user string                Username for the new key
 ```
 
 ### Options inherited from parent commands
@@ -42,10 +45,9 @@ kubectl-stash unlock [flags]
   -s, --server string                  The address and port of the Kubernetes API server
       --tls-server-name string         Server name to use for server certificate validation. If it is not provided, the hostname used to contact the server is used
       --token string                   Bearer token for authentication to the API server
-      --user string                    The name of the kubeconfig user to use
 ```
 
 ### SEE ALSO
 
-* [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
+* [kubectl-stash key](/docs/reference/cli/kubectl-stash_key.md)	 - manages restic keys (passwords) for accessing the repository
 
