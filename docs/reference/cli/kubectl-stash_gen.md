@@ -1,25 +1,21 @@
 ---
-title: Unlock
+title: Gen
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-unlock
-    name: Unlock
+    identifier: kubectl-stash-gen
+    name: Gen
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash unlock
+## kubectl-stash gen
 
-Unlock restic repository
-
-```
-kubectl-stash unlock [flags]
-```
+generate stash resources
 
 ### Options
 
 ```
-  -h, --help   help for unlock
+  -h, --help   help for gen
 ```
 
 ### Options inherited from parent commands
@@ -48,4 +44,5 @@ kubectl-stash unlock [flags]
 ### SEE ALSO
 
 * [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
+* [kubectl-stash gen rules](/docs/reference/cli/kubectl-stash_gen_rules.md)	 - Generate restore rules from nearest snapshots at a specific time.
 
