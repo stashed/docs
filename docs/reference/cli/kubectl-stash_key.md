@@ -1,25 +1,21 @@
 ---
-title: Unlock
+title: Key
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-unlock
-    name: Unlock
+    identifier: kubectl-stash-key
+    name: Key
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash unlock
+## kubectl-stash key
 
-Unlock restic repository
-
-```
-kubectl-stash unlock [flags]
-```
+manages restic keys (passwords) for accessing the repository
 
 ### Options
 
 ```
-  -h, --help   help for unlock
+  -h, --help   help for key
 ```
 
 ### Options inherited from parent commands
@@ -48,4 +44,8 @@ kubectl-stash unlock [flags]
 ### SEE ALSO
 
 * [kubectl-stash](/docs/reference/cli/kubectl-stash.md)	 - kubectl plugin for Stash by AppsCode
+* [kubectl-stash key add](/docs/reference/cli/kubectl-stash_key_add.md)	 - Add a new key (password) to a restic repository
+* [kubectl-stash key list](/docs/reference/cli/kubectl-stash_key_list.md)	 - List the keys (passwords) of a restic repository
+* [kubectl-stash key remove](/docs/reference/cli/kubectl-stash_key_remove.md)	 - Remove a key (password) of a restic repository
+* [kubectl-stash key update](/docs/reference/cli/kubectl-stash_key_update.md)	 - Update current key (password) of a restic repository
 
