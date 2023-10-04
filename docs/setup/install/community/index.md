@@ -64,6 +64,9 @@ Stash operator can be installed as a Helm chart or simply as Kubernetes manifest
     <a class="nav-link active" id="helm3-tab" data-toggle="tab" href="#helm3" role="tab" aria-controls="helm3" aria-selected="true">Helm 3 (Recommended)</a>
   </li>
   <li class="nav-item">
+    <a class="nav-link" id="terraform-tab" data-toggle="tab" href="#terraform" role="tab" aria-controls="terraform" aria-selected="false">Terraform with automatic license refresh</a>
+  </li>
+  <li class="nav-item">
     <a class="nav-link" id="script-tab" data-toggle="tab" href="#script" role="tab" aria-controls="script" aria-selected="false">YAML</a>
   </li>
 </ul>
@@ -86,6 +89,89 @@ $ helm install stash appscode/stash          \
   --namespace kube-system                     \
   --set features.community=true               \
   --set-file global.license=/path/to/the/license.txt
+```
+
+To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash-community).
+
+</div>
+<div class="tab-pane fade" id="terraform" role="tabpanel" aria-labelledby="terraform-tab">
+
+## Using Terraform 
+
+Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts) through the [Terraform helm provider](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) . To install the chart with the release name `stash`:
+
+```yaml
+resource "helm_release" "stash" {
+  repository = "https://charts.appscode.com/stable/"
+  chart      = "stash"
+  name       = "stash"
+  version    = "{{< param "info.version" >}}"
+  namespace  = "kube-system"
+  create_namespace = false
+
+  set {
+    name = "stash-community.nodeSelector.kubernetes\\.io/os"
+    value = "linux"
+  }
+  set {
+    name = "features.community"
+    value = "true"
+  }
+  set_sensitive {
+    name = "global.license"
+    value = module.stash_license.stdout
+    type = "string"
+  }
+}
+
+resource "tls_private_key" "dummy_pem" {
+  algorithm = "RSA"
+  rsa_bits  = 1024
+}
+
+resource "tls_self_signed_cert" "dummy_timeout" {
+  private_key_pem = tls_private_key.dummy_pem.private_key_pem
+
+  //9 months
+  validity_period_hours = 6570
+
+  //dummy values
+  allowed_uses = ["server_auth"]
+}
+
+data "kubernetes_namespace" "cluster_uid" {
+  metadata {
+    name = "kube-system"
+  }
+}
+
+module "stash_license" {
+  source  = "Invicton-Labs/shell-resource/external"
+  version = "0.4.1"
+  #tls_self_signed_cert actually implements a expiration algorithm, so when that expires, this will trigger
+  depends_on = [tls_self_signed_cert.dummy_timeout]
+
+  command_unix = <<EOF
+      curl -X POST -H "Content-Type: application/json" \
+        -d '{
+          "name": "${var.stash_user}",
+          "email": "${var.stash_user}",
+          "product": "stash-community",
+          "cluster": "${data.kubernetes_namespace.cluster_uid.metadata.0.uid}",
+          "tos": "true",
+          "token": "${var.stash_user_apikey}"
+        }' \
+        https://license-issuer.appscode.com/issue-license 
+EOF
+}
+
+variable "stash_user" {
+  description = "Your email"
+  default = "myemail@somewhere.com"
+}
+variable "stash_user_apikey" {
+  description = "get new from  curl -d 'email=myemail@somewhere.com' -X POST https://license-issuer.appscode.com/register"
+}
 ```
 
 To see the detailed configuration options, visit [here](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash-community).
