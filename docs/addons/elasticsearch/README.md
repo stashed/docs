@@ -15,8 +15,6 @@ aliases:
   - /docs/{{ .version }}/addons/elasticsearch/README/
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise/index.md) to try this feature." >}}
-
 # Stash Elasticsearch Addon
 
 Stash 0.9.0+ supports extending its functionality through addons. Stash Elasticsearch addon enables Stash to backup and restore Elasticsearch databases.

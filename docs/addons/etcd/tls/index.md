@@ -246,7 +246,7 @@ In this section, we are going to prepare the necessary resources (e.g., connecti
 
 ### Ensure Etcd Addon
 
-When you install Stash Enterprise edition, it will automatically install all the official addons. Make sure that Etcd addon has been installed properly using the following command.
+When you install Stash, it will automatically install all the official addons. Make sure that Etcd addon has been installed properly using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep etcd

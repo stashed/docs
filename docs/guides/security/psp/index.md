@@ -18,7 +18,7 @@ Stash comes with built-in support for [Pod Security Policy (PSP)](https://kubern
 
 ### Baseline PSP
 
- By default Stash uses minimally restrictive [baseline](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline-default) PSP. Both Stash Community Edition and Stash Enterprise Edition uses baseline PSP. Here, is the YAML of the baseline PSP that uses by Stash operator.
+ By default Stash uses minimally restrictive [baseline](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline-default) PSP. Stash uses baseline PSP. Here, is the YAML of the baseline PSP that uses by Stash operator.
 
 ```yaml
 # ref: https://kubernetes.io/docs/concepts/security/pod-security-standards/#policy-instantiation
@@ -106,7 +106,7 @@ spec:
 
 ### Privileged PSP
 
-If you are using an NFS server as backend with Stash Enterprise Edition, you may need to give Stash operator privileged permission. In this case, Stash will use [privileged](https://kubernetes.io/docs/concepts/security/pod-security-standards/#privileged) PSP. Here, is the YAML of privileged PSP that is used by Stash Enterprise Edition when you uses NFS server as backend,
+If you are using an NFS server as backend with Stash, you may need to give Stash operator privileged permission. In this case, Stash will use [privileged](https://kubernetes.io/docs/concepts/security/pod-security-standards/#privileged) PSP. Here, is the YAML of privileged PSP that is used by Stash when you uses NFS server as backend,
 
 ```yaml
 apiVersion: policy/v1beta1
@@ -141,8 +141,9 @@ spec:
 You can use your own PodSecurityPolicy with Stash. In this case, you have to create the PSP manually and provide the PSP names during installation. You can provide the custom PSP names during installation as below,
 
 ```bash
-$ helm install stash appscode/stash-community   \
-    -n kube-system                    \
-    --set podSecurityPolicies[0]=abc  \
-    --set podSecurityPolicies[1]=xyz
+$ helm install stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --set podSecurityPolicies[0]=abc \
+  --set podSecurityPolicies[1]=xyz
 ```

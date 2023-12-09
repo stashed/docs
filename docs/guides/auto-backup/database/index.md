@@ -12,8 +12,6 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise/index.md) to try this feature." >}}
-
 # Auto Backup for Database
 
 This tutorial will give you an overview of how you can configure Stash auto-backup of the databases and the available configurable options for database auto-backup.

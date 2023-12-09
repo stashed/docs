@@ -191,7 +191,7 @@ In this section, we are going to prepare the necessary resources (i.e. database 
 
 ### Verify Stash MariaDB Addon Installed
 
-When you install the Stash Enterprise edition, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
+When you install the Stash, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
 
 ```bash
 $ kubectl get tasks.stash.appscode.com | grep mariadb

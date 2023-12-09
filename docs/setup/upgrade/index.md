@@ -14,7 +14,7 @@ section_menu_id: setup
 
 # Upgrading Stash
 
-This guide will show you how to upgrade various Stash components. Here, we are going to show how to upgrade from an old Stash version to the new version, how to migrate between the enterprise edition and community edition, and how to update the license, etc.
+This guide will show you how to upgrade various Stash components. Here, we are going to show how to upgrade from an old Stash version to the new version, and how to update the license, etc.
 
 ## Upgrading Stash from `v2021.xx.xx` to `{{< param "info.version" >}}`
 
@@ -37,21 +37,9 @@ $ kubectl apply -f https://github.com/stashed/installer/raw/{{< param "info.vers
 Now, upgrade the Stash helm chart using the following command. You can find the latest installation guide [here](/docs/setup/README.md).
 
 ```bash
-# Update the helm repositories
-$ helm repo update
-
-# Upgrade Stash Community operator chart
-$ helm upgrade stash appscode/stash \
-  --version {{< param "info.version" >}} \
-  --namespace kube-system \
-  --set features.community=true               \
-  --set-file global.license=/path/to/the/license.txt
-
-# Upgrade Stash Enterprise operator chart
-$ helm upgrade stash appscode/stash \
+$ helm upgrade stash oci://ghcr.io/appscode-charts/stash \
     --version {{< param "info.version" >}} \
-    --namespace kube-system \
-    --set features.enterprise=true                \
+    --namespace stash \
     --set-file global.license=/path/to/the/license.txt
 ```
 
@@ -71,7 +59,7 @@ $ kubectl delete repository -n <namespace_name> <repository_name>
 
 ## Upgrading Stash from `v0.11.x` and older to `v0.12.x`
 
-In Stash `v0.11.x` and prior versions, Stash used separate charts for Stash community edition, Stash enterprise edition, and Stash Addons catalogs. In Stash `v0.12.x`, we have moved to a single combined chart for all the components for a better user experience. This enables seamless migration between the Stash community edition and Stash enterprise edition. It also removes the burden of installing individual database addons manually.
+In Stash `v0.11.x` and prior versions, Stash used separate charts for Stash community edition, Stash enterprise edition, and Stash Addons catalogs. In Stash `v0.12.x`, we have moved to a single combined chart for all the components for a better user experience. It also removes the burden of installing individual database addons manually.
 
 In order to upgrade from Stash `v0.11.x` to `v0.12.x`, please follow the following steps.
 
@@ -89,7 +77,7 @@ kubectl patch backupconfiguration -n <namespace> <BackupConfiguration name> --ty
 
 #### 2. Uninstall Stash Addons
 
-Now, if you have installed Stash database addons, then uninstall them by following their uninstallation guide. All the database addons will be created automatically when you upgrade to the new version of the Stash enterprise edition.
+Now, if you have installed Stash database addons, then uninstall them by following their uninstallation guide. All the database addons will be created automatically when you upgrade to the new version of the Stash.
 
 Make sure to use the appropriate uninstallation guide for the addon version that you are currently using. You can use the dropdown on the left sidebar of the documentation site to navigate to the documentation for previous versions.
 
@@ -153,93 +141,6 @@ Finally, you can resume the backups that you have paused before starting the upg
 kubectl patch backupconfiguration -n <namespace> <BackupConfiguration name> --type="merge" --patch='{"spec": {"paused": false}}'
 ```
 
-## Migration Between Community Edition and Enterprise Edition
-
-Stash `v0.12.x` supports seamless migration between community edition and enterprise edition. You can run the following commands to migrate between them.
-
-<ul class="nav nav-tabs" id="migrationTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="mgr-helm3-tab" data-toggle="tab" href="#mgr-helm3" role="tab" aria-controls="mgr-helm3" aria-selected="true">Helm 3</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="mgr-yaml-tab" data-toggle="tab" href="#mgr-yaml" role="tab" aria-controls="mgr-yaml" aria-selected="false">YAML</a>
-  </li>
-</ul>
-<div class="tab-content" id="migrationTabContent">
-  <div class="tab-pane fade show active" id="mgr-helm3" role="tabpanel" aria-labelledby="mgr-helm3">
-
-#### Using Helm 3
-
-**From Community Edition to Enterprise Edition:**
-
-In order to migrate from Stash community edition to Stash enterprise edition, please run the following command,
-
-```bash
-helm upgrade stash -n kube-system appscode/stash \
-  --reuse-values \
-  --set features.community=false \
-  --set features.enterprise=true \
-  --set-file global.license=/path/to/stash-enterprise-license.txt
-```
-
-**From Enterprise Edition to Community Edition:**
-
-In order to migrate from Stash enterprise edition to Stash community edition, please run the following command,
-
-```bash
-helm upgrade stash -n kube-system appscode/stash \
-  --reuse-values \
-  --set features.community=true \
-  --set features.enterprise=false \
-  --set-file global.license=/path/to/stash-community-license.txt
-```
-
-</div>
-<div class="tab-pane fade" id="mgr-yaml" role="tabpanel" aria-labelledby="mgr-yaml">
-
-**Using YAML (with helm 3)**
-
-**From Community Edition to Enterprise Edition:**
-
-In order to migrate from Stash community edition to Stash enterprise edition, please run the following command,
-
-```bash
-# Delete resources of Stash community edition
-helm template stash -n kube-system appscode/stash \
-  --set features.community=true \
-  --set global.license="nothing" \
-  --set global.skipCleaner=true | kubectl delete -f -
-
-# Install Stash enterprise edition
-helm template stash -n kube-system appscode/stash \
-  --version {{< param "info.version" >}} \
-  --set features.enterprise=true \
-  --set global.skipCleaner=true \
-  --set-file global.license=/path/to/stash-enterprise-license.txt | kubectl apply -f -
-```
-
-**From Enterprise Edition to Community Edition:**
-
-In order to migrate from Stash enterprise edition to Stash community edition, please run the following command,
-
-```bash
-# Delete resources of Stash enterprise edition
-helm template stash -n kube-system appscode/stash \
-  --set features.enterprise=true \
-  --set global.license="nothing" \
-  --set global.skipCleaner=true | kubectl delete -f -
-
-# Install Stash community edition
-helm template stash -n kube-system appscode/stash \
-  --version {{< param "info.version" >}} \
-  --set features.community=true \
-  --set global.skipCleaner=true \
-  --set-file global.license=/path/to/stash-community-license.txt | kubectl apply -f -
-```
-
-</div>
-</div>
-
 ## Updating License
 
 Stash support updating license without requiring any re-installation. Stash creates a Secret named `<helm release name>-license` with the license file. You just need to update the Secret. The changes will propagate automatically to the operator and it will use the updated license going forward.
@@ -267,7 +168,9 @@ Follow the below instructions to update the license:
 helm ls -A | grep stash
 
 # update license key keeping the current version
-helm upgrade stash -n kube-system appscode/stash --version=<cur_version> \
+helm upgrade stash oci://ghcr.io/appscode-charts/stash \
+  --version=<cur_version> \
+  --namespace stash --create-namespace \
   --reuse-values \
   --set-file global.license=/path/to/new/license.txt
 ```
@@ -277,29 +180,14 @@ helm upgrade stash -n kube-system appscode/stash --version=<cur_version> \
 
 #### Using YAML (with helm 3)
 
-**Update License of Community Edition:**
-
 ```bash
 # detect current version
 helm ls -A | grep stash
 
 # update license key keeping the current version
-helm template stash -n kube-system appscode/stash --version=<cur_version> \
-  --set features.community=true \
-  --set global.skipCleaner=true \
-  --show-only appscode/stash-community/templates/license.yaml \
-  --set-file global.license=/path/to/new/license.txt | kubectl apply -f -
-```
-
-**Update License of Enterprise Edition:**
-
-```bash
-# detect current version
-helm ls -A | grep stash
-
-# update license key keeping the current version
-helm template stash appscode/stash -n kube-system --version=<cur_version> \
-  --set features.enterprise=true \
+helm template stash oci://ghcr.io/appscode-charts/stash \
+  --version=<cur_version> \
+  --namespace stash --create-namespace \
   --set global.skipCleaner=true \
   --show-only appscode/stash-enterprise/templates/license.yaml \
   --set-file global.license=/path/to/new/license.txt | kubectl apply -f -

@@ -15,8 +15,6 @@ aliases:
   - /docs/{{ .version }}/addons/mariadb/README/
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise/index.md) to try this feature." >}}
-
 # Stash MariaDB Addon
 
 Stash 0.9.0+ supports extending its functionality through addons. Stash MariaDB addon enables Stash to backup and restore MariaDB databases.

@@ -1,10 +1,10 @@
 ---
-title: Install Stash Enterprise Edition
-description: Installation guide for Stash Enterprise edition
+title: Install Stash
+description: Installation guide for Stash
 menu:
   docs_{{ .version }}:
     identifier: install-stash-enterprise
-    name: Enterprise Edition
+    name: Stash
     parent: installation-guide
     weight: 20
 product_name: stash
@@ -12,11 +12,7 @@ menu_name: docs_{{ .version }}
 section_menu_id: setup
 ---
 
-# Install Stash Enterprise Edition
-
-Stash Enterprise edition is the open core version of [Stash](https://github.com/stashed/stash). It comes with all the functionalities of Stash Community edition as well as some advanced features such as [Database Backup](/docs/guides/addons/overview/index.md), [Auto-Backup](/docs/guides/auto-backup/overview/index.md), [Batch Backup](/docs/guides/batch-backup/overview/index.md), and [Local Backend](/docs/guides/backends/local/index.md) support, etc. A full features comparison between Stash Enterprise Edition and community version can be found [here](/docs/concepts/what-is-stash/overview/index.md).
-
-If you are willing to try Stash Enterprise Edition, you can grab a **30 days trial** license from [here](https://license-issuer.appscode.com/?p=stash-enterprise).
+# Install Stash
 
 ## Prerequisites
 
@@ -27,13 +23,13 @@ If you are willing to try Stash Enterprise Edition, you can grab a **30 days tri
 - **Installing on GKE cluster**: To install Stash on your GKE cluster, please check the requirements [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/troubleshoting/#installing-in-gke-cluster).
 - **NFS volume**: If you are willing to use NFS volume as a backend, you need to customize the Stash installation like [here](https://stash.run/docs/{{< param "info.version" >}}/setup/install/troubleshoting/#configuring-network-volume-accessor).
 
-## Get a Trial License
+## Get a Free Trial License
 
-In this section, we are going to show you how you can get a **30 days trial** license for Stash Enterprise edition. You can get a license for your Kubernetes cluster by going through the following steps:
+In this section, we are going to show you how you can get a free **30 days trial** license for Stash. You can get a license for your Kubernetes cluster by going through the following steps:
 
-- At first, go to [AppsCode License Server](https://license-issuer.appscode.com/?p=stash-enterprise) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
+- At first, go to [AppsCode License Server](https://appscode.com/issue-license?p=stash) and fill up the form. It will ask for your Name, Email, the product you want to install, and your cluster ID (UID of the `kube-system` namespace).
 - Provide your name and email address. **You must provide your work email address**.
-- Then, select `Stash Enterprise Edition` in the product field.
+- Then, select `Stash` in the product field.
 - Now, provide your cluster ID. You can get your cluster ID easily by running the following command:
 
 ```bash
@@ -55,11 +51,11 @@ You can create licenses for as many clusters as you want. You can upgrade your l
 
 >Stash licensing process has been designed to work with CI/CD workflow. You can automatically obtain a license from your CI/CD pipeline by following the guide from [here](https://github.com/appscode/offline-license-server#offline-license-server).
 
-## Get an Enterprise License
+## Purchase Stash License
 
-If you are interested in purchasing Enterprise license, please contact us via sales@appscode.com for further discussion. You can also set up a meeting via our [calendly link](https://calendly.com/appscode/intro).
+If you are interested in purchasing Stash license, please contact us via sales@appscode.com for further discussion. You can also set up a meeting via our [calendly link](https://calendly.com/appscode/intro).
 
-If you are willing to purchasing Enterprise license but need more time to test in your dev cluster, feel free to contact sales@appscode.com. We will be happy to extend your trial period.
+If you are willing to purchase Stash license but need more time to test in your dev cluster, feel free to contact sales@appscode.com. We will be happy to extend your trial period.
 
 ## Install
 
@@ -81,16 +77,9 @@ Stash operator can be installed as a Helm chart or simply as Kubernetes manifest
 Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://github.com/stashed/installer/tree/{{< param "info.installer" >}}/charts/stash) from [AppsCode Charts Repository](https://github.com/appscode/charts). To install the chart with the release name `stash`:
 
 ```bash
-$ helm repo add appscode https://charts.appscode.com/stable/
-$ helm repo update
-$ helm search repo appscode/stash --version {{< param "info.version" >}}
-NAME                       CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
-
-$ helm install stash appscode/stash             \
-  --version {{< param "info.version" >}}                  \
-  --namespace kube-system                       \
-  --set features.enterprise=true                \
+$ helm install stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
   --set-file global.license=/path/to/the/license.txt
 ```
 
@@ -104,17 +93,10 @@ To see the detailed configuration options, visit [here](https://github.com/stash
 If you prefer to not use Helm, you can generate YAMLs from Stash chart and deploy using `kubectl`. Here we are going to show the prodecure using Helm 3.
 
 ```bash
-$ helm repo add appscode https://charts.appscode.com/stable/
-$ helm repo update
-$ helm search repo appscode/stash --version {{< param "info.version" >}}
-NAME                       CHART VERSION         APP VERSION         DESCRIPTION
-appscode/stash  {{< param "info.version" >}}    {{< param "info.version" >}}  Stash by AppsCode - Backup your Kubernetes native applications
-
-$ helm template stash appscode/stash     \
-  --version {{< param "info.version" >}}                     \
-  --namespace kube-system                \
-  --set features.enterprise=true         \
-  --set global.skipCleaner=true          \
+$ helm template stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --set global.skipCleaner=true \
   --set-file global.license=/path/to/the/license.txt | kubectl apply -f -
 ```
 
@@ -155,7 +137,7 @@ tasks.stash.appscode.com                  2020-08-24T08:20:55Z
 
 ### Verify Catalogs
 
-Stash Enterprise edition automatically installs the necessary Addon catalogs for database backup. Verify that the Addon catalogs have been installed using the following command.
+Stash automatically installs the necessary Addon catalogs for database backup. Verify that the Addon catalogs have been installed using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com

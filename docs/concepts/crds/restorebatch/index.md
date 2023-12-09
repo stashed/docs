@@ -11,8 +11,6 @@ menu_name: docs_{{ .version }}
 section_menu_id: concepts
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise/index.md) to try this feature." >}}
-
 # RestoreBatch
 
 ## What is RestoreBatch

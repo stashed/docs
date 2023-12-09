@@ -15,8 +15,6 @@ aliases:
   - /docs/{{ .version }}/addons/redis/README/
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise/index.md) to try this feature." >}}
-
 # Stash Redis Addon
 
 Stash `{{< param "info.version" >}}` supports extending its functionality through addons. Stash Redis addon enables Stash to backup and restore Redis databases.

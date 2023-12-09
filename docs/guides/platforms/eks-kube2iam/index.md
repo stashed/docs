@@ -296,7 +296,7 @@ In this section, we are going to prepare the necessary resources (i.e. database 
 
 ### Verify Stash MariaDB Addon Installed
 
-When you install the Stash Enterprise edition, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
+When you install the Stash, it automatically installs all the official database addons. Verify that it has installed the MariaDB addons using the following command.
 
 ```bash
 $ kubectl get tasks.stash.appscode.com | grep mariadb
@@ -706,12 +706,11 @@ Here, `False` in the `SUSPEND` column means the CronJob is no longer suspended a
 When you list Snapshots using `kubectl get snapshot` command, Stash operator itself read the Snapshots directly from the backend. So, the operator needs permission to access the bucket. Therefore, stash operator pod should be annotated with the IAM Role. Run the following command to annotate the Stash operator pod using Helm,
 
 ```bash
- helm upgrade stash appscode/stash \
-      --version v2022.06.27 \
-      --namespace stash --create-namespace \
-      --set features.enterprise=true \
-      --set-file global.license=/home/sayem/Downloads/stash.txt  \
-      --set  stash-enterprise.podAnnotations.'iam\.amazonaws\.com/role'=arn:aws:iam::452618475015:role/bucket-accessor
+$ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --set-file global.license=/home/sayem/Downloads/stash.txt  \
+  --set  stash-enterprise.podAnnotations.'iam\.amazonaws\.com/role'=arn:aws:iam::452618475015:role/bucket-accessor
 ```
 
 ### Cleanup

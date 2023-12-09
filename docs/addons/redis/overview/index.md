@@ -12,8 +12,6 @@ menu_name: docs_{{ .version }}
 section_menu_id: stash-addons
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. Please install [Stash Enterprise Edition](/docs/setup/install/enterprise/index.md) to try this feature." >}}
-
 # How Stash Backups & Restores Redis Database
 
 Stash `{{< param "info.version" >}}` supports backup and restore operation of many databases. This guide will give you an overview of how Redis database backup and restore process works in Stash.
