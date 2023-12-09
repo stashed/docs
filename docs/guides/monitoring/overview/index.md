@@ -39,7 +39,7 @@ Stash exports metrics for the backup process, restore process, repository status
 
 ### Backup Metrics
 
-This section lists the metrics available for Stash. Some of the metrics are only available for Stash Enterprise edition.
+This section lists the metrics available for Stash.
 
 **Backup Session Metrics:**
 
@@ -240,28 +240,28 @@ If you haven't installed Stash yet, run the following command to enable Promethe
 **Helm 3:**
 
 ```bash
-$ helm install stash appscode/stash -n kube-system \
---version {{< param "info.version" >}} \
---set features.enterprise=true               \
---set stash-enterprise.monitoring.agent=prometheus.io/operator \
---set stash-enterprise.monitoring.backup=true \
---set stash-enterprise. monitoring.operator=true \
---set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
---set-file global.license=/path/to/license-file.txt
+$ helm install stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --set stash-enterprise.monitoring.agent=prometheus.io/operator \
+  --set stash-enterprise.monitoring.backup=true \
+  --set stash-enterprise. monitoring.operator=true \
+  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
+  --set-file global.license=/path/to/license-file.txt
 ```
 
 **YAML (with Helm 3):**
 
 ```bash
-$ helm install stash appscode/stash -n kube-system \
---no-hooks \
---version {{< param "info.version" >}} \
---set features.enterprise=true               \
---set stash-enterprise.monitoring.agent=prometheus.io/operator \
---set stash-enterprise.monitoring.backup=true \
---set stash-enterprise.monitoring.operator=true \
---set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
---set-file global.license=/path/to/license-file.txt | kubectl apply -f -
+$ helm template stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --no-hooks \
+  --set stash-enterprise.monitoring.agent=prometheus.io/operator \
+  --set stash-enterprise.monitoring.backup=true \
+  --set stash-enterprise.monitoring.operator=true \
+  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
+  --set-file global.license=/path/to/license-file.txt | kubectl apply -f -
 ```
 
 </div>
@@ -274,24 +274,28 @@ If you have installed Stash already in your cluster but didn't enable monitoring
 **Helm 3:**
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system \
---reuse-values \
---set stash-enterprise.monitoring.agent=prometheus.io/operator \
---set stash-enterprise.monitoring.backup=true \
---set stash-enterprise.monitoring.operator=true \
---set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack
+$ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --reuse-values \
+  --set stash-enterprise.monitoring.agent=prometheus.io/operator \
+  --set stash-enterprise.monitoring.backup=true \
+  --set stash-enterprise.monitoring.operator=true \
+  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack
 ```
 
 **YAML (with Helm 3):**
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system \
---no-hooks \
---reuse-values \
---set stash-enterprise.monitoring.agent=prometheus.io/operator \
---set stash-enterprise.monitoring.backup=true \
---set stash-enterprise.monitoring.operator=true \
---set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack | kubectl apply -f -
+$ helm template stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --no-hooks \
+  --reuse-values \
+  --set stash-enterprise.monitoring.agent=prometheus.io/operator \
+  --set stash-enterprise.monitoring.backup=true \
+  --set stash-enterprise.monitoring.operator=true \
+  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack | kubectl apply -f -
 ```
 
 </div>

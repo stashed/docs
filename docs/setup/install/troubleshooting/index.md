@@ -45,15 +45,14 @@ For network volume such as NFS, Stash needs to deploy a helper deployment in the
 If you haven't installed Stash yet, run the following command to configure the network volume accessor during installation
 
 ```bash
-$ helm install stash appscode/stash   \
---version {{< param "info.version" >}} \
---namespace kube-system                \
---set features.enterprise=true         \
---set stash-enterprise.netVolAccessor.cpu=200m        \
---set stash-enterprise.netVolAccessor.memory=128Mi    \
---set stash-enterprise.netVolAccessor.runAsUser=0     \
---set stash-enterprise.netVolAccessor.privileged=true
---set-file global.license=/path/to/license-file.txt
+$ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --set stash-enterprise.netVolAccessor.cpu=200m \
+  --set stash-enterprise.netVolAccessor.memory=128Mi \
+  --set stash-enterprise.netVolAccessor.runAsUser=0 \
+  --set stash-enterprise.netVolAccessor.privileged=true \
+  --set-file global.license=/path/to/license-file.txt
 ```
 
 </div>
@@ -64,12 +63,15 @@ $ helm install stash appscode/stash   \
 If you have installed Stash already in your cluster but didn't configure the network volume accessor, you can use `helm upgrade` command to configure it in the existing installation.
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system        \
-    --reuse-values                                        \
-    --set stash-enterprise.netVolAccessor.cpu=200m        \
-    --set stash-enterprise.netVolAccessor.memory=128Mi    \
-    --set stash-enterprise.netVolAccessor.runAsUser=0     \
-    --set stash-enterprise.netVolAccessor.privileged=true
+$ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --reuse-values \
+  --set stash-enterprise.netVolAccessor.cpu=200m \
+  --set stash-enterprise.netVolAccessor.memory=128Mi \
+  --set stash-enterprise.netVolAccessor.runAsUser=0 \
+  --set stash-enterprise.netVolAccessor.privileged=true \
+  --set-file global.license=/path/to/license-file.txt
 ```
 </div>
 </div>

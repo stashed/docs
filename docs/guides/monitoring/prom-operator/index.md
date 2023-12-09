@@ -177,14 +177,14 @@ Here, we are going to enable monitoring for both backup metrics and operator met
 If you haven't installed Stash yet, run the following command to enable Prometheus monitoring during installation
 
 ```bash
-$ helm install stash appscode/stash -n kube-system             \
---version {{< param "info.version" >}}                         \
---set features.enterprise=true                                 \
---set stash-enterprise.monitoring.agent=prometheus.io/operator \
---set stash-enterprise.monitoring.backup=true                  \
---set stash-enterprise.monitoring.operator=true                \
---set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
---set-file global.license=/path/to/license-file.txt
+$ helm install stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --set stash-enterprise.monitoring.agent=prometheus.io/operator \
+  --set stash-enterprise.monitoring.backup=true \
+  --set stash-enterprise.monitoring.operator=true \
+  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
+  --set-file global.license=/path/to/license-file.txt
 ```
 
 </div>
@@ -195,12 +195,14 @@ $ helm install stash appscode/stash -n kube-system             \
 If you have installed Stash already in your cluster but didn't enable monitoring during installation, you can use `helm upgrade` command to enable monitoring in the existing installation.
 
 ```bash
-$ helm upgrade stash appscode/stash -n kube-system             \
---reuse-values                                                 \
---set stash-enterprise.monitoring.agent=prometheus.io/operator \
---set stash-enterprise.monitoring.backup=true                  \
---set stash-enterprise.monitoring.operator=true                \
---set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack
+$ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --reuse-values \
+  --set stash-enterprise.monitoring.agent=prometheus.io/operator \
+  --set stash-enterprise.monitoring.backup=true \
+  --set stash-enterprise.monitoring.operator=true \
+  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack
 ```
 
 </div>

@@ -1,10 +1,10 @@
 ---
-title: Uninstall Stash Enterprise Edition
-description: Uninstallation guide for Stash Enterprise edition
+title: Uninstall Stash
+description: Uninstallation guide for Stash
 menu:
   docs_{{ .version }}:
     identifier: uninstall-stash-enterprise
-    name: Enterprise Edition
+    name: Stash
     parent: uninstallation-guide
     weight: 20
 product_name: stash
@@ -12,9 +12,9 @@ menu_name: docs_{{ .version }}
 section_menu_id: setup
 ---
 
-# Uninstall Stash Enterprise Edition
+# Uninstall Stash
 
-To uninstall Stash Enterprise edition, run the following command:
+To uninstall Stash, run the following command:
 
 <ul class="nav nav-tabs" id="installerTab" role="tablist">
   <li class="nav-item">
@@ -43,10 +43,11 @@ $ helm uninstall stash --namespace kube-system
 If you prefer to not use Helm, you can generate YAMLs from Stash chart and uninstall using `kubectl`.
 
 ```bash
-$ helm template stash appscode/stash -n kube-system \
---set features.enterprise=true                      \
---set global.license="nothing"                      \
---set global.skipCleaner=true | kubectl delete -f -
+$ helm template stash oci://ghcr.io/appscode-charts/stash \
+  --version {{< param "info.version" >}} \
+  --namespace stash --create-namespace \
+  --set global.license="nothing" \
+  --set global.skipCleaner=true | kubectl delete -f -
 ```
 
 </div>
