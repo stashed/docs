@@ -144,6 +144,7 @@ You can use your own PodSecurityPolicy with Stash. In this case, you have to cre
 $ helm install stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set podSecurityPolicies[0]=abc \
   --set podSecurityPolicies[1]=xyz
 ```

@@ -40,6 +40,7 @@ Now, upgrade the Stash helm chart using the following command. You can find the 
 $ helm upgrade stash oci://ghcr.io/appscode-charts/stash \
     --version {{< param "info.version" >}} \
     --namespace stash \
+    --set features.enterprise=true \
     --set-file global.license=/path/to/the/license.txt
 ```
 
@@ -172,6 +173,7 @@ helm upgrade stash oci://ghcr.io/appscode-charts/stash \
   --version=<cur_version> \
   --namespace stash --create-namespace \
   --reuse-values \
+  --set features.enterprise=true \
   --set-file global.license=/path/to/new/license.txt
 ```
 
@@ -188,6 +190,7 @@ helm ls -A | grep stash
 helm template stash oci://ghcr.io/appscode-charts/stash \
   --version=<cur_version> \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set global.skipCleaner=true \
   --show-only appscode/stash-enterprise/templates/license.yaml \
   --set-file global.license=/path/to/new/license.txt | kubectl apply -f -

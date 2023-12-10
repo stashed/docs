@@ -46,6 +46,7 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and unins
 $ helm template stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set global.license="nothing" \
   --set global.skipCleaner=true | kubectl delete -f -
 ```

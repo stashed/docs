@@ -48,6 +48,7 @@ If you haven't installed Stash yet, run the following command to enable Promethe
 $ helm install stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set stash-enterprise.monitoring.agent=prometheus.io/builtin \
   --set stash-enterprise.monitoring.backup=true \
   --set stash-enterprise.monitoring.operator=true \
@@ -66,6 +67,7 @@ $ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
   --reuse-values \
+  --set features.enterprise=true \
   --set stash-enterprise.monitoring.agent=prometheus.io/builtin \
   --set stash-enterprise.monitoring.backup=true \
   --set stash-enterprise.monitoring.operator=true

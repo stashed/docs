@@ -48,6 +48,7 @@ If you haven't installed Stash yet, run the following command to configure the n
 $ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set stash-enterprise.netVolAccessor.cpu=200m \
   --set stash-enterprise.netVolAccessor.memory=128Mi \
   --set stash-enterprise.netVolAccessor.runAsUser=0 \
@@ -67,6 +68,7 @@ $ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
   --reuse-values \
+  --set features.enterprise=true \
   --set stash-enterprise.netVolAccessor.cpu=200m \
   --set stash-enterprise.netVolAccessor.memory=128Mi \
   --set stash-enterprise.netVolAccessor.runAsUser=0 \

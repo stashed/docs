@@ -709,6 +709,7 @@ When you list Snapshots using `kubectl get snapshot` command, Stash operator its
 $ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set-file global.license=/home/sayem/Downloads/stash.txt  \
   --set  stash-enterprise.podAnnotations.'iam\.amazonaws\.com/role'=arn:aws:iam::452618475015:role/bucket-accessor
 ```

@@ -80,6 +80,7 @@ Stash can be installed via [Helm](https://helm.sh/) using the [chart](https://gi
 $ helm install stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set-file global.license=/path/to/the/license.txt
 ```
 
@@ -96,6 +97,7 @@ If you prefer to not use Helm, you can generate YAMLs from Stash chart and deplo
 $ helm template stash oci://ghcr.io/appscode-charts/stash \
   --version {{< param "info.version" >}} \
   --namespace stash --create-namespace \
+  --set features.enterprise=true \
   --set global.skipCleaner=true \
   --set-file global.license=/path/to/the/license.txt | kubectl apply -f -
 ```
