@@ -53,7 +53,8 @@ $ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
   --set stash-enterprise.netVolAccessor.memory=128Mi \
   --set stash-enterprise.netVolAccessor.runAsUser=0 \
   --set stash-enterprise.netVolAccessor.privileged=true \
-  --set-file global.license=/path/to/license-file.txt
+  --set-file global.license=/path/to/license-file.txt \
+  --wait --burst-limit=10000 --debug
 ```
 
 </div>
@@ -73,7 +74,8 @@ $ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
   --set stash-enterprise.netVolAccessor.memory=128Mi \
   --set stash-enterprise.netVolAccessor.runAsUser=0 \
   --set stash-enterprise.netVolAccessor.privileged=true \
-  --set-file global.license=/path/to/license-file.txt
+  --set-file global.license=/path/to/license-file.txt \
+  --wait --burst-limit=10000 --debug
 ```
 </div>
 </div>

@@ -41,7 +41,8 @@ $ helm upgrade stash oci://ghcr.io/appscode-charts/stash \
     --version {{< param "info.version" >}} \
     --namespace stash \
     --set features.enterprise=true \
-    --set-file global.license=/path/to/the/license.txt
+    --set-file global.license=/path/to/the/license.txt \
+    --wait --burst-limit=10000 --debug
 ```
 
 #### 3. Post uprade cleanup
@@ -174,7 +175,8 @@ helm upgrade stash oci://ghcr.io/appscode-charts/stash \
   --namespace stash --create-namespace \
   --reuse-values \
   --set features.enterprise=true \
-  --set-file global.license=/path/to/new/license.txt
+  --set-file global.license=/path/to/new/license.txt \
+  --wait --burst-limit=10000 --debug
 ```
 
 </div>

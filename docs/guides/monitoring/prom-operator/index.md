@@ -185,7 +185,8 @@ $ helm install stash oci://ghcr.io/appscode-charts/stash \
   --set stash-enterprise.monitoring.backup=true \
   --set stash-enterprise.monitoring.operator=true \
   --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
-  --set-file global.license=/path/to/license-file.txt
+  --set-file global.license=/path/to/license-file.txt \
+  --wait --burst-limit=10000 --debug
 ```
 
 </div>
@@ -204,7 +205,8 @@ $ helm upgrade -i stash oci://ghcr.io/appscode-charts/stash \
   --set stash-enterprise.monitoring.agent=prometheus.io/operator \
   --set stash-enterprise.monitoring.backup=true \
   --set stash-enterprise.monitoring.operator=true \
-  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack
+  --set stash-enterprise.monitoring.serviceMonitor.labels.release=prometheus-stack \
+  --wait --burst-limit=10000 --debug
 ```
 
 </div>
