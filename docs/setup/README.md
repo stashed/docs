@@ -18,7 +18,7 @@ aliases:
 # Setup
 
 <div style="text-align: center;">
-  <a class="button is-info is-medium is-active has-text-weight-normal" href="/docs/setup/install/enterprise/index.md"  style="background:#FC6011; width: 18rem;">Install Stash</a>
+  <a class="button is-info is-medium is-active has-text-weight-normal" href="/docs/setup/install/stash/index.md"  style="background:#FC6011; width: 18rem;">Install Stash</a>
 </div>
 <br>
 

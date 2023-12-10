@@ -19,7 +19,7 @@ Stash `{{< param "info.version" >}}` supports backup and restoration of Redis da
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
-- Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise/index.md).
+- Install Stash in your cluster following the steps [here](/docs/setup/install/stash/index.md).
 - If you are not familiar with how Stash backup and restore Redis databases, please check the following guide [here](/docs/addons/redis/overview/index.md).
 
 You have to be familiar with following custom resources:
@@ -178,7 +178,7 @@ In this section, we are going to prepare the necessary resources (i.e. database 
 
 ### Ensure Redis Addon
 
-When you install Stash Enterprise version, it will automatically install all the official database addons. Make sure that Redis addon was installed properly using the following command.
+When you install Stash, it will automatically install all the official database addons. Make sure that Redis addon was installed properly using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep redis

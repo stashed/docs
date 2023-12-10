@@ -19,7 +19,7 @@ Stash `{{< param "info.version" >}}` supports backup and restoration of NATS str
 ## Before You Begin
 
 - At first, you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster.
-- Install Stash Enterprise in your cluster following the steps [here](/docs/setup/install/enterprise/index.md).
+- Install Stash in your cluster following the steps [here](/docs/setup/install/stash/index.md).
 - Install cert-manager in your cluster following the instruction [here](https://cert-manager.io/docs/installation/).
 - If you are not familiar with how Stash backup and restore NATS streams, please check the following guide [here](/docs/addons/nats/overview/index.md).
 
@@ -381,7 +381,7 @@ In this section, we are going to prepare the necessary resources (i.e. connectio
 
 ### Ensure NATS Addon
 
-When you install Stash Enterprise version, it will automatically install all the official addons. Make sure that NATS addon was installed properly using the following command.
+When you install Stash, it will automatically install all the official addons. Make sure that NATS addon was installed properly using the following command.
 
 ```bash
 ❯ kubectl get tasks.stash.appscode.com | grep nats

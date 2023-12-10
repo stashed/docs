@@ -12,13 +12,11 @@ menu_name: docs_{{ .version }}
 section_menu_id: guides
 ---
 
-{{< notice type="warning" message="This is an Enterprise-only feature. You must be **Stash Enterprise** customer to use pre-built Stash Grafana dashboard." >}}
-
 # Stash Grafana Dashboard
 
 Grafana provides an elegant graphical user interface to visualize data. You can create a beautiful dashboard easily with a meaningful representation of your Prometheus metrics.
 
-We provide a pre-built Grafana dashboard to our **Stash Enterprise** users. In this guide, we are going to show you how you can import this dashboard from your Grafana UI.
+We provide a pre-built Grafana dashboard to our **Stash** users. In this guide, we are going to show you how you can import this dashboard from your Grafana UI.
 
 >Some basic metrics are also available for Stash Community Edition. You can create your dashboard using those metrics.
 
