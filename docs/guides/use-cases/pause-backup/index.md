@@ -34,7 +34,7 @@ $ kubectl create ns demo
 namespace/demo created
 ```
 
-> **Note:** YAML files used in this tutorial are stored in [docs/guides/use-cases/pause-backup/examples](https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/pause-backup/examples) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in [docs/guides/use-cases/pause-backup/examples](https://github.com/stashed/docs/raw/{{< param "info.version" >}}/docs/guides/use-cases/pause-backup/examples) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Configure Backup
 

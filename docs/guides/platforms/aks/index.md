@@ -48,7 +48,7 @@ standard             kubernetes.io/azure-disk   3m
 
 Here, we have `standard` StorageClass in our cluster.
 
-> **Note:** YAML files used in this tutorial are stored in  [docs/guides/platforms/aks/examples](/docs/guides/platforms/aks/examples) directory of [stashed/doc](https://github.com/stashed/doc) repository.
+> **Note:** YAML files used in this tutorial are stored in  [docs/guides/platforms/aks/examples](/docs/guides/platforms/aks/examples) directory of [stashed/docs](https://github.com/stashed/docs) repository.
 
 ## Backup the Volume of a Deployment
 
