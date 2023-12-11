@@ -38,6 +38,11 @@ Available command for `kubectl stash` cli are:
 | [debug backup](#debug-backup)                      | Debug Stash backup issues.                                                 |
 | [debug restore](#debug-restore)                    | Debug Stash restore issues.                                                |
 | [debug operator](#debug-operator)                  | Debug Stash operator issues.                                               |
+| [key list](#key-list)                              | List the keys (passwords) of a restic repository.                          |
+| [key add](#key-add)                                | Add a new key (password) to a restic repository.                           |
+| [key update](#key-update)                          | Update current key (password) of a restic repository.                      |
+| [key remove](#key-remove)                          | Remove a key (password) of a restic repository.                            |
+| [gen rules](#generate-rules)                       | Generate restore rules from nearest snapshots at a specific time           |
 
 ## Create Command
 
@@ -337,12 +342,8 @@ kubectl stash unlock <repository-name> [flags]
 $ kubectl stash unlock my-repo --namespace=demo
 ```
 
-## Pause Command
-
-`kubectl stash pause` command is used to pause Stash backup temporarily. 
-
-### Pause Backup
-To pause a backup you have to provide the `BackupConfiguration` name or `BackupBatch` name by using flags. The available flags are:
+## Pause Backup
+`kubectl stash pause` command is used to pause Stash backup temporarily. To pause a backup you have to provide the `BackupConfiguration` name or `BackupBatch` name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
@@ -362,8 +363,9 @@ kubectl stash pause backup [flags]
 $ kubectl stash pause backup --namespace=demo --backupconfig=my-config
 ```
 
-### Resume Backup
-To resume a backup you have to provide the `BackupConfiguration` name or `BackupBatch` name by using flags. The available flags are:
+## Resume Backup
+
+`kubectl stash pause` comand is used to resume a backup. To resume a backup you have to provide the `BackupConfiguration` name or `BackupBatch` name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
@@ -387,7 +389,7 @@ $ kubectl stash resume backup --namespace=demo --backupconfig==my-config
 `kubectl stash debug` command is used to debug stash resources. This command describes the necessary resources and shows logs from the related pods which makes the debugging process quicker and easier.
 
 ### Debug Backup
-To debug a backup you have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
+This command is used to debug a backup. You have to provide the BackupConfiguration name or BackupBatch name by using flags. The available flags are:
 
 | Flag             | Description                                                                       |
 |------------------|-----------------------------------------------------------------------------------|
@@ -410,13 +412,13 @@ $ kubectl stash debug backup --namespace=demo --backupconfig=my-config
 
 ### Debug Restore
 
-To debug a restore you have to provide the `RestoreSession` name or `RestoreBatch` name by using flags. The available flags are:
+This command is used to debug a restore. You have to provide the `RestoreSession` name or `RestoreBatch` name by using flags. The available flags are:
 
-| Flag               | Description                                                                    |
-|--------------------|--------------------------------------------------------------------------------|
-| `--namespace`      | Indicates the namespace of the respective `RestoreSession` or `RestoreBatch.`  |
-| `--restoresession` | Name of the `RestoreSession`.                                                  |
-| `--restorebatch`   | Name of the `RestoreBatch`.                                                    |
+| Flag               | Description                                                                   |
+|--------------------|-------------------------------------------------------------------------------|
+| `--namespace`      | Indicates the namespace of the respective `RestoreSession` or `RestoreBatch`. |
+| `--restoresession` | Name of the `RestoreSession`.                                                 |
+| `--restorebatch`   | Name of the `RestoreBatch`.                                                   |
 
 
 **Format:**
@@ -429,4 +431,121 @@ kubectl stash debug restore [flags]
 
 ```bash
 $ kubectl stash debug restore --namespace=demo --restoresession=my-restore 
+```
+
+### Debug Operator
+
+This command is used to show version related information and operator logs.
+
+**Example:**
+
+```bash
+$ kubectl stash debug operator
+```
+
+## Key Command
+
+`kubectl stash key` command is used to manage keys (passwords) of a restic repository.
+
+### Key List
+
+This command is used to list restic keys (passwords) of a restic repository.
+
+**Format:**
+
+```bash
+kubectl stash key list <repository-name> [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash key list my-repo --namespace=demo
+```
+
+### Key Add
+
+This command is used to add a new key (password) to a restic repository. You have to provide the information of the new key by using flags. The available flags are:
+
+| Flag                  | Description                                             |
+|-----------------------|---------------------------------------------------------|
+| `--namespace`         | Indicates the namespace of the respective `Repository`. |
+| `--host`              | Host of the new key.                                    |
+| `--user`              | User of the new key.                                    |
+| `--new-password-file` | File from which to read the new password file.          |
+
+**Format:**
+
+```bash
+kubectl stash key add <repository-name> [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash key list my-repo --namespace=demo --user root --host my-host --new-password-file password.txt
+```
+
+### Key Update
+
+This command is used to update the current key (password) of a restic repository. The available flags for this command are:
+
+| Flag                  | Description                                             |
+|-----------------------|---------------------------------------------------------|
+| `--namespace`         | Indicates the namespace of the respective `Repository`. |
+| `--new-password-file` | File from which to read the new password file.          |
+
+**Format:**
+
+```bash
+kubectl stash key update <repository-name> [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash key list my-repo --namespace=demo --new-password-file password.txt
+```
+
+### Key Remove
+
+This command is used to remove a key (password) of a restic repository. The available flags for this command are:
+
+| Flag          | Description                                             |
+|---------------|---------------------------------------------------------|
+| `--namespace` | Indicates the namespace of the respective `Repository`. |
+| `--id`        | ID of the restic key.                                   |
+
+**Format:**
+
+```bash
+kubectl stash key remove <repository-name> [flags]
+```
+
+**Example:**
+
+```bash
+$ kubectl stash key remove my-repo --namespace=demo --id cdc89a7d
+```
+
+## Generate Rules
+
+`kubectl stash debug` command is used to create rules for a RestoreSession to recover the database and application backups. This command finds the nearest repository snapshots for a given timestamp and generates two rules: one for the snapshots just before the specified timestamp and another for those at or after the specified timestamp. The available flags for this command are:
+
+| Flag                 | Description                                                 |
+|----------------------|-------------------------------------------------------------|
+| `--namespace`        | Indicates the namespace of the respective `Repository`.     |
+| `--timestamp`        | Timestamp to find the closest snapshots.                    |
+| `--group-interval`   | Specifies the time gap between batches of backup snapshots. |
+| `--request-timeout`  | Request timeout duration for the kubectl command.           |  
+
+**Format:**
+
+```bash
+kubectl stash gen rules <repository-name> [flags]
+```
+**Example:**
+
+```bash
+$ kubectl stash gen rules my-repo --namespace=demo --timestamp 2023-10-05T05:16:11Z
 ```
