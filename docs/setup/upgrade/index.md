@@ -174,7 +174,6 @@ helm upgrade stash oci://ghcr.io/appscode-charts/stash \
   --version=<cur_version> \
   --namespace stash --create-namespace \
   --reuse-values \
-  --set features.enterprise=true \
   --set-file global.license=/path/to/new/license.txt \
   --wait --burst-limit=10000 --debug
 ```
