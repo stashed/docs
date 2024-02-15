@@ -19,7 +19,7 @@ Stash by AppsCode - Backup your Kubernetes Volumes
 
 ### Synopsis
 
-Stash is a Kubernetes operator for restic. For more information, visit here: https://appscode.com/products/stash
+Stash is a Kubernetes operator for restic. For more information, visit here: https://stash.run
 
 ### Options
 
