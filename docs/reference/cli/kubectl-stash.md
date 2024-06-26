@@ -19,7 +19,7 @@ kubectl plugin for Stash by AppsCode
 
 ### Synopsis
 
-kubectl plugin for Stash by AppsCode. For more information, visit here: https://appscode.com/products/stash
+kubectl plugin for Stash by AppsCode. For more information, visit here: https://stash.run
 
 ### Options
 
