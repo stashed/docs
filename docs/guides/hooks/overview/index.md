@@ -56,7 +56,7 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
   <figcaption align="center">Fig: Hook Execution flow in sidecar model</figcaption>
   </figure>
 
-- **Job Model:** In Job model, `httpGet`, `httpPost` and `tcpSocket` are executed by the backup/restore job. However, the `exec` hook is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` points to an external URL, it is not possible for Stash to execute the `exec` hook. The hook execution flow in job model is shown in the following diagram:
+- **Job Model:** In Job model, the hooks are executed in the backup/restore job if the targeted application is not `AppBinding`. For `AppBinding`, hook is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` points to an external URL, it is not possible for Stash to execute the hook. The hook execution flow in job model is shown in the following diagram:
 
   <figure align="center">
     <img alt="Hook Execution flow in job model" src="images/job-model.svg">
