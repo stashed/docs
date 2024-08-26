@@ -56,12 +56,14 @@ Here, we are going to discuss how Stash executes the hooks in different scenario
   <figcaption align="center">Fig: Hook Execution flow in sidecar model</figcaption>
   </figure>
 
-- **Job Model:** In Job model, the hooks are executed in the backup/restore job if the targeted application is not `AppBinding`. For `AppBinding`, hook is executed in the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` crd. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` points to an external URL, it is not possible for Stash to execute the hook. The hook execution flow in job model is shown in the following diagram:
+- **Job Model:** In the Job model, the hooks are run by the backup/restore job. For the `exec` hook, the command is executed inside the targeted application pod. In order to determine the targeted application pod, Stash uses the `Service` specified in the respective `AppBinding` CRD. It first determines the endpoints of the Service. Then, it executes  the hook into one of the pod pointed by those endpoints. Hence, if the `AppBinding` points to an external URL, it is not possible for Stash to execute the hook. The hook execution flow in job model is shown in the following diagram:
 
   <figure align="center">
     <img alt="Hook Execution flow in job model" src="images/job-model.svg">
   <figcaption align="center">Fig: Hook Execution flow in job model</figcaption>
   </figure>
+
+> Note: If the postBackup hook doesn't run (e.g., because of a timeout, backup disruption, etc.), the Stash operator will handle it instead of the backup job. However, if the preBackup hook is configured but doesn’t execute or fails the postBackup hook will not be run.
 
 - **Batch Backup:** In batch backup using `BackupBatch` object, the global hooks are executed by the Stash operator itself. When Stash operator completes executing the global pre-task hook, the individual targets start executing their local pre-task hook. Then, they complete their backup process and executes their local post-task hook. Finally, the Stash operator executes global post-task hooks. The hook execution flow in batch backup is shown in the following diagram:
 
@@ -90,6 +92,8 @@ If the backup or restore process fails then the respective `postBackup` or `post
 - `OnSuccess`: The hook will be executed after the backup/restore process only if the backup/restore has succeeded.
 - `OnFailure`: The hook will be executed after the backup/restore process only if the backup/restore has failed.
 - `OnFinalRetryFailure`: The hook will be executed after the backup process only if the backup has failed with no more retry attempts left.
+
+In case of backup job, if the postBackup hook container doesn't run for any reason, the postBackup hook is executed by the Stash operator instead of the backup job (if targeted application is not `AppBinding`). For `AppBinding`, hook is executed in the targeted application pod.
 
 If the `postBackup` or `postRestore` hook fails, the respective BackupSession or RestoreSession will be marked as `Failed`.
 
