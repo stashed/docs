@@ -42,7 +42,9 @@ Available command for `kubectl stash` cli are:
 | [key add](#key-add)                                | Add a new key (password) to a restic repository.                           |
 | [key update](#key-update)                          | Update current key (password) of a restic repository.                      |
 | [key remove](#key-remove)                          | Remove a key (password) of a restic repository.                            |
-| [gen rules](#generate-rules)                       | Generate restore rules from nearest snapshots at a specific time           |
+| [gen rules](#generate-rules)                       | Generate restore rules from nearest snapshots at a specific time.          |
+| [check](#check-repository)                         | Test the restic repository for errors and reports any errors it finds.     |
+| [rebuild-index](#rebuild-index)                    | Create a new index based on the pack files in the restic repository        |
 
 ## Create Command
 
@@ -53,7 +55,7 @@ Available command for `kubectl stash` cli are:
 To create a `Repository`, you need to provide a `Repository` name and backend information and credential. You will provide the information and credential by using flags. The available flags are:
 
 | Flag                | Description                                                                   |
-| ------------------- | ----------------------------------------------------------------------------- |
+|---------------------|-------------------------------------------------------------------------------|
 | `--namespace`       | Indicates the namespace where the Repository will be created                  |
 | `--secret`          | Specify the name of the storage secret that will be used to create Repository |
 | `--bucket`          | Specify the name of the cloud bucket/container.                               |
@@ -79,13 +81,13 @@ $ kubectl stash create repository gcs-repo --namespace=demo --secret=gcs-secret 
 To create a `BackupConfiguration`, you need to provide `BackupConfiguration` name, `Repository` name, Target, and RetentionPolicy, etc. You will provide the `Repository` name, Target, RetentionPolicy by using flags. The available flags are:
 
 | Flag                    | Description                                                                                    |
-| ----------------------- | ---------------------------------------------------------------------------------------------- |
+|-------------------------|------------------------------------------------------------------------------------------------|
 | `--namespace`           | Indicates the namespace where the `BackupConfiguration` will be created                        |
 | `--target-apiversion`   | Specify API-Version of the target resource.                                                    |
 | `--target-kind`         | Specify kind of the target resource.                                                           |
 | `--target-name`         | Specify name of the target resource.                                                           |
-| `--repo-name`          | Specify name of the `Repository` that will be created.                                         |
-| `--repo-namespace` | Specify namespace of the `Repository` that will be created. |
+| `--repo-name`           | Specify name of the `Repository` that will be created.                                         |
+| `--repo-namespace`      | Specify namespace of the `Repository` that will be created.                                    |
 | `--schedule`            | Specify schedule of the backup.                                                                |
 | `--driver`              | `Driver` indicates the mechanism used to backup (i.e. VolumeSnapshotter, Restic)               |
 | `--task`                | Specify name of a `Task`                                                                       |
@@ -121,13 +123,13 @@ $ kubectl stash create backupconfig ss-backup --namespace=demo --repo-name=gcs-r
 To create a `RestoreSession`, you need to provide a `Repository` name, Target or `VolumeClaimTemplate`, etc. You will provide the `Repository` name, Target or `VolumeClaimTemplate` by using flags. The available flags are:
 
 | Flag                   | Description                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------ |
+|------------------------|--------------------------------------------------------------------------------|
 | `--namespace`          | Indicates the namespace where the `RestoreSession` will be created             |
 | `--target-apiversion`  | API-Version of the target resource.                                            |
 | `--target-kind`        | Specify kind of the target resource.                                           |
 | `--target-name`        | Specify name of the target resource.                                           |
-| `--repo-name`         | specify name of the `Repository`.                                              |
-| `--repo-namespace` | specify namespace of the `Repository` |
+| `--repo-name`          | specify name of the `Repository`.                                              |
+| `--repo-namespace`     | specify namespace of the `Repository`                                          |
 | `--driver`             | Driver indicates the mechanism used to backup (i.e. VolumeSnapshotter, Restic) |
 | `--task`               | Name of the Task                                                               |
 | `--replica`            | Replica specifies the number of replicas whose data should be backed up.       |
@@ -163,9 +165,9 @@ $ kubectl stash create restoresession ss-restore --namespace=demo --repo-name=gc
 
 To copy a Secret, you need to provide Secret name and destination namespace. You will provide the destination namespace by using flag. The available flags are:
 
-| Flag             | Description                                                          |
-| ---------------- |----------------------------------------------------------------------|
-| `--namespace`    | Indicates the namespace of the respective `Secret`.                  |
+| Flag             | Description                                                            |
+|------------------|------------------------------------------------------------------------|
+| `--namespace`    | Indicates the namespace of the respective `Secret`.                    |
 | `--to-namespace` | Indicates the destination namespace where the `Secret` will be copied. |
 
 **Format:**
@@ -189,9 +191,9 @@ To copy a Repository, you need to provide a Repository name and destination name
 
 You will provide the destination namespace by using flag. The available flags are:
 
-| Flag             | Description                                                           |
-| ---------------- |-----------------------------------------------------------------------|
-| `--namespace`    | Indicates the namespace of the respective `Repository`.               |
+| Flag             | Description                                                                |
+|------------------|----------------------------------------------------------------------------|
+| `--namespace`    | Indicates the namespace of the respective `Repository`.                    |
 | `--to-namespace` | Indicates the destination namespace where the `Repository` will be copied. |
 
 **Format:**
@@ -217,7 +219,7 @@ To copy a BackupConfiguration, you need to provide BackupConfiguration name and 
 You will provide the destination namespace by using flags. The available flags are:
 
 | Flag             | Description                                                                         |
-| ---------------- |-------------------------------------------------------------------------------------|
+|------------------|-------------------------------------------------------------------------------------|
 | `--namespace`    | Indicates the namespace of the respective `BackupConfiguration`.                    |
 | `--to-namespace` | Indicates the destination namespace where the `BackupConfiguration` will be copied. |
 
@@ -238,7 +240,7 @@ $ kubectl stash cp backupconfig my-backupconfig --namespace=demo --to-namespace=
 To copy a VolumeSnapshot, you need to provide `VolumeSnapshot` name and destination namespace. You will provide the destination namespace by using flag. The available flags are:
 
 | Flag             | Description                                                                    |
-| ---------------- |--------------------------------------------------------------------------------|
+|------------------|--------------------------------------------------------------------------------|
 | `--namespace`    | Indicates the namespace of the respective `VolumeSnapshot`.                    |
 | `--to-namespace` | Indicates the destination namespace where the `VolumeSnapshot` will be copied. |
 
@@ -261,7 +263,7 @@ To clone a PVC, you need to provide backend credentials for creating Repository.
 You will provide the backend credential by using flags. The available flags are:
 
 | Flag                | Description                                                                   |
-| ------------------- |-------------------------------------------------------------------------------|
+|---------------------|-------------------------------------------------------------------------------|
 | `--namespace`       | Indicates namespace of the respective pvc.                                    |
 | `--to-namespace`    | Indicates the destination namespace where the PVC will be cloned.             |
 | `--secret`          | Specify the name of the storage secret that will be used to create Repository |
@@ -530,7 +532,8 @@ $ kubectl stash key remove my-repo --namespace=demo --id cdc89a7d
 
 ## Generate Rules
 
-`kubectl stash debug` command is used to create rules for a RestoreSession to recover the database and application backups. This command finds the nearest repository snapshots for a given timestamp and generates two rules: one for the snapshots just before the specified timestamp and another for those at or after the specified timestamp. The available flags for this command are:
+`kubectl stash gen rules` command is used to create rules for a RestoreSession to recover the database and application 
+backups. This command finds the nearest repository snapshots for a given timestamp and generates two rules: one for the snapshots just before the specified timestamp and another for those at or after the specified timestamp. The available flags for this command are:
 
 | Flag                 | Description                                                 |
 |----------------------|-------------------------------------------------------------|
@@ -548,4 +551,48 @@ kubectl stash gen rules <repository-name> [flags]
 
 ```bash
 $ kubectl stash gen rules my-repo --namespace=demo --timestamp 2023-10-05T05:16:11Z
+```
+
+## Check Repository
+
+`kubectl stash check` command is used to test the restic repository for errors and reports any errors it finds. It can also be used to read all data and therefore simulate a restore. By default, the command will always load all data directly from the repository and not use a local cache. The available flags for this command are:
+
+| Flag                 | Description                                                                                                                                                         |
+|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--namespace`        | Indicates the namespace of the respective `Repository`.                                                                                                             |
+| `--read-data`        | Read all data blobs.                                                                                                                                                |
+| `--with-cache`       | Use existing cache, only read uncached data from repository.                                                                                                        |
+| `--read-data-subset` | Read a subset of data packs, specified as 'n/t' for specific part, or either 'x%' or 'x.y%' or a size in bytes with suffixes k/K, m/M, g/G, t/T for a random subset |  
+
+**Format**
+
+```bash
+kubectl stash check <repository-name> [flags]
+```
+
+**Example**
+
+```bash
+$ kubectl stash check my-repo --namespace=demo --read-data
+```
+
+## Rebuild Index
+
+`kubectl stash rebuild-index` command is used to create a new index based on the pack files in the restic repository. 
+
+| Flag               | Description                                             |
+|--------------------|---------------------------------------------------------|
+| `--namespace`      | Indicates the namespace of the respective `Repository`. |
+| `--read-all-packs` | Read all pack files to generate new index from scratch. |
+
+**Format**
+
+```bash
+kubectl stash rebuild-index <repository-name> [flags]
+```
+
+**Example**
+
+```bash
+$ kubectl stash rebuild-index my-repo --namespace=demo --read-all-packs
 ```
