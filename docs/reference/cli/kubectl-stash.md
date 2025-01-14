@@ -58,7 +58,9 @@ kubectl plugin for Stash by AppsCode. For more information, visit here: https://
 * [kubectl-stash download](/docs/reference/cli/kubectl-stash_download.md)	 - Download snapshots
 * [kubectl-stash gen](/docs/reference/cli/kubectl-stash_gen.md)	 - generate stash resources
 * [kubectl-stash key](/docs/reference/cli/kubectl-stash_key.md)	 - manages restic keys (passwords) for accessing the repository
+* [kubectl-stash migrate](/docs/reference/cli/kubectl-stash_migrate.md)	 - Migrate restic repository to v2
 * [kubectl-stash pause](/docs/reference/cli/kubectl-stash_pause.md)	 - Pause Stash backup temporarily
+* [kubectl-stash prune](/docs/reference/cli/kubectl-stash_prune.md)	 - Prune restic repository
 * [kubectl-stash rebuild-index](/docs/reference/cli/kubectl-stash_rebuild-index.md)	 - Build a new index
 * [kubectl-stash resume](/docs/reference/cli/kubectl-stash_resume.md)	 - Resume Stash backup
 * [kubectl-stash trigger](/docs/reference/cli/kubectl-stash_trigger.md)	 - Trigger a backup

@@ -1,35 +1,27 @@
 ---
-title: Download
+title: Migrate
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-download
-    name: Download
+    identifier: kubectl-stash-migrate
+    name: Migrate
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash download
+## kubectl-stash migrate
 
-Download snapshots
-
-### Synopsis
-
-Download contents of snapshots from Repository
+Migrate restic repository to v2
 
 ```
-kubectl-stash download [flags]
+kubectl-stash migrate [flags]
 ```
 
 ### Options
 
 ```
-      --destination string       Destination path where snapshot will be restored.
       --docker-registry string   Docker image registry for restic cli (default "restic")
-  -h, --help                     help for download
-      --host string              Name of the source host machine (default "host-0")
+  -h, --help                     help for migrate
       --image-tag string         Restic docker image tag (default "latest")
-      --paths strings            List of directories to be restored
-      --snapshots strings        List of snapshots to be restored
 ```
 
 ### Options inherited from parent commands
