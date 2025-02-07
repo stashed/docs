@@ -1,35 +1,33 @@
 ---
-title: Download
+title: Prune
 menu:
   docs_{{ .version }}:
-    identifier: kubectl-stash-download
-    name: Download
+    identifier: kubectl-stash-prune
+    name: Prune
     parent: reference-cli
 menu_name: docs_{{ .version }}
 section_menu_id: reference
 ---
-## kubectl-stash download
+## kubectl-stash prune
 
-Download snapshots
-
-### Synopsis
-
-Download contents of snapshots from Repository
+Prune restic repository
 
 ```
-kubectl-stash download [flags]
+kubectl-stash prune [flags]
 ```
 
 ### Options
 
 ```
-      --destination string       Destination path where snapshot will be restored.
-      --docker-registry string   Docker image registry for restic cli (default "restic")
-  -h, --help                     help for download
-      --host string              Name of the source host machine (default "host-0")
-      --image-tag string         Restic docker image tag (default "latest")
-      --paths strings            List of directories to be restored
-      --snapshots strings        List of snapshots to be restored
+      --docker-registry string    Docker image registry for restic cli (default "restic")
+      --dry-run                   do not modify the repository, just print what would be done
+  -h, --help                      help for prune
+      --image-tag string          Restic docker image tag (default "latest")
+      --max-repack-size string    maximum size to repack (allowed suffixes: k/K, m/M, g/G, t/T)
+      --max-unused-limit string   tolerate given limit of unused data (absolute value in bytes with suffixes k/K, m/M, g/G, t/T, a value in % or the word 'unlimited') (default "5%")
+      --repack-cacheable-only     only repack packs which are cacheable
+      --repack-small              repack pack files below 80% of target pack size
+      --repack-uncompressed       repack all uncompressed data
 ```
 
 ### Options inherited from parent commands
