@@ -21,30 +21,32 @@ Stash gives you kubectl plugin support named `kubectl stash` cli. `kubectl stash
 
 Available command for `kubectl stash` cli are:
 
-| Main Command                                       | Uses                                                                       |
-|----------------------------------------------------|----------------------------------------------------------------------------|
-| [create repository](#create-repository)            | Create a new `Repository`.                                                 |
-| [create backupconfig](#create-backupconfiguration) | Create a new `BackupConfiguration`.                                        |
-| [create restoresession](#create-restoresession)    | Create a new `RestoreSession`.                                             |
-| [cp secret](#copy-secret)                          | Copy `Secret` from source namespace to destination namespace.              |
-| [cp repository](#copy-repository)                  | Copy `Repository` from source namespace to destination namespace.          |
-| [copy backupconfig](#copy-backupconfiguration)     | Copy `BackupConfiguration` from source namespace to destination namespace. |
-| [copy volumesnapshot](#copy-volumesnapshot)        | Copy `VolumeSnapshot` from source namespace to destination namespace.      |
-| [clone pvc](#clone-pvc)                            | Clone a PVC from source namespace to destination namespace.                |
-| [download](#download-snapshots)                    | Download backup snapshots from backend into your local repository.         |
-| [trigger](#trigger-an-instant-backup)              | Take an instant backup.                                                    |
-| [pause backup](#pause-backup)                      | Pause Stash backup.                                                        |
-| [resume backup](#resume-backup)                    | Resume Stash backup.                                                       |
-| [debug backup](#debug-backup)                      | Debug Stash backup issues.                                                 |
-| [debug restore](#debug-restore)                    | Debug Stash restore issues.                                                |
-| [debug operator](#debug-operator)                  | Debug Stash operator issues.                                               |
-| [key list](#key-list)                              | List the keys (passwords) of a restic repository.                          |
-| [key add](#key-add)                                | Add a new key (password) to a restic repository.                           |
-| [key update](#key-update)                          | Update current key (password) of a restic repository.                      |
-| [key remove](#key-remove)                          | Remove a key (password) of a restic repository.                            |
-| [gen rules](#generate-rules)                       | Generate restore rules from nearest snapshots at a specific time.          |
-| [check](#check-repository)                         | Test the restic repository for errors and reports any errors it finds.     |
-| [rebuild-index](#rebuild-index)                    | Create a new index based on the pack files in the restic repository        |
+| Main Command                                       | Uses                                                                        |
+|----------------------------------------------------|-----------------------------------------------------------------------------|
+| [create repository](#create-repository)            | Create a new `Repository`.                                                  |
+| [create backupconfig](#create-backupconfiguration) | Create a new `BackupConfiguration`.                                         |
+| [create restoresession](#create-restoresession)    | Create a new `RestoreSession`.                                              |
+| [cp secret](#copy-secret)                          | Copy `Secret` from source namespace to destination namespace.               |
+| [cp repository](#copy-repository)                  | Copy `Repository` from source namespace to destination namespace.           |
+| [copy backupconfig](#copy-backupconfiguration)     | Copy `BackupConfiguration` from source namespace to destination namespace.  |
+| [copy volumesnapshot](#copy-volumesnapshot)        | Copy `VolumeSnapshot` from source namespace to destination namespace.       |
+| [clone pvc](#clone-pvc)                            | Clone a PVC from source namespace to destination namespace.                 |
+| [download](#download-snapshots)                    | Download backup snapshots from backend into your local repository.          |
+| [trigger](#trigger-an-instant-backup)              | Take an instant backup.                                                     |
+| [pause backup](#pause-backup)                      | Pause Stash backup.                                                         |
+| [resume backup](#resume-backup)                    | Resume Stash backup.                                                        |
+| [debug backup](#debug-backup)                      | Debug Stash backup issues.                                                  |
+| [debug restore](#debug-restore)                    | Debug Stash restore issues.                                                 |
+| [debug operator](#debug-operator)                  | Debug Stash operator issues.                                                |
+| [key list](#key-list)                              | List the keys (passwords) of a restic repository.                           |
+| [key add](#key-add)                                | Add a new key (password) to a restic repository.                            |
+| [key update](#key-update)                          | Update current key (password) of a restic repository.                       |
+| [key remove](#key-remove)                          | Remove a key (password) of a restic repository.                             |
+| [gen rules](#generate-rules)                       | Generate restore rules from nearest snapshots at a specific time.           |
+| [check](#check-repository)                         | Test the restic repository for errors and reports any errors it finds.      |
+| [rebuild-index](#rebuild-index)                    | Create a new index based on the pack files in the restic repository         |
+| [migrate](#migrate-repository)                     | Check the repository integrity and then upgrade the repository version to 2 |
+| [prune](#prune)                                    | Remove unneeded data from the repository                                    |
 
 ## Create Command
 
@@ -595,4 +597,50 @@ kubectl stash rebuild-index <repository-name> [flags]
 
 ```bash
 $ kubectl stash rebuild-index my-repo --namespace=demo --read-all-packs
+```
+
+## Migrate Repository
+
+`kubectl stash migrate` command is used to check the repository integrity and then upgrade the repository version to 2. After the migration is complete, run `kubectl stash prune` to compress the repository metadata.
+
+| Flag          | Description                                             |
+|---------------|---------------------------------------------------------|
+| `--namespace` | Indicates the namespace of the respective `Repository`. |
+
+**Format**
+
+```bash
+kubectl stash migrate <repository-name> [flags]
+```
+
+**Example**
+
+```bash
+$ kubectl stash migrate my-repo --namespace=demo
+```
+
+## Prune
+
+`kubectl stash prune` command is used to remove unneeded data from the repository. 
+
+| Flag                      | Description                                                                                                                                         |
+|---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--namespace`             | Indicates the namespace of the respective `Repository`.                                                                                             |
+| `--max-unused-limit`      | Tolerate given limit of unused data (absolute value in bytes with suffixes k/K, m/M, g/G, t/T, a value in % or the word 'unlimited') (default `5%`) |
+| `--max-repack-size`       | Maximum size to repack (allowed suffixes: k/K, m/M, g/G, t/T)                                                                                       |
+| `--dry-run`               | Do not modify the repository, just print what would be done                                                                                         |
+| `--repack-uncompressed`   | Repack all uncompressed data                                                                                                                        |
+| `--repack-cacheable-only` | Only repack packs which are cacheable                                                                                                               |
+| `--repack-small`          | Repack pack files below `80%` of target pack size                                                                                                   |
+
+**Format**
+
+```bash
+kubectl stash prune <repository-name> [flags]
+```
+
+**Example**
+
+```bash
+$ kubectl stash prune my-repo --namespace=demo
 ```
