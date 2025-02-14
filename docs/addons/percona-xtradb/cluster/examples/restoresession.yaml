@@ -5,9 +5,14 @@ metadata:
   namespace: demo
 spec:
   task:
-    name: perconaxtradb-restore-5.7
+    name: perconaxtradb-restore-8.0
   repository:
     name: gcs-repo-xtradb-cluster
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsGroup: 1001
+        runAsUser: 1001
   target:
     replicas: 3
     ref:
