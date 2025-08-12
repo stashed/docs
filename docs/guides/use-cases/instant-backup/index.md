@@ -236,8 +236,9 @@ Below is the YAML of the `BackupSession` crd that we are going to create,
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupSession
 metadata:
-  labels:
-    stash.appscode.com/backup-configuration: deployment-backup
+  lables:
+    stash.appscode.com/invoker-type: BackupConfiguration
+    stash.appscode.com/invoker-name: deployment-backup
   name: deployment-backupsession
   namespace: demo
 spec:
@@ -249,7 +250,8 @@ spec:
 
 - `metadata.labels` holds the respective `BackupConfiguration` name as a label. Stash backup sidecar container use this label to watch only the BackupSessions of that `BackupConfiguration`. You must provide the label in the following format:
   ```
-  stash.appscode.com/backup-configuration: <BackupConfiguration name>
+  stash.appscode.com/invoker-type: BackupConfiguration
+  stash.appscode.com/invoker-name: deployment-backup
   ```
 - `spec.invoker` section indicates the `BackupConfiguration` object whose target will be backed up instantly for this `BackupSession`.
 
